@@ -1,0 +1,88 @@
+package com.davidlukash.cakebaker.viewmodel
+
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Density
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.ui.LocalFontFamily
+import com.davidlukash.cakebaker.ui.navigation.Screen
+import com.davidlukash.cakebaker.ui.navigation.transitionDuration
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+class UIViewModel : ViewModel() {
+    private val _pendingScreen = MutableStateFlow<Screen?>(null)
+    val pendingScreen = _pendingScreen.asStateFlow()
+
+    private val _popups = MutableStateFlow<List<Pair<@Composable ColumnScope.() -> Unit, Int>>>(emptyList())
+    val popups = _popups.asStateFlow()
+
+    private val _trueDensity = MutableStateFlow<Density?>(null)
+    val trueDensity = _trueDensity.asStateFlow()
+
+    private val _currentScreen = MutableStateFlow<Screen?>(null)
+    val currentScreen = _currentScreen.asStateFlow()
+    private var nextId = 0
+
+    fun addPopup(content: @Composable ColumnScope.() -> Unit) {
+        viewModelScope.launch {
+            _popups.emit(
+                _popups.value + (content to nextId++)
+            )
+        }
+    }
+
+    fun addTextPopup(text: String) {
+        addPopup {
+            Text(
+                text,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+
+    fun removePopup(index: Int) {
+        viewModelScope.launch {
+            _popups.emit(
+                _popups.value.filterIndexed { thisIndex, _ -> thisIndex != index }
+            )
+        }
+    }
+
+    fun navigateTo(destination: Screen?) {
+        viewModelScope.launch {
+            _pendingScreen.value = destination
+        }
+    }
+
+    fun navigateWithFade(destination: Screen?) {
+        viewModelScope.launch {
+            navigateTo(Screen.Fade)
+            delay(750)
+            navigateTo(destination)
+        }
+    }
+
+    /*This is used by the UI to inform viewmodels of the current screen*/
+    fun updateCurrentScreen(screen: Screen) {
+        viewModelScope.launch {
+            val previousScreen = _currentScreen.value
+            if (previousScreen == Screen.Fade) delay(transitionDuration.toLong())
+            _currentScreen.emit(screen)
+        }
+    }
+
+    /*This is used by the UI to inform viewmodels of the true density so popups are not scaled*/
+    fun updateTrueDensity(density: Density) {
+        viewModelScope.launch {
+            _trueDensity.emit(density)
+        }
+    }
+}

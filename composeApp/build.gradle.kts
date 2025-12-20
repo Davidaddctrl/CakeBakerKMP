@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    kotlin("plugin.serialization")
 }
 
 kotlin {
@@ -45,6 +46,11 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.compose.navigaion)
+            implementation(libs.coil.compose)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.coil.network.ktor3)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.bignum)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -1,0 +1,570 @@
+package com.davidlukash.cakebaker.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.data.Item
+import com.davidlukash.cakebaker.data.ItemType
+import com.davidlukash.cakebaker.data.Order
+import com.davidlukash.cakebaker.data.OrderCakeSettings
+import com.davidlukash.cakebaker.data.OrderFactory
+import com.davidlukash.cakebaker.mapDouble
+import com.davidlukash.cakebaker.ui.navigation.Screen
+import com.davidlukash.cakebaker.weightedRandomInt
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.DecimalMode
+import com.ionspin.kotlin.bignum.decimal.RoundingMode
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlin.math.ceil
+import kotlin.random.Random
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+
+class DataViewModel(
+    val uiViewModel: UIViewModel
+) : ViewModel() {
+    init {
+        loop()
+    }
+
+    private val _allItems = MutableStateFlow(
+        listOf(
+            Item(
+                name = "Butter",
+                type = ItemType.INGREDIENT,
+                amount = BigDecimal.fromFloat(0.2f),
+                price = BigDecimal.fromFloat(250f),
+                fastPriceGrowth = true,
+                total = BigDecimal.fromFloat(0f),
+                increment = BigDecimal.fromInt(1),
+                increaseSlope = BigDecimal.fromFloat(0.25f),
+                cakePriceAccountability = mapOf(
+                    1 to BigDecimal.ZERO,
+                    2 to BigDecimal.ZERO,
+                    3 to BigDecimal.ZERO,
+                ),
+                cakePrices = mapOf(
+                    1 to BigDecimal.fromFloat(0.2f),
+                    2 to BigDecimal.fromFloat(0.4f),
+                    3 to BigDecimal.fromFloat(0.8f),
+                ),
+            ),
+            Item(
+                name = "Egg",
+                type = ItemType.INGREDIENT,
+                amount = BigDecimal.fromFloat(4f),
+                price = BigDecimal.fromFloat(30f),
+                fastPriceGrowth = false,
+                total = BigDecimal.fromFloat(0f),
+                increment = BigDecimal.fromInt(1),
+                increaseSlope = BigDecimal.fromFloat(0.1f),
+                cakePriceAccountability = mapOf(
+                    1 to BigDecimal.ZERO,
+                    2 to BigDecimal.ZERO,
+                    3 to BigDecimal.ZERO,
+                ),
+                cakePrices = mapOf(
+                    1 to BigDecimal.fromFloat(4f),
+                    2 to BigDecimal.fromFloat(8f),
+                    3 to BigDecimal.fromFloat(16f),
+                ),
+            ),
+            Item(
+                name = "Flour",
+                type = ItemType.INGREDIENT,
+                amount = BigDecimal.fromFloat(0.1f),
+                price = BigDecimal.fromFloat(400f),
+                fastPriceGrowth = true,
+                total = BigDecimal.fromFloat(0f),
+                increment = BigDecimal.fromInt(1),
+                increaseSlope = BigDecimal.fromFloat(0.3f),
+                cakePriceAccountability = mapOf(
+                    1 to BigDecimal.ZERO,
+                    2 to BigDecimal.ZERO,
+                    3 to BigDecimal.ZERO,
+                ),
+                cakePrices = mapOf(
+                    1 to BigDecimal.fromFloat(0.1f),
+                    2 to BigDecimal.fromFloat(0.2f),
+                    3 to BigDecimal.fromFloat(0.4f),
+                ),
+            ),
+            Item(
+                name = "Sugar",
+                type = ItemType.INGREDIENT,
+                amount = BigDecimal.fromFloat(0.2f),
+                price = BigDecimal.fromFloat(200f),
+                fastPriceGrowth = true,
+                total = BigDecimal.fromFloat(0f),
+                increment = BigDecimal.fromInt(1),
+                increaseSlope = BigDecimal.fromFloat(0.15f),
+                cakePriceAccountability = mapOf(
+                    1 to BigDecimal.ZERO,
+                    2 to BigDecimal.ZERO,
+                    3 to BigDecimal.ZERO,
+                ),
+                cakePrices = mapOf(
+                    1 to BigDecimal.fromFloat(0.2f),
+                    2 to BigDecimal.fromFloat(0.4f),
+                    3 to BigDecimal.fromFloat(0.8f),
+                ),
+            ),
+            Item(
+                name = "Vanilla Extract",
+                type = ItemType.INGREDIENT,
+                amount = BigDecimal.fromFloat(0.5f),
+                price = BigDecimal.fromFloat(150f),
+                fastPriceGrowth = true,
+                total = BigDecimal.fromFloat(0.5f),
+                increment = BigDecimal.fromInt(1),
+                increaseSlope = BigDecimal.fromFloat(0.4f),
+                cakePriceAccountability = mapOf(
+                    1 to BigDecimal.ZERO,
+                    2 to BigDecimal.ZERO,
+                    3 to BigDecimal.ZERO,
+                ),
+                cakePrices = mapOf(
+                    1 to BigDecimal.fromFloat(0.5f),
+                    2 to BigDecimal.fromFloat(1f),
+                    3 to BigDecimal.fromFloat(2f),
+                ),
+            ),
+            Item(
+                name = "Baking Powder",
+                type = ItemType.INGREDIENT,
+                amount = BigDecimal.fromFloat(0.2f),
+                price = BigDecimal.fromFloat(175f),
+                fastPriceGrowth = true,
+                total = BigDecimal.fromFloat(0.2f),
+                increment = BigDecimal.fromInt(1),
+                increaseSlope = BigDecimal.fromFloat(0.2f),
+                cakePriceAccountability = mapOf(
+                    1 to BigDecimal.ZERO,
+                    2 to BigDecimal.ZERO,
+                    3 to BigDecimal.ZERO,
+                ),
+                cakePrices = mapOf(
+                    1 to BigDecimal.fromFloat(0.2f),
+                    2 to BigDecimal.fromFloat(0.4f),
+                    3 to BigDecimal.fromFloat(0.8f),
+                ),
+            ),
+            Item(
+                name = "Cocoa Powder",
+                type = ItemType.INGREDIENT,
+                amount = BigDecimal.fromFloat(0f),
+                price = BigDecimal.fromFloat(4000f),
+                fastPriceGrowth = true,
+                total = BigDecimal.fromFloat(0f),
+                increment = BigDecimal.fromInt(1),
+                increaseSlope = BigDecimal.fromFloat(0.5f),
+                cakePriceAccountability = mapOf(
+                    1 to BigDecimal.ZERO,
+                    2 to BigDecimal.ZERO,
+                    3 to BigDecimal.ZERO,
+                ),
+                cakePrices = mapOf(
+                    1 to BigDecimal.fromFloat(0.0f),
+                    2 to BigDecimal.fromFloat(0.5f),
+                    3 to BigDecimal.fromFloat(0.0f),
+                ),
+            ),
+            Item(
+                name = "Honey Pot",
+                type = ItemType.INGREDIENT,
+                amount = BigDecimal.fromFloat(0f),
+                price = BigDecimal.fromFloat(7500f),
+                fastPriceGrowth = true,
+                total = BigDecimal.fromFloat(0f),
+                increment = BigDecimal.fromInt(1),
+                increaseSlope = BigDecimal.fromFloat(1f),
+                cakePriceAccountability = mapOf(
+                    1 to BigDecimal.ZERO,
+                    2 to BigDecimal.ZERO,
+                    3 to BigDecimal.ZERO,
+                ),
+                cakePrices = mapOf(
+                    1 to BigDecimal.fromFloat(0f),
+                    2 to BigDecimal.fromFloat(0f),
+                    3 to BigDecimal.fromFloat(1f),
+                ),
+            ),
+            Item(
+                name = "Vanilla Cake",
+                type = ItemType.CAKE,
+                amount = BigDecimal.ZERO,
+                cakeTier = 1,
+                salePrice = BigDecimal.fromFloat(1300f)
+            ),
+            Item(
+                name = "Chocolate Cake",
+                type = ItemType.CAKE,
+                amount = BigDecimal.ZERO,
+                cakeTier = 2,
+                salePrice = BigDecimal.fromFloat(2000f)
+            ),
+            Item(
+                name = "Honey Cake",
+                type = ItemType.CAKE,
+                amount = BigDecimal.ZERO,
+                cakeTier = 3,
+                salePrice = BigDecimal.fromFloat(4000f)
+            ),
+            Item(
+                name = "Money",
+                type = ItemType.CURRENCY,
+                amount = BigDecimal.fromFloat(0f),
+            )
+        )
+    )
+
+    val allItemsFlow = _allItems.asStateFlow()
+
+    val ingredientsFlow = allItemsFlow.map { items ->
+        items.filter { it.type == ItemType.INGREDIENT }
+    }
+
+    val ingredients: List<Item>
+        get() {
+            return _allItems.value.filter { it.type == ItemType.INGREDIENT }
+        }
+    val cakes: List<Item>
+        get() {
+            return _allItems.value.filter { it.type == ItemType.CAKE }
+        }
+
+    val cakesFlow = allItemsFlow.map { items ->
+        items.filter { it.type == ItemType.CAKE }
+    }
+
+    val cakePricesFlow = combine(cakesFlow, ingredientsFlow) { cakes: List<Item>, ingredients: List<Item> ->
+        cakes.map { cake ->
+            calculateCakePrice(cake, ingredients)
+        }
+    }
+
+    val itemMoney: Item
+        get() {
+            return _allItems.value.find { it.name == "Money" }!!
+        }
+
+    val itemMoneyFlow = allItemsFlow.map { items ->
+        items.find { it.name == "Money" }!!
+    }
+
+    private val _currentCakeTier = MutableStateFlow(1)
+    val currentCakeTier = _currentCakeTier.asStateFlow()
+
+    val currentCake = combine(currentCakeTier, cakesFlow) { currentCakeTier: Int, cakes: List<Item> ->
+        cakes[currentCakeTier - 1]
+    }
+
+    private val _ovenProgress = MutableStateFlow(0.0)
+    private val _ovenRunning = MutableStateFlow(false)
+
+    val ovenProgress = _ovenProgress.asStateFlow()
+    val ovenRunning = _ovenRunning.asStateFlow()
+
+    val canBakeFlow = ingredientsFlow.combine(currentCakeTier) { ingredients, currentCakeTier ->
+        ingredients.forEach { ingredient ->
+            if (ingredient.amount < (ingredient.cakePrices?.get(currentCakeTier) ?: 0)) return@combine false
+        }
+        true
+    }
+
+    private val _autoOvenEnabled = MutableStateFlow(false)
+    val autoOvenEnabled = _autoOvenEnabled.asStateFlow()
+
+    private var tempCakeTier: Int = 1
+
+    //1 to 100
+    private val _customerSatisfaction = MutableStateFlow(80)
+    val customerSatisfaction = _customerSatisfaction.asStateFlow()
+
+    val satisfactionLevel = customerSatisfaction.map {
+        ceil(it.toDouble() / 20.0).toInt()
+    }
+
+    val orderFactory = OrderFactory(this)
+
+    private val _orderCakeSettings = MutableStateFlow(
+        mapOf(
+            1 to OrderCakeSettings(
+                90.0, 45.0,
+                1.05, 0.99,
+                5,
+                35.0, 25.0,
+                5, 1,
+                -10, -30
+            ),
+            2 to OrderCakeSettings(
+                120.0, 60.0,
+                1.2, 0.9,
+                3,
+                45.0, 30.0,
+                15, 10,
+                -5, -10
+            ),
+            3 to OrderCakeSettings(
+                150.0, 75.0,
+                1.3, 0.8,
+                2,
+                55.0, 35.0,
+                45, 30,
+                -1, -5
+            )
+        )
+    )
+
+    val orderCakeSettings = _orderCakeSettings.asStateFlow()
+
+    private val _ordersList = MutableStateFlow(listOf<Order>())
+    val ordersList = _ordersList.asStateFlow()
+
+    var random = Random(Random.nextLong())
+
+    fun setAutoOvenEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            _autoOvenEnabled.emit(enabled)
+        }
+    }
+
+    fun setCurrentCake(tier: Int) {
+        viewModelScope.launch {
+            _currentCakeTier.emit(tier)
+        }
+    }
+
+    fun updateItem(item: Item) {
+        viewModelScope.launch {
+            _allItems.emit(
+                _allItems.value.map {
+                    if (it.name == item.name) item else it
+                }
+            )
+        }
+    }
+
+    fun calculateCakePrice(tier: Int): BigDecimal {
+        val cake = (cakes.getOrNull(tier - 1) ?: return BigDecimal.ZERO)
+        return calculateCakePrice(cake, ingredients)
+    }
+
+    fun calculateCakePrice(cake: Item, ingredients: List<Item>): BigDecimal {
+        var cakePrice = cake.salePrice ?: BigDecimal.ZERO
+        ingredients.forEach { ingredient ->
+            cakePrice += ingredient.cakePriceAccountability?.get(cake.cakeTier ?: 1) ?: BigDecimal.ZERO
+        }
+        return cakePrice
+    }
+
+    fun bake() {
+        viewModelScope.launch {
+            tempCakeTier = currentCakeTier.value
+            ingredients.forEach { item ->
+                updateItem(
+                    item.copy(
+                        amount = item.amount - (item.cakePrices?.getValue(tempCakeTier) ?: BigDecimal.ZERO)
+                    )
+                )
+            }
+            _ovenRunning.emit(true)
+        }
+    }
+
+    fun buyIngredient(name: String) {
+        val item = ingredients.find { it.name == name } ?: return
+        var tempItem = item
+        updateItem(
+            itemMoney.copy(
+                amount = itemMoney.amount - (item.price ?: BigDecimal.ZERO)
+            )
+        )
+        val oldPrice = tempItem.price ?: BigDecimal.ZERO
+        val increment = tempItem.increment ?: BigDecimal.ZERO
+        val total = (tempItem.total ?: BigDecimal.ZERO) + increment
+        val increaseSlope = (tempItem.increaseSlope ?: BigDecimal.ZERO) + BigDecimal.ONE
+        val fastPriceGrowth = tempItem.fastPriceGrowth ?: false
+        val cakePriceAccountability = (tempItem.cakePriceAccountability ?: emptyMap()).toMutableMap()
+        tempItem = tempItem.copy(
+            price = oldPrice * increaseSlope + if (fastPriceGrowth) total else BigDecimal.ZERO,
+            total = total,
+            amount = tempItem.amount + increment
+        )
+
+        val price = tempItem.price ?: BigDecimal.ZERO
+        val maxTier = cakePriceAccountability.keys.max()
+        val minTier = cakePriceAccountability.keys.min()
+        val tiers = cakePriceAccountability.keys.size
+        val denominator = (tiers + 1).toBigDecimal()
+        //Low tier cakes get a smaller price accountabiliy than higher tier
+        val factors = (minTier..maxTier).associateWith { tier -> //1: 2/4 2: 3/4 3: 4/4
+            val numerator = (tier + 1).toBigDecimal()
+            numerator.divide(
+                denominator,
+                decimalMode = DecimalMode(6L, RoundingMode.FLOOR),
+            )
+        }
+        factors.forEach { (tier, factor) ->
+            val oldAccountability = cakePriceAccountability[tier] ?: BigDecimal.ZERO
+            val difference = ((price - oldPrice) / 2)
+            cakePriceAccountability[tier] = oldAccountability + factor * difference
+        }
+
+        tempItem = tempItem.copy(
+            cakePriceAccountability = cakePriceAccountability.toMap()
+        )
+
+        updateItem(
+            tempItem
+        )
+
+    }
+
+    @OptIn(ExperimentalTime::class)
+    fun loop() {
+        viewModelScope.launch {
+            var time = Clock.System.now().toEpochMilliseconds()
+            while (true) {
+                delay(100)
+                val newTime = Clock.System.now().toEpochMilliseconds()
+                val dt = newTime - time
+                time = newTime
+                tickOven(dt)
+                tickOrderCreate(dt)
+                tickOrder(dt)
+            }
+        }
+    }
+
+    suspend fun tickOven(dt: Long) {
+        val ovenRunning = ovenRunning.value
+        if (ovenRunning) {
+            val speed = 5000.0
+            _ovenProgress.emit(ovenProgress.value + dt.toDouble() / speed)
+            if (_ovenProgress.value >= 1) {
+                _ovenRunning.emit(false)
+                _ovenProgress.emit(0.0)
+                val cake = cakes[tempCakeTier - 1]
+                updateItem(
+                    cake.copy(
+                        amount = cake.amount + 1
+                    )
+                )
+            }
+        }
+    }
+
+    private val _orderCakeTimeCounters = MutableStateFlow(mapOf<Int, Double>())
+
+    val nextOrderRemainingTime = _orderCakeTimeCounters.map { if (it.values.isEmpty()) null else it.values.min() }
+
+    suspend fun tickOrderCreate(dt: Long) {
+        val nextTier = orderFactory.selectCakeTier(_orderCakeTimeCounters.value.keys.toList())
+        nextTier?.let { nextTier ->
+            val settings = orderCakeSettings.value[nextTier]!!
+            val weight = mapDouble(customerSatisfaction.value.toDouble(), 1.0, 100.0, 0.5, 2.5)
+            val waitTime = mapDouble(
+                weightedRandomInt(weight, 10001, random).toDouble(),
+                0.0,
+                10000.0,
+                settings.waitTimeMax,
+                settings.waitTimeMin,
+            )
+            _orderCakeTimeCounters.emit(_orderCakeTimeCounters.value + (nextTier to waitTime))
+        }
+        _orderCakeTimeCounters.emit(
+            _orderCakeTimeCounters.value.mapNotNull { entry ->
+                val cakeTier = entry.key
+                val remainingTime = entry.value
+                val nextRemainingTime = remainingTime - dt.toDouble() / 1000.0
+                if (nextRemainingTime <= 0) {
+                    val order = orderFactory.createOrder(cakeTier).copy(
+                        id = random.nextInt(10000, 99999)
+                    )
+                    val cake = cakes[cakeTier - 1]
+                    if (uiViewModel.currentScreen.value != Screen.Kitchen)
+                        uiViewModel.addTextPopup("New Order for ${order.amount} ${cake.name}")
+                    _ordersList.emit(
+                        _ordersList.value + order
+                    )
+                    return@mapNotNull null
+                }
+                cakeTier to nextRemainingTime
+            }.toMap()
+        )
+    }
+
+    suspend fun tickOrder(dt: Long) {
+        val seconds = dt.toDouble() / 1000.0
+        _ordersList.emit(
+            _ordersList.value.mapNotNull {
+                val new = it.copy(
+                    remainingTime = it.remainingTime - seconds
+                )
+                if (new.remainingTime <= 0.0) {
+                    handleFailedOrder(new)
+                    return@mapNotNull null
+                }
+                new
+            }
+        )
+    }
+
+    suspend fun handleFailedOrder(order: Order) {
+        val settings = orderCakeSettings.value[order.cakeTier]!!
+        val modifier = mapDouble(
+            weightedRandomInt(1.0, 10001, random).toDouble(),
+            0.0,
+            10000.0,
+            settings.minUnfulfilledCustomerSatisfaction.toDouble(),
+            settings.maxUnfulfilledCustomerSatisfaction.toDouble()
+        ).toInt()
+        _customerSatisfaction.emit(
+            maxOf(1, _customerSatisfaction.value + modifier)
+        )
+    }
+
+    fun handleCompleteOrder(order: Order) {
+        val settings = orderCakeSettings.value[order.cakeTier]!!
+        val weight = mapDouble(order.remainingTime / order.totalTime, 0.0, 1.0, 0.5, 2.0)
+        val modifier = mapDouble(
+            weightedRandomInt(weight, 10001, random).toDouble(),
+            0.0,
+            10000.0,
+            settings.minFulfilledCustomerSatisfaction.toDouble(),
+            settings.maxFulfilledCustomerSatisfaction.toDouble()
+        ).toInt()
+        var cake = cakes[order.cakeTier - 1]
+        cake = cake.copy(
+            amount = cake.amount - order.amount.toBigDecimal()
+        )
+        updateItem(cake)
+        updateItem(
+            itemMoney.copy(
+                amount = itemMoney.amount + order.salePrice
+            )
+        )
+        viewModelScope.launch {
+            _ordersList.emit(
+                _ordersList.value.filter { it.id != order.id }
+            )
+            _customerSatisfaction.emit(
+                minOf(100, _customerSatisfaction.value + modifier * order.amount)
+            )
+        }
+    }
+
+    fun debugSkipOrderTimer(tier: Int) {
+        viewModelScope.launch {
+            _orderCakeTimeCounters.emit(
+                _orderCakeTimeCounters.value + (tier to 0.1)
+            )
+        }
+    }
+}
