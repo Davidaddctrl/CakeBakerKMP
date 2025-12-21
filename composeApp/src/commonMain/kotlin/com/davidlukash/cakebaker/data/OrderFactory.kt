@@ -40,7 +40,7 @@ class OrderFactory(
         val settings = dataViewModel.orderCakeSettings.value[cakeTier]!!
         val cake = cakes.find { it.cakeTier == cakeTier }!!
         val maxAmount = settings.maxAmount
-        val cakeAmount = minOf(maxOf(cake.amount.toDouble().toInt(), 1), weightedRandomInt(weight, maxAmount, random) + 1)
+        val cakeAmount = minOf(maxOf(cake.amount.doubleValue(false).toInt(), 1), weightedRandomInt(weight, maxAmount, random) + 1)
         val baseCakePrice = dataViewModel.calculateCakePrice(cakeTier)
         val cakePriceModifier =
             mapDouble(
