@@ -51,6 +51,7 @@ kotlin {
             implementation(libs.coil.network.ktor3)
             implementation(libs.ktor.client.cio)
             implementation(libs.bignum)
+            implementation(libs.jsonMath)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
