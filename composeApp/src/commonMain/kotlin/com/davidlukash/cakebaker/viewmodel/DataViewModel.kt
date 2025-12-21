@@ -328,6 +328,14 @@ class DataViewModel(
 
     var random = Random(Random.nextLong())
 
+    fun updateOrderSettings(tier: Int, settings: OrderCakeSettings) {
+        viewModelScope.launch {
+            _orderCakeSettings.emit(
+                _orderCakeSettings.value + (tier to settings)
+            )
+        }
+    }
+
     fun setAutoOvenEnabled(enabled: Boolean) {
         viewModelScope.launch {
             _autoOvenEnabled.emit(enabled)

@@ -3,6 +3,7 @@ package com.davidlukash.cakebaker.viewmodel
 import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.toInt
 import com.davidlukash.jsonmath.BasicOperatorsEngine
+import com.davidlukash.jsonmath.Operation
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
@@ -25,9 +26,7 @@ class CakeBakerEngine(
             "items" -> {
                 val itemName = parts[1]
                 val item = dataViewModel.allItemsFlow.value.find { it.name == itemName }
-                if (item == null) {
-                    throw NoSuchElementException("$reference not found.")
-                }
+                    ?: throw NoSuchElementException("$reference not found.")
                 val third = parts[2]
                 when (third) {
                     "type" -> ItemType.entries.indexOf(item.type).toBigDecimal(decimalMode = decimalMode)
@@ -51,6 +50,28 @@ class CakeBakerEngine(
                     "salePrice" -> item.salePrice
                     else -> throw NoSuchElementException("$reference not found.")
                 } ?: BigDecimal.parseString("-1")
+            }
+
+            "orderCakeSettings" -> {
+                val tier = parts[1].toInt()
+                val settings =
+                    dataViewModel.orderCakeSettings.value[tier]
+                        ?: throw NoSuchElementException("$reference not found.")
+                val third = parts[2]
+                when (third) {
+                    "allocatedTimeMax" -> settings.allocatedTimeMax.toBigDecimal()
+                    "allocatedTimeMin" -> settings.allocatedTimeMin.toBigDecimal()
+                    "saleMaxChange" -> settings.saleMaxChange.toBigDecimal()
+                    "saleMinChange" -> settings.saleMinChange.toBigDecimal()
+                    "maxAmount" -> settings.maxAmount.toBigDecimal()
+                    "waitTimeMax" -> settings.waitTimeMax.toBigDecimal()
+                    "waitTimeMin" -> settings.waitTimeMin.toBigDecimal()
+                    "maxFulfilledCustomerSatisfaction" -> settings.maxFulfilledCustomerSatisfaction.toBigDecimal()
+                    "minFulfilledCustomerSatisfaction" -> settings.minFulfilledCustomerSatisfaction.toBigDecimal()
+                    "maxUnfulfilledCustomerSatisfaction" -> settings.maxUnfulfilledCustomerSatisfaction.toBigDecimal()
+                    "minUnfulfilledCustomerSatisfaction" -> settings.minUnfulfilledCustomerSatisfaction.toBigDecimal()
+                    else -> throw NoSuchElementException("$reference not found.")
+                }
             }
 
             else -> throw NoSuchElementException("$reference not found.")
@@ -97,6 +118,53 @@ class CakeBakerEngine(
 
                         "cakeTier" -> item.copy(cakeTier = value.intValue(false))
                         "salePrice" -> item.copy(salePrice = value)
+                        else -> throw NoSuchElementException("$reference not found.")
+                    }
+                )
+            }
+
+            "orderCakeSettings" -> {
+                val tier = parts[1].toInt()
+                val settings =
+                    dataViewModel.orderCakeSettings.value[tier]
+                        ?: throw NoSuchElementException("$reference not found.")
+                val third = parts[2]
+                dataViewModel.updateOrderSettings(
+                    tier,
+                    when (third) {
+                        "allocatedTimeMax" -> settings.copy(
+                            allocatedTimeMax = value.doubleValue(false)
+                        )
+                        "allocatedTimeMin" -> settings.copy(
+                            allocatedTimeMin = value.doubleValue(false)
+                        )
+                        "saleMaxChange" -> settings.copy(
+                            saleMaxChange = value.doubleValue(false)
+                        )
+                        "saleMinChange" -> settings.copy(
+                            saleMinChange = value.doubleValue(false)
+                        )
+                        "maxAmount" -> settings.copy(
+                            maxAmount = value.intValue(false)
+                        )
+                        "waitTimeMax" -> settings.copy(
+                            waitTimeMax = value.doubleValue(false)
+                        )
+                        "waitTimeMin" -> settings.copy(
+                            waitTimeMin = value.doubleValue(false)
+                        )
+                        "maxFulfilledCustomerSatisfaction" -> settings.copy(
+                            maxFulfilledCustomerSatisfaction = value.intValue(false)
+                        )
+                        "minFulfilledCustomerSatisfaction" -> settings.copy(
+                            minFulfilledCustomerSatisfaction = value.intValue(false)
+                        )
+                        "maxUnfulfilledCustomerSatisfaction" -> settings.copy(
+                            maxUnfulfilledCustomerSatisfaction = value.intValue(false)
+                        )
+                        "minUnfulfilledCustomerSatisfaction" -> settings.copy(
+                            minUnfulfilledCustomerSatisfaction = value.intValue(false)
+                        )
                         else -> throw NoSuchElementException("$reference not found.")
                     }
                 )
