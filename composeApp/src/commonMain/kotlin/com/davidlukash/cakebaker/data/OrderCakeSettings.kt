@@ -11,7 +11,6 @@ data class OrderCakeSettings(
     val saleMaxChange: Double,
     val saleMinChange: Double,
     val maxAmount: Int,
-    // Chance per second weighted by customer satisfaction
     val waitTimeMax: Double,
     val waitTimeMin: Double,
     val maxFulfilledCustomerSatisfaction: Int,
