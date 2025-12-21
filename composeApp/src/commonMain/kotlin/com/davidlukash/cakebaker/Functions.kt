@@ -36,6 +36,7 @@ val debugTimestampFormat = LocalTime.Format {
     minute()
     char(':')
     second()
+    char('.')
     secondFraction(3)
     char(']')
 }
