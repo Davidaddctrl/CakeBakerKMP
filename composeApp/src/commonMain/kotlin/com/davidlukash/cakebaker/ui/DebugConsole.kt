@@ -69,7 +69,7 @@ fun RowScope.DebugConsole() {
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(logs) {
-        lazyListState.scrollToItem(logs.size - 1)
+        if (logs.isNotEmpty()) lazyListState.scrollToItem(logs.size - 1)
     }
 
     Column(
