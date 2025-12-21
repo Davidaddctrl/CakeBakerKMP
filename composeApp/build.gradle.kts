@@ -52,6 +52,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.bignum)
             implementation(libs.jsonMath)
+            implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
