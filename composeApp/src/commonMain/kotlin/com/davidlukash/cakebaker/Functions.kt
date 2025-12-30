@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker
 
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
@@ -42,6 +43,8 @@ val debugTimestampFormat = LocalTime.Format {
 }
 
 fun Boolean.toInt() = if (this) 1 else 0
+
+fun Int.toBoolean() = this == 1
 
 fun toEngNotation(number: BigDecimal): String {
     if (number < 1000) {
@@ -128,3 +131,6 @@ fun secondsToString(totalSeconds: Double): String {
 val json = Json {
     prettyPrint = true
 }
+
+expect fun Modifier.horizontalDragCursor(): Modifier
+expect fun Modifier.verticalDragCursor(): Modifier
