@@ -7,9 +7,14 @@ import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.Order
 import com.davidlukash.cakebaker.data.OrderCakeSettings
 import com.davidlukash.cakebaker.data.OrderFactory
+import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.mapDouble
+import com.davidlukash.cakebaker.toBoolean
+import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.weightedRandomInt
+import com.davidlukash.jsonmath.engine.normal.EnumScopeType
+import com.davidlukash.jsonmath.engine.normal.ScopeType
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
@@ -20,13 +25,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlin.collections.listOf
 import kotlin.math.ceil
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class DataViewModel(
-    val uiViewModel: UIViewModel
+    val uiViewModel: UIViewModel,
+    val engine: CakeBakerEngine
 ) : ViewModel() {
     init {
         loop()
@@ -264,6 +271,40 @@ class DataViewModel(
         cakes[currentCakeTier - 1]
     }
 
+    private val _upgradesFlow = MutableStateFlow(
+        listOf(
+            Upgrade(
+                pageName = "Oven",
+                imageName = "Oven",
+                name = "Faster Oven",
+                price = 1,
+                cakeTier = 1,
+                maxLevel = 45,
+                onBuy = listOf()
+//                onLoad = listOf(),
+//                onBuy = createLinearOnBuy("Faster Oven"),
+//                parameters = mapOf(
+//                    "shouldTierChange" to 1.toBigDecimal(),
+//                    "tierChangeLevel" to 35.toBigDecimal(),
+//                    "newTier" to 2.toBigDecimal(),
+//                    "priceIncrement" to 1.toBigDecimal(),
+//                    "initialPrice" to 1.toBigDecimal(),
+//                    "levelsUntilPriceIncrease" to 15.toBigDecimal(),
+            ),
+            Upgrade(
+                pageName = "Oven",
+                imageName = "Oven",
+                name = "Auto Oven",
+                price = 3,
+                cakeTier = 1,
+                maxLevel = 1,
+                onBuy = listOf()
+            )
+        )
+    )
+
+    val upgradesFlow = _upgradesFlow.asStateFlow()
+
     private val _ovenProgress = MutableStateFlow(0.0)
     private val _ovenRunning = MutableStateFlow(false)
 
@@ -275,6 +316,13 @@ class DataViewModel(
             if (ingredient.amount < (ingredient.cakePrices?.get(currentCakeTier) ?: 0)) return@combine false
         }
         true
+    }
+
+    fun canBake(tier: Int): Boolean {
+        ingredients.forEach { ingredient ->
+            if (ingredient.amount < (ingredient.cakePrices?.get(tier) ?: 0)) return false
+        }
+        return true
     }
 
     private val _autoOvenEnabled = MutableStateFlow(false)
@@ -328,6 +376,79 @@ class DataViewModel(
 
     var random = Random(Random.nextLong())
 
+//    /**
+//    * This is a simple linear price growth. It requires shouldTierChange, tierChangeLevel, newTier, priceIncrement,
+//     * initialPrice, levelsUntilPriceIncrease in parameters
+//    */
+//    private fun createLinearOnBuy(upgradeName: String): List<Generic> {
+//        return listOf(
+//            createGeneric(
+//                ConditionBlock(
+//                    operations = listOf(
+//                        Condition(
+//                            condition = "and",
+//                            arguments = listOf(
+//                                createExpression(
+//                                    Condition(
+//                                        condition = "==",
+//                                        arguments = listOf(
+//                                            createExpression("upgrades.$upgradeName.level"),
+//                                            createExpression("upgrades.$upgradeName" +
+//                                                    ".parameters.tierChangeLevel")
+//                                        ),
+//                                    )
+//                                ),
+//                                createExpression("upgrades.$upgradeName.parameters.shouldTierChange")
+//                            )
+//                        ) to listOf(
+//                            Operation(
+//                                "none",
+//                                reference = "upgrades.$upgradeName.cakeTier",
+//                                arguments = listOf(
+//                                    createExpression("upgrades.$upgradeName.parameters.newTier"),
+//                                )
+//                            )
+//                        )
+//                    )
+//                )
+//            ),
+//            createGeneric(
+//                Operation(
+//                    operation = "+",
+//                    reference = "upgrades.$upgradeName.price",
+//                    arguments = listOf(
+//                        createExpression("upgrades.$upgradeName.parameters.initialPrice"),
+//                        createExpression(
+//                            Operation(
+//                                operation = "*",
+//                                arguments = listOf(
+//                                    createExpression("upgrades.$upgradeName.parameters.priceIncrement"),
+//                                    createExpression(
+//                                        Operation(
+//                                            operation = "floor",
+//                                            arguments = listOf(
+//                                                createExpression(
+//                                                    Operation(
+//                                                        operation = "/",
+//                                                        arguments = listOf(
+//                                                            createExpression("upgrades.$upgradeName.level"),
+//                                                            createExpression("upgrades.$upgradeName" +
+//                                                                    ".parameters.levelsUntilPriceIncrease")
+//                                                        )
+//                                                    )
+//                                                )
+//                                            )
+//                                        )
+//                                    )
+//                                )
+//                            )
+//                        )
+//                    )
+//                )
+//            )
+//        )
+//    }
+
     fun updateOrderSettings(tier: Int, settings: OrderCakeSettings) {
         viewModelScope.launch {
             _orderCakeSettings.emit(
@@ -354,6 +475,14 @@ class DataViewModel(
                 _allItems.value.map {
                     if (it.name == item.name) item else it
                 }
+            )
+        }
+    }
+
+    fun updateUpgrade(upgrade: Upgrade) {
+        viewModelScope.launch {
+            _upgradesFlow.emit(
+                (listOf(upgrade) + _upgradesFlow.value).distinctBy { it.name }
             )
         }
     }
@@ -415,7 +544,7 @@ class DataViewModel(
             val numerator = (tier + 1).toBigDecimal()
             numerator.divide(
                 denominator,
-                decimalMode = DecimalMode(6L, RoundingMode.FLOOR),
+                decimalMode = DecimalMode(20L, RoundingMode.FLOOR, scale = 2L),
             )
         }
         factors.forEach { (tier, factor) ->
@@ -446,14 +575,17 @@ class DataViewModel(
                 tickOven(dt)
                 tickOrderCreate(dt)
                 tickOrder(dt)
+                tickAutoOven()
             }
         }
     }
 
     suspend fun tickOven(dt: Long) {
         val ovenRunning = ovenRunning.value
+        val fasterOven = upgradesFlow.value.find { it.name == "Faster Oven" }
+        val level = fasterOven?.level ?: 0
         if (ovenRunning) {
-            val speed = 5000.0
+            val speed = 5000.0 - level.toDouble() * 100.0
             _ovenProgress.emit(ovenProgress.value + dt.toDouble() / speed)
             if (_ovenProgress.value >= 1) {
                 _ovenRunning.emit(false)
@@ -465,6 +597,15 @@ class DataViewModel(
                     )
                 )
             }
+        }
+    }
+
+    fun tickAutoOven() {
+        val ovenRunning = ovenRunning.value
+        val autoOven = upgradesFlow.value.find { it.name == "Auto Oven" }?.level?.toBoolean() ?: false
+        val autoOvenEnabled = autoOvenEnabled.value
+        if (!ovenRunning && canBake(currentCakeTier.value) && autoOven && autoOvenEnabled) {
+            bake()
         }
     }
 
@@ -496,7 +637,7 @@ class DataViewModel(
                         id = random.nextInt(10000, 99999)
                     )
                     val cake = cakes[cakeTier - 1]
-                    if (uiViewModel.currentScreen.value != Screen.Kitchen)
+                    if (uiViewModel.currentScreen.value != KitchenScreen)
                         uiViewModel.addTextPopup("New Order for ${order.amount} ${cake.name}")
                     _ordersList.emit(
                         _ordersList.value + order
@@ -568,11 +709,18 @@ class DataViewModel(
         }
     }
 
-    fun debugSkipOrderTimer(tier: Int) {
-        viewModelScope.launch {
-            _orderCakeTimeCounters.emit(
-                _orderCakeTimeCounters.value + (tier to 0.1)
+    fun buyUpgrade(upgrade: Upgrade) {
+        updateUpgrade(
+            upgrade.copy(
+                level = upgrade.level + 1,
             )
-        }
+        )
+        val cake = cakes[upgrade.cakeTier - 1]
+        updateItem(
+            cake.copy(
+                amount = cake.amount - upgrade.price.toBigDecimal()
+            )
+        )
+        //engine.evaluateGenerics(upgrade.onBuy)
     }
 }
