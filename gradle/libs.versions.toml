@@ -21,7 +21,7 @@ kotlinx-coroutines = "1.10.2"
 kotlinxDatetime = "0.7.1"
 kotlinxSerializationJson = "1.9.0"
 ktorClientCio = "3.3.3"
-jsonMath = "1.0.1"
+jsonMath = "1.0.5"
 
 [libraries]
 bignum = { module = "com.ionspin.kotlin:bignum", version.ref = "bignum" }
