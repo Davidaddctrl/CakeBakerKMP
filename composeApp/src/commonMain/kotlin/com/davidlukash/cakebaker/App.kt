@@ -8,7 +8,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.ui.DebugConsole
+import com.davidlukash.cakebaker.ui.DebugPopup
+import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.GameTheme
 import com.davidlukash.cakebaker.ui.ScaleViewport
 import com.davidlukash.cakebaker.ui.navigation.Navigation
@@ -19,6 +20,7 @@ const val VERSION = "Alpha"
 
 
 const val usingDebugSidebar = false
+const val usingDebugPopup = true
 
 @Composable
 @Preview
@@ -32,7 +34,7 @@ fun App() {
             mainViewModel.uiViewModel.updateTrueDensity(density)
         }
         Box(
-            modifier = Modifier.weight(3f).fillMaxSize(),
+            modifier = Modifier.weight(1f).fillMaxSize(),
         ) {
             GameTheme {
                 ScaleViewport(2000.dp, 1080.dp, doAspectRatio = false) {
@@ -40,6 +42,7 @@ fun App() {
                 }
             }
         }
-        if (usingDebugSidebar) DebugConsole()
+        if (usingDebugPopup) DebugPopup()
+        if (usingDebugSidebar) DebugSideBar()
     }
 }
