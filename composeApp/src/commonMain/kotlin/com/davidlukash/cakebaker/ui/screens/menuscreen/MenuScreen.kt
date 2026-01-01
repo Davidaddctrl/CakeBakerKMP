@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 import com.davidlukash.cakebaker.ui.LocalFontFamily
+import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
+import com.davidlukash.cakebaker.ui.navigation.SaveScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
@@ -38,11 +40,19 @@ fun MenuScreen() {
         ) {
             LargeThemedButton(
                 onClick = {
-                    navigationViewModel.navigateWithFade(Screen.Kitchen)
+                    navigationViewModel.navigateWithFade(KitchenScreen)
                 },
                 modifier = Modifier.width(480.dp)
             ) {
                 Text("Play", style = theme.buttonTextStyle, fontFamily = LocalFontFamily.current)
+            }
+            LargeThemedButton(
+                onClick = {
+                    navigationViewModel.navigateWithFade(SaveScreen)
+                },
+                modifier = Modifier.width(480.dp)
+            ) {
+                Text("Saves", style = theme.buttonTextStyle, fontFamily = LocalFontFamily.current)
             }
         }
     }
