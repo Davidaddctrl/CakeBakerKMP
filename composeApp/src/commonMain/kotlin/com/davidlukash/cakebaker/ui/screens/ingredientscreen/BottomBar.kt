@@ -20,7 +20,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.ui.ImageButton
 import com.davidlukash.cakebaker.ui.ResourceImage
+import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
+import com.davidlukash.cakebaker.ui.navigation.UpgradeScreen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
@@ -36,23 +38,23 @@ fun BottomBar() {
     ) {
         ImageButton(
             onClick = {
-                uiViewModel.navigateWithFade(Screen.Kitchen)
+                uiViewModel.navigateWithFade(KitchenScreen)
             },
         ) {
             ResourceImage(
                 theme.nameToImage("Oven"),
-                modifier = Modifier.height(320.dp)
+                modifier = Modifier.height(280.dp)
             )
         }
 
         ImageButton(
             onClick = {
-                uiViewModel.navigateWithFade(Screen.Upgrade)
+                uiViewModel.navigateWithFade(UpgradeScreen)
             },
         ) {
             ResourceImage(
                 theme.nameToImage("Upgrade Shop"),
-                modifier = Modifier.height(320.dp)
+                modifier = Modifier.height(280.dp)
             )
         }
     }
