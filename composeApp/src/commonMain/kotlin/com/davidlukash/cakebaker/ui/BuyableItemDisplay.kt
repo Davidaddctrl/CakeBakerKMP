@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -12,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.Item
 import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.toEngNotation
@@ -32,16 +32,16 @@ fun BuyableItemDisplay(item: Item) {
         modifier = Modifier.padding(16.dp)
     ) {
         ResourceImage(
-            theme.nameToImage(item.name) ?: ImageData(),
+            theme.nameToImage(item.name),
             modifier = Modifier.height(128.dp)
         )
         Container(
-            modifier = Modifier.width(216.dp)
+            modifier = Modifier.defaultMinSize(minWidth = 208.dp)
         ) {
             Column {
                 Text(
                     item.name,
-                    style = theme.verySmallLabelStyle,
+                    style = theme.smallLabelStyle,
                     fontFamily = LocalFontFamily.current,
                 )
                 Text(
