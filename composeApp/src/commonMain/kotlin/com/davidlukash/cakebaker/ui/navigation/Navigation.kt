@@ -25,15 +25,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.toRoute
 import com.davidlukash.cakebaker.ui.Background
 import com.davidlukash.cakebaker.ui.MessageManager
 import com.davidlukash.cakebaker.ui.screens.cakescreen.CakeScreen
 import com.davidlukash.cakebaker.ui.screens.ingredientscreen.IngredientScreen
 import com.davidlukash.cakebaker.ui.screens.kitchenscreen.KitchenScreen
 import com.davidlukash.cakebaker.ui.screens.menuscreen.MenuScreen
+import com.davidlukash.cakebaker.ui.screens.savescreen.SaveScreen
 import com.davidlukash.cakebaker.ui.screens.upgradescreen.UpgradeScreen
 
 const val transitionDuration = 750
@@ -117,6 +116,13 @@ fun Navigation() {
                 NormalScreenMessageManager(lazyListState = lazyListState) {
                     Background {
                         UpgradeScreen()
+                    }
+                }
+            }
+            composable<SaveScreen> {
+                NormalScreenMessageManager(lazyListState = lazyListState) {
+                    Background {
+                        SaveScreen()
                     }
                 }
             }
