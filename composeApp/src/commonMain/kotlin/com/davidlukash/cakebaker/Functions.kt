@@ -1,29 +1,35 @@
 package com.davidlukash.cakebaker
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
-import kotlin.compareTo
 import kotlin.math.floor
 import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-import kotlin.toString
 
-fun BigDecimal.toDouble(): Double {
-    return ((this.roundToDigitPositionAfterDecimalPoint(2L, RoundingMode.FLOOR) * 100).longValue().toDouble() / 100)
-}
+val globalDecimalMode = DecimalMode(
+    decimalPrecision = 34,
+    roundingMode = RoundingMode.FLOOR,
+    scale = 1
+)
 
-fun BigDecimal.log10Int(): Int {
+fun BigDecimal.log10(): Int {
     return this.toString().split("+")[1].toInt()
 }
 
@@ -47,25 +53,20 @@ fun Boolean.toInt() = if (this) 1 else 0
 fun Int.toBoolean() = this == 1
 
 fun toEngNotation(number: BigDecimal): String {
-    if (number < 1000) {
-        return number.toDouble().toString().let {
+    if (number < 1000.toBigDecimal()) {
+        return number.toPlainString().let {
             if (it.endsWith(".0")) {
                 it.removeSuffix(".0")
             } else it
         }
     }
     val suffixes = listOf("", "K", "M", "B", "T", "Qa", "Qt", "Sx", "Sp", "Oc", "No")
-    val index = floor(number.log10Int() / 3.0).toInt()
+    val index = floor(number.log10().toDouble() / 3.0).toInt()
     val scaled = (number.divide(
-        1000.0.pow(index).toBigDecimal(), decimalMode = DecimalMode(4, roundingMode = RoundingMode.FLOOR)
-    )).roundToDigitPosition(4)
-        .toDouble()
-    val string = if (scaled % 1.0 == 0.0) {
-        scaled.toString()
-    } else {
-        val rounded = floor(scaled * 10) / 10
-        rounded.toString()
-    }.let {
+        1000.0.pow(index).toBigDecimal(),
+        decimalMode = globalDecimalMode
+    )).roundToDigitPositionAfterDecimalPoint(1L, RoundingMode.FLOOR)
+    val string = scaled.toPlainString().let {
         if (it.endsWith(".0")) {
             it.removeSuffix(".0")
         } else it
@@ -130,7 +131,31 @@ fun secondsToString(totalSeconds: Double): String {
 
 val json = Json {
     prettyPrint = true
+    allowStructuredMapKeys = true
 }
 
 expect fun Modifier.horizontalDragCursor(): Modifier
 expect fun Modifier.verticalDragCursor(): Modifier
+
+fun Modifier.horizontalRowScroll(coroutineScope: CoroutineScope, scrollState: ScrollState, reversed: Boolean = false): Modifier {
+    return this.pointerInput(Unit) {
+        detectHorizontalDragGestures { change, dragAmount ->
+            coroutineScope.launch {
+                scrollState.scrollBy(if (reversed) dragAmount else -dragAmount)
+            }
+        }
+    }
+        .pointerInput(Unit) {
+            awaitPointerEventScope {
+                while (true) {
+                    val event = awaitPointerEvent()
+                    val scrollDelta = event.changes.firstOrNull()?.scrollDelta?.y
+                    if (scrollDelta != null && scrollDelta != 0f) {
+                        coroutineScope.launch {
+                            scrollState.scrollBy(if (reversed) (scrollDelta * -96) else (scrollDelta * 96))
+                        }
+                    }
+                }
+            }
+        }
+}
