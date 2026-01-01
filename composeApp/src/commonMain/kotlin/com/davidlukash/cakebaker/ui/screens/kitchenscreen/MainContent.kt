@@ -25,7 +25,9 @@ import com.davidlukash.cakebaker.ui.ImageButton
 import com.davidlukash.cakebaker.ui.LocalFontFamily
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.ResourceImage
+import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
+import com.davidlukash.cakebaker.ui.navigation.UpgradeScreen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import kotlin.math.floor
 
@@ -39,6 +41,8 @@ fun MainContent(innerPadding: PaddingValues) {
     val progress by dataViewModel.ovenProgress.collectAsState()
     val canBake by dataViewModel.canBakeFlow.collectAsState(initial = false)
     val ovenRunning by dataViewModel.ovenRunning.collectAsState(initial = true)
+    val upgrades by dataViewModel.upgradesFlow.collectAsState(initial = emptyList())
+    val fasterOvenLevel = upgrades.find { it.name == "Faster Oven" }?.level?.toDouble() ?: 0.0
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 16.dp),
@@ -47,12 +51,11 @@ fun MainContent(innerPadding: PaddingValues) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            //TODO: Once upgrades implemented allow dynamic oven speed so there is an accurate second count
-            Box(
+             Box(
                 contentAlignment = Alignment.Center,
             ) {
                 ProgressBar(progress)
-                val ovenTime = 5.0
+                val ovenTime = 5.0 - fasterOvenLevel / 10.0
                 if (ovenRunning)
                     Text(
                         "${floor((1.0 - progress) * ovenTime * 10.0) / 10.0} seconds remaining",
@@ -69,17 +72,17 @@ fun MainContent(innerPadding: PaddingValues) {
             ) {
                 ResourceImage(
                     theme.nameToImage("Oven"),
-                    modifier = Modifier.height(320.dp)
+                    modifier = Modifier.height(280.dp)
                 )
             }
             ImageButton(
                 onClick = {
-                    uiViewModel.navigateWithFade(Screen.Ingredient)
+                    uiViewModel.navigateWithFade(IngredientScreen)
                 }
             ) {
                 ResourceImage(
                     theme.nameToImage("Ingredient Shop"),
-                    modifier = Modifier.height(320.dp)
+                    modifier = Modifier.height(280.dp)
                 )
             }
         }
@@ -88,12 +91,12 @@ fun MainContent(innerPadding: PaddingValues) {
         InfoPanel()
         ImageButton(
             onClick = {
-                uiViewModel.navigateWithFade(Screen.Upgrade)
+                uiViewModel.navigateWithFade(UpgradeScreen)
             }
         ) {
             ResourceImage(
                 theme.nameToImage("Upgrade Shop"),
-                modifier = Modifier.height(320.dp)
+                modifier = Modifier.height(280.dp)
             )
         }
     }
