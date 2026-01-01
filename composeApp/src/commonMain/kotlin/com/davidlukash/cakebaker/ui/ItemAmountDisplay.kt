@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,11 +24,11 @@ fun ItemAmountDisplay(item: Item) {
     val mainViewModel = LocalMainViewModel.current
     val themeViewModel = mainViewModel.themeViewModel
     val theme by themeViewModel.theme.collectAsState()
-    val image = theme.nameToImage(item.name)!!
+    val image = theme.nameToImage(item.name)
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.height(224.dp)//.border(2.dp, Color.Red)
+        modifier = Modifier.height(224.dp)
     ) {
         Text(
             item.name.replace(" ", "\n"),
