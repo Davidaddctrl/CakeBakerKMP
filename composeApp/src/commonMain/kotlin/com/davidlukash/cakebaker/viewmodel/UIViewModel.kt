@@ -9,7 +9,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.data.ConsoleType
+import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.ui.LocalFontFamily
+import com.davidlukash.cakebaker.ui.navigation.FadeScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
 import kotlinx.coroutines.delay
@@ -29,7 +32,28 @@ class UIViewModel : ViewModel() {
 
     private val _currentScreen = MutableStateFlow<Screen?>(null)
     val currentScreen = _currentScreen.asStateFlow()
+
+    private val _logs = MutableStateFlow(listOf<Log>())
+    val logs = _logs.asStateFlow()
+
+    private val _debugConsole = MutableStateFlow(ConsoleType.SIDEBAR)
+    val debugConsole = _debugConsole.asStateFlow()
+
     private var nextId = 0
+
+    fun appendLog(log: Log) {
+        viewModelScope.launch {
+            _logs.emit(
+                _logs.value + log
+            )
+        }
+    }
+
+    fun setDebugConsole(type: ConsoleType) {
+        viewModelScope.launch {
+            _debugConsole.emit(type)
+        }
+    }
 
     fun addPopup(content: @Composable ColumnScope.() -> Unit) {
         viewModelScope.launch {
@@ -64,7 +88,7 @@ class UIViewModel : ViewModel() {
 
     fun navigateWithFade(destination: Screen?) {
         viewModelScope.launch {
-            navigateTo(Screen.Fade)
+            navigateTo(FadeScreen)
             delay(750)
             navigateTo(destination)
         }
@@ -74,7 +98,7 @@ class UIViewModel : ViewModel() {
     fun updateCurrentScreen(screen: Screen) {
         viewModelScope.launch {
             val previousScreen = _currentScreen.value
-            if (previousScreen == Screen.Fade) delay(transitionDuration.toLong())
+            if (previousScreen == FadeScreen) delay(transitionDuration.toLong())
             _currentScreen.emit(screen)
         }
     }

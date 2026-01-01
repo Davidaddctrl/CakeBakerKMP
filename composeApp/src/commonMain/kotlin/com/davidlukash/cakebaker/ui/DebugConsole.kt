@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,14 +52,18 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
 import com.davidlukash.cakebaker.currentLocalTime
+import com.davidlukash.cakebaker.data.Log
+import com.davidlukash.cakebaker.data.LogType
 import com.davidlukash.cakebaker.debugTimestampFormat
 import com.davidlukash.cakebaker.horizontalDragCursor
 import com.davidlukash.cakebaker.json
 import com.davidlukash.cakebaker.verticalDragCursor
 import com.davidlukash.cakebaker.viewmodel.CakeBakerScope
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import com.davidlukash.jsonmath.data.Expression
 import com.davidlukash.jsonmath.engine.basic.OriginNode
 import com.davidlukash.jsonmath.engine.basic.toTraceString
 import com.davidlukash.jsonmath.engine.normal.EnumScopeType
@@ -76,12 +82,6 @@ val red = Color.Red
 val green = Color.Green
 val textColor = Color.White
 
-data class Log @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class) constructor(
-    val message: String,
-    val color: Color,
-    val timestamp: LocalTime = currentLocalTime(),
-    val uuid: Uuid = Uuid.random()
-)
 
 @Composable
 fun DebugSideBar() {
@@ -107,56 +107,56 @@ fun DebugPopup() {
     var height by remember { mutableStateOf(384.dp) }
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
 
-    Popup(
-        offset = IntOffset(
-            offset.x.roundToInt(),
-            offset.y.roundToInt()
-        )
-    ) {
-        Box {
-            Spacer(
-                modifier = Modifier.height(height).width(8.dp).draggable(
-                    orientation = Orientation.Horizontal,
-                    state = rememberDraggableState { delta ->
-                        width -= delta.dp
-                        offset = offset.copy(
-                            x = offset.x + delta
-                        )
-                    }
-                ).horizontalDragCursor().align(Alignment.TopStart)
-            )
-            Spacer(
-                modifier = Modifier.height(height).width(8.dp).draggable(
-                    orientation = Orientation.Horizontal,
-                    state = rememberDraggableState { delta ->
-                        width += delta.dp
-                    }
-                ).horizontalDragCursor().align(Alignment.TopEnd)
-            )
-            Spacer(
-                modifier = Modifier.width(width).height(8.dp).draggable(
-                    orientation = Orientation.Vertical,
-                    state = rememberDraggableState { delta ->
-                        height += delta.dp
-                    }
-                ).verticalDragCursor().align(Alignment.BottomStart)
-            )
-            Spacer(
-                modifier = Modifier.width(width).height(32.dp).draggable2D(
-                    state = rememberDraggable2DState { deltaOffset ->
-                        offset = offset.copy(
-                            x = offset.x + deltaOffset.x,
-                            y = offset.y + deltaOffset.y
-                        )
-                    }
-                ).pointerHoverIcon(
-                    PointerIcon.Hand
-                ).align(Alignment.TopStart)
-            )
-            DebugPanel(
-                modifier = Modifier.size(width, height).clip(RoundedCornerShape(8.dp))
+    Box(
+        modifier = Modifier.offset {
+            IntOffset(
+                offset.x.roundToInt(),
+                offset.y.roundToInt()
             )
         }
+    ) {
+        Spacer(
+            modifier = Modifier.height(height).width(8.dp).draggable(
+                orientation = Orientation.Horizontal,
+                state = rememberDraggableState { delta ->
+                    width -= delta.dp
+                    offset = offset.copy(
+                        x = offset.x + delta
+                    )
+                }
+            ).horizontalDragCursor().align(Alignment.TopStart)
+        )
+        Spacer(
+            modifier = Modifier.height(height).width(8.dp).draggable(
+                orientation = Orientation.Horizontal,
+                state = rememberDraggableState { delta ->
+                    width += delta.dp
+                }
+            ).horizontalDragCursor().align(Alignment.TopEnd)
+        )
+        Spacer(
+            modifier = Modifier.width(width).height(8.dp).draggable(
+                orientation = Orientation.Vertical,
+                state = rememberDraggableState { delta ->
+                    height += delta.dp
+                }
+            ).verticalDragCursor().align(Alignment.BottomStart)
+        )
+        Spacer(
+            modifier = Modifier.width(width).height(32.dp).draggable2D(
+                state = rememberDraggable2DState { deltaOffset ->
+                    offset = offset.copy(
+                        x = offset.x + deltaOffset.x,
+                        y = offset.y + deltaOffset.y
+                    )
+                }
+            ).pointerHoverIcon(
+                PointerIcon.Hand
+            ).align(Alignment.TopStart)
+        )
+        DebugPanel(
+            modifier = Modifier.size(width, height).clip(RoundedCornerShape(8.dp))
+        )
     }
 }
 
@@ -166,12 +166,12 @@ fun DebugPanel(modifier: Modifier) {
 
     val mainViewModel = LocalMainViewModel.current
     val engine = mainViewModel.engine
-    var logs by remember { mutableStateOf(listOf<Log>()) }
+    val uiViewModel = mainViewModel.uiViewModel
+    val logs by uiViewModel.logs.collectAsState()
     var input by remember { mutableStateOf("") }
     val lazyListState = rememberLazyListState()
-    val globalScope = mainViewModel.globalScope
+    val globalScope = mainViewModel.dataViewModel.globalScope
     val localScope = remember { CakeBakerScope(ScopeType(EnumScopeType.LOCAL), mainViewModel.dataViewModel) }
-    val origin = remember { OriginNode("Debug Console") }
 
     LaunchedEffect(logs) {
         if (logs.isNotEmpty()) lazyListState.scrollToItem(logs.size - 1)
@@ -209,7 +209,15 @@ fun DebugPanel(modifier: Modifier) {
                                         append(debugTimestampFormat.format(log.timestamp))
                                         append(" ")
                                     }
-                                    withStyle(style = SpanStyle(color = log.color)) {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            color = when (log.logType) {
+                                                LogType.ERROR -> red
+                                                LogType.RESULT -> green
+                                                LogType.MESSAGE -> textColor
+                                            }
+                                        )
+                                    ) {
                                         append(log.message)
                                     }
                                 }
@@ -239,18 +247,19 @@ fun DebugPanel(modifier: Modifier) {
             )
             Button(
                 onClick = {
-                    logs = logs + Log(input, textColor)
+                    uiViewModel.appendLog(Log(input, LogType.MESSAGE))
                     try {
+                        val code = json.decodeFromString<Expression>(input)
                         val output = engine.evaluateExpression(
-                            json.decodeFromString(input),
+                            code,
                             listOf(globalScope, localScope),
-                            listOf(origin)
+                            listOf(OriginNode("Debug Console", listOf(code)))
                         )
-                        logs = logs + Log("Result: $output", green)
+                        uiViewModel.appendLog(Log("Result: $output", LogType.RESULT))
                     } catch (e: LanguageException) {
-                        logs = logs + Log(e.toString() + e.origins?.toTraceString(), red)
+                        uiViewModel.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
                     } catch (e: Exception) {
-                        logs = logs + Log(e.toString() + e.stackTraceToString(), red)
+                        uiViewModel.appendLog(Log(e.toString() + e.stackTraceToString(), LogType.ERROR))
                     }
                 },
                 modifier = Modifier.align(Alignment.BottomEnd).zIndex(2f).offset(x = (-4).dp, y = (-4).dp),
