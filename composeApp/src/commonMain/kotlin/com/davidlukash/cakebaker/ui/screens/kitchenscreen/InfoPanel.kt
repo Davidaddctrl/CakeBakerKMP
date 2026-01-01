@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.toBoolean
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LocalFontFamily
@@ -43,6 +44,8 @@ fun RowScope.InfoPanel() {
     val currentCakeTier by dataViewModel.currentCakeTier.collectAsState()
     val cakePrices by dataViewModel.cakePricesFlow.collectAsState(initial = emptyList())
     val theme by themeViewModel.theme.collectAsState()
+    val upgrades by dataViewModel.upgradesFlow.collectAsState()
+    val autoOven = upgrades.find { it.name == "Auto Oven" }?.level?.toBoolean() ?: false
 
     Container(
         modifier = Modifier.weight(1f).fillMaxWidth(),
@@ -119,7 +122,7 @@ fun RowScope.InfoPanel() {
                 value = autoOvenEnabled,
                 onText = "On",
                 offText = "Off",
-                //enabled = false,
+                enabled = autoOven,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 dataViewModel.setAutoOvenEnabled(it)
