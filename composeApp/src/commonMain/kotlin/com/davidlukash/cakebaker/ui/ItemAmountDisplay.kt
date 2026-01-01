@@ -1,11 +1,9 @@
 package com.davidlukash.cakebaker.ui
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,7 +26,7 @@ fun ItemAmountDisplay(item: Item) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.height(224.dp)
+        modifier = Modifier.defaultMinSize(minHeight = 224.dp)
     ) {
         Text(
             item.name.replace(" ", "\n"),
