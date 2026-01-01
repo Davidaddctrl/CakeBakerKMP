@@ -30,7 +30,7 @@ fun HorizontalScrollBar(scrollState: ScrollState, coroutineScope: CoroutineScope
     val mainViewModel = LocalMainViewModel.current
     val density = LocalDensity.current
     val viewportWidth = density.run { scrollState.viewportSize.toDp() }
-    val maxValue = density.run { scrollState.maxValue.toDp() }
+    val maxValue = density.run { scrollState.maxValue.toDp() } + viewportWidth
     var scrollBarWidth by remember { mutableStateOf(0.dp) }
     val value = density.run { scrollState.value.toDp() }
     val visibleFraction = viewportWidth / maxValue
@@ -46,11 +46,11 @@ fun HorizontalScrollBar(scrollState: ScrollState, coroutineScope: CoroutineScope
             Surface(
                 color = theme.buttonTheme.containerColor,
                 modifier = Modifier.fillMaxWidth(visibleFraction).height(32.dp)
-                    .absoluteOffset(x = value * fraction)
+                    .absoluteOffset(x = value * visibleFraction)
                     .pointerInput(Unit) {
-                        detectHorizontalDragGestures { change, dragAmount ->
+                        detectHorizontalDragGestures { _, dragAmount ->
                             coroutineScope.launch {
-                                scrollState.scrollBy(dragAmount / fraction)
+                                scrollState.scrollBy((dragAmount) / visibleFraction)
                             }
                         }
                     }.border(6.dp, theme.buttonTheme.borderColor).onPlaced {
