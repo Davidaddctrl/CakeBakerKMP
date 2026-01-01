@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.davidlukash.cakebaker.ui.ResourceImage
+import com.davidlukash.cakebaker.ui.navigation.MenuScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import kotlinx.coroutines.delay
@@ -25,7 +26,7 @@ fun CakeScreen() {
 
     LaunchedEffect(Unit) {
         delay(2000)
-        navigationViewModel.navigateWithFade(Screen.Menu)
+        navigationViewModel.navigateWithFade(MenuScreen)
     }
 
     Scaffold(
