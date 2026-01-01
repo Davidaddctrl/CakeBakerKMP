@@ -1,35 +1,45 @@
 package com.davidlukash.cakebaker.ui.screens.ingredientscreen
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.ui.BuyableItemDisplay
+import com.davidlukash.cakebaker.ui.HorizontalScrollBar
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun MainContent(innerPadding: PaddingValues) {
+fun BoxScope.MainContent() {
     val mainViewModel = LocalMainViewModel.current
     val dataViewModel = mainViewModel.dataViewModel
     val ingredients by dataViewModel.ingredientsFlow.collectAsState(initial = emptyList())
-    Row(
-        modifier = Modifier.padding(innerPadding).fillMaxSize(),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically,
+    val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    Column(
+        modifier = Modifier.align(Alignment.Center)
     ) {
-        ingredients.forEach { ingredient ->
-            key(ingredient.name) {
-                BuyableItemDisplay(ingredient)
+        Row(
+            modifier = Modifier.horizontalScroll(scrollState)
+                .horizontalRowScroll(coroutineScope, scrollState).align(Alignment.CenterHorizontally).fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            ingredients.forEach { ingredient ->
+                key(ingredient.name) {
+                    BuyableItemDisplay(ingredient)
+                }
             }
         }
+        HorizontalScrollBar(scrollState, coroutineScope)
     }
 }
