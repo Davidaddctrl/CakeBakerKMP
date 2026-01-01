@@ -17,18 +17,19 @@ import com.davidlukash.cakebaker.ui.BuyableItemDisplay
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun MainContent(innerPadding: PaddingValues) {
+fun MainContent(innerPadding: PaddingValues, currentPage: String) {
     val mainViewModel = LocalMainViewModel.current
     val dataViewModel = mainViewModel.dataViewModel
-    val ingredients by dataViewModel.ingredientsFlow.collectAsState(initial = emptyList())
+    val upgrades by dataViewModel.upgradesFlow.collectAsState()
+    val filteredUpgrades = upgrades.filter { it.pageName == currentPage }
     Row(
         modifier = Modifier.padding(innerPadding).fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ingredients.forEach { ingredient ->
-            key(ingredient.name) {
-                BuyableItemDisplay(ingredient)
+        filteredUpgrades.forEach { upgrade ->
+            key(upgrade.name) {
+                UpgradeDisplay(upgrade)
             }
         }
     }
