@@ -1,12 +1,9 @@
-package com.davidlukash.cakebaker.data
+package com.davidlukash.cakebaker.data.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cakebaker.composeapp.generated.resources.Res
-import cakebaker.composeapp.generated.resources.Roboto
 import cakebaker.composeapp.generated.resources.baking_powder
 import cakebaker.composeapp.generated.resources.butter
 import cakebaker.composeapp.generated.resources.choc_cake
@@ -21,7 +18,6 @@ import cakebaker.composeapp.generated.resources.flour
 import cakebaker.composeapp.generated.resources.honey_cake
 import cakebaker.composeapp.generated.resources.honey_pot
 import cakebaker.composeapp.generated.resources.ingredient_shop
-import cakebaker.composeapp.generated.resources.missing
 import cakebaker.composeapp.generated.resources.money
 import cakebaker.composeapp.generated.resources.oven
 import cakebaker.composeapp.generated.resources.sugar
@@ -29,32 +25,14 @@ import cakebaker.composeapp.generated.resources.upgrade_shop
 import cakebaker.composeapp.generated.resources.vanilla_cake
 import cakebaker.composeapp.generated.resources.vanilla_extract
 import cakebaker.composeapp.generated.resources.vcr_osd_mono
-import org.jetbrains.compose.resources.Font
+import com.davidlukash.cakebaker.data.ImageData
+import com.davidlukash.cakebaker.data.theme.ButtonTheme
+import com.davidlukash.cakebaker.data.theme.ProgressBarTheme
 import org.jetbrains.compose.resources.FontResource
 
 data class Theme(
     val backgroundColor: Color,
     val accentColor: Color,
-//    val butterImage: ImageData,
-//    val eggImage: ImageData,
-//    val flourImage: ImageData,
-//    val sugarImage: ImageData,
-//    val vanillaExtractImage: ImageData,
-//    val bakingPowderImage: ImageData,
-//    val cocoaPowderImage: ImageData,
-//    val honeyPotImage: ImageData,
-//    val vanillaCakeImage: ImageData,
-//    val chocolateCakeImage: ImageData,
-//    val honeyCakeImage: ImageData,
-//    val moneyImage: ImageData,
-//    val ingredientShopImage: ImageData,
-//    val upgradeShopImage: ImageData,
-//    val ovenImage: ImageData,
-//    val faceHappy: ImageData,
-//    val faceMedium: ImageData,
-//    val faceNeutral: ImageData,
-//    val faceNeutralSad: ImageData,
-//    val faceSad: ImageData,
     val nameToImageMap: Map<String, ImageData>,
     val font: FontResource,
     val titleStyle: TextStyle,

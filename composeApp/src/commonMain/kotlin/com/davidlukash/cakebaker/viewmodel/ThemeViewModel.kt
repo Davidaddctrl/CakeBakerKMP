@@ -2,7 +2,7 @@ package com.davidlukash.cakebaker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.davidlukash.cakebaker.data.Theme
+import com.davidlukash.cakebaker.data.theme.Theme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

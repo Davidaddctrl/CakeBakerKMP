@@ -1,7 +1,6 @@
-package com.davidlukash.cakebaker.data
+package com.davidlukash.cakebaker.data.theme
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 
 data class ButtonTheme(
     val containerColor: Color,
