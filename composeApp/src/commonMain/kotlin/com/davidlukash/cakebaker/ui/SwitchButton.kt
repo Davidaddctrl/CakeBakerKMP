@@ -39,7 +39,7 @@ fun SwitchButton(
     Surface(
         color = theme.containerBorderColor,
         border = BorderStroke(8.dp, theme.containerBorderColor),
-        modifier = Modifier.clickable(onClick = { onClick(!value) }),
+        modifier = Modifier.clickable(onClick = { onClick(!value) }, enabled = enabled),
     ) {
         Row(modifier = modifier.height(48.dp)) {
             Box(modifier = Modifier.weight(1f)) {
