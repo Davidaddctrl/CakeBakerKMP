@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker.data
 
+import androidx.collection.emptyObjectList
 import com.davidlukash.jsonmath.createNullObject
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.Expression
@@ -27,9 +28,7 @@ data class Upgrade(
             createObject("name") to createObject(name),
             createObject("price") to createObject(price.toBigDecimal()),
             createObject("cakeTier") to createObject(cakeTier.toBigDecimal()),
-            createObject("maxLevel") to (
-                    maxLevel?.let { createObject(it.toBigDecimal()) } ?: createNullObject()
-                    ),
+            createObject("maxLevel") to createObject(maxLevel?.toBigDecimal()),
             createObject("onBuy") to createObject(onBuy.map { createObject(it) }),
             createObject("level") to createObject(level.toBigDecimal()),
             createObject("parameters") to createObject(
@@ -69,6 +68,10 @@ data class Upgrade(
                     "List[Expression]",
                 )
             }
+            val parametersException = createInvalidTypeException(
+                "parameters",
+                "Dictionary[String, Any?]"
+            )
             return Upgrade(
                 pageName = dictionary[createObject("pageName")]?.asString() ?: throw createInvalidTypeException(
                     "pageName",
@@ -82,29 +85,26 @@ data class Upgrade(
                     "name",
                     ObjectType.STRING
                 ),
-                price = (dictionary[createObject("price")]?.asNumber() ?: throw createInvalidTypeException(
+                price = (dictionary[createObject("price")]?.asInteger() ?: throw createInvalidTypeException(
                     "price",
-                    ObjectType.NUMBER
-                )).let {
-                    if (!it.isWholeNumber()) throw createInvalidTypeException("price", "Integer")
-                    it.intValue(true)
-                },
-                cakeTier = (dictionary[createObject("cakeTier")]?.asNumber() ?: throw createInvalidTypeException(
+                    "Integer"
+                )).intValue(true),
+                cakeTier = (dictionary[createObject("cakeTier")]?.asInteger() ?: throw createInvalidTypeException(
                     "cakeTier",
                     "Integer"
-                )).let {
-                    if (!it.isWholeNumber()) throw createInvalidTypeException("cakeTier", "Integer")
-                    it.intValue(true)
-                },
+                )).intValue(true),
                 maxLevel = maxLevel,
                 onBuy = onBuy,
-                level = (dictionary[createObject("level")]?.asNumber() ?: throw createInvalidTypeException(
-                    "level",
-                    ObjectType.NUMBER
-                )).let {
-                    if (!it.isWholeNumber()) throw createInvalidTypeException("level", "Integer")
-                    it.intValue(true)
-                },
+                level =
+                    (dictionary[createObject("level")] ?: createObject(0.toBigDecimal())).asInteger()
+                        ?.intValue(true) ?: throw createInvalidTypeException(
+                        "level",
+                        ObjectType.NUMBER
+                    ),
+                parameters = (dictionary[createObject("parameters")] ?: createObject(mapOf())).asDictionary()
+                    ?.map { (key, value) ->
+                        (key.asString() ?: throw parametersException) to value
+                    }?.toMap() ?: throw parametersException
             )
         }
 
