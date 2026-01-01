@@ -46,7 +46,7 @@ fun NormalScreenMessageManager(lazyListState: LazyListState, content: @Composabl
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        if (currentScreen is Screen.Fade) MessageManager(lazyListState = lazyListState)
+        if (currentScreen is FadeScreen) MessageManager(lazyListState = lazyListState)
         else Popup(
             alignment = Alignment.BottomCenter,
         ) {
@@ -69,51 +69,51 @@ fun Navigation() {
 
     LaunchedEffect(currentScreen) {
         currentScreen?.let {
-            uiViewModel.updateCurrentScreen(it)
+            uiViewModel.updateCurrentScreen(it as Screen)
         }
     }
 
     LaunchedEffect(pendingScreen) {
         pendingScreen?.let {
-            navController.navigate(it)
+            navController.navigate(it as Screen)
         }
     }
     val navGraph = remember(navController) {
-        navController.createGraph(startDestination = Screen.Kitchen) {
-            composable<Screen.Cake> {
+        navController.createGraph(startDestination = KitchenScreen) {
+            composable<CakeScreen> {
                 NormalScreenMessageManager(lazyListState = lazyListState) {
                     Background {
                         CakeScreen()
                     }
                 }
             }
-            composable<Screen.Fade> {
+            composable<FadeScreen> {
                 Box(
                     modifier = Modifier.fillMaxSize().background(Color.Black),
                 )
             }
-            composable<Screen.Menu> {
+            composable<MenuScreen> {
                 NormalScreenMessageManager(lazyListState = lazyListState) {
                     Background {
                         MenuScreen()
                     }
                 }
             }
-            composable<Screen.Kitchen> {
+            composable<KitchenScreen> {
                 NormalScreenMessageManager(lazyListState = lazyListState) {
                     Background {
                         KitchenScreen()
                     }
                 }
             }
-            composable<Screen.Ingredient> {
+            composable<IngredientScreen> {
                 NormalScreenMessageManager(lazyListState = lazyListState) {
                     Background {
                         IngredientScreen()
                     }
                 }
             }
-            composable<Screen.Upgrade> {
+            composable<UpgradeScreen> {
                 NormalScreenMessageManager(lazyListState = lazyListState) {
                     Background {
                         UpgradeScreen()
