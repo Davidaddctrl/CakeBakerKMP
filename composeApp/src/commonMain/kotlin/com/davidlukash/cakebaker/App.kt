@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.GameTheme
@@ -16,16 +19,15 @@ import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+
 const val VERSION = "Alpha"
-
-
-const val usingDebugSidebar = false
-const val usingDebugPopup = true
 
 @Composable
 @Preview
 fun App() {
     val mainViewModel = LocalMainViewModel.current
+    val uiViewModel = mainViewModel.uiViewModel
+    val debugConsole by uiViewModel.debugConsole.collectAsState()
     Row(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -41,8 +43,8 @@ fun App() {
                     Navigation()
                 }
             }
+            if (debugConsole == ConsoleType.POPUP) DebugPopup()
         }
-        if (usingDebugPopup) DebugPopup()
-        if (usingDebugSidebar) DebugSideBar()
+        if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()
     }
 }
