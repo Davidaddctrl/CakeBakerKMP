@@ -2,18 +2,28 @@ package com.davidlukash.cakebaker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.Item
 import com.davidlukash.cakebaker.data.ItemType
+import com.davidlukash.cakebaker.data.Log
+import com.davidlukash.cakebaker.data.LogType
 import com.davidlukash.cakebaker.data.Order
 import com.davidlukash.cakebaker.data.OrderCakeSettings
 import com.davidlukash.cakebaker.data.OrderFactory
 import com.davidlukash.cakebaker.data.Upgrade
+import com.davidlukash.cakebaker.globalDecimalMode
 import com.davidlukash.cakebaker.mapDouble
 import com.davidlukash.cakebaker.toBoolean
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.weightedRandomInt
+import com.davidlukash.jsonmath.buildExpressionList
+import com.davidlukash.jsonmath.createObject
+import com.davidlukash.jsonmath.data.Expression
+import com.davidlukash.jsonmath.engine.basic.OriginNode
+import com.davidlukash.jsonmath.engine.basic.toTraceString
 import com.davidlukash.jsonmath.engine.normal.EnumScopeType
+import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.davidlukash.jsonmath.engine.normal.ScopeType
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
@@ -30,11 +40,14 @@ import kotlin.math.ceil
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.uuid.ExperimentalUuidApi
 
 class DataViewModel(
     val uiViewModel: UIViewModel,
     val engine: CakeBakerEngine
 ) : ViewModel() {
+    val globalScope = CakeBakerScope(ScopeType(EnumScopeType.GLOBAL), this)
+
     init {
         loop()
     }
@@ -257,11 +270,11 @@ class DataViewModel(
 
     val itemMoney: Item
         get() {
-            return _allItems.value.find { it.name == "Money" }!!
+            return _allItems.value.find { it.name == "Money" } ?: Item("Money", ItemType.CURRENCY, BigDecimal.ZERO)
         }
 
     val itemMoneyFlow = allItemsFlow.map { items ->
-        items.find { it.name == "Money" }!!
+        items.find { it.name == "Money" } ?: Item("Money", ItemType.CURRENCY, BigDecimal.ZERO)
     }
 
     private val _currentCakeTier = MutableStateFlow(1)
@@ -280,16 +293,15 @@ class DataViewModel(
                 price = 1,
                 cakeTier = 1,
                 maxLevel = 45,
-                onBuy = listOf()
-//                onLoad = listOf(),
-//                onBuy = createLinearOnBuy("Faster Oven"),
-//                parameters = mapOf(
-//                    "shouldTierChange" to 1.toBigDecimal(),
-//                    "tierChangeLevel" to 35.toBigDecimal(),
-//                    "newTier" to 2.toBigDecimal(),
-//                    "priceIncrement" to 1.toBigDecimal(),
-//                    "initialPrice" to 1.toBigDecimal(),
-//                    "levelsUntilPriceIncrease" to 15.toBigDecimal(),
+                onBuy = createLinearOnBuy(),
+                parameters = mapOf(
+                    "shouldTierChange" to createObject(true),
+                    "tierChangeLevel" to createObject(35.toBigDecimal()),
+                    "newTier" to createObject(2.toBigDecimal()),
+                    "priceIncrement" to createObject(1.toBigDecimal()),
+                    "initialPrice" to createObject(1.toBigDecimal()),
+                    "levelsUntilPriceIncrease" to createObject(15.toBigDecimal()),
+                )
             ),
             Upgrade(
                 pageName = "Oven",
@@ -298,7 +310,15 @@ class DataViewModel(
                 price = 3,
                 cakeTier = 1,
                 maxLevel = 1,
-                onBuy = listOf()
+                onBuy = createLinearOnBuy(),
+                parameters = mapOf(
+                    "shouldTierChange" to createObject(false),
+                    "tierChangeLevel" to createObject(1.toBigDecimal()),
+                    "newTier" to createObject(1.toBigDecimal()),
+                    "priceIncrement" to createObject(1.toBigDecimal()),
+                    "initialPrice" to createObject(1.toBigDecimal()),
+                    "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                )
             )
         )
     )
@@ -376,78 +396,181 @@ class DataViewModel(
 
     var random = Random(Random.nextLong())
 
-//    /**
-//    * This is a simple linear price growth. It requires shouldTierChange, tierChangeLevel, newTier, priceIncrement,
-//     * initialPrice, levelsUntilPriceIncrease in parameters
-//    */
-//    private fun createLinearOnBuy(upgradeName: String): List<Generic> {
-//        return listOf(
-//            createGeneric(
-//                ConditionBlock(
-//                    operations = listOf(
-//                        Condition(
-//                            condition = "and",
-//                            arguments = listOf(
-//                                createExpression(
-//                                    Condition(
-//                                        condition = "==",
-//                                        arguments = listOf(
-//                                            createExpression("upgrades.$upgradeName.level"),
-//                                            createExpression("upgrades.$upgradeName" +
-//                                                    ".parameters.tierChangeLevel")
-//                                        ),
-//                                    )
-//                                ),
-//                                createExpression("upgrades.$upgradeName.parameters.shouldTierChange")
-//                            )
-//                        ) to listOf(
-//                            Operation(
-//                                "none",
-//                                reference = "upgrades.$upgradeName.cakeTier",
-//                                arguments = listOf(
-//                                    createExpression("upgrades.$upgradeName.parameters.newTier"),
-//                                )
-//                            )
-//                        )
-//                    )
-//                )
-//            ),
-//            createGeneric(
-//                Operation(
-//                    operation = "+",
-//                    reference = "upgrades.$upgradeName.price",
-//                    arguments = listOf(
-//                        createExpression("upgrades.$upgradeName.parameters.initialPrice"),
-//                        createExpression(
-//                            Operation(
-//                                operation = "*",
-//                                arguments = listOf(
-//                                    createExpression("upgrades.$upgradeName.parameters.priceIncrement"),
-//                                    createExpression(
-//                                        Operation(
-//                                            operation = "floor",
-//                                            arguments = listOf(
-//                                                createExpression(
-//                                                    Operation(
-//                                                        operation = "/",
-//                                                        arguments = listOf(
-//                                                            createExpression("upgrades.$upgradeName.level"),
-//                                                            createExpression("upgrades.$upgradeName" +
-//                                                                    ".parameters.levelsUntilPriceIncrease")
-//                                                        )
-//                                                    )
-//                                                )
-//                                            )
-//                                        )
-//                                    )
-//                                )
-//                            )
-//                        )
-//                    )
-//                )
-//            )
-//        )
-//    }
+    /**
+     * This is a simple linear price growth. It requires shouldTierChange, tierChangeLevel, newTier, priceIncrement,
+     * initialPrice, levelsUntilPriceIncrease in parameters
+     */
+    private fun createLinearOnBuy(): List<Expression> = buildExpressionList {
+        appendFunction {
+            name = "control.if"
+            appendFunction {
+                name = "compare.and"
+                appendFunction {
+                    name = "compare.equalTo"
+                    appendFunction {
+                        name = "variable.get"
+                        appendFunction {
+                            name = "string.join"
+                            appendString(".")
+                            appendFunction {
+                                name = "variable.get"
+                                appendString("locals.this")
+                            }
+                            appendString("level")
+                        }
+                        appendBoolean(true)
+                    }
+                    appendFunction {
+                        name = "variable.get"
+                        appendFunction {
+                            name = "string.join"
+                            appendString(".")
+                            appendFunction {
+                                name = "variable.get"
+                                appendString("locals.this")
+                            }
+                            appendString("parameters")
+                            appendString("tierChangeLevel")
+                        }
+                        appendBoolean(true)
+                    }
+                }
+                appendFunction {
+                    name = "variable.get"
+                    appendFunction {
+                        name = "string.join"
+                        appendString(".")
+                        appendFunction {
+                            name = "variable.get"
+                            appendString("locals.this")
+                        }
+                        appendString("parameters")
+                        appendString("shouldTierChange")
+                    }
+                    appendBoolean(true)
+                }
+            }
+            appendList {
+                appendFunction {
+                    name = "variable.set"
+                    appendFunction {
+                        name = "string.join"
+                        appendString(".")
+                        appendFunction {
+                            name = "variable.get"
+                            appendString("locals.this")
+                        }
+                        appendString("cakeTier")
+                    }
+                    appendFunction {
+                        name = "variable.get"
+                        appendFunction {
+                            name = "string.join"
+                            appendString(".")
+                            appendFunction {
+                                name = "variable.get"
+                                appendString("locals.this")
+                            }
+                            appendString("parameters")
+                            appendString("newTier")
+                        }
+                        appendBoolean(true)
+                    }
+                    appendBoolean(true)
+                }
+            }
+            appendList {
+                appendExpression {
+                    obj {
+                        string("Hello")
+                    }
+                }
+            }
+        }
+        appendFunction {
+            name = "variable.set"
+            appendFunction {
+                name = "string.join"
+                appendString(".")
+                appendFunction {
+                    name = "variable.get"
+                    appendString("locals.this")
+                }
+                appendString("price")
+            }
+            appendFunction {
+                name = "math.sum"
+                appendFunction { 
+                    name = "variable.get"
+                    appendFunction {
+                        name = "string.join"
+                        appendString(".")
+                        appendFunction {
+                            name = "variable.get"
+                            appendString("locals.this")
+                        }
+                        appendString("parameters")
+                        appendString("initialPrice")
+                    }
+                    appendBoolean(true)
+                }
+                appendFunction {
+                    name = "math.product"
+                    //locals.this.parameters.priceIncrement
+                    appendFunction {
+                        name = "variable.get"
+                        appendFunction {
+                            name = "string.join"
+                            appendString(".")
+                            appendFunction {
+                                name = "variable.get"
+                                appendString("locals.this")
+                            }
+                            appendString("parameters")
+                            appendString("priceIncrement")
+                        }
+                        appendBoolean(true)
+                    }
+                    appendFunction {
+                        name = "math.floor"
+                        appendFunction {
+                            name = "math.divide"
+                            //locals.this.level
+                            appendFunction {
+                                name = "variable.get"
+                                appendFunction {
+                                    name = "string.join"
+                                    appendString(".")
+                                    appendFunction {
+                                        name = "variable.get"
+                                        appendString("locals.this")
+                                    }
+                                    appendString("level")
+                                }
+                                appendBoolean(true)
+                            }
+                            //locals.this.parameters.levelsUntilPriceIncrease
+                            appendFunction {
+                                name = "variable.get"
+                                appendFunction {
+                                    name = "string.join"
+                                    appendString(".")
+                                    appendFunction {
+                                        name = "variable.get"
+                                        appendString("locals.this")
+                                    }
+                                    appendString("parameters")
+                                    appendString("levelsUntilPriceIncrease")
+                                }
+                                appendBoolean(true)
+                            }
+                        }
+                    }
+                }
+            }
+            appendBoolean(true)
+        }
+    }
 
     fun updateOrderSettings(tier: Int, settings: OrderCakeSettings) {
         viewModelScope.launch {
@@ -479,11 +602,25 @@ class DataViewModel(
         }
     }
 
+    fun setItems(items: List<Item>) {
+        viewModelScope.launch {
+            _allItems.emit(items)
+        }
+    }
+
     fun updateUpgrade(upgrade: Upgrade) {
         viewModelScope.launch {
             _upgradesFlow.emit(
-                (listOf(upgrade) + _upgradesFlow.value).distinctBy { it.name }
+                _upgradesFlow.value.map {
+                    if (it.name == upgrade.name) upgrade else it
+                }
             )
+        }
+    }
+
+    fun setUpgrades(upgrades: List<Upgrade>) {
+        viewModelScope.launch {
+            _upgradesFlow.emit(upgrades)
         }
     }
 
@@ -529,14 +666,14 @@ class DataViewModel(
         val fastPriceGrowth = tempItem.fastPriceGrowth ?: false
         val cakePriceAccountability = (tempItem.cakePriceAccountability ?: emptyMap()).toMutableMap()
         tempItem = tempItem.copy(
-            price = oldPrice * increaseSlope + if (fastPriceGrowth) total else BigDecimal.ZERO,
+            price = oldPrice.multiply(increaseSlope, globalDecimalMode) + if (fastPriceGrowth) total else BigDecimal.ZERO,
             total = total,
             amount = tempItem.amount + increment
         )
 
         val price = tempItem.price ?: BigDecimal.ZERO
-        val maxTier = cakePriceAccountability.keys.max()
-        val minTier = cakePriceAccountability.keys.min()
+        val maxTier = cakePriceAccountability.keys.maxOrNull() ?: 1
+        val minTier = cakePriceAccountability.keys.minOrNull() ?: 1
         val tiers = cakePriceAccountability.keys.size
         val denominator = (tiers + 1).toBigDecimal()
         //Low tier cakes get a smaller price accountabiliy than higher tier
@@ -544,7 +681,7 @@ class DataViewModel(
             val numerator = (tier + 1).toBigDecimal()
             numerator.divide(
                 denominator,
-                decimalMode = DecimalMode(20L, RoundingMode.FLOOR, scale = 2L),
+                decimalMode = globalDecimalMode,
             )
         }
         factors.forEach { (tier, factor) ->
@@ -709,18 +846,32 @@ class DataViewModel(
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     fun buyUpgrade(upgrade: Upgrade) {
-        updateUpgrade(
-            upgrade.copy(
-                level = upgrade.level + 1,
+        try {
+            updateUpgrade(
+                upgrade.copy(
+                    level = upgrade.level + 1,
+                )
             )
-        )
-        val cake = cakes[upgrade.cakeTier - 1]
-        updateItem(
-            cake.copy(
-                amount = cake.amount - upgrade.price.toBigDecimal()
+            val cake = cakes[upgrade.cakeTier - 1]
+            updateItem(
+                cake.copy(
+                    amount = cake.amount - upgrade.price.toBigDecimal()
+                )
             )
-        )
-        //engine.evaluateGenerics(upgrade.onBuy)
+            val localScope = CakeBakerScope(ScopeType(EnumScopeType.LOCAL), this)
+            localScope.setVariable("locals.this", createObject("globals.upgrades.${upgrade.name}"))
+            val origin = OriginNode("Upgrade On Buy", upgrade.onBuy)
+            upgrade.onBuy.forEach { expression ->
+                uiViewModel.appendLog(Log(expression.toString(), LogType.MESSAGE))
+            }
+            val result = engine.evaluateExpressions(upgrade.onBuy, listOf(globalScope, localScope), listOf(origin))
+            uiViewModel.appendLog(Log(result.toString(), LogType.RESULT))
+        } catch (e: LanguageException) {
+            if (uiViewModel.debugConsole.value == ConsoleType.NONE)
+                uiViewModel.setDebugConsole(ConsoleType.POPUP)
+            uiViewModel.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
+        }
     }
 }
