@@ -45,7 +45,7 @@ fun RowScope.InfoPanel() {
     val cakePrices by dataViewModel.cakePricesFlow.collectAsState(initial = emptyList())
     val theme by themeViewModel.theme.collectAsState()
     val upgrades by dataViewModel.upgradesFlow.collectAsState()
-    val autoOven = upgrades.find { it.name == "Auto Oven" }?.level?.toBoolean() ?: false
+    val autoOven = upgrades.find { it.name == "Auto Oven" }?.level?.toBoolean()
 
     Container(
         modifier = Modifier.weight(1f).fillMaxWidth(),
@@ -110,22 +110,25 @@ fun RowScope.InfoPanel() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
-            Text(
-                "Auto Oven",
-                fontFamily = LocalFontFamily.current,
-                style = theme.labelStyle,
-                textAlign = TextAlign.Center,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-            )
-            SwitchButton(
-                value = autoOvenEnabled,
-                onText = "On",
-                offText = "Off",
-                enabled = autoOven,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                dataViewModel.setAutoOvenEnabled(it)
+
+            autoOven?.let {
+                Text(
+                    "Auto Oven",
+                    fontFamily = LocalFontFamily.current,
+                    style = theme.labelStyle,
+                    textAlign = TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                )
+                SwitchButton(
+                    value = autoOvenEnabled,
+                    onText = "On",
+                    offText = "Off",
+                    enabled = autoOven,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    dataViewModel.setAutoOvenEnabled(it)
+                }
             }
         }
     }
