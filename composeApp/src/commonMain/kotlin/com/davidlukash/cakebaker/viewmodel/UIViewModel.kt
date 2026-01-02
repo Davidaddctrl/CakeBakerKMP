@@ -9,6 +9,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.AppLogger
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.ui.LocalFontFamily
@@ -20,7 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class UIViewModel : ViewModel() {
+class UIViewModel : ViewModel(), AppLogger {
     private val _pendingScreen = MutableStateFlow<Screen?>(null)
     val pendingScreen = _pendingScreen.asStateFlow()
 
@@ -41,7 +42,7 @@ class UIViewModel : ViewModel() {
 
     private var nextId = 0
 
-    fun appendLog(log: Log) {
+    override fun appendLog(log: Log) {
         viewModelScope.launch {
             _logs.emit(
                 _logs.value + log
@@ -49,11 +50,13 @@ class UIViewModel : ViewModel() {
         }
     }
 
-    fun setDebugConsole(type: ConsoleType) {
+    override fun setDebugConsole(type: ConsoleType) {
         viewModelScope.launch {
             _debugConsole.emit(type)
         }
     }
+
+    override fun getDebugConsole(): ConsoleType = debugConsole.value
 
     fun addPopup(content: @Composable ColumnScope.() -> Unit) {
         viewModelScope.launch {

@@ -6,6 +6,12 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import com.davidlukash.cakebaker.data.ConsoleType
+import com.davidlukash.cakebaker.data.Log
+import com.davidlukash.cakebaker.data.LogType
+import com.davidlukash.cakebaker.viewmodel.DataViewModel
+import com.davidlukash.jsonmath.engine.basic.toTraceString
+import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
@@ -17,11 +23,13 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.floor
 import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.uuid.ExperimentalUuidApi
 
 val globalDecimalMode = DecimalMode(
     decimalPrecision = 34,
@@ -137,7 +145,11 @@ val json = Json {
 expect fun Modifier.horizontalDragCursor(): Modifier
 expect fun Modifier.verticalDragCursor(): Modifier
 
-fun Modifier.horizontalRowScroll(coroutineScope: CoroutineScope, scrollState: ScrollState, reversed: Boolean = false): Modifier {
+fun Modifier.horizontalRowScroll(
+    coroutineScope: CoroutineScope,
+    scrollState: ScrollState,
+    reversed: Boolean = false
+): Modifier {
     return this.pointerInput(Unit) {
         detectHorizontalDragGestures { change, dragAmount ->
             coroutineScope.launch {
@@ -159,3 +171,30 @@ fun Modifier.horizontalRowScroll(coroutineScope: CoroutineScope, scrollState: Sc
             }
         }
 }
+
+@OptIn(ExperimentalUuidApi::class)
+fun <T> withErrorHandling(appLogger: AppLogger, finallyBlock: () -> Unit = {}, block: () -> T): Result<T> {
+    try {
+        return Result.success(block())
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: LanguageException) {
+        if (appLogger.getDebugConsole() == ConsoleType.NONE)
+            appLogger.setDebugConsole(ConsoleType.POPUP)
+        appLogger.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
+        return Result.failure(e)
+    } catch (e: Exception) {
+        if (appLogger.getDebugConsole() == ConsoleType.NONE)
+            appLogger.setDebugConsole(ConsoleType.POPUP)
+        appLogger.appendLog(Log(e.stackTraceToString(), LogType.ERROR))
+        return Result.failure(e)
+    } finally {
+        finallyBlock()
+    }
+}
+
+fun <T> AppLogger.withErrorHandling(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> =
+    withErrorHandling(this, finallyBlock, block)
+
+fun <T> DataViewModel.withErrorHandling(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> =
+    withErrorHandling(this.uiViewModel, finallyBlock, block)
