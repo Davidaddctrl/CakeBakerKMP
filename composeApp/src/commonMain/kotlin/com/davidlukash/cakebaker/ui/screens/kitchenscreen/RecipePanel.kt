@@ -48,7 +48,7 @@ fun RowScope.RecipePanel() {
     val mainViewModel = LocalMainViewModel.current
     val themeViewModel = mainViewModel.themeViewModel
     val dataViewModel = mainViewModel.dataViewModel
-    val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyList())
+    val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyMap())
     val ingredients by dataViewModel.ingredientsFlow.collectAsState(initial = emptyList())
     val currentCakeTier by dataViewModel.currentCakeTier.collectAsState()
     val theme by themeViewModel.theme.collectAsState()
@@ -76,7 +76,7 @@ fun RowScope.RecipePanel() {
                     tint = if (currentCakeTier != 1) LocalContentColor.current else Color.Transparent
                 )
                 Text(
-                    cakes.getOrNull(currentCakeTier - 1)?.name ?: "Cakes Not Loaded Yet",
+                    cakes[currentCakeTier]?.name ?: "Cake Tier Invalid",
                     fontFamily = LocalFontFamily.current,
                     style = theme.labelStyle,
                     textAlign = TextAlign.Center,

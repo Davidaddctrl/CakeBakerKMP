@@ -40,8 +40,8 @@ fun UpgradeDisplay(upgrade: Upgrade) {
     val themeViewModel = mainViewModel.themeViewModel
     val dataViewModel = mainViewModel.dataViewModel
     val theme by themeViewModel.theme.collectAsState()
-    val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyList())
-    val cake = cakes.getOrNull(upgrade.cakeTier - 1)
+    val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyMap())
+    val cake = cakes[upgrade.cakeTier]
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),

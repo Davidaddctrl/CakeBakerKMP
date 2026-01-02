@@ -17,6 +17,7 @@ import com.davidlukash.cakebaker.toBoolean
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.weightedRandomInt
 import com.davidlukash.cakebaker.withErrorHandling
+import com.davidlukash.cakebaker.withErrorHandlingAsync
 import com.davidlukash.jsonmath.buildExpressionList
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.Expression
@@ -249,19 +250,19 @@ class DataViewModel(
         get() {
             return _allItems.value.filter { it.type == ItemType.INGREDIENT }
         }
-    val cakes: List<Item>
+    val cakes: Map<Int, Item>
         get() {
-            return _allItems.value.filter { it.type == ItemType.CAKE }
+            return _allItems.value.filter { it.type == ItemType.CAKE && it.cakeTier != null }.associateBy { it.cakeTier!!  }
         }
 
     val cakesFlow = allItemsFlow.map { items ->
-        items.filter { it.type == ItemType.CAKE }
+        items.filter { it.type == ItemType.CAKE && it.cakeTier != null }.associateBy { it.cakeTier!!  }
     }
 
-    val cakePricesFlow = combine(cakesFlow, ingredientsFlow) { cakes: List<Item>, ingredients: List<Item> ->
-        cakes.map { cake ->
-            calculateCakePrice(cake, ingredients)
-        }
+    val cakePricesFlow = combine(cakesFlow, ingredientsFlow) { cakes: Map<Int, Item>, ingredients: List<Item> ->
+        cakes.map { (tier, cake) ->
+            tier to calculateCakePrice(cake, ingredients)
+        }.toMap()
     }
 
     val itemMoney: Item
@@ -276,7 +277,7 @@ class DataViewModel(
     private val _currentCakeTier = MutableStateFlow(1)
     val currentCakeTier = _currentCakeTier.asStateFlow()
 
-    val currentCake = combine(currentCakeTier, cakesFlow) { currentCakeTier: Int, cakes: List<Item> ->
+    val currentCake = combine(currentCakeTier, cakesFlow) { currentCakeTier: Int, cakes: Map<Int, Item> ->
         cakes[currentCakeTier - 1]
     }
 
@@ -621,7 +622,8 @@ class DataViewModel(
     }
 
     fun calculateCakePrice(tier: Int): BigDecimal {
-        val cake = (cakes.getOrNull(tier - 1) ?: return BigDecimal.ZERO)
+        val cake = cakes[tier]
+            ?: throw IllegalArgumentException("Cake with tier $tier does not exist")
         return calculateCakePrice(cake, ingredients)
     }
 
@@ -648,7 +650,8 @@ class DataViewModel(
     }
 
     fun buyIngredient(name: String) {
-        val item = ingredients.find { it.name == name } ?: return
+        val item = ingredients.find { it.name == name }
+            ?: throw IllegalArgumentException("Ingredient $name does not exist")
         var tempItem = item
         updateItem(
             itemMoney.copy(
@@ -701,14 +704,16 @@ class DataViewModel(
         viewModelScope.launch {
             var time = Clock.System.now().toEpochMilliseconds()
             while (true) {
-                delay(100)
-                val newTime = Clock.System.now().toEpochMilliseconds()
-                val dt = newTime - time
-                time = newTime
-                tickOven(dt)
-                tickOrderCreate(dt)
-                tickOrder(dt)
-                tickAutoOven()
+                withErrorHandlingAsync {
+                    delay(100)
+                    val newTime = Clock.System.now().toEpochMilliseconds()
+                    val dt = newTime - time
+                    time = newTime
+                    tickOven(dt)
+                    tickOrderCreate(dt)
+                    tickOrder(dt)
+                    tickAutoOven()
+                }
             }
         }
     }
@@ -723,7 +728,8 @@ class DataViewModel(
             if (_ovenProgress.value >= 1) {
                 _ovenRunning.emit(false)
                 _ovenProgress.emit(0.0)
-                val cake = cakes[tempCakeTier - 1]
+                val cake = cakes[tempCakeTier]
+                    ?: throw IllegalArgumentException("Cake with tier $tempCakeTier does not exist")
                 updateItem(
                     cake.copy(
                         amount = cake.amount + 1
@@ -769,7 +775,8 @@ class DataViewModel(
                     val order = orderFactory.createOrder(cakeTier).copy(
                         id = random.nextInt(10000, 99999)
                     )
-                    val cake = cakes[cakeTier - 1]
+                    val cake = cakes[cakeTier]
+                        ?: throw IllegalArgumentException("Cake with tier $cakeTier does not exist")
                     if (uiViewModel.currentScreen.value != KitchenScreen)
                         uiViewModel.addTextPopup("New Order for ${order.amount} ${cake.name}")
                     _ordersList.emit(
@@ -813,32 +820,36 @@ class DataViewModel(
     }
 
     fun handleCompleteOrder(order: Order) {
-        val settings = orderCakeSettings.value[order.cakeTier] ?: return
-        val weight = mapDouble(order.remainingTime / order.totalTime, 0.0, 1.0, 0.5, 2.0)
-        val modifier = mapDouble(
-            weightedRandomInt(weight, 10001, random).toDouble(),
-            0.0,
-            10000.0,
-            settings.minFulfilledCustomerSatisfaction.toDouble(),
-            settings.maxFulfilledCustomerSatisfaction.toDouble()
-        ).toInt()
-        var cake = cakes[order.cakeTier - 1]
-        cake = cake.copy(
-            amount = cake.amount - order.amount.toBigDecimal()
-        )
-        updateItem(cake)
-        updateItem(
-            itemMoney.copy(
-                amount = itemMoney.amount + order.salePrice
+        withErrorHandling {
+            val settings = orderCakeSettings.value[order.cakeTier]
+                ?: throw IllegalArgumentException("Order Cake Settings with tier ${order.cakeTier} does not exist")
+            val weight = mapDouble(order.remainingTime / order.totalTime, 0.0, 1.0, 0.5, 2.0)
+            val modifier = mapDouble(
+                weightedRandomInt(weight, 10001, random).toDouble(),
+                0.0,
+                10000.0,
+                settings.minFulfilledCustomerSatisfaction.toDouble(),
+                settings.maxFulfilledCustomerSatisfaction.toDouble()
+            ).toInt()
+            var cake = cakes[order.cakeTier]
+                ?: throw IllegalArgumentException("Cake with tier ${order.cakeTier} does not exist")
+            cake = cake.copy(
+                amount = cake.amount - order.amount.toBigDecimal()
             )
-        )
-        viewModelScope.launch {
-            _ordersList.emit(
-                _ordersList.value.filter { it.id != order.id }
+            updateItem(cake)
+            updateItem(
+                itemMoney.copy(
+                    amount = itemMoney.amount + order.salePrice
+                )
             )
-            _customerSatisfaction.emit(
-                minOf(100, _customerSatisfaction.value + modifier * order.amount)
-            )
+            viewModelScope.launch {
+                _ordersList.emit(
+                    _ordersList.value.filter { it.id != order.id }
+                )
+                _customerSatisfaction.emit(
+                    minOf(100, _customerSatisfaction.value + modifier * order.amount)
+                )
+            }
         }
     }
 
@@ -850,7 +861,8 @@ class DataViewModel(
                     level = upgrade.level + 1,
                 )
             )
-            val cake = cakes[upgrade.cakeTier - 1]
+            val cake = cakes[upgrade.cakeTier]
+                ?: throw IllegalArgumentException("Cake with tier ${upgrade.cakeTier} does not exist")
             updateItem(
                 cake.copy(
                     amount = cake.amount - upgrade.price.toBigDecimal()

@@ -30,9 +30,9 @@ fun OrderItem(order: Order) {
     val mainViewModel = LocalMainViewModel.current
     val dataViewModel = mainViewModel.dataViewModel
     val themeViewModel = mainViewModel.themeViewModel
-    val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyList())
+    val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyMap())
     val theme by themeViewModel.theme.collectAsState()
-    val cake = cakes.getOrNull(order.cakeTier - 1) ?: return
+    val cake = cakes[order.cakeTier]
     TertiaryContainer(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -51,27 +51,40 @@ fun OrderItem(order: Order) {
                     style = theme.labelStyle,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-                SmallThemedButton(
-                    onClick = {
-                        dataViewModel.handleCompleteOrder(order)
-                    },
-                    enabled = cake.amount >= order.amount
-                ) {
-                    Text(
-                        "Complete",
-                        fontFamily = LocalFontFamily.current,
-                        style = theme.smallLabelStyle,
-                        modifier = Modifier.padding(horizontal = 4.dp)
-                    )
+                cake?.let { cake ->
+                    SmallThemedButton(
+                        onClick = {
+                            dataViewModel.handleCompleteOrder(order)
+                        },
+                        enabled = cake.amount >= order.amount
+                    ) {
+                        Text(
+                            "Complete",
+                            fontFamily = LocalFontFamily.current,
+                            style = theme.smallLabelStyle,
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                        )
+                    }
                 }
             }
-            Text(
-                "${toEngNotation(order.amount.toBigDecimal())} ${cake.name}",
-                fontFamily = LocalFontFamily.current,
-                style = theme.labelStyle,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-            )
+            cake?.let { cake ->
+                Text(
+                    "${toEngNotation(order.amount.toBigDecimal())} ${cake.name}",
+                    fontFamily = LocalFontFamily.current,
+                    style = theme.labelStyle,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                )
+            }
+            if (cake == null)
+                Text(
+                    "Invalid Cake Tier",
+                    fontFamily = LocalFontFamily.current,
+                    style = theme.labelStyle,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                )
+
             Text(
                 "Buying for",
                 fontFamily = LocalFontFamily.current,

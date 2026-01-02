@@ -42,7 +42,7 @@ fun RowScope.InfoPanel() {
     val autoOvenEnabled by dataViewModel.autoOvenEnabled.collectAsState()
     val themeViewModel = mainViewModel.themeViewModel
     val currentCakeTier by dataViewModel.currentCakeTier.collectAsState()
-    val cakePrices by dataViewModel.cakePricesFlow.collectAsState(initial = emptyList())
+    val cakePrices by dataViewModel.cakePricesFlow.collectAsState(initial = emptyMap())
     val theme by themeViewModel.theme.collectAsState()
     val upgrades by dataViewModel.upgradesFlow.collectAsState()
     val autoOven = upgrades.find { it.name == "Auto Oven" }?.level?.toBoolean()
@@ -104,7 +104,7 @@ fun RowScope.InfoPanel() {
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
-                "$${toEngNotation(cakePrices.getOrNull(currentCakeTier - 1) ?: BigDecimal.ZERO)}",
+                "$${toEngNotation(cakePrices[currentCakeTier] ?: BigDecimal.ZERO)}",
                 fontFamily = LocalFontFamily.current,
                 style = theme.smallTitleStyle,
                 textAlign = TextAlign.Center,

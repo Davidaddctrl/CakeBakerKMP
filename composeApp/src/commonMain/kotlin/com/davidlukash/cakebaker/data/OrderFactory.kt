@@ -14,11 +14,11 @@ class OrderFactory(
     val dataViewModel: DataViewModel,
 ) {
     fun selectCakeTier(exclusions: List<Int> = listOf()): Int? {
-        val cakes = dataViewModel.cakes.filter { it.amount != BigDecimal.ZERO }
+        val cakes = dataViewModel.cakes.filter { it.value.amount != BigDecimal.ZERO }
         if (cakes.isEmpty()) return null
         val weight = mapDouble(dataViewModel.customerSatisfaction.value.toDouble(), 1.0, 100.0, 0.5, 2.5)
         val random = dataViewModel.random
-        val cakeTiers = cakes.map { it.cakeTier ?: 1 }.filter { it !in exclusions }
+        val cakeTiers = cakes.map { it.value.cakeTier ?: 1 }.filter { it !in exclusions }
         val cakeTier = weightedRandomItem(weight, cakeTiers, random)
         return cakeTier
     }
@@ -28,10 +28,15 @@ class OrderFactory(
         val cakes = dataViewModel.cakes
         val weight = mapDouble(dataViewModel.customerSatisfaction.value.toDouble(), 1.0, 100.0, 0.5, 2.0)
         val random = dataViewModel.random
-        val settings = dataViewModel.orderCakeSettings.value[cakeTier]!!
-        val cake = cakes.find { it.cakeTier == cakeTier }!!
+        val settings = dataViewModel.orderCakeSettings.value[cakeTier]
+            ?: throw IllegalArgumentException("Order Cake Settings with tier $cakeTier does not exist")
+        val cake = cakes[cakeTier]
+            ?: throw IllegalArgumentException("Cake with tier $cakeTier does not exist")
         val maxAmount = settings.maxAmount
-        val cakeAmount = minOf(maxOf(cake.amount.doubleValue(false).toInt(), 1), weightedRandomInt(weight, maxAmount, random) + 1)
+        val cakeAmount = minOf(
+            maxOf(cake.amount.doubleValue(false).toInt(), 1),
+            weightedRandomInt(weight, maxAmount, random) + 1
+        )
         val baseCakePrice = dataViewModel.calculateCakePrice(cakeTier)
         val cakePriceModifier =
             mapDouble(
