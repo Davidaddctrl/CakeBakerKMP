@@ -50,7 +50,7 @@ fun HorizontalScrollBar(scrollState: ScrollState, coroutineScope: CoroutineScope
                     .pointerInput(Unit) {
                         detectHorizontalDragGestures { _, dragAmount ->
                             coroutineScope.launch {
-                                scrollState.scrollBy((dragAmount) / visibleFraction)
+                                scrollState.scrollBy(dragAmount / visibleFraction)
                             }
                         }
                     }.border(6.dp, theme.buttonTheme.borderColor).onPlaced {
