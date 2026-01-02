@@ -15,19 +15,15 @@ import com.davidlukash.cakebaker.globalDecimalMode
 import com.davidlukash.cakebaker.mapDouble
 import com.davidlukash.cakebaker.toBoolean
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
-import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.weightedRandomInt
+import com.davidlukash.cakebaker.withErrorHandling
 import com.davidlukash.jsonmath.buildExpressionList
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.Expression
 import com.davidlukash.jsonmath.engine.basic.OriginNode
-import com.davidlukash.jsonmath.engine.basic.toTraceString
 import com.davidlukash.jsonmath.engine.normal.EnumScopeType
-import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.davidlukash.jsonmath.engine.normal.ScopeType
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
-import com.ionspin.kotlin.bignum.decimal.DecimalMode
-import com.ionspin.kotlin.bignum.decimal.RoundingMode
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -753,7 +749,7 @@ class DataViewModel(
     suspend fun tickOrderCreate(dt: Long) {
         val nextTier = orderFactory.selectCakeTier(_orderCakeTimeCounters.value.keys.toList())
         nextTier?.let { nextTier ->
-            val settings = orderCakeSettings.value[nextTier]!!
+            val settings = orderCakeSettings.value[nextTier] ?: return@let
             val weight = mapDouble(customerSatisfaction.value.toDouble(), 1.0, 100.0, 0.5, 2.5)
             val waitTime = mapDouble(
                 weightedRandomInt(weight, 10001, random).toDouble(),
@@ -803,7 +799,7 @@ class DataViewModel(
     }
 
     suspend fun handleFailedOrder(order: Order) {
-        val settings = orderCakeSettings.value[order.cakeTier]!!
+        val settings = orderCakeSettings.value[order.cakeTier] ?: return
         val modifier = mapDouble(
             weightedRandomInt(1.0, 10001, random).toDouble(),
             0.0,
@@ -817,7 +813,7 @@ class DataViewModel(
     }
 
     fun handleCompleteOrder(order: Order) {
-        val settings = orderCakeSettings.value[order.cakeTier]!!
+        val settings = orderCakeSettings.value[order.cakeTier] ?: return
         val weight = mapDouble(order.remainingTime / order.totalTime, 0.0, 1.0, 0.5, 2.0)
         val modifier = mapDouble(
             weightedRandomInt(weight, 10001, random).toDouble(),
@@ -848,7 +844,7 @@ class DataViewModel(
 
     @OptIn(ExperimentalUuidApi::class)
     fun buyUpgrade(upgrade: Upgrade) {
-        try {
+        withErrorHandling {
             updateUpgrade(
                 upgrade.copy(
                     level = upgrade.level + 1,
@@ -868,10 +864,6 @@ class DataViewModel(
             }
             val result = engine.evaluateExpressions(upgrade.onBuy, listOf(globalScope, localScope), listOf(origin))
             uiViewModel.appendLog(Log(result.toString(), LogType.RESULT))
-        } catch (e: LanguageException) {
-            if (uiViewModel.debugConsole.value == ConsoleType.NONE)
-                uiViewModel.setDebugConsole(ConsoleType.POPUP)
-            uiViewModel.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
         }
     }
 }
