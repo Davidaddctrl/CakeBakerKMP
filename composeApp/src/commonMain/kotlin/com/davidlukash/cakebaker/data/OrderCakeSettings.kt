@@ -1,7 +1,9 @@
 package com.davidlukash.cakebaker.data
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class OrderCakeSettings(
     // Weighted by customer satisfaction
     val allocatedTimeMax: Double,
