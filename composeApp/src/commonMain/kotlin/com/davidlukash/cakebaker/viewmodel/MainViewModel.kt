@@ -26,7 +26,7 @@ class MainViewModel(
     val dataViewModel = DataViewModel(uiViewModel, engine).also {
         it.loadSave(Save.default)
     }
-    val saveFileViewModel = SaveFileViewModel(savesRepository)
+    val saveFileViewModel = SaveFileViewModel(uiViewModel, savesRepository)
 
 }
 
