@@ -28,11 +28,13 @@ import com.davidlukash.jsonmath.engine.normal.EnumScopeType
 import com.davidlukash.jsonmath.engine.normal.ScopeType
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.collections.listOf
 import kotlin.math.ceil
@@ -47,8 +49,10 @@ class DataViewModel(
 ) : ViewModel() {
     val globalScope = CakeBakerScope(ScopeType(EnumScopeType.GLOBAL), this)
 
+    var loopJob: Job? = null
+
     init {
-        loop()
+        startLoop()
     }
 
     private val _allItems = MutableStateFlow(
@@ -874,10 +878,11 @@ class DataViewModel(
     }
 
     @OptIn(ExperimentalTime::class)
-    fun loop() {
-        viewModelScope.launch {
+    fun startLoop() {
+        if (loopJob?.isActive == true) return
+        loopJob = viewModelScope.launch {
             var time = Clock.System.now().toEpochMilliseconds()
-            while (true) {
+            while (isActive) {
                 withErrorHandlingAsync {
                     delay(100)
                     val newTime = Clock.System.now().toEpochMilliseconds()
@@ -890,6 +895,11 @@ class DataViewModel(
                 }
             }
         }
+    }
+
+    fun stopLoop() {
+        loopJob?.cancel()
+        loopJob = null
     }
 
     suspend fun tickOven(dt: Long) {
