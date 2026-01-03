@@ -8,13 +8,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.davidlukash.cakebaker.data.ConsoleType
+import com.davidlukash.cakebaker.data.JVMSavesRepository
 import com.davidlukash.cakebaker.ui.DebugPanel
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
+import java.io.File
 
 fun main() {
+    val baseDirectory = File(".").absoluteFile.resolve("CakeBaker").also { it.mkdirs() }
     application {
-        val localMainViewModel = remember { MainViewModel() }
+        val localMainViewModel = remember { MainViewModel(JVMSavesRepository(baseDirectory)) }
         CompositionLocalProvider(
             LocalMainViewModel provides localMainViewModel
         ) {

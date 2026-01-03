@@ -11,5 +11,3 @@ abstract class SavesRepository {
 
     abstract fun importSave(): Boolean
 }
-
-expect val savesRepository: com.davidlukash.cakebaker.data.SavesRepository

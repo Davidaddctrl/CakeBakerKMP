@@ -1,15 +1,12 @@
 package com.davidlukash.cakebaker.data
 
 import com.davidlukash.cakebaker.json
-import kotlinx.serialization.builtins.serializer
 import java.io.File
-import java.nio.file.Paths
-import kotlin.io.path.Path
 
-val baseDirectory = File(".").absoluteFile.resolve("CakeBaker").also { it.mkdirs() }
-
-actual val savesRepository: SavesRepository = object : SavesRepository() {
-    val saveDirectory = baseDirectory.resolve("saves")
+class JVMSavesRepository(
+    baseDirectory: File,
+) : SavesRepository() {
+    val saveDirectory = baseDirectory.resolve("saves").also { it.mkdirs() }
 
     override fun listSaves(): List<SaveFile> {
         return saveDirectory.listFiles { it.isFile }.map {
@@ -26,14 +23,17 @@ actual val savesRepository: SavesRepository = object : SavesRepository() {
     }
 
     override fun upsertSave(file: SaveFile): Boolean {
-        return false
+        val saveFile = saveDirectory.resolve(file.name)
+        val existsBefore = saveFile.createNewFile()
+        saveFile.writeText(json.encodeToString(file))
+        return existsBefore
     }
 
     override fun exportSave(file: SaveFile): Boolean {
-        return false
+        TODO("Not yet implemented")
     }
 
     override fun importSave(): Boolean {
-        return false
+        TODO("Not yet implemented")
     }
 }

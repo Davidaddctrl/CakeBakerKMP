@@ -3,7 +3,7 @@ package com.davidlukash.cakebaker.data
 import com.davidlukash.cakebaker.json
 import kotlinx.browser.window
 
-actual val savesRepository: SavesRepository = object : SavesRepository() {
+class JSSavesRepository : SavesRepository() {
     private val localStorage = window.localStorage
 
     private fun updateSaves(list: List<SaveFile>) {
@@ -27,8 +27,9 @@ actual val savesRepository: SavesRepository = object : SavesRepository() {
 
     override fun upsertSave(file: SaveFile): Boolean {
         val saves = listSaves()
+        val existsBefore = saves.map { it.name }.contains(file.name)
         updateSaves((listOf(file) + saves).distinctBy { it.name })
-        return true
+        return existsBefore
     }
 
     override fun exportSave(file: SaveFile): Boolean {
