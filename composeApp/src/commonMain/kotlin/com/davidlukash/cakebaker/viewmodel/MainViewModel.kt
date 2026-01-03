@@ -4,10 +4,14 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.lifecycle.ViewModel
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.data.LogType
+import com.davidlukash.cakebaker.data.Save
+import com.davidlukash.cakebaker.data.SavesRepository
 import com.davidlukash.cakebaker.dumpFunctionsToFile
 import kotlin.uuid.ExperimentalUuidApi
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    val savesRepository: SavesRepository,
+) : ViewModel() {
     val engine = CakeBakerEngine(this).also {
         it.registerStandardFunctions()
         dumpFunctionsToFile(it)
@@ -19,7 +23,10 @@ class MainViewModel : ViewModel() {
         it.appendLog(Log("List of all available functions:\n$functionDump", LogType.MESSAGE))
     }
     val themeViewModel = ThemeViewModel()
-    val dataViewModel = DataViewModel(uiViewModel, engine)
+    val dataViewModel = DataViewModel(uiViewModel, engine).also {
+        it.loadSave(Save.default)
+    }
+    val saveFileViewModel = SaveFileViewModel(savesRepository)
 
 }
 
