@@ -5,7 +5,9 @@ import com.davidlukash.jsonmath.buildExpressionList
 import com.davidlukash.jsonmath.createObject
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Save(
     val items: List<Item>,
     val currentCakeTier: Int,
@@ -17,6 +19,7 @@ data class Save(
     val customerSatisfaction: Int,
     val orderCakeSettings: Map<Int, OrderCakeSettings>,
     val orders: List<Order>,
+    val orderCakeTimeCounters: Map<Int, Double>
 ) {
     companion object {
         val default = Save(
@@ -213,7 +216,7 @@ data class Save(
                 Upgrade(
                     pageName = "Vanilla Cake",
                     imageName = "Vanilla Cake",
-                    name = "Cheaper Vanilla Cake",
+                    name = "Expensive Vanilla Cakes",
                     price = 2,
                     cakeTier = 1,
                     maxLevel = null,
@@ -357,7 +360,8 @@ data class Save(
                     -1, -5
                 )
             ),
-            listOf()
+            listOf(),
+            mapOf()
         )
     }
 }

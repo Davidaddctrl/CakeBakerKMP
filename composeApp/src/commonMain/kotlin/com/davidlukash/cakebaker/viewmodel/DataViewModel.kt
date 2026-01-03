@@ -481,6 +481,7 @@ class DataViewModel(
             _customerSatisfaction.emit(save.customerSatisfaction)
             _orderCakeSettings.emit(save.orderCakeSettings)
             _ordersList.emit(save.orders)
+            _orderCakeTimeCounters.emit(save.orderCakeTimeCounters)
         }
     }
 
@@ -495,5 +496,6 @@ class DataViewModel(
         _customerSatisfaction.value,
         _orderCakeSettings.value,
         _ordersList.value,
+        _orderCakeTimeCounters.value
     )
 }
