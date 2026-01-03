@@ -1,16 +1,26 @@
 package com.davidlukash.cakebaker.viewmodel
 
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidlukash.cakebaker.AppLogger
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.Log
+import com.davidlukash.cakebaker.data.Popup
+import com.davidlukash.cakebaker.ui.LocalFontFamily
+import com.davidlukash.cakebaker.ui.SmallThemedButton
 import com.davidlukash.cakebaker.ui.navigation.FadeScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
@@ -23,7 +33,7 @@ class UIViewModel : ViewModel(), AppLogger {
     private val _pendingScreen = MutableStateFlow<Screen?>(null)
     val pendingScreen = _pendingScreen.asStateFlow()
 
-    private val _popups = MutableStateFlow<List<Pair<@Composable ColumnScope.() -> Unit, Int>>>(emptyList())
+    private val _popups = MutableStateFlow(emptyList<Popup>())
     val popups = _popups.asStateFlow()
 
     private val _trueDensity = MutableStateFlow<Density?>(null)
@@ -56,10 +66,10 @@ class UIViewModel : ViewModel(), AppLogger {
 
     override fun getDebugConsole(): ConsoleType = debugConsole.value
 
-    fun addPopup(content: @Composable ColumnScope.() -> Unit) {
+    fun addPopup(shouldHaveDefaultButton: Boolean = true, content: @Composable Popup.() -> Unit) {
         viewModelScope.launch {
             _popups.emit(
-                _popups.value + (content to nextId++)
+                _popups.value + Popup(content, nextId++, shouldHaveDefaultButton)
             )
         }
     }
@@ -70,6 +80,34 @@ class UIViewModel : ViewModel(), AppLogger {
                 text,
                 modifier = Modifier.fillMaxWidth(),
             )
+        }
+    }
+
+    fun addTextButtonPopup(text: String, shouldHaveDefaultButton: Boolean = true, buttonText: String, onClick: () -> Unit) {
+        addPopup(shouldHaveDefaultButton) {
+            val viewModel = LocalMainViewModel.current
+            val themeViewModel = viewModel.themeViewModel
+            val theme by themeViewModel.theme.collectAsState()
+            Text(
+                text,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            SmallThemedButton(
+                onClick = {
+                    onClick()
+                    removePopup(this.index)
+                },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    buttonText,
+                    style = theme.smallLabelStyle,
+                    fontFamily = LocalFontFamily.current,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 

@@ -58,7 +58,7 @@ fun MessageManager(
             modifier = Modifier.width(320.dp).zIndex(2f).padding(16.dp),
             state = lazyListState
         ) {
-            itemsIndexed(popups, key = { _, (_, id) -> id }) { index, (popup, _) ->
+            itemsIndexed(popups, key = { _, (_, id) -> id }) { index, popup ->
                 Box {
                     SmallContainer(
                         modifier = Modifier.width(320.dp),
@@ -74,21 +74,23 @@ fun MessageManager(
                                     textAlign = TextAlign.Center,
                                 )
                             ) {
-                                popup()
+                                popup.content(popup.copy(index = index))
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            SmallThemedButton(
-                                onClick = {
-                                    uiViewModel.removePopup(index)
+                            if (popup.shouldHaveDefaultButton) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                SmallThemedButton(
+                                    onClick = {
+                                        uiViewModel.removePopup(index)
+                                    }
+                                ) {
+                                    Text(
+                                        "Dismiss",
+                                        style = theme.smallLabelStyle,
+                                        fontFamily = LocalFontFamily.current,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center
+                                    )
                                 }
-                            ) {
-                                Text(
-                                    "Dismiss",
-                                    style = theme.smallLabelStyle,
-                                    fontFamily = LocalFontFamily.current,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textAlign = TextAlign.Center
-                                )
                             }
                         }
                     }
