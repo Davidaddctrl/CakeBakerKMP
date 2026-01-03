@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 @Composable
-fun ScaleViewport(baseWidth: Dp, baseHeight: Dp, doAspectRatio: Boolean = true, content: @Composable () -> Unit) {
+fun ScaleViewport(baseWidth: Dp, baseHeight: Dp, doAspectRatio: Boolean = false, content: @Composable () -> Unit) {
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
     ) {
