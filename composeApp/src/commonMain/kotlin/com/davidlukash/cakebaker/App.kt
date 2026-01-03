@@ -37,7 +37,7 @@ fun App() {
             modifier = Modifier.weight(1f).fillMaxSize(),
         ) {
             GameTheme {
-                ScaleViewport(1920.dp, 1080.dp, doAspectRatio = false) {
+                ScaleViewport(1920.dp, 1080.dp) {
                     Navigation()
                 }
             }
