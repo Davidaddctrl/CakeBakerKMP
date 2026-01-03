@@ -21,21 +21,15 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
 fun SaveScreen() {
-    val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
-    val navigationViewModel = mainViewModel.uiViewModel
-    val theme by themeViewModel.theme.collectAsState()
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
             TopBar()
         },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        bottomBar = {
+            BottomBar()
         }
+    ) { innerPadding ->
+        MainContent(innerPadding)
     }
 }
