@@ -45,7 +45,7 @@ fun UpgradeDisplay(upgrade: Upgrade) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(16.dp).width(384.dp)
+        modifier = Modifier.padding(16.dp).width(480.dp)
     ) {
         Text(
             upgrade.name,
