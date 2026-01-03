@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.fromKeyword
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import com.davidlukash.cakebaker.viewmodel.CakeBakerEngine
 import org.jetbrains.skiko.Cursor
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -14,4 +15,9 @@ actual fun Modifier.horizontalDragCursor(): Modifier {
 @OptIn(ExperimentalComposeUiApi::class)
 actual fun Modifier.verticalDragCursor(): Modifier {
     return this.pointerHoverIcon(PointerIcon.fromKeyword("n-resize"))
+}
+
+actual fun dumpFunctionsToFile(
+    engine: CakeBakerEngine
+) {
 }

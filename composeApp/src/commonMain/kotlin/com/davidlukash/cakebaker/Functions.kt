@@ -9,6 +9,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.data.LogType
+import com.davidlukash.cakebaker.viewmodel.CakeBakerEngine
 import com.davidlukash.cakebaker.viewmodel.DataViewModel
 import com.davidlukash.jsonmath.engine.basic.toTraceString
 import com.davidlukash.jsonmath.engine.normal.LanguageException
@@ -218,3 +219,7 @@ suspend fun <T> withErrorHandlingAsync(appLogger: AppLogger, finallyBlock: suspe
 }
 suspend fun <T> DataViewModel.withErrorHandlingAsync(finallyBlock: suspend () -> Unit = {}, block: suspend () -> T): Result<T> =
     withErrorHandlingAsync(this.uiViewModel, finallyBlock, block)
+
+expect fun dumpFunctionsToFile(engine: CakeBakerEngine)
+
+fun BigDecimal.roundTo1dp(): BigDecimal = this.roundSignificand(globalDecimalMode)
