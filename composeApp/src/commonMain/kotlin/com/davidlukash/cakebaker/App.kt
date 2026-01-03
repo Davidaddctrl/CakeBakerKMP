@@ -17,13 +17,11 @@ import com.davidlukash.cakebaker.ui.GameTheme
 import com.davidlukash.cakebaker.ui.ScaleViewport
 import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 const val VERSION = "Alpha"
 
 @Composable
-@Preview
 fun App() {
     val mainViewModel = LocalMainViewModel.current
     val uiViewModel = mainViewModel.uiViewModel
@@ -39,7 +37,7 @@ fun App() {
             modifier = Modifier.weight(1f).fillMaxSize(),
         ) {
             GameTheme {
-                ScaleViewport(2000.dp, 1200.dp, doAspectRatio = false) {
+                ScaleViewport(1920.dp, 1080.dp, doAspectRatio = false) {
                     Navigation()
                 }
             }
