@@ -18,14 +18,13 @@ import com.davidlukash.cakebaker.ui.LargeThemedButton
 import com.davidlukash.cakebaker.ui.LocalFontFamily
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.SaveScreen
-import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
 fun MenuScreen() {
     val mainViewModel = LocalMainViewModel.current
     val themeViewModel = mainViewModel.themeViewModel
-    val navigationViewModel = mainViewModel.uiViewModel
+    val uiViewModel = mainViewModel.uiViewModel
     val theme by themeViewModel.theme.collectAsState()
     Scaffold(
         containerColor = Color.Transparent,
@@ -36,11 +35,11 @@ fun MenuScreen() {
         Column(
             modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             LargeThemedButton(
                 onClick = {
-                    navigationViewModel.navigateWithFade(KitchenScreen)
+                    uiViewModel.navigateWithFade(KitchenScreen)
                 },
                 modifier = Modifier.width(480.dp)
             ) {
@@ -48,7 +47,7 @@ fun MenuScreen() {
             }
             LargeThemedButton(
                 onClick = {
-                    navigationViewModel.navigateWithFade(SaveScreen)
+                    uiViewModel.navigateWithFade(SaveScreen)
                 },
                 modifier = Modifier.width(480.dp)
             ) {
