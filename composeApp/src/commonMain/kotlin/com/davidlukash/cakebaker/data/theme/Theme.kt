@@ -84,7 +84,7 @@ data class Theme(
             labelStyle = TextStyle(fontSize = 32.sp),
             smallLabelStyle = TextStyle(fontSize = 22.sp),
             verySmallLabelStyle = TextStyle(fontSize = 16.sp),
-            buttonTextStyle = TextStyle(fontSize = 56.sp),
+            buttonTextStyle = TextStyle(fontSize = 60.sp),
             buttonTheme = ButtonTheme(
                 containerColor = Color(8, 160, 69),
                 disabledContainerColor = Color(37, 41, 46),
