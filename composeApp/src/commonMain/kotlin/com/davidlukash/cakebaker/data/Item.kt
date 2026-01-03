@@ -1,6 +1,7 @@
 package com.davidlukash.cakebaker.data
 
 import com.davidlukash.cakebaker.data.serializers.BigDecimalSerializer
+import com.davidlukash.cakebaker.roundTo1dp
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.Object
 import com.davidlukash.jsonmath.data.ObjectType
@@ -84,14 +85,14 @@ data class Item(
                         ObjectType.STRING
                     )
                 ),
-                amount = dictionary[createObject("amount")]?.asNumber() ?: throw createInvalidTypeException(
+                amount = dictionary[createObject("amount")]?.asNumber()?.roundTo1dp() ?: throw createInvalidTypeException(
                     "amount",
                     ObjectType.NUMBER
                 ),
-                price = dictionary[createObject("price")]?.asNullableNumber("Item[price]"),
+                price = dictionary[createObject("price")]?.asNullableNumber("Item[price]")?.roundTo1dp(),
                 fastPriceGrowth = dictionary[createObject("fastPriceGrowth")]?.asNullableBoolean("Item[fastPriceGrowth]"),
-                total = dictionary[createObject("total")]?.asNullableNumber("Item[total]"),
-                increment = dictionary[createObject("increment")]?.asNullableNumber("Item[increment]"),
+                total = dictionary[createObject("total")]?.asNullableNumber("Item[total]")?.roundTo1dp(),
+                increment = dictionary[createObject("increment")]?.asNullableNumber("Item[increment]")?.roundTo1dp(),
                 increaseSlope = dictionary[createObject("increaseSlope")]?.asNullableNumber("Item[increaseSlope]"),
                 cakePriceAccountability = dictionary[createObject("cakePriceAccountability")]
                     ?.asDictionary()?.map { (key, value) ->
@@ -104,7 +105,7 @@ data class Item(
                                 (value.asNumber() ?: throw cakePricesException)
                     }?.toMap(),
                 cakeTier = dictionary[createObject("cakeTier")]?.asNullableInteger("Item[cakeTier]")?.intValue(true),
-                salePrice = dictionary[createObject("salePrice")]?.asNullableNumber("Item[salePrice]")
+                salePrice = dictionary[createObject("salePrice")]?.asNullableNumber("Item[salePrice]")?.roundTo1dp()
             )
         }
 
