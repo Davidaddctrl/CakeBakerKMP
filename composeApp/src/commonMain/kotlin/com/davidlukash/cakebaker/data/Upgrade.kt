@@ -8,8 +8,10 @@ import com.davidlukash.jsonmath.data.Object
 import com.davidlukash.jsonmath.data.ObjectType
 import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import kotlinx.serialization.Serializable
 import kotlin.math.max
 
+@Serializable
 data class Upgrade(
     val pageName: String,
     val imageName: String,
