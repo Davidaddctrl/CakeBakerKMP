@@ -11,7 +11,7 @@ class JVMSavesRepository(
     override fun listSaves(): List<SaveFile> {
         return saveDirectory.listFiles { it.isFile }.map {
             val text = it.readText()
-            json.decodeFromString<SaveFile>(text)
+            SaveFile(it.name, json.decodeFromString<Save>(text))
         }
     }
 
@@ -25,7 +25,7 @@ class JVMSavesRepository(
     override fun upsertSave(file: SaveFile): Boolean {
         val saveFile = saveDirectory.resolve(file.name)
         val existsBefore = saveFile.createNewFile()
-        saveFile.writeText(json.encodeToString(file))
+        saveFile.writeText(json.encodeToString(file.save))
         return existsBefore
     }
 
