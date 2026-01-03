@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -25,6 +25,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,6 +56,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
+import cakebaker.composeapp.generated.resources.Res
+import cakebaker.composeapp.generated.resources.add
+import cakebaker.composeapp.generated.resources.remove_drawable
 import com.davidlukash.cakebaker.currentLocalTime
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.data.LogType
@@ -70,6 +75,7 @@ import com.davidlukash.jsonmath.engine.normal.EnumScopeType
 import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.davidlukash.jsonmath.engine.normal.ScopeType
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.vectorResource
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -86,12 +92,13 @@ val textColor = Color.White
 @Composable
 fun DebugSideBar() {
     var width by remember { mutableStateOf(256.dp) }
+    val density = LocalDensity.current
     Box {
         Spacer(
             modifier = Modifier.fillMaxHeight().width(8.dp).draggable(
                 orientation = Orientation.Horizontal,
                 state = rememberDraggableState { delta ->
-                    width -= delta.dp
+                    width -= density.run { delta.toDp() }
                 }
             ).horizontalDragCursor()
         )
@@ -106,6 +113,8 @@ fun DebugPopup() {
     var width by remember { mutableStateOf(512.dp) }
     var height by remember { mutableStateOf(384.dp) }
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
+    var isHidden by remember { mutableStateOf(false) }
+    val density = LocalDensity.current
 
     Box(
         modifier = Modifier.offset {
@@ -115,33 +124,35 @@ fun DebugPopup() {
             )
         }
     ) {
-        Spacer(
-            modifier = Modifier.height(height).width(8.dp).draggable(
-                orientation = Orientation.Horizontal,
-                state = rememberDraggableState { delta ->
-                    width -= delta.dp
-                    offset = offset.copy(
-                        x = offset.x + delta
-                    )
-                }
-            ).horizontalDragCursor().align(Alignment.TopStart)
-        )
-        Spacer(
-            modifier = Modifier.height(height).width(8.dp).draggable(
-                orientation = Orientation.Horizontal,
-                state = rememberDraggableState { delta ->
-                    width += delta.dp
-                }
-            ).horizontalDragCursor().align(Alignment.TopEnd)
-        )
-        Spacer(
-            modifier = Modifier.width(width).height(8.dp).draggable(
-                orientation = Orientation.Vertical,
-                state = rememberDraggableState { delta ->
-                    height += delta.dp
-                }
-            ).verticalDragCursor().align(Alignment.BottomStart)
-        )
+        if (!isHidden) {
+            Spacer(
+                modifier = Modifier.height(height).width(8.dp).draggable(
+                    orientation = Orientation.Horizontal,
+                    state = rememberDraggableState { delta ->
+                        width -= density.run { delta.toDp() }
+                        offset = offset.copy(
+                            x = offset.x + delta
+                        )
+                    }
+                ).horizontalDragCursor().align(Alignment.TopStart)
+            )
+            Spacer(
+                modifier = Modifier.height(height).width(8.dp).draggable(
+                    orientation = Orientation.Horizontal,
+                    state = rememberDraggableState { delta ->
+                        width += density.run { delta.toDp() }
+                    }
+                ).horizontalDragCursor().align(Alignment.TopEnd)
+            )
+            Spacer(
+                modifier = Modifier.width(width).height(8.dp).draggable(
+                    orientation = Orientation.Vertical,
+                    state = rememberDraggableState { delta ->
+                        height += density.run { delta.toDp() }
+                    }
+                ).verticalDragCursor().align(Alignment.BottomStart)
+            )
+        }
         Spacer(
             modifier = Modifier.width(width).height(32.dp).draggable2D(
                 state = rememberDraggable2DState { deltaOffset ->
@@ -155,15 +166,23 @@ fun DebugPopup() {
             ).align(Alignment.TopStart)
         )
         DebugPanel(
-            modifier = Modifier.size(width, height).clip(RoundedCornerShape(8.dp))
-        )
+            modifier = Modifier.width(width).clip(RoundedCornerShape(8.dp)).then(
+                if (isHidden) Modifier else Modifier.height(height)
+            ),
+            canHide = true,
+            isHidden = isHidden,
+        ) { isHidden = it }
     }
 }
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 @Composable
-fun DebugPanel(modifier: Modifier) {
-
+fun DebugPanel(
+    modifier: Modifier,
+    canHide: Boolean = false,
+    isHidden: Boolean = false,
+    setHidden: (Boolean) -> Unit = {}
+) {
     val mainViewModel = LocalMainViewModel.current
     val engine = mainViewModel.engine
     val uiViewModel = mainViewModel.uiViewModel
@@ -177,99 +196,137 @@ fun DebugPanel(modifier: Modifier) {
         if (logs.isNotEmpty()) lazyListState.scrollToItem(logs.size - 1)
     }
     Column(
-        modifier = modifier.background(color = background).padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier.background(color = background).padding(horizontal = 16.dp).padding(
+            top = if (canHide) 8.dp else 16.dp,
+            bottom = if (isHidden) 8.dp else 16.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Text(
-            "Debug Console",
-            fontFamily = FontFamily.Monospace,
-            color = textColor,
-            fontSize = 20.sp
-        )
-        Surface(
-            color = surface,
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.weight(2f).fillMaxSize()
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(
+                bottom = if (canHide) 0.dp else 8.dp
+            ),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                state = lazyListState
-            ) {
-                items(
-                    logs.size,
-                    key = { logs[it].uuid }
-                ) { index ->
-                    val log = logs[index]
-                    SelectionContainer {
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(style = SpanStyle(fontFamily = FontFamily.Monospace)) {
-                                    withStyle(style = SpanStyle(color = textColor.copy(alpha = 0.2f))) {
-                                        append(debugTimestampFormat.format(log.timestamp))
-                                        append(" ")
-                                    }
-                                    withStyle(
-                                        style = SpanStyle(
-                                            color = when (log.logType) {
-                                                LogType.ERROR -> red
-                                                LogType.RESULT -> green
-                                                LogType.MESSAGE -> textColor
-                                            }
-                                        )
-                                    ) {
-                                        append(log.message)
-                                    }
-                                }
-                            }
+            Text(
+                "Debug Console",
+                fontFamily = FontFamily.Monospace,
+                color = textColor,
+                fontSize = 20.sp
+            )
+            if (canHide) {
+                if (isHidden) {
+                    IconButton(
+                        onClick = { setHidden(false) },
+                    ) {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.add),
+                            contentDescription = "Show",
+                            tint = textColor
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { setHidden(true) },
+                    ) {
+                        Icon(
+                            imageVector = vectorResource(Res.drawable.remove_drawable),
+                            contentDescription = "Hide",
+                            tint = textColor
                         )
                     }
                 }
             }
         }
-        Box(
-            modifier = Modifier.weight(1f)
-        ) {
-            BasicTextField(
-                value = input,
-                onValueChange = { input = it },
-                textStyle = TextStyle(fontFamily = FontFamily.Monospace, color = textColor),
-                decorationBox = { innerTextField ->
-                    Box(
-                        modifier = Modifier.background(color = surface, shape = RoundedCornerShape(8.dp))
-                            .fillMaxSize().padding(8.dp).fillMaxSize()
-                    ) {
-                        innerTextField()
-                    }
-                },
-                modifier = Modifier.fillMaxSize(),
-                cursorBrush = SolidColor(textColor),
-            )
-            Button(
-                onClick = {
-                    uiViewModel.appendLog(Log(input, LogType.MESSAGE))
-                    try {
-                        val code = json.decodeFromString<Expression>(input)
-                        val output = engine.evaluateExpression(
-                            code,
-                            listOf(globalScope, localScope),
-                            listOf(OriginNode("Debug Console", listOf(code)))
-                        )
-                        uiViewModel.appendLog(Log("Result: $output", LogType.RESULT))
-                    } catch (e: LanguageException) {
-                        uiViewModel.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
-                    } catch (e: Exception) {
-                        uiViewModel.appendLog(Log(e.toString() + e.stackTraceToString(), LogType.ERROR))
-                    }
-                },
-                modifier = Modifier.align(Alignment.BottomEnd).zIndex(2f).offset(x = (-4).dp, y = (-4).dp),
+        if (!isHidden) {
+            Surface(
+                color = surface,
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = surface2,
-                    contentColor = textColor
+                modifier = Modifier.weight(2f).fillMaxSize().padding(
+                    bottom = 8.dp
                 )
             ) {
-                Text("Enter", color = textColor, fontFamily = FontFamily.Monospace)
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    state = lazyListState
+                ) {
+                    items(
+                        logs.size,
+                        key = { logs[it].uuid }
+                    ) { index ->
+                        val log = logs[index]
+                        SelectionContainer {
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = SpanStyle(fontFamily = FontFamily.Monospace)) {
+                                        withStyle(style = SpanStyle(color = textColor.copy(alpha = 0.2f))) {
+                                            append(debugTimestampFormat.format(log.timestamp))
+                                            append(" ")
+                                        }
+                                        withStyle(
+                                            style = SpanStyle(
+                                                color = when (log.logType) {
+                                                    LogType.ERROR -> red
+                                                    LogType.RESULT -> green
+                                                    LogType.MESSAGE -> textColor
+                                                }
+                                            )
+                                        ) {
+                                            append(log.message)
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+            Box(
+                modifier = Modifier.weight(1f)
+            ) {
+                BasicTextField(
+                    value = input,
+                    onValueChange = { input = it },
+                    textStyle = TextStyle(fontFamily = FontFamily.Monospace, color = textColor),
+                    decorationBox = { innerTextField ->
+                        Box(
+                            modifier = Modifier.background(color = surface, shape = RoundedCornerShape(8.dp))
+                                .fillMaxSize().padding(8.dp).fillMaxSize()
+                        ) {
+                            innerTextField()
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    cursorBrush = SolidColor(textColor),
+                )
+                Button(
+                    onClick = {
+                        uiViewModel.appendLog(Log(input, LogType.MESSAGE))
+                        try {
+                            val code = json.decodeFromString<Expression>(input)
+                            val output = engine.evaluateExpression(
+                                code,
+                                listOf(globalScope, localScope),
+                                listOf(OriginNode("Debug Console", listOf(code)))
+                            )
+                            uiViewModel.appendLog(Log("Result: $output", LogType.RESULT))
+                        } catch (e: LanguageException) {
+                            uiViewModel.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
+                        } catch (e: Exception) {
+                            uiViewModel.appendLog(Log(e.toString() + e.stackTraceToString(), LogType.ERROR))
+                        }
+                    },
+                    modifier = Modifier.align(Alignment.BottomEnd).zIndex(2f).offset(x = (-4).dp, y = (-4).dp),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = surface2,
+                        contentColor = textColor
+                    )
+                ) {
+                    Text("Enter", color = textColor, fontFamily = FontFamily.Monospace)
+                }
             }
         }
     }
