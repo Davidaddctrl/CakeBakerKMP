@@ -5,14 +5,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidlukash.cakebaker.AppLogger
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.Log
-import com.davidlukash.cakebaker.ui.LocalFontFamily
 import com.davidlukash.cakebaker.ui.navigation.FadeScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
@@ -92,7 +90,7 @@ class UIViewModel : ViewModel(), AppLogger {
     fun navigateWithFade(destination: Screen?) {
         viewModelScope.launch {
             navigateTo(FadeScreen)
-            delay(750)
+            delay(transitionDuration.toLong())
             navigateTo(destination)
         }
     }
