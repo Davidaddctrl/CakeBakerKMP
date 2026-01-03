@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,7 +21,7 @@ import com.davidlukash.cakebaker.ui.LocalFontFamily
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
-import com.davidlukash.cakebaker.viewmodel.UIViewModel
+import com.davidlukash.cakebaker.withErrorHandling
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -31,6 +30,7 @@ fun SaveItem(saveFile: SaveFile) {
     val mainViewModel = LocalMainViewModel.current
     val themeViewModel = mainViewModel.themeViewModel
     val dataViewModel = mainViewModel.dataViewModel
+    val saveFileViewModel = mainViewModel.saveFileViewModel
     val uiViewModel = mainViewModel.uiViewModel
     val theme by themeViewModel.theme.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -40,14 +40,19 @@ fun SaveItem(saveFile: SaveFile) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(saveFile.name, style = theme.buttonTextStyle, fontFamily = LocalFontFamily.current)
+            Text(
+                saveFile.name,
+                style = theme.buttonTextStyle,
+                fontFamily = LocalFontFamily.current,
+                modifier = Modifier.padding(8.dp)
+            )
             Spacer(modifier = Modifier.weight(1f))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 LargeThemedButton(
                     onClick = {
-                        //uiViewModel.navigateWithFade(KitchenScreen)
+                        saveFileViewModel.exportSave(saveFile)
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -55,7 +60,7 @@ fun SaveItem(saveFile: SaveFile) {
                 }
                 LargeThemedButton(
                     onClick = {
-                        //uiViewModel.navigateWithFade(KitchenScreen)
+                        saveFileViewModel.deleteSave(saveFile.name)
                     },
                     modifier = Modifier.weight(1f),
                     enabled = !saveFile.isDefault
@@ -81,7 +86,19 @@ fun SaveItem(saveFile: SaveFile) {
                 }
                 LargeThemedButton(
                     onClick = {
-                        //uiViewModel.navigateWithFade(KitchenScreen)
+                        val result = withErrorHandling(uiViewModel) {
+                            saveFileViewModel.upsertSave(
+                                saveFile.copy(
+                                    save = dataViewModel.createSave()
+                                )
+                            )
+                        }
+                        result.onSuccess {
+                            uiViewModel.addTextPopup("Save Overwritten")
+                        }
+                        result.onFailure {
+                            uiViewModel.addTextPopup("Save Error. Check debug console")
+                        }
                     },
                     modifier = Modifier.weight(1f),
                     enabled = !saveFile.isDefault
