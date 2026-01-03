@@ -26,8 +26,6 @@ import cakebaker.composeapp.generated.resources.vanilla_cake
 import cakebaker.composeapp.generated.resources.vanilla_extract
 import cakebaker.composeapp.generated.resources.vcr_osd_mono
 import com.davidlukash.cakebaker.data.ImageData
-import com.davidlukash.cakebaker.data.theme.ButtonTheme
-import com.davidlukash.cakebaker.data.theme.ProgressBarTheme
 import org.jetbrains.compose.resources.FontResource
 
 data class Theme(
@@ -104,48 +102,5 @@ data class Theme(
             green = Color(58, 158, 0),
             red = Color(255, 0, 0),
         )
-
-//        val default = Theme(
-//            backgroundColor = Color(0, 0, 0),
-//            accentColor = Color(255, 255, 255),
-//            butterImage = ImageData(resource = Res.drawable.missing),
-//            eggImage = ImageData(resource = Res.drawable.missing),
-//            flourImage = ImageData(resource = Res.drawable.missing),
-//            sugarImage = ImageData(resource = Res.drawable.missing),
-//            vanillaExtractImage = ImageData(resource = Res.drawable.missing),
-//            bakingPowderImage = ImageData(resource = Res.drawable.missing),
-//            cocoaPowderImage = ImageData(resource = Res.drawable.missing),
-//            honeyPotImage = ImageData(resource = Res.drawable.missing),
-//            vanillaCakeImage = ImageData(resource = Res.drawable.missing),
-//            chocolateCakeImage = ImageData(resource = Res.drawable.missing),
-//            honeyCakeImage = ImageData(resource = Res.drawable.missing),
-//            moneyImage = ImageData(resource = Res.drawable.missing),
-//            ingredientShopImage = ImageData(resource = Res.drawable.missing),
-//            upgradeShopImage = ImageData(resource = Res.drawable.missing),
-//            ovenImage = ImageData(resource = Res.drawable.missing),
-//            font = Res.font.Roboto,
-//            titleStyle = TextStyle(fontSize = 96.sp),
-//            smallTitleStyle = TextStyle(fontSize = 48.sp),
-//            subtitleStyle = TextStyle(fontSize = 36.sp),
-//            labelStyle = TextStyle(fontSize = 32.sp),
-//            smallLabelStyle = TextStyle(fontSize = 22.sp),
-//            buttonTextStyle = TextStyle(fontSize = 56.sp),
-//            buttonTheme = ButtonTheme(
-//                containerColor = Color(0, 0, 0),
-//                disabledContainerColor = Color(37, 41, 46),
-//                contentColor = Color(255, 255, 255),
-//                disabledContentColor = Color(128, 128, 128),
-//                borderColor = Color(255, 255, 255),
-//                disabledBorderColor = Color(53, 57, 62),
-//            ),
-//            progressBarTheme = ProgressBarTheme(
-//                border = Color.Black,
-//                backgroundColor = Color(127, 127, 127),
-//                filledColor = Color(255, 255, 255, 255)
-//            ),
-//            containerBorderColor = Color.Black,
-//            green = Color(255, 0, 0, 255),
-//            red = Color(255, 0, 0),
-//        )
     }
 }
