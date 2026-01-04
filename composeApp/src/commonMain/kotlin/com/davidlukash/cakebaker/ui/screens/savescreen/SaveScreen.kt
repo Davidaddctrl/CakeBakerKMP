@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.ui.LargeThemedButton
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 

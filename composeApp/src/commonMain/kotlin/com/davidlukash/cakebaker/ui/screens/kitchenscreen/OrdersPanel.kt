@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.secondsToString
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.SmallThemedButton
@@ -62,7 +62,6 @@ fun RowScope.OrdersPanel() {
             Box {
                 Text(
                     "Orders",
-                    fontFamily = LocalFontFamily.current,
                     style = theme.labelStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
@@ -70,7 +69,6 @@ fun RowScope.OrdersPanel() {
                 )
                 Text(
                     orders.size.toString(),
-                    fontFamily = LocalFontFamily.current,
                     style = theme.smallLabelStyle,
                 )
             }
@@ -83,7 +81,6 @@ fun RowScope.OrdersPanel() {
                     nextOrderRemainingTime?.let {
                         Text(
                             "${secondsToString(it)} until next order",
-                            fontFamily = LocalFontFamily.current,
                             style = theme.labelStyle,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
@@ -92,7 +89,6 @@ fun RowScope.OrdersPanel() {
                     if (nextOrderRemainingTime == null)
                         Text(
                         "Bake a cake to get orders",
-                        fontFamily = LocalFontFamily.current,
                         style = theme.labelStyle,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()

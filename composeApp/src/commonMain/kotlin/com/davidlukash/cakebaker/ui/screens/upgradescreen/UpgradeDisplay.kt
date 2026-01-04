@@ -28,7 +28,7 @@ import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
@@ -52,7 +52,6 @@ fun UpgradeDisplay(upgrade: Upgrade) {
             style = theme.labelStyle,
             color = Color.White,
             textAlign = TextAlign.Center,
-            fontFamily = LocalFontFamily.current,
         )
         ResourceImage(
             theme.nameToImage(upgrade.imageName),
@@ -64,7 +63,6 @@ fun UpgradeDisplay(upgrade: Upgrade) {
             style = theme.labelStyle,
             color = Color.White,
             textAlign = TextAlign.Center,
-            fontFamily = LocalFontFamily.current,
         )
 
         Row(
@@ -76,13 +74,11 @@ fun UpgradeDisplay(upgrade: Upgrade) {
                     "${toEngNotation(upgrade.price.toBigDecimal())} ${cake?.name.toString()}",
                     style = theme.labelStyle,
                     color = Color.White,
-                    fontFamily = LocalFontFamily.current,
                 ) else
                 Text(
                     "Max Level Reached",
                     style = theme.labelStyle,
                     color = Color.White,
-                    fontFamily = LocalFontFamily.current,
                 )
         }
         LargeThemedButton(
@@ -96,7 +92,6 @@ fun UpgradeDisplay(upgrade: Upgrade) {
             Text(
                 "Buy",
                 style = theme.buttonTextStyle,
-                fontFamily = LocalFontFamily.current,
             )
         }
     }

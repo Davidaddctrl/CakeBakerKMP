@@ -1,7 +1,9 @@
 package com.davidlukash.cakebaker.data.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import cakebaker.composeapp.generated.resources.Res
 import cakebaker.composeapp.generated.resources.baking_powder
@@ -26,13 +28,13 @@ import cakebaker.composeapp.generated.resources.vanilla_cake
 import cakebaker.composeapp.generated.resources.vanilla_extract
 import cakebaker.composeapp.generated.resources.vcr_osd_mono
 import com.davidlukash.cakebaker.data.ImageData
-import org.jetbrains.compose.resources.FontResource
+import org.jetbrains.compose.resources.Font
 
 data class Theme(
     val backgroundColor: Color,
     val accentColor: Color,
     val nameToImageMap: Map<String, ImageData>,
-    val font: FontResource,
+    val font: FontFamily,
     val titleStyle: TextStyle,
     val smallTitleStyle: TextStyle,
     val subtitleStyle: TextStyle,
@@ -52,6 +54,7 @@ data class Theme(
     }
 
     companion object {
+        //Do not use this, use getDefaultTheme instead
         val default = Theme(
             backgroundColor = Color(0, 120, 255),
             accentColor = Color(246, 255, 153),
@@ -77,7 +80,7 @@ data class Theme(
                 "Neutral Sad Face" to ImageData(resource = Res.drawable.face_neutral_sad),
                 "Sad Face" to ImageData(resource = Res.drawable.face_sad),
             ),
-            font = Res.font.vcr_osd_mono,
+            font = FontFamily.Default,
             titleStyle = TextStyle(fontSize = 72.sp),
             smallTitleStyle = TextStyle(fontSize = 48.sp),
             subtitleStyle = TextStyle(fontSize = 36.sp),
@@ -103,4 +106,20 @@ data class Theme(
             red = Color(255, 0, 0),
         )
     }
+}
+
+@Composable
+fun getDefaultTheme(): Theme {
+    val theme = Theme.default
+    val fontFamily = FontFamily(Font(Res.font.vcr_osd_mono))
+    return theme.copy(
+        font = fontFamily,
+        titleStyle = theme.titleStyle.copy(fontFamily = fontFamily),
+        smallTitleStyle = theme.smallTitleStyle.copy(fontFamily = fontFamily),
+        subtitleStyle = theme.subtitleStyle.copy(fontFamily = fontFamily),
+        labelStyle = theme.labelStyle.copy(fontFamily = fontFamily),
+        smallLabelStyle = theme.smallLabelStyle.copy(fontFamily = fontFamily),
+        verySmallLabelStyle = theme.verySmallLabelStyle.copy(fontFamily = fontFamily),
+        buttonTextStyle = theme.buttonTextStyle.copy(fontFamily = fontFamily),
+    )
 }

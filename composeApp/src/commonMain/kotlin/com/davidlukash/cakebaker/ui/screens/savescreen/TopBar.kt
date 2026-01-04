@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.MenuButton
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
@@ -23,6 +23,5 @@ fun TopBar() {
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),
         style = theme.titleStyle,
-        fontFamily = LocalFontFamily.current
     )
 }

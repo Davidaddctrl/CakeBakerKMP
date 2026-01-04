@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.toBoolean
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.SwitchButton
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
@@ -57,7 +57,6 @@ fun RowScope.InfoPanel() {
         ) {
             Text(
                 "Information",
-                fontFamily = LocalFontFamily.current,
                 style = theme.labelStyle,
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
@@ -69,7 +68,6 @@ fun RowScope.InfoPanel() {
             ) {
                 Text(
                     "Customer\nSatisfaction",
-                    fontFamily = LocalFontFamily.current,
                     style = theme.labelStyle,
                     textAlign = TextAlign.Center,
                 )
@@ -90,14 +88,12 @@ fun RowScope.InfoPanel() {
                     )
                     Text(
                         "$satisfaction%",
-                        fontFamily = LocalFontFamily.current,
                         style = theme.labelStyle,
                     )
                 }
             }
             Text(
                 "Cake Sale Price",
-                fontFamily = LocalFontFamily.current,
                 style = theme.labelStyle,
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
@@ -105,7 +101,6 @@ fun RowScope.InfoPanel() {
             )
             Text(
                 "$${toEngNotation(cakePrices[currentCakeTier] ?: BigDecimal.ZERO)}",
-                fontFamily = LocalFontFamily.current,
                 style = theme.smallTitleStyle,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
@@ -114,7 +109,6 @@ fun RowScope.InfoPanel() {
             autoOven?.let {
                 Text(
                     "Auto Oven",
-                    fontFamily = LocalFontFamily.current,
                     style = theme.labelStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,

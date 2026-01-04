@@ -33,7 +33,6 @@ fun ItemAmountDisplay(item: Item) {
             color = Color.White,
             textAlign = TextAlign.Center,
             style = if (item.name.contains(" ")) theme.smallLabelStyle else theme.labelStyle,
-            fontFamily = LocalFontFamily.current
         )
         Column(
             modifier = Modifier.height(96.dp),
@@ -49,14 +48,12 @@ fun ItemAmountDisplay(item: Item) {
             color = Color.White,
             textAlign = TextAlign.Center,
             style = theme.labelStyle,
-            fontFamily = LocalFontFamily.current
         )
         Text(
             toEngNotation(item.amount),
             color = Color.White,
             textAlign = TextAlign.Center,
             style = theme.labelStyle,
-            fontFamily = LocalFontFamily.current
         )
     }
 }

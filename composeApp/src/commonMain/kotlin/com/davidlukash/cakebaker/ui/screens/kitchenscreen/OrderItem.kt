@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Order
 import com.davidlukash.cakebaker.secondsToString
 import com.davidlukash.cakebaker.toEngNotation
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.SmallThemedButton
 import com.davidlukash.cakebaker.ui.TertiaryContainer
@@ -47,7 +47,6 @@ fun OrderItem(order: Order) {
             ) {
                 Text(
                     "Order for",
-                    fontFamily = LocalFontFamily.current,
                     style = theme.labelStyle,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
@@ -60,7 +59,6 @@ fun OrderItem(order: Order) {
                     ) {
                         Text(
                             "Complete",
-                            fontFamily = LocalFontFamily.current,
                             style = theme.smallLabelStyle,
                             modifier = Modifier.padding(horizontal = 4.dp)
                         )
@@ -70,7 +68,6 @@ fun OrderItem(order: Order) {
             cake?.let { cake ->
                 Text(
                     "${toEngNotation(order.amount.toBigDecimal())} ${cake.name}",
-                    fontFamily = LocalFontFamily.current,
                     style = theme.labelStyle,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -79,7 +76,6 @@ fun OrderItem(order: Order) {
             if (cake == null)
                 Text(
                     "Invalid Cake Tier",
-                    fontFamily = LocalFontFamily.current,
                     style = theme.labelStyle,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -87,20 +83,17 @@ fun OrderItem(order: Order) {
 
             Text(
                 "Buying for",
-                fontFamily = LocalFontFamily.current,
                 style = theme.labelStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             Text(
                 "$${toEngNotation(order.salePrice)}",
-                fontFamily = LocalFontFamily.current,
                 style = theme.smallTitleStyle,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             Text(
                 "Remaining Time",
-                fontFamily = LocalFontFamily.current,
                 style = theme.labelStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
@@ -112,13 +105,11 @@ fun OrderItem(order: Order) {
                 )
                 Text(
                     "${secondsToString(order.remainingTime)} remaining",
-                    fontFamily = LocalFontFamily.current,
                     style = theme.smallLabelStyle,
                 )
             }
             Text(
                 "Order ${order.id}",
-                fontFamily = LocalFontFamily.current,
                 style = theme.smallLabelStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )

@@ -37,7 +37,7 @@ import cakebaker.composeapp.generated.resources.close
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.SwitchButton
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
@@ -77,7 +77,6 @@ fun RowScope.RecipePanel() {
                 )
                 Text(
                     cakes[currentCakeTier]?.name ?: "Cake Tier Invalid",
-                    fontFamily = LocalFontFamily.current,
                     style = theme.labelStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
@@ -108,12 +107,10 @@ fun RowScope.RecipePanel() {
                             ) {
                                 Text(
                                     "•",
-                                    fontFamily = LocalFontFamily.current,
                                     style = theme.labelStyle,
                                 )
                                 Text(
                                     "${toEngNotation(cakePrice)} ${item.name}",
-                                    fontFamily = LocalFontFamily.current,
                                     style = theme.labelStyle,
                                 )
                             }

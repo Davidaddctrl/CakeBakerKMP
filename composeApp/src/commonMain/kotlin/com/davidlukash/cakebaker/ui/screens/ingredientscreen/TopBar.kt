@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.ui.ItemTopRow
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
@@ -30,7 +30,6 @@ fun TopBar() {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
             style = theme.titleStyle,
-            fontFamily = LocalFontFamily.current
         )
         ItemTopRow()
     }

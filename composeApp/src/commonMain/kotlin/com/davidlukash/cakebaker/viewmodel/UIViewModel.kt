@@ -19,7 +19,6 @@ import com.davidlukash.cakebaker.AppLogger
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.data.Popup
-import com.davidlukash.cakebaker.ui.LocalFontFamily
 import com.davidlukash.cakebaker.ui.SmallThemedButton
 import com.davidlukash.cakebaker.ui.navigation.FadeScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
@@ -103,7 +102,6 @@ class UIViewModel : ViewModel(), AppLogger {
                 Text(
                     buttonText,
                     style = theme.smallLabelStyle,
-                    fontFamily = LocalFontFamily.current,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )

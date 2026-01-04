@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.davidlukash.cakebaker.VERSION
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
@@ -23,6 +23,5 @@ fun BottomBar() {
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),
         style = theme.subtitleStyle,
-        fontFamily = LocalFontFamily.current
     )
 }

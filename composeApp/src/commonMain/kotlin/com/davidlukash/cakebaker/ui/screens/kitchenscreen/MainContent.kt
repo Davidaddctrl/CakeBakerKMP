@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.ImageButton
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
@@ -59,7 +59,6 @@ fun MainContent(innerPadding: PaddingValues) {
                 if (ovenRunning)
                     Text(
                         "${floor((1.0 - progress) * ovenTime * 10.0) / 10.0} seconds remaining",
-                        fontFamily = LocalFontFamily.current,
                         style = theme.smallLabelStyle,
                         color = theme.buttonTheme.contentColor
                     )

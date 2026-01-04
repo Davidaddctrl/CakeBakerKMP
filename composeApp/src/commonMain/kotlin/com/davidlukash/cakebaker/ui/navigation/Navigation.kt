@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.Background
 import com.davidlukash.cakebaker.ui.MessageManager
 import com.davidlukash.cakebaker.ui.screens.cakescreen.CakeScreen
@@ -36,25 +37,25 @@ import com.davidlukash.cakebaker.ui.screens.upgradescreen.UpgradeScreen
 const val transitionDuration = 750
 
 @Composable
-fun NormalScreenMessageManager(lazyListState: LazyListState, content: @Composable () -> Unit) {
+fun NormalScreenMessageManager(theme: Theme, lazyListState: LazyListState, content: @Composable () -> Unit) {
     val uiViewModel = LocalMainViewModel.current.uiViewModel
     val currentScreen by uiViewModel.currentScreen.collectAsState()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        if (currentScreen is FadeScreen) MessageManager(lazyListState = lazyListState)
+        if (currentScreen is FadeScreen) MessageManager(theme = theme, lazyListState = lazyListState)
         else Popup(
             alignment = Alignment.BottomCenter,
         ) {
-            MessageManager(lazyListState = lazyListState)
+            MessageManager(theme = theme, lazyListState = lazyListState)
         }
         content()
     }
 }
 
 @Composable
-fun Navigation() {
+fun Navigation(theme: Theme) {
     val uiViewModel = LocalMainViewModel.current.uiViewModel
     val pendingScreen by uiViewModel.pendingScreen.collectAsState()
     val navController = rememberNavController()
@@ -76,9 +77,9 @@ fun Navigation() {
         }
     }
     val navGraph = remember(navController) {
-        navController.createGraph(startDestination = KitchenScreen) {
+        navController.createGraph(startDestination = SaveScreen) {
             composable<CakeScreen> {
-                NormalScreenMessageManager(lazyListState = lazyListState) {
+                NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
                     Background {
                         CakeScreen()
                     }
@@ -90,35 +91,35 @@ fun Navigation() {
                 )
             }
             composable<MenuScreen> {
-                NormalScreenMessageManager(lazyListState = lazyListState) {
+                NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
                     Background {
                         MenuScreen()
                     }
                 }
             }
             composable<KitchenScreen> {
-                NormalScreenMessageManager(lazyListState = lazyListState) {
+                NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
                     Background {
                         KitchenScreen()
                     }
                 }
             }
             composable<IngredientScreen> {
-                NormalScreenMessageManager(lazyListState = lazyListState) {
+                NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
                     Background {
                         IngredientScreen()
                     }
                 }
             }
             composable<UpgradeScreen> {
-                NormalScreenMessageManager(lazyListState = lazyListState) {
+                NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
                     Background {
                         UpgradeScreen()
                     }
                 }
             }
             composable<SaveScreen> {
-                NormalScreenMessageManager(lazyListState = lazyListState) {
+                NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
                     Background {
                         SaveScreen()
                     }

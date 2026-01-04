@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.SaveFile
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
@@ -43,7 +43,6 @@ fun SaveItem(saveFile: SaveFile) {
             Text(
                 saveFile.name,
                 style = theme.buttonTextStyle,
-                fontFamily = LocalFontFamily.current,
                 modifier = Modifier.padding(8.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -56,7 +55,7 @@ fun SaveItem(saveFile: SaveFile) {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Export", style = theme.buttonTextStyle, fontFamily = LocalFontFamily.current)
+                    Text("Export", style = theme.buttonTextStyle)
                 }
                 LargeThemedButton(
                     onClick = {
@@ -65,7 +64,7 @@ fun SaveItem(saveFile: SaveFile) {
                     modifier = Modifier.weight(1f),
                     enabled = !saveFile.isDefault
                 ) {
-                    Text("Delete", style = theme.buttonTextStyle, fontFamily = LocalFontFamily.current)
+                    Text("Delete", style = theme.buttonTextStyle)
                 }
             }
             Row(
@@ -82,7 +81,7 @@ fun SaveItem(saveFile: SaveFile) {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Load", style = theme.buttonTextStyle, fontFamily = LocalFontFamily.current)
+                    Text("Load", style = theme.buttonTextStyle)
                 }
                 LargeThemedButton(
                     onClick = {
@@ -103,7 +102,7 @@ fun SaveItem(saveFile: SaveFile) {
                     modifier = Modifier.weight(1f),
                     enabled = !saveFile.isDefault
                 ) {
-                    Text("Overwrite", style = theme.buttonTextStyle, fontFamily = LocalFontFamily.current)
+                    Text("Overwrite", style = theme.buttonTextStyle)
                 }
             }
         }

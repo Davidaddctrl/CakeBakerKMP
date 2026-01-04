@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.ImageButton
-import com.davidlukash.cakebaker.ui.LocalFontFamily
+
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
@@ -74,7 +74,6 @@ fun BottomBar(currentPage: String, setCurrentPage: (String) -> Unit) {
                         ) {
                             Text(
                                 page,
-                                fontFamily = LocalFontFamily.current,
                                 textAlign = TextAlign.Center,
                                 style = theme.labelStyle,
                                 fontWeight = if (page == currentPage) FontWeight.Bold else FontWeight.Normal,

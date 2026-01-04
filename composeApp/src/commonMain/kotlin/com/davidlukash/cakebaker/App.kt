@@ -11,9 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.ConsoleType
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
-import com.davidlukash.cakebaker.ui.GameTheme
 import com.davidlukash.cakebaker.ui.ScaleViewport
 import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
@@ -25,21 +25,26 @@ const val VERSION = "Alpha"
 fun App() {
     val mainViewModel = LocalMainViewModel.current
     val uiViewModel = mainViewModel.uiViewModel
+    val themeViewModel = mainViewModel.themeViewModel
+    val theme = getDefaultTheme()
     val debugConsole by uiViewModel.debugConsole.collectAsState()
+    val density = LocalDensity.current
+    LaunchedEffect(density) {
+        mainViewModel.uiViewModel.updateTrueDensity(density)
+    }
+
+    LaunchedEffect(themeViewModel) {
+        themeViewModel.setTheme(theme)
+    }
+
     Row(
         modifier = Modifier.fillMaxSize(),
     ) {
-        val density = LocalDensity.current
-        LaunchedEffect(density) {
-            mainViewModel.uiViewModel.updateTrueDensity(density)
-        }
         Box(
             modifier = Modifier.weight(1f).fillMaxSize(),
         ) {
-            GameTheme {
-                ScaleViewport(1920.dp, 1080.dp) {
-                    Navigation()
-                }
+            ScaleViewport(1920.dp, 1080.dp) {
+                Navigation(theme = theme)
             }
             if (debugConsole == ConsoleType.POPUP) DebugPopup()
         }

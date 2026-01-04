@@ -32,11 +32,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun MessageManager(
+    theme: Theme,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
     val viewModel = LocalMainViewModel.current
@@ -61,6 +63,7 @@ fun MessageManager(
             itemsIndexed(popups, key = { _, (_, id) -> id }) { index, popup ->
                 Box {
                     SmallContainer(
+                        theme = theme,
                         modifier = Modifier.width(320.dp),
                         shadowElevation = 8.dp
                     ) {
@@ -70,7 +73,6 @@ fun MessageManager(
                         ) {
                             CompositionLocalProvider(
                                 LocalTextStyle provides theme.smallLabelStyle.copy(
-                                    fontFamily = LocalFontFamily.current,
                                     textAlign = TextAlign.Center,
                                 )
                             ) {
@@ -86,7 +88,6 @@ fun MessageManager(
                                     Text(
                                         "Dismiss",
                                         style = theme.smallLabelStyle,
-                                        fontFamily = LocalFontFamily.current,
                                         modifier = Modifier.fillMaxWidth(),
                                         textAlign = TextAlign.Center
                                     )

@@ -53,7 +53,6 @@ fun SwitchButton(
                     ) {
                         Text(
                             offText,
-                            fontFamily = LocalFontFamily.current,
                             style = theme.smallLabelStyle,
                             color = (if (theme.red.isDark) Color.White else Color.Black).copy(alpha = if (!value && enabled) 1f else 0.3f),
                             textAlign = TextAlign.Center,
@@ -73,7 +72,6 @@ fun SwitchButton(
                     ) {
                         Text(
                             onText,
-                            fontFamily = LocalFontFamily.current,
                             style = theme.smallLabelStyle,
                             color = (if (theme.green.isLight) Color.Black else Color.White).copy(alpha = if (value && enabled) 1f else 0.3f),
                             textAlign = TextAlign.Center,

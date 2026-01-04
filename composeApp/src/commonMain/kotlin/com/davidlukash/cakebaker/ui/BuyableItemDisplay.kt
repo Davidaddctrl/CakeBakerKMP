@@ -42,12 +42,10 @@ fun BuyableItemDisplay(item: Item) {
                 Text(
                     item.name,
                     style = theme.smallLabelStyle,
-                    fontFamily = LocalFontFamily.current,
                 )
                 Text(
                     "$${toEngNotation(item.price ?: BigDecimal.ZERO)}",
-                    style = theme.subtitleStyle,
-                    fontFamily = LocalFontFamily.current,
+                    style = theme.subtitleStyle
                 )
             }
         }
@@ -61,7 +59,6 @@ fun BuyableItemDisplay(item: Item) {
             Text(
                 "Buy",
                 style = theme.buttonTextStyle,
-                fontFamily = LocalFontFamily.current,
             )
         }
     }
