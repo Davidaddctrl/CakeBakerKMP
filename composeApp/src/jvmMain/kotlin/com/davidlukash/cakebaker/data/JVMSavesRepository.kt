@@ -33,7 +33,7 @@ class JVMSavesRepository(
         TODO("Not yet implemented")
     }
 
-    override fun importSave(): Boolean {
+    override fun importSave(): Pair<Save, String?>? {
         TODO("Not yet implemented")
     }
 }

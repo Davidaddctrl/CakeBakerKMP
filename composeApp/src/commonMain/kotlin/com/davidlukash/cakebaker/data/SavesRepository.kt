@@ -9,5 +9,6 @@ abstract class SavesRepository {
 
     abstract fun exportSave(file: SaveFile): Boolean
 
-    abstract fun importSave(): Boolean
+    //This should return a Save, and a String? which is the name or null
+    abstract fun importSave(): Pair<Save, String?>?
 }
