@@ -10,6 +10,7 @@ import com.davidlukash.cakebaker.data.Order
 import com.davidlukash.cakebaker.data.OrderCakeSettings
 import com.davidlukash.cakebaker.data.OrderFactory
 import com.davidlukash.cakebaker.data.Save
+import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.globalDecimalMode
 import com.davidlukash.cakebaker.mapDouble
@@ -29,6 +30,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -132,9 +134,6 @@ class DataViewModel(
     private val _customerSatisfaction = MutableStateFlow(80)
     val customerSatisfaction = _customerSatisfaction.asStateFlow()
 
-    val satisfactionLevel = customerSatisfaction.map {
-        ceil(it.toDouble() / 20.0).toInt()
-    }
 
     val orderFactory = OrderFactory(this)
 
@@ -498,4 +497,40 @@ class DataViewModel(
         _ordersList.value,
         _orderCakeTimeCounters.value
     )
+
+    val uiStateFlow =
+        combine(
+            allItemsFlow,
+            currentCakeTier,
+            upgradesFlow,
+            ovenProgress,
+            ovenRunning,
+            autoOvenEnabled,
+            customerSatisfaction,
+            ordersList,
+            nextOrderRemainingTime,
+        ) { list ->
+            val items = list[0] as List<Item>
+            val currentCakeTier = list[1] as Int
+            val upgrades = list[2] as List<Upgrade>
+            val ovenProgress = list[3] as Double
+            val ovenRunning = list[4] as Boolean
+            val autoOvenEnabled = list[5] as Boolean
+            val customerSatisfaction = list[6] as Int
+            val orders = list[7] as List<Order>
+            val nextOrderRemainingTime = list[8] as? Double
+            val canBake = canBake(currentCakeTier)
+            UIState(
+                items = items,
+                currentCakeTier = currentCakeTier,
+                upgrades = upgrades,
+                ovenProgress = ovenProgress,
+                ovenRunning = ovenRunning,
+                autoOvenEnabled = autoOvenEnabled,
+                customerSatisfaction = customerSatisfaction,
+                orders = orders,
+                nextOrderRemainingTime = nextOrderRemainingTime,
+                canBake = canBake,
+            )
+        }
 }

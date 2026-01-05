@@ -1,5 +1,10 @@
 package com.davidlukash.cakebaker.ui.screens.kitchenscreen
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Order
+import com.davidlukash.cakebaker.data.Save
+import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.secondsToString
 import com.davidlukash.cakebaker.toEngNotation
 
@@ -25,12 +33,11 @@ import com.davidlukash.cakebaker.ui.SmallThemedButton
 import com.davidlukash.cakebaker.ui.TertiaryContainer
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun OrderItem(theme: Theme, order: Order) {
-    val mainViewModel = LocalMainViewModel.current
-    val dataViewModel = mainViewModel.dataViewModel
-    val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyMap())
+fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: Order) {
+    val cakes = uiState.getCakes()
     val cake = cakes[order.cakeTier]
     TertiaryContainer(
         theme = theme,
@@ -54,7 +61,7 @@ fun OrderItem(theme: Theme, order: Order) {
                     SmallThemedButton(
                         theme = theme,
                         onClick = {
-                            dataViewModel.handleCompleteOrder(order)
+                            completeOrder()
                         },
                         enabled = cake.amount >= order.amount
                     ) {
@@ -117,4 +124,30 @@ fun OrderItem(theme: Theme, order: Order) {
             )
         }
     }
+}
+
+@Preview(
+    widthDp = 512
+)
+@Composable
+fun OrderItemPreview() {
+    val theme = getDefaultTheme()
+    val uiState = Save.state.copy(
+        items = Save.state.items.map { it.copy(amount = 10.toBigDecimal()) },
+    )
+    val infiniteTransition = rememberInfiniteTransition()
+    val remainingTime by infiniteTransition.animateFloat(
+        30f, 0f, animationSpec = infiniteRepeatable(
+            animation = tween(30000, easing = LinearEasing),
+        )
+    )
+    val order = Order(
+        cakeTier = 1,
+        amount = 1,
+        salePrice = 2500.toBigDecimal(),
+        remainingTime = remainingTime.toDouble(),
+        totalTime = 30.0,
+        id = 988756,
+    )
+    OrderItem(theme = theme, uiState = uiState, completeOrder = {}, order = order)
 }

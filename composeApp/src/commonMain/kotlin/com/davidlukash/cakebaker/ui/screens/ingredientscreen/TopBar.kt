@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.ItemTopRow
 import com.davidlukash.cakebaker.ui.MenuButton
@@ -18,7 +19,7 @@ import com.davidlukash.cakebaker.ui.MenuButton
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun TopBar(theme: Theme) {
+fun TopBar(theme: Theme, uiState: UIState) {
     MenuButton {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -31,7 +32,7 @@ fun TopBar(theme: Theme) {
                 modifier = Modifier.fillMaxWidth(),
                 style = theme.titleStyle,
             )
-            ItemTopRow(theme)
+            ItemTopRow(theme, uiState)
         }
     }
 }

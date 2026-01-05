@@ -1,7 +1,6 @@
 package com.davidlukash.cakebaker.ui.screens.kitchenscreen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -9,13 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,27 +19,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.Save
+import com.davidlukash.cakebaker.data.UIState
+import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.toBoolean
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
 
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.SwitchButton
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun RowScope.InfoPanel(theme: Theme) {
-    val mainViewModel = LocalMainViewModel.current
-    val dataViewModel = mainViewModel.dataViewModel
-    val satisfactionLevel by dataViewModel.satisfactionLevel.collectAsState(initial = null)
-    val satisfaction by dataViewModel.customerSatisfaction.collectAsState()
-    val autoOvenEnabled by dataViewModel.autoOvenEnabled.collectAsState()
-    val currentCakeTier by dataViewModel.currentCakeTier.collectAsState()
-    val cakePrices by dataViewModel.cakePricesFlow.collectAsState(initial = emptyMap())
-    val upgrades by dataViewModel.upgradesFlow.collectAsState()
-    val autoOven = upgrades.find { it.name == "Auto Oven" }?.level?.toBoolean()
+fun RowScope.InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit) {
+    val satisfactionLevel = uiState.getSatisfactionLevel()
+    val satisfaction = uiState.customerSatisfaction
+    val autoOvenEnabled = uiState.autoOvenEnabled
+    val currentCakeTier = uiState.currentCakeTier
+    val cakesSalePrices = uiState.getCakesSalesPrices()
+    val autoOven = uiState.getAutoOven()
 
     Container(
         theme = theme,
@@ -100,7 +95,7 @@ fun RowScope.InfoPanel(theme: Theme) {
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
-                "$${toEngNotation(cakePrices[currentCakeTier] ?: BigDecimal.ZERO)}",
+                "$${toEngNotation(cakesSalePrices[currentCakeTier] ?: BigDecimal.ZERO)}",
                 style = theme.smallTitleStyle,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
@@ -122,9 +117,32 @@ fun RowScope.InfoPanel(theme: Theme) {
                     enabled = autoOven,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    dataViewModel.setAutoOvenEnabled(it)
+                    setAutoOvenEnabled(it)
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun InfoPanelPreview() {
+    val theme = getDefaultTheme()
+    var autoOvenEnabled by remember { mutableStateOf(true) }
+    val uiState = Save.state.copy(
+        customerSatisfaction = 50,
+        upgrades = Save.default.upgrades.filter { it.name == "Auto Oven" }.map {
+            it.copy(level = 1)
+        },
+        autoOvenEnabled = autoOvenEnabled
+    )
+    Row(
+        modifier = Modifier.size(400.dp, 720.dp)
+    ) {
+        InfoPanel(
+            theme = theme,
+            uiState = uiState,
+            setAutoOvenEnabled = { autoOvenEnabled = it }
+        )
     }
 }

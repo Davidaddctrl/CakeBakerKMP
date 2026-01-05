@@ -8,23 +8,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Item
-import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
-fun BuyableItemDisplay(theme: Theme, item: Item) {
-    val mainViewModel = LocalMainViewModel.current
-    val dataViewModel = mainViewModel.dataViewModel
-    val money by dataViewModel.itemMoneyFlow.collectAsState(initial = Item("Money", type = ItemType.CURRENCY, amount = BigDecimal.ZERO))
+fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Unit, item: Item) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -52,7 +45,7 @@ fun BuyableItemDisplay(theme: Theme, item: Item) {
         LargeThemedButton(
             theme = theme,
             onClick = {
-                dataViewModel.buyIngredient(item.name)
+                buyIngredient(item.name)
             },
             enabled = money.amount >= (item.price ?: BigDecimal.ZERO),
             modifier = Modifier.width(180.dp)

@@ -34,6 +34,7 @@ import cakebaker.composeapp.generated.resources.check
 import cakebaker.composeapp.generated.resources.chevron_backward
 import cakebaker.composeapp.generated.resources.chevron_forward
 import cakebaker.composeapp.generated.resources.close
+import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
@@ -45,12 +46,10 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun RowScope.RecipePanel(theme: Theme) {
-    val mainViewModel = LocalMainViewModel.current
-    val dataViewModel = mainViewModel.dataViewModel
-    val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyMap())
-    val ingredients by dataViewModel.ingredientsFlow.collectAsState(initial = emptyList())
-    val currentCakeTier by dataViewModel.currentCakeTier.collectAsState()
+fun RowScope.RecipePanel(theme: Theme, uiState: UIState, setCurrentCake: (Int) -> Unit) {
+    val cakes = uiState.getCakes()
+    val ingredients = uiState.getIngredients()
+    val currentCakeTier = uiState.currentCakeTier
 
     Container(
         theme = theme,
@@ -71,7 +70,7 @@ fun RowScope.RecipePanel(theme: Theme) {
                     modifier = Modifier.size(48.dp).clip(CircleShape).clickable(
                         enabled = currentCakeTier != 1
                     ) {
-                        dataViewModel.setCurrentCake(currentCakeTier - 1)
+                        setCurrentCake(currentCakeTier - 1)
                     },
                     tint = if (currentCakeTier != 1) LocalContentColor.current else Color.Transparent
                 )
@@ -88,7 +87,7 @@ fun RowScope.RecipePanel(theme: Theme) {
                     modifier = Modifier.size(48.dp).clip(CircleShape).clickable(
                         enabled = currentCakeTier != cakes.size
                     ) {
-                        dataViewModel.setCurrentCake(currentCakeTier + 1)
+                        setCurrentCake(currentCakeTier + 1)
                     },
                     tint = if (currentCakeTier != cakes.size) LocalContentColor.current else Color.Transparent
                 )

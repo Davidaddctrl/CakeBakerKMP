@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.ui.BuyableItemDisplay
@@ -21,10 +23,9 @@ import com.davidlukash.cakebaker.ui.HorizontalScrollBar
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun BoxScope.MainContent(theme: Theme) {
-    val mainViewModel = LocalMainViewModel.current
-    val dataViewModel = mainViewModel.dataViewModel
-    val ingredients by dataViewModel.ingredientsFlow.collectAsState(initial = emptyList())
+fun BoxScope.MainContent(theme: Theme, uiState: UIState, buyIngredient: (String) -> Unit) {
+    val ingredients = uiState.getIngredients()
+    val money = uiState.getMoneyItem()
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     Column(
@@ -37,7 +38,7 @@ fun BoxScope.MainContent(theme: Theme) {
         ) {
             ingredients.forEach { ingredient ->
                 key(ingredient.name) {
-                    BuyableItemDisplay(theme, ingredient)
+                    BuyableItemDisplay(theme, money, buyIngredient, ingredient)
                 }
             }
         }

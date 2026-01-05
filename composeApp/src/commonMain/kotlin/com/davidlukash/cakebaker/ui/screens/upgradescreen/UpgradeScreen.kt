@@ -7,20 +7,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import com.davidlukash.cakebaker.data.UIState
+import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.ui.navigation.Screen
 
 @Composable
-fun UpgradeScreen(theme: Theme) {
+fun UpgradeScreen(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit, buyUpgrade: (Upgrade) -> Unit) {
     var currentPage by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
-            TopBar(theme)
+            TopBar(theme, uiState)
         },
         bottomBar = {
-            BottomBar(theme, currentPage) { currentPage = it }
+            BottomBar(theme, uiState, navigateWithFade, currentPage) { currentPage = it }
         },
         containerColor = Color.Transparent
     ) { innerPadding ->
-        MainContent(theme, innerPadding, currentPage)
+        MainContent(theme, uiState, buyUpgrade, innerPadding, currentPage)
     }
 }

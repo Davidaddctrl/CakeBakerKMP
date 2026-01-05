@@ -16,15 +16,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun ItemTopRow(theme: Theme) {
-    val mainViewModel = LocalMainViewModel.current
-    val dataViewModel = mainViewModel.dataViewModel
-    val items by dataViewModel.allItemsFlow.collectAsState(initial = emptyList())
+fun ItemTopRow(theme: Theme, uiState: UIState) {
+    val items = uiState.items
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     Column(

@@ -43,7 +43,7 @@ class UIViewModel : ViewModel(), AppLogger {
     val currentScreen = _currentScreen.asStateFlow()
 
     private val _logs = MutableStateFlow(listOf<Log>())
-    val logs = _logs.asStateFlow()
+    override val logs = _logs.asStateFlow()
 
     private val _debugConsole = MutableStateFlow(ConsoleType.SIDEBAR)
     val debugConsole = _debugConsole.asStateFlow()

@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.ImageButton
@@ -31,11 +32,8 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun BottomBar(theme: Theme, currentPage: String, setCurrentPage: (String) -> Unit) {
-    val mainViewModel = LocalMainViewModel.current
-    val uiViewModel = mainViewModel.uiViewModel
-    val dataViewModel = mainViewModel.dataViewModel
-    val upgrades by dataViewModel.upgradesFlow.collectAsState()
+fun BottomBar(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit, currentPage: String, setCurrentPage: (String) -> Unit) {
+    val upgrades = uiState.upgrades
     val pages = upgrades.map { it.pageName }.distinct()
     LaunchedEffect(pages) {
         setCurrentPage(pages.firstOrNull() ?: "")
@@ -47,7 +45,7 @@ fun BottomBar(theme: Theme, currentPage: String, setCurrentPage: (String) -> Uni
 
         ImageButton(
             onClick = {
-                uiViewModel.navigateWithFade(IngredientScreen)
+                navigateWithFade(IngredientScreen)
             }
         ) {
             ResourceImage(
@@ -86,7 +84,7 @@ fun BottomBar(theme: Theme, currentPage: String, setCurrentPage: (String) -> Uni
         }
         ImageButton(
             onClick = {
-                uiViewModel.navigateWithFade(KitchenScreen)
+                navigateWithFade(KitchenScreen)
             }
         ) {
             ResourceImage(

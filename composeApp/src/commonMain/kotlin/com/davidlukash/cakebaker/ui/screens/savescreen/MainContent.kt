@@ -18,7 +18,14 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun MainContent(theme: Theme, innerPadding: PaddingValues) {
+fun MainContent(
+    theme: Theme,
+    exportSave: (SaveFile) -> Unit,
+    deleteSave: (SaveFile) -> Unit,
+    loadSave: (SaveFile) -> Unit,
+    overwriteSave: (SaveFile) -> Unit,
+    innerPadding: PaddingValues
+) {
     val mainViewModel = LocalMainViewModel.current
     val saveFileViewModel = mainViewModel.saveFileViewModel
     val saveFiles by saveFileViewModel.savesFlow.collectAsState(initial = emptyList())
@@ -30,11 +37,11 @@ fun MainContent(theme: Theme, innerPadding: PaddingValues) {
         columns = GridCells.Adaptive(760.dp)
     ) {
         item {
-            SaveItem(theme, default)
+            SaveItem(theme, exportSave, deleteSave, loadSave, overwriteSave,default)
         }
         items(saveFiles.size) { index ->
             val saveFile = saveFiles[index]
-            SaveItem(theme, saveFile)
+            SaveItem(theme, exportSave, deleteSave, loadSave, overwriteSave, saveFile)
         }
     }
 }

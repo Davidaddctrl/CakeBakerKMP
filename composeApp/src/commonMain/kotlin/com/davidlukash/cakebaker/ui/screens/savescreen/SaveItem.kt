@@ -27,12 +27,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun SaveItem(theme: Theme, saveFile: SaveFile) {
-    val mainViewModel = LocalMainViewModel.current
-    val dataViewModel = mainViewModel.dataViewModel
-    val saveFileViewModel = mainViewModel.saveFileViewModel
-    val uiViewModel = mainViewModel.uiViewModel
-    val coroutineScope = rememberCoroutineScope()
+fun SaveItem(
+    theme: Theme,
+    exportSave: (SaveFile) -> Unit,
+    deleteSave: (SaveFile) -> Unit,
+    loadSave: (SaveFile) -> Unit,
+    overwriteSave: (SaveFile) -> Unit,
+    saveFile: SaveFile
+) {
     Container(
         theme = theme,
         modifier = Modifier.fillMaxWidth().height(360.dp)
@@ -52,7 +54,7 @@ fun SaveItem(theme: Theme, saveFile: SaveFile) {
                 LargeThemedButton(
                     theme = theme,
                     onClick = {
-                        saveFileViewModel.exportSave(saveFile)
+                        exportSave(saveFile)
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -61,7 +63,7 @@ fun SaveItem(theme: Theme, saveFile: SaveFile) {
                 LargeThemedButton(
                     theme = theme,
                     onClick = {
-                        saveFileViewModel.deleteSave(saveFile.name)
+                        deleteSave(saveFile)
                     },
                     modifier = Modifier.weight(1f),
                     enabled = !saveFile.isDefault
@@ -75,12 +77,7 @@ fun SaveItem(theme: Theme, saveFile: SaveFile) {
                 LargeThemedButton(
                     theme = theme,
                     onClick = {
-                        coroutineScope.launch {
-                            dataViewModel.loadSave(saveFile.save)
-                            uiViewModel.navigateWithFade(KitchenScreen)
-                            delay(transitionDuration.toLong())
-                            uiViewModel.addTextPopup("Save Loaded")
-                        }
+                        loadSave(saveFile)
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -89,19 +86,7 @@ fun SaveItem(theme: Theme, saveFile: SaveFile) {
                 LargeThemedButton(
                     theme = theme,
                     onClick = {
-                        val result = withErrorHandling(uiViewModel) {
-                            saveFileViewModel.upsertSave(
-                                saveFile.copy(
-                                    save = dataViewModel.createSave()
-                                )
-                            )
-                        }
-                        result.onSuccess {
-                            uiViewModel.addTextPopup("Save Overwritten")
-                        }
-                        result.onFailure {
-                            uiViewModel.addTextPopup("Save Error. Check debug console")
-                        }
+                        overwriteSave(saveFile)
                     },
                     modifier = Modifier.weight(1f),
                     enabled = !saveFile.isDefault

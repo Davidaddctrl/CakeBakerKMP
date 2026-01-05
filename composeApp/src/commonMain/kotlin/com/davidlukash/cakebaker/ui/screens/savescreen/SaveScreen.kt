@@ -14,23 +14,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.SaveFile
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
+import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun SaveScreen(theme: Theme) {
+fun SaveScreen(
+    theme: Theme,
+    navigateWithFade: (Screen) -> Unit,
+    exportSave: (SaveFile) -> Unit,
+    deleteSave: (SaveFile) -> Unit,
+    loadSave: (SaveFile) -> Unit,
+    overwriteSave: (SaveFile) -> Unit,
+) {
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
             TopBar(theme)
         },
         bottomBar = {
-            BottomBar(theme)
+            BottomBar(theme, navigateWithFade)
         }
     ) { innerPadding ->
-        MainContent(theme, innerPadding)
+        MainContent(theme, exportSave, deleteSave, loadSave, overwriteSave, innerPadding)
     }
 }
