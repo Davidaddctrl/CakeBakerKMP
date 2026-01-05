@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.data
 
 import com.davidlukash.cakebaker.json
 import java.io.File
+import javax.swing.JFileChooser
 
 class JVMSavesRepository(
     baseDirectory: File,
@@ -30,10 +31,22 @@ class JVMSavesRepository(
     }
 
     override fun exportSave(file: SaveFile): Boolean {
-        TODO("Not yet implemented")
+        val fileChooser = JFileChooser()
+        val option = fileChooser.showSaveDialog(null)
+        if (option == JFileChooser.APPROVE_OPTION) {
+            val selectedFile = fileChooser.selectedFile
+            selectedFile.writeText(json.encodeToString(file.save))
+            return true
+        } else return false
     }
 
-    override fun importSave(): Pair<Save, String?>? {
-        TODO("Not yet implemented")
+    override fun importSave(): Save? {
+        val fileChooser = JFileChooser()
+        val option = fileChooser.showOpenDialog(null)
+        if (option == JFileChooser.APPROVE_OPTION) {
+            val selectedFile = fileChooser.selectedFile
+            val save = json.decodeFromString<Save>(selectedFile.readText())
+            return save
+        } else return null
     }
 }

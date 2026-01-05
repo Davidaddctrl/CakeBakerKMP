@@ -36,7 +36,7 @@ class JSSavesRepository : SavesRepository() {
         TODO("Not yet implemented")
     }
 
-    override fun importSave(): Pair<Save, String?>? {
+    override fun importSave(): Save? {
         TODO("Not yet implemented")
     }
 }

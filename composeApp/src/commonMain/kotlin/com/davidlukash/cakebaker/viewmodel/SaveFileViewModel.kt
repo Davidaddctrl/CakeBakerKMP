@@ -56,7 +56,8 @@ class SaveFileViewModel(
     fun exportSave(file: SaveFile) {
         viewModelScope.launch {
             withErrorHandling(uiViewModel) {
-                savesRepository.exportSave(file)
+                val created = savesRepository.exportSave(file)
+                if (created) uiViewModel.addTextPopup("Save Exported")
             }
         }
     }
