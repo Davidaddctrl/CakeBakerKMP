@@ -48,7 +48,7 @@ import com.davidlukash.cakebaker.ui.screens.savescreen.SaveScreen
 import com.davidlukash.cakebaker.ui.screens.upgradescreen.UpgradeScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-const val transitionDuration = 750
+const val transitionDuration = 500
 
 @Composable
 fun NormalScreenMessageManager(
@@ -123,8 +123,8 @@ fun Navigation(
             navController.navigate(it as Screen)
         }
     }
-    val navGraph = remember(navController, uiState, currentScreen) {
-        navController.createGraph(startDestination = IngredientScreen) {
+    val navGraph = remember(navController, uiState, currentScreen, popups) {
+        navController.createGraph(startDestination = SaveScreen) {
             composable<IngredientScreen> {
                 NormalScreenMessageManager(
                     theme = theme,
@@ -244,28 +244,24 @@ fun NavigationPreview() {
     val theme = getDefaultTheme()
     val uiState = Save.state
     var currentScreen by remember { mutableStateOf<Screen>(IngredientScreen) }
-    CompositionLocalProvider(
-        LocalInspectionMode provides true
-    ) {
-        Navigation(
-            theme = theme,
-            uiState = uiState,
-            pendingScreen = currentScreen,
-            updateCurrentScreen = { currentScreen = it },
-            navigateWithFade = { currentScreen = it },
-            bake = {},
-            buyIngredient = {},
-            setAutoOvenEnabled = {},
-            completeOrder = {},
-            setCurrentCake = {},
-            exportSave = {},
-            deleteSave = {},
-            loadSave = {},
-            overwriteSave = {},
-            buyUpgrade = {},
-            popups = listOf(),
-            trueDensity = LocalDensity.current,
-            removePopup = {},
-        )
-    }
+    Navigation(
+        theme = theme,
+        uiState = uiState,
+        pendingScreen = currentScreen,
+        updateCurrentScreen = { currentScreen = it },
+        navigateWithFade = { currentScreen = it },
+        bake = {},
+        buyIngredient = {},
+        setAutoOvenEnabled = {},
+        completeOrder = {},
+        setCurrentCake = {},
+        exportSave = {},
+        deleteSave = {},
+        loadSave = {},
+        overwriteSave = {},
+        buyUpgrade = {},
+        popups = listOf(),
+        trueDensity = LocalDensity.current,
+        removePopup = {},
+    )
 }
