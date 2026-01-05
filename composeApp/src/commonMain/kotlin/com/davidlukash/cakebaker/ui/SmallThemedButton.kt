@@ -31,11 +31,13 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SmallThemedButton(
@@ -77,5 +79,17 @@ fun SmallThemedButton(
         ) {
             content()
         }
+    }
+}
+
+@Preview
+@Composable
+fun SmallThemedButtonPreview() {
+    val theme = getDefaultTheme()
+    SmallThemedButton(
+        theme = theme,
+        onClick = {},
+    ) {
+        Text("Small Button Preview")
     }
 }

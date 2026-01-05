@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.dp
 import cakebaker.composeapp.generated.resources.Res
 import cakebaker.composeapp.generated.resources.chevron_backward
@@ -25,13 +26,12 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun MenuButton(content: @Composable () -> Unit) {
-    val mainViewModel = LocalMainViewModel.current
-    val uiViewModel = mainViewModel.uiViewModel
+    val uiViewModel = if (LocalInspectionMode.current) null else LocalMainViewModel.current.uiViewModel
     Box(modifier = Modifier.fillMaxWidth()) {
         content()
         IconButton(
             onClick = {
-                uiViewModel.navigateWithFade(MenuScreen)
+                uiViewModel?.navigateWithFade(MenuScreen)
             },
             modifier = Modifier.align(Alignment.TopStart).size(72.dp).offset(x = 24.dp, y = 24.dp)
         ) {

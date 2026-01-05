@@ -2,16 +2,12 @@ package com.davidlukash.cakebaker.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -26,26 +22,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
+import com.davidlukash.cakebaker.data.Popup
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
-import kotlinx.coroutines.delay
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MessageManager(
     theme: Theme,
+    popups: List<Popup>,
+    trueDensity: Density,
+    removePopup: (Int) -> Unit,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
-    val viewModel = LocalMainViewModel.current
-    val uiViewModel = viewModel.uiViewModel
-    val popups by uiViewModel.popups.collectAsState()
-    val trueDensity by uiViewModel.trueDensity.collectAsState()
-
     LaunchedEffect(popups) {
         if (popups.isNotEmpty())
             lazyListState.scrollToItem(popups.size - 1)
@@ -59,45 +55,65 @@ fun MessageManager(
             state = lazyListState
         ) {
             itemsIndexed(popups, key = { _, (_, id) -> id }) { index, popup ->
-                Box {
-                    SmallContainer(
+                Popup(theme, { removePopup(index) }, index, popup)
+            }
+        }
+    }
+}
+
+@Composable
+fun Popup(theme: Theme, remove: (Int) -> Unit, index: Int, popup: Popup) {
+    Box {
+        SmallContainer(
+            theme = theme,
+            modifier = Modifier.width(320.dp),
+            shadowElevation = 8.dp
+        ) {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CompositionLocalProvider(
+                    LocalTextStyle provides theme.smallLabelStyle.copy(
+                        textAlign = TextAlign.Center,
+                    )
+                ) {
+                    popup.content.invoke(
+                        popup to theme
+                    )
+                }
+                if (popup.shouldHaveDefaultButton) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    SmallThemedButton(
                         theme = theme,
-                        modifier = Modifier.width(320.dp),
-                        shadowElevation = 8.dp
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            CompositionLocalProvider(
-                                LocalTextStyle provides theme.smallLabelStyle.copy(
-                                    textAlign = TextAlign.Center,
-                                )
-                            ) {
-                                popup.content.invoke(
-                                    popup to theme
-                                )
-                            }
-                            if (popup.shouldHaveDefaultButton) {
-                                Spacer(modifier = Modifier.height(8.dp))
-                                SmallThemedButton(
-                                    theme = theme,
-                                    onClick = {
-                                        uiViewModel.removePopup(index)
-                                    }
-                                ) {
-                                    Text(
-                                        "Dismiss",
-                                        style = theme.smallLabelStyle,
-                                        modifier = Modifier.fillMaxWidth(),
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-                            }
+                        onClick = {
+                            remove(index)
                         }
+                    ) {
+                        Text(
+                            "Dismiss",
+                            style = theme.smallLabelStyle,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
         }
     }
+}
+
+@Preview(
+    heightDp = 120,
+)
+@Composable
+fun PopupPreview() {
+    val theme = getDefaultTheme()
+    val popup = Popup(
+        content = {
+            Text("Popup Preview", modifier = Modifier.fillMaxWidth())
+        },
+        id = 0
+    )
+    Popup(theme = theme, remove = {}, -1, popup)
 }

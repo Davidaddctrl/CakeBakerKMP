@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -76,6 +77,7 @@ import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.davidlukash.jsonmath.engine.normal.ScopeType
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
@@ -187,10 +189,45 @@ fun DebugPanel(
     val engine = mainViewModel.engine
     val uiViewModel = mainViewModel.uiViewModel
     val logs by uiViewModel.logs.collectAsState()
-    var input by remember { mutableStateOf("") }
-    val lazyListState = rememberLazyListState()
     val globalScope = mainViewModel.dataViewModel.globalScope
     val localScope = remember { CakeBakerScope(ScopeType(EnumScopeType.LOCAL), mainViewModel.dataViewModel) }
+    DebugPanelContent(
+        logs,
+        execute = {
+            uiViewModel.appendLog(Log(it, LogType.MESSAGE))
+            try {
+                val code = json.decodeFromString<Expression>(it)
+                val output = engine.evaluateExpression(
+                    code,
+                    listOf(globalScope, localScope),
+                    listOf(OriginNode("Debug Console", listOf(code)))
+                )
+                uiViewModel.appendLog(Log("Result: $output", LogType.RESULT))
+            } catch (e: LanguageException) {
+                uiViewModel.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
+            } catch (e: Exception) {
+                uiViewModel.appendLog(Log(e.toString() + e.stackTraceToString(), LogType.ERROR))
+            }
+        },
+        modifier = modifier,
+        canHide = canHide,
+        isHidden = isHidden,
+        setHidden = setHidden,
+    )
+}
+
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
+@Composable
+fun DebugPanelContent(
+    logs: List<Log>,
+    execute: (String) -> Unit,
+    modifier: Modifier,
+    canHide: Boolean = false,
+    isHidden: Boolean = false,
+    setHidden: (Boolean) -> Unit = {}
+) {
+    var input by remember { mutableStateOf("") }
+    val lazyListState = rememberLazyListState()
 
     LaunchedEffect(logs) {
         if (logs.isNotEmpty()) lazyListState.scrollToItem(logs.size - 1)
@@ -303,20 +340,7 @@ fun DebugPanel(
                 )
                 Button(
                     onClick = {
-                        uiViewModel.appendLog(Log(input, LogType.MESSAGE))
-                        try {
-                            val code = json.decodeFromString<Expression>(input)
-                            val output = engine.evaluateExpression(
-                                code,
-                                listOf(globalScope, localScope),
-                                listOf(OriginNode("Debug Console", listOf(code)))
-                            )
-                            uiViewModel.appendLog(Log("Result: $output", LogType.RESULT))
-                        } catch (e: LanguageException) {
-                            uiViewModel.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
-                        } catch (e: Exception) {
-                            uiViewModel.appendLog(Log(e.toString() + e.stackTraceToString(), LogType.ERROR))
-                        }
+                        execute(input)
                     },
                     modifier = Modifier.align(Alignment.BottomEnd).zIndex(2f).offset(x = (-4).dp, y = (-4).dp),
                     shape = RoundedCornerShape(8.dp),
@@ -330,4 +354,28 @@ fun DebugPanel(
             }
         }
     }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+@Preview(
+    widthDp = 800,
+    heightDp = 600
+)
+@Composable
+fun DebugPanelPreview() {
+    var logs by remember { mutableStateOf(listOf<Log>(
+        Log("Debug Panel Preview Message", LogType.MESSAGE),
+        Log("Debug Panel Preview Error", LogType.ERROR),
+        Log("Debug Panel Preview Result", LogType.RESULT),
+    )) }
+    var isHidden by remember { mutableStateOf(false) }
+    DebugPanelContent(
+        logs = logs,
+        execute = {
+            logs = logs + Log(it, LogType.MESSAGE)
+        },
+        modifier = Modifier.size(800.dp, 600.dp),
+        canHide = true,
+        isHidden = isHidden,
+    ) { isHidden = it }
 }

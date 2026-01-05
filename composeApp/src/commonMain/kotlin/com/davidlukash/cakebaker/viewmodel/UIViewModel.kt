@@ -120,7 +120,7 @@ class UIViewModel : ViewModel(), AppLogger {
 
     fun navigateTo(destination: Screen?) {
         viewModelScope.launch {
-            _pendingScreen.value = destination
+            _pendingScreen.emit(destination)
         }
     }
 

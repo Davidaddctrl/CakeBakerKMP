@@ -19,13 +19,10 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun CakeScreen(theme: Theme) {
-    val mainViewModel = LocalMainViewModel.current
-    val navigationViewModel = mainViewModel.uiViewModel
-
+fun CakeScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
     LaunchedEffect(Unit) {
         delay(2000)
-        navigationViewModel.navigateWithFade(MenuScreen)
+        navigateWithFade(MenuScreen)
     }
 
     Scaffold(

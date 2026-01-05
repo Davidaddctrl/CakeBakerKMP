@@ -14,14 +14,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Item
+import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ItemAmountDisplay(theme: Theme, item: Item) {
-    val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val image = theme.nameToImage(item.name)
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
@@ -56,4 +58,16 @@ fun ItemAmountDisplay(theme: Theme, item: Item) {
             style = theme.labelStyle,
         )
     }
+}
+
+@Preview
+@Composable
+fun ItemAmountDisplayPreview() {
+    val theme = getDefaultTheme()
+    val item = Item(
+        name = "Money",
+        type = ItemType.CURRENCY,
+        amount = 10000.toBigDecimal(),
+    )
+    ItemAmountDisplay(theme = theme, item = item)
 }

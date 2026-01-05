@@ -14,14 +14,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.ImageButton
 
@@ -30,6 +35,7 @@ import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun BottomBar(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit, currentPage: String, setCurrentPage: (String) -> Unit) {
@@ -42,7 +48,6 @@ fun BottomBar(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Bottom,
     ) {
-
         ImageButton(
             onClick = {
                 navigateWithFade(IngredientScreen)
@@ -93,4 +98,20 @@ fun BottomBar(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit
             )
         }
     }
+}
+
+@Preview(
+    widthDp = 1920
+)
+@Composable
+fun BottomBarPreview() {
+    val theme = getDefaultTheme()
+    val uiState = Save.state
+    var currentPage by remember { mutableStateOf("") }
+    BottomBar(
+        theme = theme,
+        uiState = uiState,
+        navigateWithFade = {},
+        currentPage = currentPage,
+    ) { currentPage = it }
 }

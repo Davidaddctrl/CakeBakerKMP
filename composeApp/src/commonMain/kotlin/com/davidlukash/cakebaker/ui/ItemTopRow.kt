@@ -16,10 +16,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ItemTopRow(theme: Theme, uiState: UIState) {
@@ -47,4 +50,14 @@ fun ItemTopRow(theme: Theme, uiState: UIState) {
         Spacer(modifier = Modifier.height(16.dp))
         HorizontalScrollBar(theme, scrollState, coroutineScope)
     }
+}
+
+@Preview(
+    widthDp = 1920
+)
+@Composable
+fun ItemTopRowPreview() {
+    val theme = getDefaultTheme()
+    val uiState = Save.state
+    ItemTopRow(theme = theme, uiState = uiState)
 }

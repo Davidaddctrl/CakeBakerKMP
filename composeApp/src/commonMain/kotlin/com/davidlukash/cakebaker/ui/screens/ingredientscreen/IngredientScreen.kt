@@ -10,18 +10,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.ui.navigation.Screen
 
 @Composable
-fun IngredientScreen(theme: Theme, uiState: UIState, buyIngredient: (String) -> Unit) {
-    LaunchedEffect(uiState) {
-        println("UIState IngredientScreen: ${uiState.getMoneyItem()}")
-    }
+fun IngredientScreen(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit, buyIngredient: (String) -> Unit) {
     Scaffold(
         topBar = {
             TopBar(theme, uiState)
         },
         bottomBar = {
-            BottomBar(theme)
+            BottomBar(theme, navigateWithFade)
         },
         containerColor = Color.Transparent
     ) { innerPadding ->

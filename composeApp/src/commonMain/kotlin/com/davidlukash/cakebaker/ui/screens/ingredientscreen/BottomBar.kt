@@ -27,9 +27,7 @@ import com.davidlukash.cakebaker.ui.navigation.UpgradeScreen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun BottomBar(theme: Theme) {
-    val mainViewModel = LocalMainViewModel.current
-    val uiViewModel = mainViewModel.uiViewModel
+fun BottomBar(theme: Theme, navigateWithFade: (Screen) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(),
@@ -37,7 +35,7 @@ fun BottomBar(theme: Theme) {
     ) {
         ImageButton(
             onClick = {
-                uiViewModel.navigateWithFade(KitchenScreen)
+                navigateWithFade(KitchenScreen)
             },
         ) {
             ResourceImage(
@@ -48,7 +46,7 @@ fun BottomBar(theme: Theme) {
 
         ImageButton(
             onClick = {
-                uiViewModel.navigateWithFade(UpgradeScreen)
+                navigateWithFade(UpgradeScreen)
             },
         ) {
             ResourceImage(

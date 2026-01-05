@@ -12,8 +12,10 @@ import cakebaker.composeapp.generated.resources.Res
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.davidlukash.cakebaker.data.ImageData
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ResourceImage(data: ImageData, contentDescription: String? = null, modifier: Modifier = Modifier) {
@@ -29,4 +31,11 @@ fun ResourceImage(data: ImageData, contentDescription: String? = null, modifier:
             filterQuality = data.filterQuality
         )
     }
+}
+
+@Preview
+@Composable
+fun ResourceImagePreview() {
+    val theme = getDefaultTheme()
+    ResourceImage(theme.nameToImage("Oven"))
 }

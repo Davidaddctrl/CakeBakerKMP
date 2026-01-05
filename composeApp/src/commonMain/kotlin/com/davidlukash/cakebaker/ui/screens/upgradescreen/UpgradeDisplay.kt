@@ -24,9 +24,11 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.Item
 import com.davidlukash.cakebaker.data.ItemType
+import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
@@ -35,6 +37,7 @@ import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit, upgrade: Upgrade) {
@@ -94,4 +97,20 @@ fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun UpgradeDisplayPreview() {
+    val theme = getDefaultTheme()
+    val uiState = Save.state.copy(
+        items = Save.state.items.map { it.copy(amount = 1000.toBigDecimal()) }
+    )
+    val upgrade = uiState.upgrades.first()
+    UpgradeDisplay(
+        theme = theme,
+        uiState = uiState,
+        buyUpgrade = {},
+        upgrade = upgrade
+    )
 }

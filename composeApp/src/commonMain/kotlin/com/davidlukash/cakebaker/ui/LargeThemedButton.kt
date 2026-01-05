@@ -15,9 +15,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,13 +28,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.Modifier.Companion
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LargeThemedButton(
@@ -47,7 +52,6 @@ fun LargeThemedButton(
         onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        content = content,
         enabled = enabled,
         contentPadding = PaddingValues(16.dp),
         border = BorderStroke(
@@ -67,5 +71,25 @@ fun LargeThemedButton(
             0.dp,
             0.dp
         )
-    )
+    ) {
+        CompositionLocalProvider(
+            LocalTextStyle provides theme.buttonTextStyle.copy(textAlign = TextAlign.Center),
+        ) {
+            content()
+        }
+    }
+}
+
+@Preview(
+    widthDp = 768
+)
+@Composable
+fun LargeThemedButtonPreview() {
+    val theme = getDefaultTheme()
+    LargeThemedButton(
+        theme,
+        onClick = {},
+    ) {
+        Text("Button Preview")
+    }
 }

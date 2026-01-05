@@ -11,12 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.ItemTopRow
 
 import com.davidlukash.cakebaker.ui.MenuButton
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun TopBar(theme: Theme, uiState: UIState) {
@@ -35,4 +38,14 @@ fun TopBar(theme: Theme, uiState: UIState) {
             ItemTopRow(theme, uiState)
         }
     }
+}
+
+@Preview(
+    widthDp = 1920,
+)
+@Composable
+fun TopBarPreview() {
+    val theme = getDefaultTheme()
+    val uiState = Save.state
+    TopBar(theme, uiState)
 }

@@ -39,6 +39,9 @@ fun App() {
     val debugConsole by uiViewModel.debugConsole.collectAsState()
     val density = LocalDensity.current
     val coroutineScope = rememberCoroutineScope()
+    val pendingScreen by uiViewModel.pendingScreen.collectAsState()
+    val popups by uiViewModel.popups.collectAsState()
+    val trueDensity by uiViewModel.trueDensity.collectAsState()
     LaunchedEffect(density) {
         mainViewModel.uiViewModel.updateTrueDensity(density)
     }
@@ -56,7 +59,11 @@ fun App() {
             ScaleViewport(1920.dp, 1080.dp) {
                 Navigation(
                     theme = theme, uiState = uiState,
-                    navigateWithFade = { uiViewModel.navigateTo(it) },
+                    pendingScreen = pendingScreen,
+                    popups = popups, trueDensity = trueDensity ?: LocalDensity.current,
+                    removePopup = { uiViewModel.removePopup(it) },
+                    updateCurrentScreen = { uiViewModel.updateCurrentScreen(it) },
+                    navigateWithFade = { uiViewModel.navigateWithFade(it) },
                     bake = { dataViewModel.bake() },
                     buyIngredient = { dataViewModel.buyIngredient(it) },
                     setAutoOvenEnabled = { dataViewModel.setAutoOvenEnabled(it) },

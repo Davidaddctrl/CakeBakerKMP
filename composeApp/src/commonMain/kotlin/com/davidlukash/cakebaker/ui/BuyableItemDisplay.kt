@@ -12,9 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Item
+import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Unit, item: Item) {
@@ -56,4 +60,27 @@ fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Uni
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun BuyableItemDisplayPreview() {
+    val theme = getDefaultTheme()
+    val money = Item(
+        name = "Money",
+        type = ItemType.CURRENCY,
+        amount = 2000.toBigDecimal(),
+    )
+    val item = Item(
+        name = "Butter",
+        type = ItemType.INGREDIENT,
+        amount = BigDecimal.ZERO,
+        price = 200.toBigDecimal()
+    )
+    BuyableItemDisplay(
+        theme = theme,
+        money = money,
+        buyIngredient = { },
+        item = item
+    )
 }
