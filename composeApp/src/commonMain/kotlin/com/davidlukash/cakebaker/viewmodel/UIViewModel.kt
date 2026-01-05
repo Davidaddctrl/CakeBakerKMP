@@ -19,6 +19,7 @@ import com.davidlukash.cakebaker.AppLogger
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.data.Popup
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.SmallThemedButton
 import com.davidlukash.cakebaker.ui.navigation.FadeScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
@@ -65,7 +66,7 @@ class UIViewModel : ViewModel(), AppLogger {
 
     override fun getDebugConsole(): ConsoleType = debugConsole.value
 
-    fun addPopup(shouldHaveDefaultButton: Boolean = true, content: @Composable Popup.() -> Unit) {
+    fun addPopup(shouldHaveDefaultButton: Boolean = true, content: @Composable Pair<Popup, Theme>.() -> Unit) {
         viewModelScope.launch {
             _popups.emit(
                 _popups.value + Popup(content, nextId++, shouldHaveDefaultButton)
@@ -84,18 +85,18 @@ class UIViewModel : ViewModel(), AppLogger {
 
     fun addTextButtonPopup(text: String, shouldHaveDefaultButton: Boolean = true, buttonText: String, onClick: () -> Unit) {
         addPopup(shouldHaveDefaultButton) {
-            val viewModel = LocalMainViewModel.current
-            val themeViewModel = viewModel.themeViewModel
-            val theme by themeViewModel.theme.collectAsState()
+            val popup = first
+            val theme = second
             Text(
                 text,
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(modifier = Modifier.height(8.dp))
             SmallThemedButton(
+                theme = theme,
                 onClick = {
                     onClick()
-                    removePopup(this.index)
+                    removePopup(popup.index)
                 },
                 modifier = Modifier.fillMaxWidth(),
             ) {

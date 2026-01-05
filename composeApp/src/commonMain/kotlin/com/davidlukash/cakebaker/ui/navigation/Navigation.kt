@@ -80,8 +80,8 @@ fun Navigation(theme: Theme) {
         navController.createGraph(startDestination = SaveScreen) {
             composable<CakeScreen> {
                 NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
-                    Background {
-                        CakeScreen()
+                    Background(theme) {
+                        CakeScreen(theme)
                     }
                 }
             }
@@ -92,36 +92,36 @@ fun Navigation(theme: Theme) {
             }
             composable<MenuScreen> {
                 NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
-                    Background {
-                        MenuScreen()
+                    Background(theme) {
+                        MenuScreen(theme)
                     }
                 }
             }
             composable<KitchenScreen> {
                 NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
-                    Background {
-                        KitchenScreen()
+                    Background(theme) {
+                        KitchenScreen(theme)
                     }
                 }
             }
             composable<IngredientScreen> {
                 NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
-                    Background {
-                        IngredientScreen()
+                    Background(theme) {
+                        IngredientScreen(theme)
                     }
                 }
             }
             composable<UpgradeScreen> {
                 NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
-                    Background {
-                        UpgradeScreen()
+                    Background(theme) {
+                        UpgradeScreen(theme)
                     }
                 }
             }
             composable<SaveScreen> {
                 NormalScreenMessageManager(theme = theme, lazyListState = lazyListState) {
-                    Background {
-                        SaveScreen()
+                    Background(theme) {
+                        SaveScreen(theme)
                     }
                 }
             }

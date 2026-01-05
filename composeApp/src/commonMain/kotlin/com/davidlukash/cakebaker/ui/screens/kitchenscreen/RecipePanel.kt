@@ -34,6 +34,7 @@ import cakebaker.composeapp.generated.resources.check
 import cakebaker.composeapp.generated.resources.chevron_backward
 import cakebaker.composeapp.generated.resources.chevron_forward
 import cakebaker.composeapp.generated.resources.close
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
@@ -44,16 +45,15 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun RowScope.RecipePanel() {
+fun RowScope.RecipePanel(theme: Theme) {
     val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val dataViewModel = mainViewModel.dataViewModel
     val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyMap())
     val ingredients by dataViewModel.ingredientsFlow.collectAsState(initial = emptyList())
     val currentCakeTier by dataViewModel.currentCakeTier.collectAsState()
-    val theme by themeViewModel.theme.collectAsState()
 
     Container(
+        theme = theme,
         modifier = Modifier.weight(1f).fillMaxWidth(),
     ) {
         Column(

@@ -25,6 +25,7 @@ import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.Item
 import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.Upgrade
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
@@ -35,11 +36,9 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 
 @Composable
-fun UpgradeDisplay(upgrade: Upgrade) {
+fun UpgradeDisplay(theme: Theme, upgrade: Upgrade) {
     val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val dataViewModel = mainViewModel.dataViewModel
-    val theme by themeViewModel.theme.collectAsState()
     val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyMap())
     val cake = cakes[upgrade.cakeTier]
     Column(
@@ -82,6 +81,7 @@ fun UpgradeDisplay(upgrade: Upgrade) {
                 )
         }
         LargeThemedButton(
+            theme = theme,
             onClick = {
                 dataViewModel.buyUpgrade(upgrade)
             },

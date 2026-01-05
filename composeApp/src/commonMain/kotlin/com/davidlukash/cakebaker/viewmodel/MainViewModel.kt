@@ -12,6 +12,7 @@ import kotlin.uuid.ExperimentalUuidApi
 class MainViewModel(
     val savesRepository: SavesRepository,
 ) : ViewModel() {
+    val themeViewModel = ThemeViewModel()
     val engine = CakeBakerEngine(this).also {
         it.registerStandardFunctions()
         dumpFunctionsToFile(it)
@@ -22,7 +23,6 @@ class MainViewModel(
         it.appendLog(Log("Welcome to JsonMath 1.0.8", LogType.MESSAGE))
         it.appendLog(Log("List of all available functions:\n$functionDump", LogType.MESSAGE))
     }
-    val themeViewModel = ThemeViewModel()
     val dataViewModel = DataViewModel(uiViewModel, engine).also {
         it.loadSave(Save.default)
     }

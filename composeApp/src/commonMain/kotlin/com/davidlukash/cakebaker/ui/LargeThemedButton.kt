@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier.Companion
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.Screen
@@ -35,14 +36,12 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun LargeThemedButton(
+    theme: Theme,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
-    val theme by themeViewModel.theme.collectAsState()
     val buttonTheme = theme.buttonTheme
     Button(
         onClick = onClick,

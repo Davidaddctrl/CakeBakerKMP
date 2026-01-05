@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toBoolean
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
@@ -34,20 +35,19 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
-fun RowScope.InfoPanel() {
+fun RowScope.InfoPanel(theme: Theme) {
     val mainViewModel = LocalMainViewModel.current
     val dataViewModel = mainViewModel.dataViewModel
     val satisfactionLevel by dataViewModel.satisfactionLevel.collectAsState(initial = null)
     val satisfaction by dataViewModel.customerSatisfaction.collectAsState()
     val autoOvenEnabled by dataViewModel.autoOvenEnabled.collectAsState()
-    val themeViewModel = mainViewModel.themeViewModel
     val currentCakeTier by dataViewModel.currentCakeTier.collectAsState()
     val cakePrices by dataViewModel.cakePricesFlow.collectAsState(initial = emptyMap())
-    val theme by themeViewModel.theme.collectAsState()
     val upgrades by dataViewModel.upgradesFlow.collectAsState()
     val autoOven = upgrades.find { it.name == "Auto Oven" }?.level?.toBoolean()
 
     Container(
+        theme = theme,
         modifier = Modifier.weight(1f).fillMaxWidth(),
     ) {
         Column(
@@ -115,6 +115,7 @@ fun RowScope.InfoPanel() {
                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                 )
                 SwitchButton(
+                    theme = theme,
                     value = autoOvenEnabled,
                     onText = "On",
                     offText = "Off",

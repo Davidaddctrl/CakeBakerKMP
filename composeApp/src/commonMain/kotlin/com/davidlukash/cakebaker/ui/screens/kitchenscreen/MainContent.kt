@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.ImageButton
 
@@ -32,12 +33,10 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import kotlin.math.floor
 
 @Composable
-fun MainContent(innerPadding: PaddingValues) {
+fun MainContent(theme: Theme, innerPadding: PaddingValues) {
     val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val dataViewModel = mainViewModel.dataViewModel
     val uiViewModel = mainViewModel.uiViewModel
-    val theme by themeViewModel.theme.collectAsState()
     val progress by dataViewModel.ovenProgress.collectAsState()
     val canBake by dataViewModel.canBakeFlow.collectAsState(initial = false)
     val ovenRunning by dataViewModel.ovenRunning.collectAsState(initial = true)
@@ -54,7 +53,7 @@ fun MainContent(innerPadding: PaddingValues) {
              Box(
                 contentAlignment = Alignment.Center,
             ) {
-                ProgressBar(progress)
+                ProgressBar(theme, progress)
                 val ovenTime = 5.0 - fasterOvenLevel / 10.0
                 if (ovenRunning)
                     Text(
@@ -85,9 +84,9 @@ fun MainContent(innerPadding: PaddingValues) {
                 )
             }
         }
-        RecipePanel()
-        OrdersPanel()
-        InfoPanel()
+        RecipePanel(theme)
+        OrdersPanel(theme)
+        InfoPanel(theme)
         ImageButton(
             onClick = {
                 uiViewModel.navigateWithFade(UpgradeScreen)

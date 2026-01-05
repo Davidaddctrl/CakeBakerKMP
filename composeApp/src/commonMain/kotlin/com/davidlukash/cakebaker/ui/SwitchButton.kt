@@ -20,12 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.isDark
 import com.davidlukash.cakebaker.isLight
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
 fun SwitchButton(
+    theme: Theme,
     value: Boolean,
     onText: String,
     offText: String,
@@ -33,9 +35,6 @@ fun SwitchButton(
     modifier: Modifier = Modifier,
     onClick: (Boolean) -> Unit
 ) {
-    val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
-    val theme by themeViewModel.theme.collectAsState()
     Surface(
         color = theme.containerBorderColor,
         border = BorderStroke(8.dp, theme.containerBorderColor),

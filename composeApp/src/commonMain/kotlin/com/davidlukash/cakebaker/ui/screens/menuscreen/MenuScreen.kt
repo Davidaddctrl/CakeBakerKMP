@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
@@ -21,15 +22,13 @@ import com.davidlukash.cakebaker.ui.navigation.SaveScreen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun MenuScreen() {
+fun MenuScreen(theme: Theme) {
     val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val uiViewModel = mainViewModel.uiViewModel
-    val theme by themeViewModel.theme.collectAsState()
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            TopBar()
+            TopBar(theme)
         },
     ) { innerPadding ->
         Column(
@@ -38,6 +37,7 @@ fun MenuScreen() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             LargeThemedButton(
+                theme = theme,
                 onClick = {
                     uiViewModel.navigateWithFade(KitchenScreen)
                 },
@@ -46,6 +46,7 @@ fun MenuScreen() {
                 Text("Play", style = theme.buttonTextStyle)
             }
             LargeThemedButton(
+                theme = theme,
                 onClick = {
                     uiViewModel.navigateWithFade(SaveScreen)
                 },

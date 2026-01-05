@@ -13,14 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun Container(modifier: Modifier, content: @Composable () -> Unit) {
-    val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
-    val dataViewModel = mainViewModel.dataViewModel
-    val theme by themeViewModel.theme.collectAsState()
+fun Container(theme: Theme, modifier: Modifier, content: @Composable () -> Unit) {
     Surface(
         modifier = modifier,
         color = theme.accentColor,

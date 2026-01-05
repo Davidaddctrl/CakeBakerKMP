@@ -11,13 +11,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun ProgressBar(amount: Double) {
-    val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
-    val theme by themeViewModel.theme.collectAsState()
+fun ProgressBar(theme: Theme, amount: Double) {
     Surface(
         modifier = Modifier.width(320.dp).height(48.dp),
         shape = CircleShape,

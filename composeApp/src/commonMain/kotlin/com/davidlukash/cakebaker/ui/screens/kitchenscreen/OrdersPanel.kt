@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.secondsToString
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
@@ -43,15 +44,14 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 
 @Composable
-fun RowScope.OrdersPanel() {
+fun RowScope.OrdersPanel(theme: Theme) {
     val mainViewModel = LocalMainViewModel.current
     val dataViewModel = mainViewModel.dataViewModel
-    val themeViewModel = mainViewModel.themeViewModel
     val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = 0.0)
     val orders by dataViewModel.ordersList.collectAsState()
-    val theme by themeViewModel.theme.collectAsState()
 
     Container(
+        theme = theme,
         modifier = Modifier.weight(1f).fillMaxWidth(),
     ) {
         Column(
@@ -102,7 +102,7 @@ fun RowScope.OrdersPanel() {
                         orders.size,
                         key = { orders[it].id }
                     ) { orderIndex ->
-                        OrderItem(orders[orderIndex])
+                        OrderItem(theme, orders[orderIndex])
                     }
                 }
             }

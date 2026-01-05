@@ -24,7 +24,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun SmallContainer(
     theme: Theme,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     shadowElevation: Dp = 0.dp,
     content: @Composable () -> Unit
 ) {
@@ -36,7 +36,7 @@ fun SmallContainer(
         shadowElevation = shadowElevation,
     ) {
         Box(
-            modifier = Modifier.padding(16.dp).fillMaxSize()
+            modifier = modifier.padding(16.dp)
         ) {
             content()
         }
@@ -49,7 +49,7 @@ fun SmallContainerPreview() {
     val theme = getDefaultTheme()
     SmallContainer(
         theme = theme,
-        modifier = Modifier.size(800.dp)
+        modifier = Modifier.size(400.dp),
     ) {
         Text(
             "Small Container Preview",

@@ -15,9 +15,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,7 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.Modifier.Companion
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.Screen
@@ -35,22 +39,19 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SmallThemedButton(
+    theme: Theme,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
-    val theme by themeViewModel.theme.collectAsState()
     val buttonTheme = theme.buttonTheme
     Button(
         onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(8.dp),
-        content = content,
         enabled = enabled,
-        contentPadding = PaddingValues(4.dp),
+        contentPadding = PaddingValues(8.dp),
         border = BorderStroke(
             width = 4.dp,
             color = if (enabled) buttonTheme.borderColor else buttonTheme.disabledBorderColor,
@@ -68,5 +69,13 @@ fun SmallThemedButton(
             0.dp,
             0.dp
         )
-    )
+    ) {
+        CompositionLocalProvider(
+            LocalTextStyle provides theme.smallLabelStyle.copy(
+                textAlign = TextAlign.Center,
+            )
+        ) {
+            content()
+        }
+    }
 }

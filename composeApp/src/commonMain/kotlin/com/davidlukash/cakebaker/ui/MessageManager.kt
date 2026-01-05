@@ -42,10 +42,8 @@ fun MessageManager(
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
     val viewModel = LocalMainViewModel.current
-    val themeViewModel = viewModel.themeViewModel
     val uiViewModel = viewModel.uiViewModel
     val popups by uiViewModel.popups.collectAsState()
-    val theme by themeViewModel.theme.collectAsState()
     val trueDensity by uiViewModel.trueDensity.collectAsState()
 
     LaunchedEffect(popups) {
@@ -76,11 +74,14 @@ fun MessageManager(
                                     textAlign = TextAlign.Center,
                                 )
                             ) {
-                                popup.content(popup.copy(index = index))
+                                popup.content.invoke(
+                                    popup to theme
+                                )
                             }
                             if (popup.shouldHaveDefaultButton) {
                                 Spacer(modifier = Modifier.height(8.dp))
                                 SmallThemedButton(
+                                    theme = theme,
                                     onClick = {
                                         uiViewModel.removePopup(index)
                                     }

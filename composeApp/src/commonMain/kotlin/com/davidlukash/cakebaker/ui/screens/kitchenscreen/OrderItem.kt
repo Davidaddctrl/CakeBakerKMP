@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Order
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.secondsToString
 import com.davidlukash.cakebaker.toEngNotation
 
@@ -26,14 +27,13 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 
 @Composable
-fun OrderItem(order: Order) {
+fun OrderItem(theme: Theme, order: Order) {
     val mainViewModel = LocalMainViewModel.current
     val dataViewModel = mainViewModel.dataViewModel
-    val themeViewModel = mainViewModel.themeViewModel
     val cakes by dataViewModel.cakesFlow.collectAsState(initial = emptyMap())
-    val theme by themeViewModel.theme.collectAsState()
     val cake = cakes[order.cakeTier]
     TertiaryContainer(
+        theme = theme,
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
@@ -52,6 +52,7 @@ fun OrderItem(order: Order) {
                 )
                 cake?.let { cake ->
                     SmallThemedButton(
+                        theme = theme,
                         onClick = {
                             dataViewModel.handleCompleteOrder(order)
                         },
@@ -101,6 +102,7 @@ fun OrderItem(order: Order) {
                 contentAlignment = Alignment.Center,
             ) {
                 ProgressBar(
+                    theme,
                     order.remainingTime / order.totalTime
                 )
                 Text(

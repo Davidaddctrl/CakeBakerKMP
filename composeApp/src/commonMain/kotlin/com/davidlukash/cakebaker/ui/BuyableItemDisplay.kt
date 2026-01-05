@@ -15,16 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Item
 import com.davidlukash.cakebaker.data.ItemType
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
-fun BuyableItemDisplay(item: Item) {
+fun BuyableItemDisplay(theme: Theme, item: Item) {
     val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val dataViewModel = mainViewModel.dataViewModel
-    val theme by themeViewModel.theme.collectAsState()
     val money by dataViewModel.itemMoneyFlow.collectAsState(initial = Item("Money", type = ItemType.CURRENCY, amount = BigDecimal.ZERO))
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -36,6 +35,7 @@ fun BuyableItemDisplay(item: Item) {
             modifier = Modifier.height(128.dp)
         )
         Container(
+            theme = theme,
             modifier = Modifier.defaultMinSize(minWidth = 208.dp)
         ) {
             Column {
@@ -50,6 +50,7 @@ fun BuyableItemDisplay(item: Item) {
             }
         }
         LargeThemedButton(
+            theme = theme,
             onClick = {
                 dataViewModel.buyIngredient(item.name)
             },

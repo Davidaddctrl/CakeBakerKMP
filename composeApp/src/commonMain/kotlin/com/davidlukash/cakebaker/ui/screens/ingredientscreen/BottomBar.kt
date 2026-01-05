@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.ImageButton
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
@@ -26,11 +27,9 @@ import com.davidlukash.cakebaker.ui.navigation.UpgradeScreen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun BottomBar() {
+fun BottomBar(theme: Theme) {
     val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val uiViewModel = mainViewModel.uiViewModel
-    val theme by themeViewModel.theme.collectAsState()
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(),

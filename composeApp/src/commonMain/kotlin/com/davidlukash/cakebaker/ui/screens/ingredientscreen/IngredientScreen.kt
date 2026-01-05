@@ -7,22 +7,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.davidlukash.cakebaker.data.theme.Theme
 
 @Composable
-fun IngredientScreen() {
+fun IngredientScreen(theme: Theme) {
     Scaffold(
         topBar = {
-            TopBar()
+            TopBar(theme)
         },
         bottomBar = {
-            BottomBar()
+            BottomBar(theme)
         },
         containerColor = Color.Transparent
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding).fillMaxSize(),
         ) {
-            MainContent()
+            MainContent(theme)
         }
     }
 }

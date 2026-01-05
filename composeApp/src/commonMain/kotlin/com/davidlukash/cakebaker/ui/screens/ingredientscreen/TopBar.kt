@@ -11,26 +11,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.ItemTopRow
+import com.davidlukash.cakebaker.ui.MenuButton
 
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun TopBar() {
-    val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
-    val theme by themeViewModel.theme.collectAsState()
-    Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            "Ingredient Shop",
-            color = Color.White,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
-            style = theme.titleStyle,
-        )
-        ItemTopRow()
+fun TopBar(theme: Theme) {
+    MenuButton {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                "Ingredient Shop",
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+                style = theme.titleStyle,
+            )
+            ItemTopRow(theme)
+        }
     }
 }

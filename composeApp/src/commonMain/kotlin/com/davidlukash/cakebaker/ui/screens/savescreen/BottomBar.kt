@@ -13,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.SaveFile
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 
 import com.davidlukash.cakebaker.ui.navigation.MenuScreen
@@ -20,19 +21,17 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.withErrorHandling
 
 @Composable
-fun BottomBar() {
+fun BottomBar(theme: Theme) {
     val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val uiViewModel = mainViewModel.uiViewModel
-    val theme by themeViewModel.theme.collectAsState()
     val dataViewModel = mainViewModel.dataViewModel
     val saveFileViewModel = mainViewModel.saveFileViewModel
-    val coroutineScope = rememberCoroutineScope()
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         LargeThemedButton(
+            theme = theme,
             onClick = {
                 uiViewModel.navigateWithFade(MenuScreen)
             },
@@ -44,6 +43,7 @@ fun BottomBar() {
             modifier = Modifier.weight(1f)
         )
         LargeThemedButton(
+            theme = theme,
             onClick = {
                 //uiViewModel.navigateWithFade(MenuScreen)
             },
@@ -52,6 +52,7 @@ fun BottomBar() {
             Text("Import", style = theme.buttonTextStyle)
         }
         LargeThemedButton(
+            theme = theme,
             onClick = {
                 val result = withErrorHandling(uiViewModel) {
                     saveFileViewModel.upsertSave(

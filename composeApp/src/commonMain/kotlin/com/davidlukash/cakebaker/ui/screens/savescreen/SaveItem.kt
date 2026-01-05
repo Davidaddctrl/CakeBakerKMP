@@ -15,6 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.SaveFile
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 
@@ -26,15 +27,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun SaveItem(saveFile: SaveFile) {
+fun SaveItem(theme: Theme, saveFile: SaveFile) {
     val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val dataViewModel = mainViewModel.dataViewModel
     val saveFileViewModel = mainViewModel.saveFileViewModel
     val uiViewModel = mainViewModel.uiViewModel
-    val theme by themeViewModel.theme.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     Container(
+        theme = theme,
         modifier = Modifier.fillMaxWidth().height(360.dp)
     ) {
         Column(
@@ -50,6 +50,7 @@ fun SaveItem(saveFile: SaveFile) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 LargeThemedButton(
+                    theme = theme,
                     onClick = {
                         saveFileViewModel.exportSave(saveFile)
                     },
@@ -58,6 +59,7 @@ fun SaveItem(saveFile: SaveFile) {
                     Text("Export", style = theme.buttonTextStyle)
                 }
                 LargeThemedButton(
+                    theme = theme,
                     onClick = {
                         saveFileViewModel.deleteSave(saveFile.name)
                     },
@@ -71,6 +73,7 @@ fun SaveItem(saveFile: SaveFile) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 LargeThemedButton(
+                    theme = theme,
                     onClick = {
                         coroutineScope.launch {
                             dataViewModel.loadSave(saveFile.save)
@@ -84,6 +87,7 @@ fun SaveItem(saveFile: SaveFile) {
                     Text("Load", style = theme.buttonTextStyle)
                 }
                 LargeThemedButton(
+                    theme = theme,
                     onClick = {
                         val result = withErrorHandling(uiViewModel) {
                             saveFileViewModel.upsertSave(

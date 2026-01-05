@@ -14,14 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Item
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun ItemAmountDisplay(item: Item) {
+fun ItemAmountDisplay(theme: Theme, item: Item) {
     val mainViewModel = LocalMainViewModel.current
     val themeViewModel = mainViewModel.themeViewModel
-    val theme by themeViewModel.theme.collectAsState()
     val image = theme.nameToImage(item.name)
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),

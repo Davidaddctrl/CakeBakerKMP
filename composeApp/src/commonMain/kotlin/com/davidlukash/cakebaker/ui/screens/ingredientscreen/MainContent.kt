@@ -14,13 +14,14 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.ui.BuyableItemDisplay
 import com.davidlukash.cakebaker.ui.HorizontalScrollBar
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun BoxScope.MainContent() {
+fun BoxScope.MainContent(theme: Theme) {
     val mainViewModel = LocalMainViewModel.current
     val dataViewModel = mainViewModel.dataViewModel
     val ingredients by dataViewModel.ingredientsFlow.collectAsState(initial = emptyList())
@@ -36,10 +37,10 @@ fun BoxScope.MainContent() {
         ) {
             ingredients.forEach { ingredient ->
                 key(ingredient.name) {
-                    BuyableItemDisplay(ingredient)
+                    BuyableItemDisplay(theme, ingredient)
                 }
             }
         }
-        HorizontalScrollBar(scrollState, coroutineScope)
+        HorizontalScrollBar(theme, scrollState, coroutineScope)
     }
 }

@@ -9,12 +9,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun Background(content: @Composable () -> Unit) {
-    val mainViewModel = LocalMainViewModel.current
-    val theme by mainViewModel.themeViewModel.theme.collectAsState()
+fun Background(theme: Theme, content: @Composable () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize().background(theme.backgroundColor).padding(16.dp)
     ) {

@@ -14,10 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.SaveFile
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun MainContent(innerPadding: PaddingValues) {
+fun MainContent(theme: Theme, innerPadding: PaddingValues) {
     val mainViewModel = LocalMainViewModel.current
     val saveFileViewModel = mainViewModel.saveFileViewModel
     val saveFiles by saveFileViewModel.savesFlow.collectAsState(initial = emptyList())
@@ -29,11 +30,11 @@ fun MainContent(innerPadding: PaddingValues) {
         columns = GridCells.Adaptive(760.dp)
     ) {
         item {
-            SaveItem(default)
+            SaveItem(theme, default)
         }
         items(saveFiles.size) { index ->
             val saveFile = saveFiles[index]
-            SaveItem(saveFile)
+            SaveItem(theme, saveFile)
         }
     }
 }

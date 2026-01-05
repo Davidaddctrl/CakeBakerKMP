@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.ImageButton
 
@@ -30,12 +31,10 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun BottomBar(currentPage: String, setCurrentPage: (String) -> Unit) {
+fun BottomBar(theme: Theme, currentPage: String, setCurrentPage: (String) -> Unit) {
     val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
     val uiViewModel = mainViewModel.uiViewModel
     val dataViewModel = mainViewModel.dataViewModel
-    val theme by themeViewModel.theme.collectAsState()
     val upgrades by dataViewModel.upgradesFlow.collectAsState()
     val pages = upgrades.map { it.pageName }.distinct()
     LaunchedEffect(pages) {
@@ -57,6 +56,7 @@ fun BottomBar(currentPage: String, setCurrentPage: (String) -> Unit) {
             )
         }
         Container(
+            theme = theme,
             modifier = Modifier.weight(1f).padding(horizontal = 8.dp).height(280.dp),
         ) {
             FlowRow(

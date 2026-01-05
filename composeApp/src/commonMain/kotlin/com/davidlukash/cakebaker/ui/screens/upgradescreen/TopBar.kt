@@ -11,18 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.ItemTopRow
 
 import com.davidlukash.cakebaker.ui.MenuButton
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun TopBar() {
-    val mainViewModel = LocalMainViewModel.current
-    val themeViewModel = mainViewModel.themeViewModel
-    val dataViewModel = mainViewModel.dataViewModel
-    val items by dataViewModel.allItemsFlow.collectAsState(initial = emptyList())
-    val theme by themeViewModel.theme.collectAsState()
+fun TopBar(theme: Theme) {
     MenuButton {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -35,7 +31,7 @@ fun TopBar() {
                 modifier = Modifier.fillMaxWidth(),
                 style = theme.titleStyle,
             )
-            ItemTopRow()
+            ItemTopRow(theme)
         }
     }
 }

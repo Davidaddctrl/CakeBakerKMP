@@ -21,12 +21,13 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun HorizontalScrollBar(scrollState: ScrollState, coroutineScope: CoroutineScope) {
+fun HorizontalScrollBar(theme: Theme, scrollState: ScrollState, coroutineScope: CoroutineScope) {
     val mainViewModel = LocalMainViewModel.current
     val density = LocalDensity.current
     val viewportWidth = density.run { scrollState.viewportSize.toDp() }
@@ -35,9 +36,6 @@ fun HorizontalScrollBar(scrollState: ScrollState, coroutineScope: CoroutineScope
     val value = density.run { scrollState.value.toDp() }
     val visibleFraction = viewportWidth / maxValue
     val fraction = (viewportWidth - scrollBarWidth) / maxValue
-
-    val themeViewModel = mainViewModel.themeViewModel
-    val theme by themeViewModel.theme.collectAsState()
     if (scrollState.canScrollForward || scrollState.canScrollBackward) {
         Box(
             modifier = Modifier.fillMaxWidth(),

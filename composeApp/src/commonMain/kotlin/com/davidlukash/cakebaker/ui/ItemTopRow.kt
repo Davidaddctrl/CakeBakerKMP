@@ -16,11 +16,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
-fun ItemTopRow() {
+fun ItemTopRow(theme: Theme) {
     val mainViewModel = LocalMainViewModel.current
     val dataViewModel = mainViewModel.dataViewModel
     val items by dataViewModel.allItemsFlow.collectAsState(initial = emptyList())
@@ -38,12 +39,13 @@ fun ItemTopRow() {
             items.forEach { item ->
                 key(item.name) {
                     ItemAmountDisplay(
+                        theme = theme,
                         item = item,
                     )
                 }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        HorizontalScrollBar(scrollState, coroutineScope)
+        HorizontalScrollBar(theme, scrollState, coroutineScope)
     }
 }
