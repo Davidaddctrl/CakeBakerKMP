@@ -22,11 +22,12 @@ import cakebaker.composeapp.generated.resources.chevron_backward
 import cakebaker.composeapp.generated.resources.menu
 import com.davidlukash.cakebaker.ui.navigation.MenuScreen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import com.davidlukash.cakebaker.viewmodel.ViewModelProvided
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun MenuButton(content: @Composable () -> Unit) {
-    val uiViewModel = if (LocalInspectionMode.current) null else LocalMainViewModel.current.uiViewModel
+    val uiViewModel = if (!ViewModelProvided.current) null else LocalMainViewModel.current.uiViewModel
     Box(modifier = Modifier.fillMaxWidth()) {
         content()
         IconButton(
