@@ -21,6 +21,7 @@ data class Save(
     val orders: List<Order>,
     val orderCakeTimeCounters: Map<Int, Double>
 ) {
+
     companion object {
         val default = Save(
             items = listOf(
@@ -214,28 +215,13 @@ data class Save(
             currentCakeTier = 1,
             upgrades = listOf(
                 Upgrade(
-                    pageName = "Vanilla Cake",
+                    pageName = "Cake",
                     imageName = "Vanilla Cake",
                     name = "Expensive Vanilla Cakes",
                     price = 2,
                     cakeTier = 1,
                     maxLevel = null,
-                    onBuy = buildExpressionList {
-                        appendFunction {
-                            name = "variable.set"
-                            appendString("globals.items.Vanilla Cake.salePrice")
-                            appendFunction {
-                                name = "math.product"
-                                appendFunction {
-                                    name = "variable.get"
-                                    appendString("globals.items.Vanilla Cake.salePrice")
-                                    appendBoolean(true)
-                                }
-                                appendNumber("1.25")
-                            }
-                            appendBoolean(true)
-                        }
-                    } + JsonMathHelpers.createLinearOnBuy(),
+                    onBuy = JsonMathHelpers.createLinearOnBuy() + JsonMathHelpers.createProductUpgradeOnBuy(),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
@@ -246,6 +232,51 @@ data class Save(
                         "priceIncrement" to createObject(2.toBigDecimal()),
                         "initialPrice" to createObject(2.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                        "variable" to createObject("globals.items.Vanilla Cake.salePrice"),
+                        "product" to createObject(1.25.toBigDecimal()),
+                    )
+                ),
+                Upgrade(
+                    pageName = "Cake",
+                    imageName = "Chocolate Cake",
+                    name = "Expensive Chocolate Cakes",
+                    price = 5,
+                    cakeTier = 1,
+                    maxLevel = null,
+                    onBuy = JsonMathHelpers.createLinearOnBuy() + JsonMathHelpers.createProductUpgradeOnBuy(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(5.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(15.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(3.toBigDecimal()),
+                        "initialPrice" to createObject(5.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                        "variable" to createObject("globals.items.Chocolate Cake.salePrice"),
+                        "product" to createObject(1.4.toBigDecimal()),
+                    )
+                ),
+                Upgrade(
+                    pageName = "Cake",
+                    imageName = "Honey Cake",
+                    name = "Expensive Honey Cakes",
+                    price = 6,
+                    cakeTier = 2,
+                    maxLevel = null,
+                    onBuy = JsonMathHelpers.createLinearOnBuy() + JsonMathHelpers.createProductUpgradeOnBuy(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(5.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(4.toBigDecimal()),
+                        "initialPrice" to createObject(6.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                        "variable" to createObject("globals.items.Honey Cake.salePrice"),
+                        "product" to createObject(1.7.toBigDecimal()),
                     )
                 ),
                 Upgrade(
@@ -362,6 +393,19 @@ data class Save(
             ),
             listOf(),
             mapOf()
+        )
+
+        val state = UIState(
+            items = default.items,
+            currentCakeTier = default.currentCakeTier,
+            upgrades = default.upgrades,
+            ovenProgress = default.ovenProgress,
+            ovenRunning = default.ovenRunning,
+            autoOvenEnabled = default.autoOvenEnabled,
+            customerSatisfaction = default.customerSatisfaction,
+            orders = default.orders,
+            nextOrderRemainingTime = 0.0,
+            canBake = false
         )
     }
 }

@@ -220,50 +220,25 @@ object JsonMathHelpers {
     }
 
     /**
-     * This is a total price growth. When bought it adds the current total to the price. It requires cakeTiers: Dictionary[Int, Int] and total
+     * This is a simple script that requires 2 parameters: variable: String, product: Number in parameters. It simply sets the variable to the variable * product
      */
-    fun createTotalGrowthOnBuy(): List<Expression> = buildExpressionList {
-        expressions.add(
-            createExpression(createChangeableCakeTier())
-        )
+    fun createProductUpgradeOnBuy(): List<Expression> = buildExpressionList {
         appendFunction {
             name = "variable.set"
+            expressions.add(
+                createExpression(createGetDynamic("parameters.variable"))
+            )
             appendFunction {
-                name = "string.join"
-                appendString(".")
+                name = "math.product"
                 appendFunction {
                     name = "variable.get"
-                    appendString("locals.this")
+                    expressions.add(
+                        createExpression(createGetDynamic("parameters.variable"))
+                    )
+                    appendBoolean(true)
                 }
-                appendString("parameters.total")
-            }
-            appendFunction {
-                name = "math.sum"
                 expressions.add(
-                    createExpression(createGetDynamic("parameters.total"))
-                )
-                appendNumber("1")
-            }
-            appendBoolean(true)
-        }
-        appendFunction {
-            name = "variable.set"
-            appendFunction {
-                name = "string.join"
-                appendString(".")
-                appendFunction {
-                    name = "variable.get"
-                    appendString("locals.this")
-                }
-                appendString("price")
-            }
-            appendFunction {
-                name = "math.sum"
-                expressions.add(
-                    createExpression(createGetDynamic("parameters.total"))
-                )
-                expressions.add(
-                    createExpression(createGetDynamic("price"))
+                    createExpression(createGetDynamic("parameters.product"))
                 )
             }
             appendBoolean(true)

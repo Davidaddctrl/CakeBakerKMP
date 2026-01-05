@@ -12,6 +12,7 @@ plugins {
 }
 
 kotlin {
+    applyDefaultHierarchyTemplate()
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
