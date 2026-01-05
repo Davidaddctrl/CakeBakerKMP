@@ -13,9 +13,11 @@ import com.davidlukash.cakebaker.ui.DebugPanel
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
 import java.io.File
+import javax.swing.UIManager
 
 fun main() {
     val baseDirectory = File(".").absoluteFile.resolve("CakeBaker").also { it.mkdirs() }
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     application {
         val localMainViewModel = remember { MainViewModel(JVMSavesRepository(baseDirectory)) }
         CompositionLocalProvider(
