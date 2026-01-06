@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.SaveFile
 import com.davidlukash.cakebaker.data.SavesRepository
 import com.davidlukash.cakebaker.withErrorHandling
@@ -53,20 +54,15 @@ class SaveFileViewModel(
         }
     }
 
-    fun exportSave(file: SaveFile) {
-        viewModelScope.launch {
-            withErrorHandling(uiViewModel) {
-                val created = savesRepository.exportSave(file)
-                if (created) uiViewModel.addTextPopup("Save Exported")
-            }
+    fun exportSave(file: SaveFile): Result<Boolean> {
+        return withErrorHandling(uiViewModel) {
+            savesRepository.exportSave(file)
         }
     }
 
-    fun importSave() {
-        viewModelScope.launch {
-            withErrorHandling(uiViewModel) {
-                savesRepository.importSave()
-            }
+    fun importSave(): Result<Save?> {
+        return withErrorHandling(uiViewModel) {
+            savesRepository.importSave()
         }
     }
 }
