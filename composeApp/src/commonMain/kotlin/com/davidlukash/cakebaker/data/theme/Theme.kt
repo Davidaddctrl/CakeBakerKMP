@@ -43,6 +43,7 @@ data class Theme(
     val verySmallLabelStyle: TextStyle,
     val buttonTextStyle: TextStyle,
     val buttonTheme: ButtonTheme,
+    val extremelySmallLabelStyle: TextStyle,
     val progressBarTheme: ProgressBarTheme,
     val containerBorderColor: Color,
     val green: Color,
@@ -88,6 +89,7 @@ data class Theme(
             smallLabelStyle = TextStyle(fontSize = 22.sp),
             verySmallLabelStyle = TextStyle(fontSize = 16.sp),
             buttonTextStyle = TextStyle(fontSize = 60.sp),
+            extremelySmallLabelStyle = TextStyle(fontSize = 12.sp),
             buttonTheme = ButtonTheme(
                 containerColor = Color(8, 160, 69),
                 disabledContainerColor = Color(37, 41, 46),
@@ -121,5 +123,6 @@ fun getDefaultTheme(): Theme {
         smallLabelStyle = theme.smallLabelStyle.copy(fontFamily = fontFamily),
         verySmallLabelStyle = theme.verySmallLabelStyle.copy(fontFamily = fontFamily),
         buttonTextStyle = theme.buttonTextStyle.copy(fontFamily = fontFamily),
+        extremelySmallLabelStyle = theme.extremelySmallLabelStyle.copy(fontFamily = fontFamily),
     )
 }
