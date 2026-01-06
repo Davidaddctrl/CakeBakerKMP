@@ -22,7 +22,7 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.withErrorHandling
 
 @Composable
-fun BottomBar(theme: Theme, navigateWithFade: (Screen) -> Unit) {
+fun BottomBar(theme: Theme, import: () -> Unit, create: () -> Unit, navigateWithFade: (Screen) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -42,6 +42,7 @@ fun BottomBar(theme: Theme, navigateWithFade: (Screen) -> Unit) {
         LargeThemedButton(
             theme = theme,
             onClick = {
+                import()
             },
             modifier = Modifier.width(280.dp)
         ) {
@@ -50,6 +51,7 @@ fun BottomBar(theme: Theme, navigateWithFade: (Screen) -> Unit) {
         LargeThemedButton(
             theme = theme,
             onClick = {
+                create()
             },
             modifier = Modifier.width(280.dp)
         ) {

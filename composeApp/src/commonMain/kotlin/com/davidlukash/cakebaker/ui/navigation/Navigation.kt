@@ -8,34 +8,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.createGraph
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.window.Popup
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.davidlukash.cakebaker.data.Order
-import com.davidlukash.cakebaker.data.Popup
-import com.davidlukash.cakebaker.data.Save
-import com.davidlukash.cakebaker.data.SaveFile
-import com.davidlukash.cakebaker.data.UIState
-import com.davidlukash.cakebaker.data.Upgrade
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
+import com.davidlukash.cakebaker.data.*
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.Background
@@ -90,6 +75,7 @@ fun NormalScreenMessageManager(
 fun Navigation(
     theme: Theme, uiState: UIState,
     pendingScreen: Screen?,
+    saveFiles: List<SaveFile>,
     popups: List<Popup>,
     trueDensity: Density,
     removePopup: (Int) -> Unit,
@@ -102,6 +88,7 @@ fun Navigation(
     exportSave: (SaveFile) -> Unit,
     deleteSave: (SaveFile) -> Unit,
     loadSave: (SaveFile) -> Unit,
+    importSave: () -> Unit,
     overwriteSave: (SaveFile) -> Unit,
     buyUpgrade: (Upgrade) -> Unit
 ) {
@@ -123,7 +110,7 @@ fun Navigation(
             navController.navigate(it as Screen)
         }
     }
-    val navGraph = remember(navController, uiState, currentScreen, popups) {
+    val navGraph = remember(navController, uiState, currentScreen, popups, saveFiles) {
         navController.createGraph(startDestination = SaveScreen) {
             composable<IngredientScreen> {
                 NormalScreenMessageManager(
@@ -218,7 +205,7 @@ fun Navigation(
                     lazyListState = lazyListState
                 ) {
                     Background(theme) {
-                        SaveScreen(theme, navigateWithFade, exportSave, deleteSave, loadSave, overwriteSave)
+                        SaveScreen(theme, saveFiles, navigateWithFade, exportSave, deleteSave, loadSave, overwriteSave, importSave)
                     }
                 }
             }
@@ -248,6 +235,7 @@ fun NavigationPreview() {
         theme = theme,
         uiState = uiState,
         pendingScreen = currentScreen,
+        saveFiles = listOf(),
         updateCurrentScreen = { currentScreen = it },
         navigateWithFade = { currentScreen = it },
         bake = {},
@@ -258,6 +246,7 @@ fun NavigationPreview() {
         exportSave = {},
         deleteSave = {},
         loadSave = {},
+        importSave = {},
         overwriteSave = {},
         buyUpgrade = {},
         popups = listOf(),

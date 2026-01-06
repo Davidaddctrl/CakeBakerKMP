@@ -20,16 +20,14 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 @Composable
 fun MainContent(
     theme: Theme,
+    saveFiles: List<SaveFile>,
     exportSave: (SaveFile) -> Unit,
     deleteSave: (SaveFile) -> Unit,
     loadSave: (SaveFile) -> Unit,
     overwriteSave: (SaveFile) -> Unit,
     innerPadding: PaddingValues
 ) {
-    val mainViewModel = LocalMainViewModel.current
-    val saveFileViewModel = mainViewModel.saveFileViewModel
-    val saveFiles by saveFileViewModel.savesFlow.collectAsState(initial = emptyList())
-    val default = remember { SaveFile("Default", Save.default, true) }
+    val default = remember { SaveFile("default", Save.default, true) }
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize().padding(innerPadding).padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
