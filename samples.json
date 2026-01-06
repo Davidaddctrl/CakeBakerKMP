@@ -1,0 +1,172 @@
+[
+  {
+    "type": "FUNCTIONCALL",
+    "functionCall": {
+      "name": "math.sum",
+      "arguments": [
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "NUMBER",
+            "number": "100"
+          }
+        },
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "NUMBER",
+            "number": "100"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "type": "FUNCTIONCALL",
+    "functionCall": {
+      "name": "variable.get",
+      "arguments": [
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "STRING",
+            "string": "globals.upgrades.Faster Oven"
+          }
+        },
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "BOOLEAN",
+            "boolean": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "type": "FUNCTIONCALL",
+    "functionCall": {
+      "name": "variable.set",
+      "arguments": [
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "STRING",
+            "string": "globals.items.Egg"
+          }
+        },
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "DICTIONARY",
+            "dictionary": [
+              {
+                "objectType": "STRING",
+                "string": "amount"
+              },
+              {
+                "objectType": "NUMBER",
+                "number": "100"
+              }
+            ]
+          }
+        },
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "BOOLEAN",
+            "boolean": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "type": "FUNCTIONCALL",
+    "functionCall": {
+      "name": "variable.set",
+      "arguments": [
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "STRING",
+            "string": "globals.items.Money.amount"
+          }
+        },
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "NUMBER",
+            "number": "100000000000"
+          }
+        },
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "BOOLEAN",
+            "boolean": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "type": "FUNCTIONCALL",
+    "functionCall": {
+      "name": "variable.set",
+      "arguments": [
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "STRING",
+            "string": "globals.items"
+          }
+        },
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "LIST",
+            "list": [
+              {
+                "objectType": "DICTIONARY",
+                "dictionary": [
+                  {
+                    "objectType": "STRING",
+                    "string": "name"
+                  },
+                  {
+                    "objectType": "STRING",
+                    "string": "Oven"
+                  },
+                  {
+                    "objectType": "STRING",
+                    "string": "type"
+                  },
+                  {
+                    "objectType": "STRING",
+                    "string": "INGREDIENT"
+                  },
+                  {
+                    "objectType": "STRING",
+                    "string": "amount"
+                  },
+                  {
+                    "objectType": "NUMBER",
+                    "number": "100"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "BOOLEAN",
+            "boolean": true
+          }
+        }
+      ]
+    }
+  }
+]
