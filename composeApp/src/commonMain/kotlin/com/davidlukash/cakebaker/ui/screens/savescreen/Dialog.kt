@@ -29,7 +29,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun LoadSaveDialog(theme: Theme, saveName: String, load: () -> Unit, cancel: () -> Unit) {
     GameDialog(
-        theme = theme, modifier = Modifier.width(512.dp), title = { Text("Are you sure?") },
+        theme = theme, modifier = Modifier.width(512.dp), title = { Text("Load Save?") },
         buttons = {
             SmallThemedButton(theme = theme, modifier = Modifier.weight(1f), onClick = { load() }) { Text("Load") }
             SmallThemedButton(theme = theme, modifier = Modifier.weight(1f), onClick = { cancel() }) { Text("Cancel") }
@@ -46,7 +46,7 @@ fun LoadSaveDialogPreview() {
 @Composable
 fun DeleteSaveDialog(theme: Theme, saveName: String, delete: () -> Unit, cancel: () -> Unit) {
     GameDialog(
-        theme = theme, modifier = Modifier.width(512.dp), title = { Text("Are you sure?") },
+        theme = theme, modifier = Modifier.width(512.dp), title = { Text("Delete Save?") },
         buttons = {
             SmallThemedButton(theme = theme, modifier = Modifier.weight(1f), onClick = { delete() }) { Text("Delete") }
             SmallThemedButton(theme = theme, modifier = Modifier.weight(1f), onClick = { cancel() }) { Text("Cancel") }
@@ -63,7 +63,7 @@ fun DeleteSaveDialogPreview() {
 @Composable
 fun OverwriteSaveDialog(theme: Theme, saveName: String, overwrite: () -> Unit, cancel: () -> Unit) {
     GameDialog(
-        theme = theme, modifier = Modifier.width(512.dp), title = { Text("Are you sure?") },
+        theme = theme, modifier = Modifier.width(512.dp), title = { Text("Overwrite Save?") },
         buttons = {
             SmallThemedButton(
                 theme = theme,
