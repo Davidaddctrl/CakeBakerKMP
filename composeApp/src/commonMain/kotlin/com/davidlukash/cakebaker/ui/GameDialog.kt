@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.FlowRowScope
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,12 +18,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shader
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
@@ -38,6 +35,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun GameDialog(
     theme: Theme,
     modifier: Modifier = Modifier,
+    offset: IntOffset = IntOffset.Zero,
     title: @Composable ColumnScope.() -> Unit,
     buttons: @Composable FlowRowScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit
@@ -56,15 +54,29 @@ fun GameDialog(
                 alignment = Alignment.Center,
                 onDismissRequest = null,
                 properties = PopupProperties(
-                    focusable = true,
                     dismissOnBackPress = false,
-                    dismissOnClickOutside = false
+                    dismissOnClickOutside = false,
+                    clippingEnabled = false
                 )
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize().background(
                         Color(0, 0, 0, 100)
                     )
+                )
+            }
+            Popup(
+                alignment = Alignment.Center,
+                onDismissRequest = null,
+                properties = PopupProperties(
+                    focusable = true,
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false,
+                    clippingEnabled = false
+                ), offset = offset
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     GameDialogContent(theme, modifier, title, buttons, content)
                 }
