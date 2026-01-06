@@ -1,14 +1,10 @@
 package com.davidlukash.cakebaker.viewmodel
 
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
@@ -19,12 +15,10 @@ import com.davidlukash.cakebaker.AppLogger
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.data.Popup
+import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.SmallThemedButton
-import com.davidlukash.cakebaker.ui.navigation.FadeScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
-import com.davidlukash.cakebaker.ui.navigation.transitionDuration
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -47,6 +41,24 @@ class UIViewModel : ViewModel(), AppLogger {
 
     private val _debugConsole = MutableStateFlow(ConsoleType.NONE)
     val debugConsole = _debugConsole.asStateFlow()
+
+    private val _importDialogOpen = MutableStateFlow(false)
+    private val _importSaveData = MutableStateFlow<Save?>(null)
+
+    val importDialogOpen = _importDialogOpen.asStateFlow()
+    val importSaveData = _importSaveData.asStateFlow()
+
+    fun setImportDialogOpen(open: Boolean) {
+        viewModelScope.launch {
+            _importDialogOpen.emit(open)
+        }
+    }
+
+    fun setImportSaveData(save: Save?) {
+        viewModelScope.launch {
+            _importSaveData.emit(save)
+        }
+    }
 
     private var nextId = 0
 
