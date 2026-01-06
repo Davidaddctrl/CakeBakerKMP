@@ -8,15 +8,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.ConsoleType
-import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.SaveFile
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
@@ -33,7 +29,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-const val VERSION = "Alpha"
+const val VERSION = "Beta 0.9.1"
 
 @Composable
 fun App() {
