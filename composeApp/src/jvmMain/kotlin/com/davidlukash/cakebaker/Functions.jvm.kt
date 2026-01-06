@@ -4,6 +4,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import com.davidlukash.cakebaker.viewmodel.CakeBakerEngine
+import com.ionspin.kotlin.bignum.integer.Platform
 import java.awt.Cursor
 import java.io.File
 import kotlin.uuid.ExperimentalUuidApi
@@ -30,3 +31,5 @@ actual fun dumpFunctionsToFile(
         it.createNewFile()
     }.writeText(functionDump)
 }
+
+actual val platform: com.davidlukash.cakebaker.data.Platform = com.davidlukash.cakebaker.data.Platform.JVM

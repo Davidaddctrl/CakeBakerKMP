@@ -17,6 +17,7 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import com.ionspin.kotlin.bignum.integer.Platform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
@@ -223,3 +224,5 @@ suspend fun <T> DataViewModel.withErrorHandlingAsync(finallyBlock: suspend () ->
 expect fun dumpFunctionsToFile(engine: CakeBakerEngine)
 
 fun BigDecimal.roundTo1dp(): BigDecimal = this.roundSignificand(globalDecimalMode)
+
+expect val platform: com.davidlukash.cakebaker.data.Platform
