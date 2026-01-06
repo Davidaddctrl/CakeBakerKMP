@@ -138,8 +138,6 @@ class UIViewModel : ViewModel(), AppLogger {
 
     fun navigateWithFade(destination: Screen?) {
         viewModelScope.launch {
-            navigateTo(FadeScreen)
-            delay(transitionDuration.toLong())
             navigateTo(destination)
         }
     }
@@ -147,8 +145,6 @@ class UIViewModel : ViewModel(), AppLogger {
     /*This is used by the UI to inform viewmodels of the current screen*/
     fun updateCurrentScreen(screen: Screen) {
         viewModelScope.launch {
-            val previousScreen = _currentScreen.value
-            if (previousScreen == FadeScreen) delay(transitionDuration.toLong())
             _currentScreen.emit(screen)
         }
     }

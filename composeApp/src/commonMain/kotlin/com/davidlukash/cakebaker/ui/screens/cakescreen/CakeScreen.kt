@@ -21,7 +21,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun CakeScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
     LaunchedEffect(Unit) {
-        delay(2000)
+        delay(500)
         navigateWithFade(MenuScreen)
     }
 

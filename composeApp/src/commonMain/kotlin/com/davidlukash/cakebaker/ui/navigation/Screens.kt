@@ -24,9 +24,6 @@ object CakeScreen : Screen("CakeScreen")
 object MenuScreen : Screen("MenuScreen")
 
 @Serializable
-object FadeScreen : Screen("FadeScreen")
-
-@Serializable
 object KitchenScreen : Screen("KitchenScreen")
 
 @Serializable
@@ -41,7 +38,6 @@ object SaveScreen : Screen("SaveScreen")
 val allScreens = listOf(
     CakeScreen,
     MenuScreen,
-    FadeScreen,
     KitchenScreen,
     IngredientScreen,
     UpgradeScreen,

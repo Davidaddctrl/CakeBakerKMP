@@ -3,7 +3,6 @@ package com.davidlukash.cakebaker.ui.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
@@ -11,7 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.window.Popup
@@ -41,22 +39,13 @@ fun NormalScreenMessageManager(
     popups: List<Popup>,
     trueDensity: Density,
     removePopup: (Int) -> Unit,
-    currentScreen: Screen?,
     lazyListState: LazyListState,
     content: @Composable () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
-    ) {
-        if (currentScreen is FadeScreen) MessageManager(
-            theme = theme,
-            popups = popups,
-            trueDensity = trueDensity,
-            removePopup = removePopup,
-            lazyListState = lazyListState
-        )
-        else Popup(
+    ) { Popup(
             alignment = Alignment.BottomCenter,
         ) {
             MessageManager(
@@ -111,20 +100,20 @@ fun Navigation(
         }
     }
     val navGraph = remember(navController, uiState, currentScreen, popups, saveFiles) {
-        navController.createGraph(startDestination = SaveScreen) {
+        navController.createGraph(startDestination = CakeScreen) {
             composable<IngredientScreen> {
                 NormalScreenMessageManager(
                     theme = theme,
                     popups = popups,
                     trueDensity = trueDensity,
                     removePopup = removePopup,
-                    currentScreen = currentScreen,
-                    lazyListState = lazyListState
-                ) {
-                    Background(theme) {
-                        IngredientScreen(theme, uiState, navigateWithFade, buyIngredient)
+                    lazyListState = lazyListState,
+                    {
+                        Background(theme) {
+                            IngredientScreen(theme, uiState, navigateWithFade, buyIngredient)
+                        }
                     }
-                }
+                )
             }
             composable<CakeScreen> {
                 NormalScreenMessageManager(
@@ -132,17 +121,12 @@ fun Navigation(
                     popups = popups,
                     trueDensity = trueDensity,
                     removePopup = removePopup,
-                    currentScreen = currentScreen,
-                    lazyListState = lazyListState
-                ) {
-                    Background(theme) {
-                        CakeScreen(theme, navigateWithFade)
+                    lazyListState = lazyListState,
+                    {
+                        Background(theme) {
+                            CakeScreen(theme, navigateWithFade)
+                        }
                     }
-                }
-            }
-            composable<FadeScreen> {
-                Box(
-                    modifier = Modifier.fillMaxSize().background(Color.Black),
                 )
             }
             composable<MenuScreen> {
@@ -151,13 +135,13 @@ fun Navigation(
                     popups = popups,
                     trueDensity = trueDensity,
                     removePopup = removePopup,
-                    currentScreen = currentScreen,
-                    lazyListState = lazyListState
-                ) {
-                    Background(theme) {
-                        MenuScreen(theme, navigateWithFade)
+                    lazyListState = lazyListState,
+                    {
+                        Background(theme) {
+                            MenuScreen(theme, navigateWithFade)
+                        }
                     }
-                }
+                )
             }
             composable<KitchenScreen> {
                 NormalScreenMessageManager(
@@ -165,21 +149,21 @@ fun Navigation(
                     popups = popups,
                     trueDensity = trueDensity,
                     removePopup = removePopup,
-                    currentScreen = currentScreen,
-                    lazyListState = lazyListState
-                ) {
-                    Background(theme) {
-                        KitchenScreen(
-                            theme,
-                            uiState,
-                            navigateWithFade,
-                            bake,
-                            setAutoOvenEnabled,
-                            completeOrder,
-                            setCurrentCake
-                        )
+                    lazyListState = lazyListState,
+                    {
+                        Background(theme) {
+                            KitchenScreen(
+                                theme,
+                                uiState,
+                                navigateWithFade,
+                                bake,
+                                setAutoOvenEnabled,
+                                completeOrder,
+                                setCurrentCake
+                            )
+                        }
                     }
-                }
+                )
             }
             composable<UpgradeScreen> {
                 NormalScreenMessageManager(
@@ -187,13 +171,13 @@ fun Navigation(
                     popups = popups,
                     trueDensity = trueDensity,
                     removePopup = removePopup,
-                    currentScreen = currentScreen,
-                    lazyListState = lazyListState
-                ) {
-                    Background(theme) {
-                        UpgradeScreen(theme, uiState, navigateWithFade, buyUpgrade)
+                    lazyListState = lazyListState,
+                    {
+                        Background(theme) {
+                            UpgradeScreen(theme, uiState, navigateWithFade, buyUpgrade)
+                        }
                     }
-                }
+                )
             }
             composable<SaveScreen> {
                 NormalScreenMessageManager(
@@ -201,13 +185,13 @@ fun Navigation(
                     popups = popups,
                     trueDensity = trueDensity,
                     removePopup = removePopup,
-                    currentScreen = currentScreen,
-                    lazyListState = lazyListState
-                ) {
-                    Background(theme) {
-                        SaveScreen(theme, saveFiles, navigateWithFade, exportSave, deleteSave, loadSave, overwriteSave, importSave)
+                    lazyListState = lazyListState,
+                    {
+                        Background(theme) {
+                            SaveScreen(theme, saveFiles, navigateWithFade, exportSave, deleteSave, loadSave, overwriteSave, importSave)
+                        }
                     }
-                }
+                )
             }
         }
     }
