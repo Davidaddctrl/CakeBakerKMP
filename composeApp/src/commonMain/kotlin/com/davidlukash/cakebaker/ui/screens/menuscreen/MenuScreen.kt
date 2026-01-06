@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.ui.screens.menuscreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -18,6 +19,7 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
+import com.davidlukash.cakebaker.ui.navigation.OtherScreen
 import com.davidlukash.cakebaker.ui.navigation.SaveScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
@@ -52,6 +54,15 @@ fun MenuScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
                 modifier = Modifier.width(480.dp)
             ) {
                 Text("Saves", style = theme.buttonTextStyle)
+            }
+            LargeThemedButton(
+                theme = theme,
+                onClick = {
+                    navigateWithFade(OtherScreen)
+                },
+                modifier = Modifier.width(480.dp)
+            ) {
+                Text("Licenses", style = theme.buttonTextStyle)
             }
         }
     }

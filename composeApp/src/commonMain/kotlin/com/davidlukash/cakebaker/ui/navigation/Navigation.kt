@@ -27,6 +27,7 @@ import com.davidlukash.cakebaker.ui.screens.cakescreen.CakeScreen
 import com.davidlukash.cakebaker.ui.screens.ingredientscreen.IngredientScreen
 import com.davidlukash.cakebaker.ui.screens.kitchenscreen.KitchenScreen
 import com.davidlukash.cakebaker.ui.screens.menuscreen.MenuScreen
+import com.davidlukash.cakebaker.ui.screens.otherscreen.OtherScreen
 import com.davidlukash.cakebaker.ui.screens.savescreen.SaveScreen
 import com.davidlukash.cakebaker.ui.screens.upgradescreen.UpgradeScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -189,6 +190,20 @@ fun Navigation(
                     {
                         Background(theme) {
                             SaveScreen(theme, saveFiles, navigateWithFade, exportSave, deleteSave, loadSave, overwriteSave, importSave)
+                        }
+                    }
+                )
+            }
+            composable<OtherScreen> {
+                NormalScreenMessageManager(
+                    theme = theme,
+                    popups = popups,
+                    trueDensity = trueDensity,
+                    removePopup = removePopup,
+                    lazyListState = lazyListState,
+                    {
+                        Background(theme) {
+                            OtherScreen(theme, navigateWithFade)
                         }
                     }
                 )
