@@ -54,8 +54,8 @@ fun App() {
         val popups by uiViewModel.popups.collectAsState()
         val saveFiles by saveFileViewModel.savesFlow.collectAsState(listOf())
         val trueDensity by uiViewModel.trueDensity.collectAsState()
-        var importDialogOpen by remember { mutableStateOf(false) }
-        var importSaveData by remember { mutableStateOf<Save?>(null) }
+        val importDialogOpen by uiViewModel.importDialogOpen.collectAsState()
+        val importSaveData by uiViewModel.importSaveData.collectAsState()
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)
         }
@@ -72,13 +72,13 @@ fun App() {
                 },
                 create = {
                     saveFileViewModel.upsertSave(SaveFile(it, importSaveData!!))
-                    importSaveData = null
-                    importDialogOpen = false
+                    uiViewModel.setImportSaveData(null)
+                    uiViewModel.setImportDialogOpen(false)
                     uiViewModel.addTextPopup("Save Imported")
                 },
                 cancel = {
-                    importDialogOpen = false
-                    importSaveData = null
+                    uiViewModel.setImportSaveData(null)
+                    uiViewModel.setImportDialogOpen(false)
                 },
                 isImport = true,
             )
@@ -121,7 +121,7 @@ fun App() {
                             coroutineScope.launch {
                                 dataViewModel.loadSave(saveFile.save)
                                 uiViewModel.navigateWithFade(KitchenScreen)
-                                delay(transitionDuration.toLong())
+                                delay(transitionDuration.toLong() / 2L)
                                 uiViewModel.addTextPopup("Save Loaded")
                             }
                         },
@@ -148,8 +148,8 @@ fun App() {
                             val result = saveFileViewModel.importSave()
                             result.onSuccess { save ->
                                 if (save != null) {
-                                    importSaveData = save
-                                    importDialogOpen = true
+                                    uiViewModel.setImportSaveData(save)
+                                    uiViewModel.setImportDialogOpen(true)
                                 }
                             }
                             result.onFailure {
