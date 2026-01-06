@@ -9,14 +9,14 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
 
 expect fun createSavesRepository(): SavesRepository
+val savesRepository = createSavesRepository()
+val mainViewModel = MainViewModel(savesRepository)
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    val savesRepository = createSavesRepository()
     ComposeViewport {
-        val localMainViewModel = remember { MainViewModel(savesRepository) }
         CompositionLocalProvider(
-            LocalMainViewModel provides localMainViewModel
+            LocalMainViewModel provides mainViewModel
         ) {
             App()
         }
