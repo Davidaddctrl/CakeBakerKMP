@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,13 +24,14 @@ import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ThemedField(theme: Theme, modifier: Modifier = Modifier, value: String, setValue: (String) -> Unit) {
+fun ThemedField(theme: Theme, modifier: Modifier = Modifier, placeholder: String, value: String, singleLine: Boolean = true, setValue: (String) -> Unit) {
     BasicTextField(
         value,
         onValueChange = { setValue(it) },
         modifier = modifier,
         cursorBrush = SolidColor(Color.White),
-        textStyle = theme.buttonTextStyle.copy(color = Color.White),
+        textStyle = theme.smallLabelStyle.copy(color = Color.White),
+        singleLine = singleLine,
         decorationBox = { innerTextField ->
             Surface(
                 modifier = Modifier,
@@ -40,6 +42,8 @@ fun ThemedField(theme: Theme, modifier: Modifier = Modifier, value: String, setV
                 Box(
                     modifier = Modifier.padding(16.dp)
                 ) {
+                    if (value.isEmpty())
+                        Text(placeholder, style = theme.smallLabelStyle, color = theme.buttonTheme.disabledContentColor)
                     innerTextField()
                 }
             }
@@ -53,11 +57,12 @@ fun ThemedField(theme: Theme, modifier: Modifier = Modifier, value: String, setV
 @Composable
 fun ThemedFieldPreview() {
     val theme = getDefaultTheme()
-    var value by remember { mutableStateOf("Value") }
+    var value by remember { mutableStateOf("") }
     ThemedField(
         theme = theme,
         modifier = Modifier.width(256.dp),
         value = value,
         setValue = { value = it },
+        placeholder = "Save Name",
     )
 }
