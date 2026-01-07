@@ -221,7 +221,7 @@ class DataViewModel(
             ingredients.forEach { item ->
                 updateItem(
                     item.copy(
-                        amount = item.amount - (item.cakePrices?.getValue(tempCakeTier) ?: BigDecimal.ZERO)
+                        amount = item.amount - (item.cakePrices?.get(tempCakeTier) ?: BigDecimal.ZERO)
                     )
                 )
             }
