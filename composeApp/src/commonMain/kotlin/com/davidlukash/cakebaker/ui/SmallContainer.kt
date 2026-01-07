@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
@@ -35,10 +38,14 @@ fun SmallContainer(
         border = BorderStroke(6.dp, theme.containerBorderColor),
         shadowElevation = shadowElevation,
     ) {
-        Box(
-            modifier = modifier.padding(16.dp)
+        CompositionLocalProvider(
+            LocalContentColor provides Color.Black
         ) {
-            content()
+            Box(
+                modifier = modifier.padding(16.dp)
+            ) {
+                content()
+            }
         }
     }
 }
