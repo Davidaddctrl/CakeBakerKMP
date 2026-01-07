@@ -153,6 +153,8 @@ fun App() {
                             }
                         },
                         buyUpgrade = { dataViewModel.buyUpgrade(it) },
+                        setDebugConsole = { uiViewModel.setDebugConsole(it) },
+                        consoleType = debugConsole
                     )
                 }
                 if (debugConsole == ConsoleType.POPUP) DebugPopup()

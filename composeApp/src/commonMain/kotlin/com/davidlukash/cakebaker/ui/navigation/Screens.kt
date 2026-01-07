@@ -1,15 +1,7 @@
 package com.davidlukash.cakebaker.ui.navigation
 
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationStrategy
-import kotlinx.serialization.Serializer
-import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonTransformingSerializer
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -36,6 +28,8 @@ object UpgradeScreen : Screen("UpgradeScreen")
 object SaveScreen : Screen("SaveScreen")
 @Serializable
 object OtherScreen : Screen("OtherScreen")
+@Serializable
+object SettingsScreen : Screen("SettingsScreen")
 
 val allScreens = listOf(
     CakeScreen,
@@ -44,7 +38,8 @@ val allScreens = listOf(
     IngredientScreen,
     UpgradeScreen,
     SaveScreen,
-    OtherScreen
+    OtherScreen,
+    SettingsScreen
 )
 
 val allScreensMap = allScreens.associateBy { Json.encodeToJsonElement(it as Screen).jsonObject["type"]?.jsonPrimitive?.content }

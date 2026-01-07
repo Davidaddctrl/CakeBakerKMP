@@ -29,6 +29,7 @@ import com.davidlukash.cakebaker.ui.screens.kitchenscreen.KitchenScreen
 import com.davidlukash.cakebaker.ui.screens.menuscreen.MenuScreen
 import com.davidlukash.cakebaker.ui.screens.otherscreen.OtherScreen
 import com.davidlukash.cakebaker.ui.screens.savescreen.SaveScreen
+import com.davidlukash.cakebaker.ui.screens.settingsscreen.SettingsScreen
 import com.davidlukash.cakebaker.ui.screens.upgradescreen.UpgradeScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -80,7 +81,9 @@ fun Navigation(
     loadSave: (SaveFile) -> Unit,
     importSave: () -> Unit,
     overwriteSave: (SaveFile) -> Unit,
-    buyUpgrade: (Upgrade) -> Unit
+    buyUpgrade: (Upgrade) -> Unit,
+    setDebugConsole: (ConsoleType) -> Unit,
+    consoleType: ConsoleType
 ) {
     val navController = rememberNavController()
     val lazyListState = rememberLazyListState()
@@ -100,7 +103,7 @@ fun Navigation(
             navController.navigate(it as Screen)
         }
     }
-    val navGraph = remember(navController, uiState, currentScreen, popups, saveFiles) {
+    val navGraph = remember(navController, uiState, currentScreen, popups, saveFiles, consoleType) {
         navController.createGraph(startDestination = CakeScreen) {
             composable<IngredientScreen> {
                 NormalScreenMessageManager(
@@ -140,6 +143,20 @@ fun Navigation(
                     {
                         Background(theme) {
                             MenuScreen(theme, navigateWithFade)
+                        }
+                    }
+                )
+            }
+            composable<SettingsScreen> {
+                NormalScreenMessageManager(
+                    theme = theme,
+                    popups = popups,
+                    trueDensity = trueDensity,
+                    removePopup = removePopup,
+                    lazyListState = lazyListState,
+                    {
+                        Background(theme) {
+                            SettingsScreen(theme, navigateWithFade, setDebugConsole, consoleType)
                         }
                     }
                 )
@@ -251,5 +268,7 @@ fun NavigationPreview() {
         popups = listOf(),
         trueDensity = LocalDensity.current,
         removePopup = {},
+        consoleType = ConsoleType.NONE,
+        setDebugConsole = {}
     )
 }

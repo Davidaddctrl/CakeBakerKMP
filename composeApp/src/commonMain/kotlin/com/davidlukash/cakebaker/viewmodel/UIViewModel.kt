@@ -39,7 +39,7 @@ class UIViewModel : ViewModel(), AppLogger {
     private val _logs = MutableStateFlow(listOf<Log>())
     override val logs = _logs.asStateFlow()
 
-    private val _debugConsole = MutableStateFlow(ConsoleType.POPUP  )
+    private val _debugConsole = MutableStateFlow(ConsoleType.NONE)
     val debugConsole = _debugConsole.asStateFlow()
 
     private val _importDialogOpen = MutableStateFlow(false)
