@@ -4,8 +4,8 @@
     "platforms": [
       {
         "name": "WASM",
-        "playLink": "../wasm-v0.9.1-beta.1",
-        "downloadLink": "../wasm-v0.9.1-beta.1/build.zip"
+        "playLink": "../builds/v0.9.1-beta.1/wasm",
+        "downloadLink": "../builds/v0.9.1-beta.1/wasm/build.zip"
       }
     ]
   }
