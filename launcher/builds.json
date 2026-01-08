@@ -1,0 +1,12 @@
+[
+  {
+    "version": "0.9.1-beta.1",
+    "platforms": [
+      {
+        "name": "WASM",
+        "playLink": "../wasm-v0.9.1-beta.1",
+        "downloadLink": "../wasm-v0.9.1-beta.1/build.zip"
+      }
+    ]
+  }
+]
