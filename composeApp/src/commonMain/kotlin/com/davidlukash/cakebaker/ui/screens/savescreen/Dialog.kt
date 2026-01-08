@@ -2,7 +2,6 @@ package com.davidlukash.cakebaker.ui.screens.savescreen
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -132,7 +131,7 @@ fun CreateSaveDialog(theme: Theme, exists: (String) -> Boolean,create: (String) 
                         (if (containsNonAlphanumeric) " only contain lowercase alphanumeric characters" else ""),
                 style = theme.extremelySmallLabelStyle,
                 textAlign = TextAlign.Start,
-                color = theme.badColor,
+                color = theme.dangerColor,
                 modifier = Modifier.align(
                     Alignment.Start
                 )
@@ -144,7 +143,7 @@ fun CreateSaveDialog(theme: Theme, exists: (String) -> Boolean,create: (String) 
                 "A save with this name already exists",
                 style = theme.extremelySmallLabelStyle,
                 textAlign = TextAlign.Start,
-                color = theme.badColor,
+                color = theme.dangerColor,
                 modifier = Modifier.align(
                     Alignment.Start
                 )

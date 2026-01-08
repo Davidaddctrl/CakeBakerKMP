@@ -137,7 +137,7 @@ fun MainContentPreview() {
         autoOvenEnabled = autoOvenEnabled
     )
     Box(
-        modifier = Modifier.fillMaxSize().background(theme.backgroundColor),
+        modifier = Modifier.fillMaxSize().background(theme.backgroundTheme.containerColor),
     ) {
         MainContent(
             theme = theme,

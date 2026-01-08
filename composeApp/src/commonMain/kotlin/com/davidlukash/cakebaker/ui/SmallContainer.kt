@@ -31,15 +31,16 @@ fun SmallContainer(
     shadowElevation: Dp = 0.dp,
     content: @Composable () -> Unit
 ) {
+    val containerTheme = theme.containerTheme
     Surface(
         modifier = modifier,
-        color = theme.accentColor,
+        color = containerTheme.containerColor,
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(6.dp, theme.containerBorderColor),
+        border = BorderStroke(6.dp, containerTheme.borderColor),
         shadowElevation = shadowElevation,
     ) {
         CompositionLocalProvider(
-            LocalContentColor provides Color.Black
+            LocalContentColor provides containerTheme.contentColor,
         ) {
             Box(
                 modifier = modifier.padding(16.dp)

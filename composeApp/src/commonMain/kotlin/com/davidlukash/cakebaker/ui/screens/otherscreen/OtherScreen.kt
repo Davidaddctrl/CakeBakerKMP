@@ -163,7 +163,7 @@ fun OtherScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
 @Composable
 fun OtherScreenPreview() {
     val theme = getDefaultTheme()
-    Box(Modifier.fillMaxSize().background(theme.backgroundColor).padding(8.dp)) {
+    Box(Modifier.fillMaxSize().background(theme.backgroundTheme.containerColor).padding(8.dp)) {
         OtherScreen(theme = theme) { }
     }
 }

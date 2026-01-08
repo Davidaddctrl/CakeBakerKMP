@@ -25,17 +25,18 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun Container(theme: Theme, modifier: Modifier, content: @Composable () -> Unit) {
+    val containerTheme = theme.containerTheme
     Surface(
         modifier = modifier,
-        color = theme.accentColor,
+        color = containerTheme.containerColor,
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(8.dp, theme.containerBorderColor)
+        border = BorderStroke(8.dp, containerTheme.borderColor),
     ) {
         Box(
             modifier = Modifier.padding(16.dp)
         ) {
             CompositionLocalProvider(
-                LocalContentColor provides Color.Black
+                LocalContentColor provides containerTheme.contentColor,
             ) {
                 content()
             }

@@ -31,8 +31,6 @@ import com.davidlukash.cakebaker.data.ImageData
 import org.jetbrains.compose.resources.Font
 
 data class Theme(
-    val backgroundColor: Color,
-    val accentColor: Color,
     val nameToImageMap: Map<String, ImageData>,
     val font: FontFamily,
     val titleStyle: TextStyle,
@@ -43,12 +41,14 @@ data class Theme(
     val verySmallLabelStyle: TextStyle,
     val buttonTextStyle: TextStyle,
     val extremelySmallLabelStyle: TextStyle,
-    val containerBorderColor: Color,
     val progressBarTheme: ProgressBarTheme,
     val buttonTheme: ButtonTheme,
     val switchButtonTheme: SwitchButtonTheme,
-    val goodColor: Color,
-    val badColor: Color,
+    val backgroundTheme: ContainerTheme,
+    val containerTheme: ContainerTheme,
+    val secondaryContainerTheme: ContainerTheme,
+    val successColor: Color,
+    val dangerColor: Color,
 ) {
 
     fun nameToImage(name: String): ImageData {
@@ -58,8 +58,6 @@ data class Theme(
     companion object {
         //Do not use this, use getDefaultTheme instead
         val default = Theme(
-            backgroundColor = Color(0, 120, 255),
-            accentColor = Color(246, 255, 153),
             nameToImageMap = mapOf(
                 "Butter" to ImageData(resource = Res.drawable.butter),
                 "Egg" to ImageData(resource = Res.drawable.egg),
@@ -115,9 +113,23 @@ data class Theme(
                 onSelectedTextColor = Color(255, 255, 255),
                 onUnselectedTextColor = Color(255, 255, 255).copy(alpha = 0.3f),
             ),
-            containerBorderColor = Color.Black,
-            goodColor = Color(58, 158, 0),
-            badColor = Color(255, 0, 0)
+            backgroundTheme = ContainerTheme(
+                borderColor = Color.Transparent,
+                containerColor = Color(0, 120, 255),
+                contentColor = Color(255, 255, 255),
+            ),
+            containerTheme = ContainerTheme(
+                borderColor = Color(0, 0, 0),
+                containerColor = Color(246, 255, 153),
+                contentColor = Color(0, 0, 0)
+            ),
+            secondaryContainerTheme = ContainerTheme(
+                borderColor = Color(0, 0, 0),
+                containerColor = Color(8, 160, 69),
+                contentColor = Color(255, 255, 255),
+            ),
+            successColor = Color(58, 158, 0),
+            dangerColor = Color(255, 0, 0)
         )
     }
 }

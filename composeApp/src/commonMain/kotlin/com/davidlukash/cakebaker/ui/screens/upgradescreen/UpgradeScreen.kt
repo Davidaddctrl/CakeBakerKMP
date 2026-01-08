@@ -49,7 +49,7 @@ fun UpgradeScreenPreview() {
         },
     )
     Box(
-        modifier = Modifier.fillMaxSize().background(theme.backgroundColor)
+        modifier = Modifier.fillMaxSize().background(theme.backgroundTheme.containerColor),
     ) {
         UpgradeScreen(
             theme,

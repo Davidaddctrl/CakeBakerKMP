@@ -11,10 +11,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,8 +28,7 @@ import com.davidlukash.cakebaker.toEngNotation
 
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.SmallThemedButton
-import com.davidlukash.cakebaker.ui.TertiaryContainer
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import com.davidlukash.cakebaker.ui.SecondaryContainer
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -39,7 +36,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: Order) {
     val cakes = uiState.getCakes()
     val cake = cakes[order.cakeTier]
-    TertiaryContainer(
+    SecondaryContainer(
         theme = theme,
         modifier = Modifier.fillMaxWidth()
     ) {

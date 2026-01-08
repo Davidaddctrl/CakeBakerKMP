@@ -17,11 +17,12 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 
 @Composable
 fun Background(theme: Theme, content: @Composable () -> Unit) {
+    val backgroundTheme = theme.backgroundTheme
     Box(
-        modifier = Modifier.fillMaxSize().background(theme.backgroundColor).padding(16.dp)
+        modifier = Modifier.fillMaxSize().background(backgroundTheme.containerColor).padding(16.dp)
     ) {
         CompositionLocalProvider(
-            LocalContentColor provides Color.White,
+            LocalContentColor provides backgroundTheme.contentColor,
         ) {
             content()
         }
