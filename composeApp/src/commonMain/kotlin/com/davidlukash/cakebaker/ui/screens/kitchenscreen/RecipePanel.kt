@@ -117,14 +117,14 @@ fun RowScope.RecipePanel(theme: Theme, uiState: UIState, setCurrentCake: (Int) -
                                 Icon(
                                     painter = painterResource(Res.drawable.check),
                                     contentDescription = "Enough",
-                                    tint = theme.green,
+                                    tint = theme.goodColor,
                                     modifier = Modifier.size(36.dp)
                                 )
                             else
                                 Icon(
                                     painter = painterResource(Res.drawable.close),
                                     contentDescription = "Not Enough",
-                                    tint = theme.red,
+                                    tint = theme.badColor,
                                     modifier = Modifier.size(36.dp)
                                 )
                         }

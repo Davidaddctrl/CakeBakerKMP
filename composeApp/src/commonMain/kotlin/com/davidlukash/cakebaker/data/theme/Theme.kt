@@ -42,12 +42,13 @@ data class Theme(
     val smallLabelStyle: TextStyle,
     val verySmallLabelStyle: TextStyle,
     val buttonTextStyle: TextStyle,
-    val buttonTheme: ButtonTheme,
     val extremelySmallLabelStyle: TextStyle,
-    val progressBarTheme: ProgressBarTheme,
     val containerBorderColor: Color,
-    val green: Color,
-    val red: Color,
+    val progressBarTheme: ProgressBarTheme,
+    val buttonTheme: ButtonTheme,
+    val switchButtonTheme: SwitchButtonTheme,
+    val goodColor: Color,
+    val badColor: Color,
 ) {
 
     fun nameToImage(name: String): ImageData {
@@ -103,9 +104,20 @@ data class Theme(
                 backgroundColor = Color(127, 127, 127),
                 filledColor = Color(255, 127, 0)
             ),
+            switchButtonTheme = SwitchButtonTheme(
+                borderColor = Color.Black,
+                offSelectedContainerColor = Color(255, 0, 0),
+                offUnselectedContainerColor = Color(255, 0, 0).copy(alpha = 0.3f),
+                offSelectedTextColor = Color(255, 255, 255),
+                offUnselectedTextColor = Color(255, 255, 255).copy(alpha = 0.3f),
+                onSelectedContainerColor = Color(58, 158, 0),
+                onUnselectedContainerColor = Color(58, 158, 0).copy(alpha = 0.3f),
+                onSelectedTextColor = Color(255, 255, 255),
+                onUnselectedTextColor = Color(255, 255, 255).copy(alpha = 0.3f),
+            ),
             containerBorderColor = Color.Black,
-            green = Color(58, 158, 0),
-            red = Color(255, 0, 0),
+            goodColor = Color(58, 158, 0),
+            badColor = Color(255, 0, 0)
         )
     }
 }

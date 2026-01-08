@@ -132,7 +132,7 @@ fun CreateSaveDialog(theme: Theme, exists: (String) -> Boolean,create: (String) 
                         (if (containsNonAlphanumeric) " only contain lowercase alphanumeric characters" else ""),
                 style = theme.extremelySmallLabelStyle,
                 textAlign = TextAlign.Start,
-                color = theme.red,
+                color = theme.badColor,
                 modifier = Modifier.align(
                     Alignment.Start
                 )
@@ -144,7 +144,7 @@ fun CreateSaveDialog(theme: Theme, exists: (String) -> Boolean,create: (String) 
                 "A save with this name already exists",
                 style = theme.extremelySmallLabelStyle,
                 textAlign = TextAlign.Start,
-                color = theme.red,
+                color = theme.badColor,
                 modifier = Modifier.align(
                     Alignment.Start
                 )

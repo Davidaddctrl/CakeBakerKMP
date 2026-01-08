@@ -40,15 +40,19 @@ fun SwitchButton(
     modifier: Modifier = Modifier,
     onClick: (Boolean) -> Unit
 ) {
+    val switchButtonTheme = theme.switchButtonTheme
     Surface(
-        color = theme.containerBorderColor,
-        border = BorderStroke(8.dp, theme.containerBorderColor),
+        color = switchButtonTheme.borderColor,
+        border = BorderStroke(8.dp, switchButtonTheme.borderColor),
         modifier = Modifier.clickable(onClick = { onClick(!value) }, enabled = enabled),
     ) {
         Row(modifier = modifier.height(48.dp)) {
             Box(modifier = Modifier.weight(1f)) {
                 Surface(
-                    color = theme.red.copy(alpha = if (!value && enabled) 1f else 0.3f),
+                    color = if (!value && enabled)
+                        switchButtonTheme.offSelectedContainerColor
+                    else
+                        switchButtonTheme.offUnselectedContainerColor,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Box(
@@ -58,7 +62,10 @@ fun SwitchButton(
                         Text(
                             offText,
                             style = theme.smallLabelStyle,
-                            color = (if (theme.red.isDark) Color.White else Color.Black).copy(alpha = if (!value && enabled) 1f else 0.3f),
+                            color = if (!value && enabled)
+                                switchButtonTheme.offSelectedTextColor
+                            else
+                                switchButtonTheme.offUnselectedTextColor,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -67,7 +74,10 @@ fun SwitchButton(
             }
             Box(modifier = Modifier.weight(1f)) {
                 Surface(
-                    color = theme.green.copy(alpha = if (value && enabled) 1f else 0.3f),
+                    color = if (value && enabled)
+                        switchButtonTheme.onSelectedContainerColor
+                    else
+                        switchButtonTheme.onUnselectedContainerColor,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Box(
@@ -77,7 +87,10 @@ fun SwitchButton(
                         Text(
                             onText,
                             style = theme.smallLabelStyle,
-                            color = (if (theme.green.isLight) Color.Black else Color.White).copy(alpha = if (value && enabled) 1f else 0.3f),
+                            color = if (value && enabled)
+                                switchButtonTheme.onSelectedTextColor
+                            else
+                                switchButtonTheme.onUnselectedTextColor,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
