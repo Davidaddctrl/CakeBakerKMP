@@ -61,7 +61,7 @@ fun MainContent(
         verticalAlignment = Alignment.Bottom,
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.Start,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
