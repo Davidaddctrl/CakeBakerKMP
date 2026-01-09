@@ -11,6 +11,15 @@ plugins {
     kotlin("plugin.serialization")
 }
 
+tasks.register("packageAllNonAndroid") {
+    dependsOn(
+        tasks.named("wasmJsBrowserDistribution"),
+        tasks.named("jsBrowserDistribution"),
+        tasks.named("packageReleaseDistributionForCurrentOS"), //Requires Windows Build
+        tasks.named("packageReleaseUberJarForCurrentOS") //Requires Windows Build
+    )
+}
+
 kotlin {
     applyDefaultHierarchyTemplate()
     androidTarget {
@@ -74,7 +83,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.9.2"
     }
     packaging {
         resources {
@@ -101,9 +110,22 @@ compose.desktop {
         mainClass = "com.davidlukash.cakebaker.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.davidlukash.cakebaker"
-            packageVersion = "1.0.0"
+            targetFormats(TargetFormat.AppImage, TargetFormat.Exe, TargetFormat.Deb)
+            packageName = "Cake Baker"
+            packageVersion = "0.9.2"
+
+            windows {
+                console = false
+                shortcut = true
+                upgradeUuid = "efcfb118-88d7-4875-8fb1-1888d7b87576"
+                menu = true
+                menuGroup = "Cake Baker"
+            }
+
+            linux {
+                shortcut = true
+                menuGroup = "Cake Baker"
+            }
         }
     }
 }
