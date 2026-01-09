@@ -10,7 +10,7 @@ object JsonMathHelpers {
     /**
      * This is a simple item cheaper expression list. It requires in parameters itemName (eg. globals.items.Egg), priceDivisor, slopeDivisor
      */
-    fun createItemCheaperUpgradeOnBuy(): List<Expression> = buildExpressionList {
+    fun createCheaperItem(): List<Expression> = buildExpressionList {
         //Short term
         appendFunction {
             name = "variable.set"
@@ -127,10 +127,10 @@ object JsonMathHelpers {
     }
 
     /**
-     * This is a simple linear price growth. It requires cakeTiers: Dictionary[Int, Int], priceIncrement,
+     * This is a simple linear price growth. It also includes changeable cake tier. It requires cakeTiers: Dictionary[Int, Int], priceIncrement,
      * initialPrice, levelsUntilPriceIncrease in parameters
      */
-    fun createLinearOnBuy(): List<Expression> = buildExpressionList {
+    fun createLinearGrowth(): List<Expression> = buildExpressionList {
         expressions.add(
             createExpression(createChangeableCakeTier())
         )
@@ -222,7 +222,7 @@ object JsonMathHelpers {
     /**
      * This is a simple script that requires 2 parameters: variable: String, product: Number in parameters. It simply sets the variable to the variable * product
      */
-    fun createProductUpgradeOnBuy(): List<Expression> = buildExpressionList {
+    fun createProduct(): List<Expression> = buildExpressionList {
         appendFunction {
             name = "variable.set"
             expressions.add(
@@ -240,6 +240,99 @@ object JsonMathHelpers {
                 expressions.add(
                     createExpression(createGetDynamic("parameters.product"))
                 )
+            }
+            appendBoolean(true)
+        }
+    }
+
+    /**
+     *  This is a script that is used for dense item upgrades. It sets each cake price to the cake price -1
+     */
+    fun createDense(): List<Expression> = buildExpressionList {
+        appendFunction {
+            name = "variable.set"
+            appendFunction {
+                name = "string.join"
+                appendString(".")
+                expressions.add(
+                    createExpression(createGetDynamic("parameters.itemName"))
+                )
+                appendString("cakePrices")
+            }
+            appendFunction {
+                name = "dictionary.construct"
+                appendFunction {
+                    name = "dictionary.keys"
+                    appendFunction {
+                        name = "variable.get"
+                        appendFunction {
+                            name = "string.join"
+                            appendString(".")
+                            expressions.add(
+                                createExpression(createGetDynamic("parameters.itemName"))
+                            )
+                            appendString("cakePrices")
+                        }
+                        appendBoolean(true)
+                    }
+                }
+                appendFunction {
+                    name = "control.forEach"
+                    appendString("locals.value")
+                    appendFunction {
+                        name = "dictionary.values"
+                        appendFunction {
+                            name = "variable.get"
+                            appendFunction {
+                                name = "string.join"
+                                appendString(".")
+                                expressions.add(
+                                    createExpression(createGetDynamic("parameters.itemName"))
+                                )
+                                appendString("cakePrices")
+                            }
+                            appendBoolean(true)
+                        }
+                    }
+                    appendList {
+                        appendFunction {
+                            name = "math.max"
+                            appendFunction {
+                                name = "control.if"
+                                appendFunction {
+                                    name = "compare.greaterThan"
+                                    appendFunction {
+                                        name = "variable.get"
+                                        appendString("locals.value")
+                                    }
+                                    // >
+                                    appendNumber("1")
+                                }
+                                appendList {
+                                    appendExpression { function {
+                                        name = "math.subtract"
+                                        appendFunction {
+                                            name = "variable.get"
+                                            appendString("locals.value")
+                                        }
+                                        appendNumber("1")
+                                    } }
+                                }
+                                appendList {
+                                    appendExpression { function {
+                                        name = "math.subtract"
+                                        appendFunction {
+                                            name = "variable.get"
+                                            appendString("locals.value")
+                                        }
+                                        appendNumber("0.1")
+                                    } }
+                                }
+                            }
+                            appendNumber("0.1")
+                        }
+                    }
+                }
             }
             appendBoolean(true)
         }

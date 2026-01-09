@@ -1,7 +1,6 @@
 package com.davidlukash.cakebaker.data
 
 import com.davidlukash.cakebaker.JsonMathHelpers
-import com.davidlukash.jsonmath.buildExpressionList
 import com.davidlukash.jsonmath.createObject
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
@@ -33,7 +32,7 @@ data class Save(
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.25f),
+                    increaseSlope = BigDecimal.fromFloat(0.2f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -53,7 +52,7 @@ data class Save(
                     fastPriceGrowth = false,
                     total = BigDecimal.fromFloat(0f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.1f),
+                    increaseSlope = BigDecimal.fromFloat(0.05f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -113,7 +112,7 @@ data class Save(
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0.5f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.4f),
+                    increaseSlope = BigDecimal.fromFloat(0.1f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -153,7 +152,7 @@ data class Save(
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.5f),
+                    increaseSlope = BigDecimal.fromFloat(1f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -221,7 +220,7 @@ data class Save(
                     price = 2,
                     cakeTier = 1,
                     maxLevel = null,
-                    onBuy = JsonMathHelpers.createLinearOnBuy() + JsonMathHelpers.createProductUpgradeOnBuy(),
+                    onBuy = JsonMathHelpers.createLinearGrowth() + JsonMathHelpers.createProduct(),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
@@ -243,7 +242,7 @@ data class Save(
                     price = 5,
                     cakeTier = 1,
                     maxLevel = null,
-                    onBuy = JsonMathHelpers.createLinearOnBuy() + JsonMathHelpers.createProductUpgradeOnBuy(),
+                    onBuy = JsonMathHelpers.createLinearGrowth() + JsonMathHelpers.createProduct(),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
@@ -265,7 +264,7 @@ data class Save(
                     price = 6,
                     cakeTier = 2,
                     maxLevel = null,
-                    onBuy = JsonMathHelpers.createLinearOnBuy() + JsonMathHelpers.createProductUpgradeOnBuy(),
+                    onBuy = JsonMathHelpers.createLinearGrowth() + JsonMathHelpers.createProduct(),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
@@ -286,7 +285,7 @@ data class Save(
                     price = 1,
                     cakeTier = 1,
                     maxLevel = 45,
-                    onBuy = JsonMathHelpers.createLinearOnBuy(),
+                    onBuy = JsonMathHelpers.createLinearGrowth(),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
@@ -305,12 +304,35 @@ data class Save(
                     price = 3,
                     cakeTier = 1,
                     maxLevel = 1,
-                    onBuy = JsonMathHelpers.createLinearOnBuy(),
+                    onBuy = JsonMathHelpers.createLinearGrowth(),
                     parameters = mapOf(
                         "cakeTiers" to createObject(mapOf()),
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(1.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                    )
+                ),
+                Upgrade(
+                    pageName = "Butter",
+                    imageName = "Butter",
+                    name = "Cheaper Butter",
+                    price = 1,
+                    cakeTier = 1,
+                    maxLevel = null,
+                    onBuy = JsonMathHelpers.createCheaperItem() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(5.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(20.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(2.toBigDecimal()),
+                        "initialPrice" to createObject(2.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Butter"),
+                        "priceDivisor" to createObject(2.toBigDecimal()),
+                        "slopeDivisor" to createObject(1.25.toBigDecimal()),
                     )
                 ),
                 Upgrade(
@@ -320,7 +342,7 @@ data class Save(
                     price = 1,
                     cakeTier = 1,
                     maxLevel = null,
-                    onBuy = JsonMathHelpers.createItemCheaperUpgradeOnBuy() + JsonMathHelpers.createLinearOnBuy(),
+                    onBuy = JsonMathHelpers.createCheaperItem() + JsonMathHelpers.createLinearGrowth(),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
@@ -337,13 +359,34 @@ data class Save(
                     )
                 ),
                 Upgrade(
+                    pageName = "Egg",
+                    imageName = "Egg",
+                    name = "Dense Egg",
+                    price = 5,
+                    cakeTier = 1,
+                    maxLevel = 24,
+                    onBuy = JsonMathHelpers.createDense() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(12.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(16.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(5.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(3.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Egg"),
+                    )
+                ),
+                Upgrade(
                     pageName = "Vanilla Extract",
                     imageName = "Vanilla Extract",
                     name = "Cheaper Vanilla Extract",
                     price = 1,
                     cakeTier = 1,
                     maxLevel = null,
-                    onBuy = JsonMathHelpers.createItemCheaperUpgradeOnBuy() + JsonMathHelpers.createLinearOnBuy(),
+                    onBuy = JsonMathHelpers.createCheaperItem() + JsonMathHelpers.createLinearGrowth(),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
