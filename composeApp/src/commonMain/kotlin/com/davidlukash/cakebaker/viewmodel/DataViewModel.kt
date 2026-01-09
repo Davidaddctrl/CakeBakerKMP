@@ -233,6 +233,10 @@ class DataViewModel(
         val item = ingredients.find { it.name == name }
             ?: throw IllegalArgumentException("Ingredient $name does not exist")
         var tempItem = item
+        if (itemMoney.amount < (item.price ?: BigDecimal.ZERO)) {
+            uiViewModel.addTextPopup("You do not have enough money to buy $name")
+            return
+        }
         updateItem(
             itemMoney.copy(
                 amount = itemMoney.amount - (item.price ?: BigDecimal.ZERO)
@@ -279,7 +283,6 @@ class DataViewModel(
         updateItem(
             tempItem
         )
-
     }
 
     @OptIn(ExperimentalTime::class)
