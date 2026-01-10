@@ -33,7 +33,7 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun RowScope.InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit) {
+fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit) {
     val satisfactionLevel = uiState.getSatisfactionLevel()
     val satisfaction = uiState.customerSatisfaction
     val autoOvenEnabled = uiState.autoOvenEnabled
@@ -43,10 +43,10 @@ fun RowScope.InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Bool
 
     Container(
         theme = theme,
-        modifier = Modifier.weight(1f).fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().height(720.dp),
+            modifier = Modifier.fillMaxWidth().height(408.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

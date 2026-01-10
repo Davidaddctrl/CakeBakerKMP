@@ -99,16 +99,22 @@ fun MainContent(
         }
         RecipePanel(theme, uiState, setCurrentCake)
         OrdersPanel(theme, uiState, completeOrder)
-        InfoPanel(theme, uiState, setAutoOvenEnabled)
-        ImageButton(
-            onClick = {
-                navigateWithFade(UpgradeScreen)
-            }
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.weight(1f)
         ) {
-            ResourceImage(
-                theme.nameToImage("Upgrade Shop"),
-                modifier = Modifier.height(280.dp)
-            )
+            InfoPanel(theme, uiState, setAutoOvenEnabled)
+            ImageButton(
+                onClick = {
+                    navigateWithFade(UpgradeScreen)
+                }
+            ) {
+                ResourceImage(
+                    theme.nameToImage("Upgrade Shop"),
+                    modifier = Modifier.height(280.dp)
+                )
+            }
         }
     }
 }

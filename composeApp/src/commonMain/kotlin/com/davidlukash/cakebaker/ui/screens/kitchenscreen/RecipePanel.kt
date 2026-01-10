@@ -50,13 +50,13 @@ fun RowScope.RecipePanel(theme: Theme, uiState: UIState, setCurrentCake: (Int) -
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(72.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     painter = painterResource(Res.drawable.chevron_backward),
                     contentDescription = "Previous Tier Cake",
-                    modifier = Modifier.size(48.dp).clip(CircleShape).clickable(
+                    modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
                         enabled = currentCakeTier != 1
                     ) {
                         setCurrentCake(currentCakeTier - 1)
@@ -65,7 +65,7 @@ fun RowScope.RecipePanel(theme: Theme, uiState: UIState, setCurrentCake: (Int) -
                 )
                 Text(
                     cakes[currentCakeTier]?.name ?: "Cake Tier Invalid",
-                    style = theme.labelStyle,
+                    style = theme.subtitleStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.fillMaxWidth().weight(1f)
@@ -73,7 +73,7 @@ fun RowScope.RecipePanel(theme: Theme, uiState: UIState, setCurrentCake: (Int) -
                 Icon(
                     painter = painterResource(Res.drawable.chevron_forward),
                     contentDescription = "Next Tier Cake",
-                    modifier = Modifier.size(48.dp).clip(CircleShape).clickable(
+                    modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
                         enabled = currentCakeTier != cakes.size
                     ) {
                         setCurrentCake(currentCakeTier + 1)
