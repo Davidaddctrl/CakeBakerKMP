@@ -220,7 +220,7 @@ data class Save(
                     price = 2,
                     cakeTier = 1,
                     maxLevel = null,
-                    onBuy = JsonMathHelpers.createLinearGrowth() + JsonMathHelpers.createProduct(),
+                    onBuy = JsonMathHelpers.createLinearGrowth() + JsonMathHelpers.createOperation("math.product"),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
@@ -232,7 +232,7 @@ data class Save(
                         "initialPrice" to createObject(2.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
                         "variable" to createObject("globals.items.Vanilla Cake.salePrice"),
-                        "product" to createObject(1.25.toBigDecimal()),
+                        "argument" to createObject(1.25.toBigDecimal()),
                     )
                 ),
                 Upgrade(
@@ -242,7 +242,7 @@ data class Save(
                     price = 5,
                     cakeTier = 1,
                     maxLevel = null,
-                    onBuy = JsonMathHelpers.createLinearGrowth() + JsonMathHelpers.createProduct(),
+                    onBuy = JsonMathHelpers.createLinearGrowth() + JsonMathHelpers.createOperation("math.product"),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
@@ -254,7 +254,7 @@ data class Save(
                         "initialPrice" to createObject(5.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
                         "variable" to createObject("globals.items.Chocolate Cake.salePrice"),
-                        "product" to createObject(1.4.toBigDecimal()),
+                        "argument" to createObject(1.4.toBigDecimal()),
                     )
                 ),
                 Upgrade(
@@ -264,7 +264,7 @@ data class Save(
                     price = 6,
                     cakeTier = 2,
                     maxLevel = null,
-                    onBuy = JsonMathHelpers.createLinearGrowth() + JsonMathHelpers.createProduct(),
+                    onBuy = JsonMathHelpers.createLinearGrowth() + JsonMathHelpers.createOperation("math.product"),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
@@ -275,7 +275,7 @@ data class Save(
                         "initialPrice" to createObject(6.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
                         "variable" to createObject("globals.items.Honey Cake.salePrice"),
-                        "product" to createObject(1.7.toBigDecimal()),
+                        "argument" to createObject(1.7.toBigDecimal()),
                     )
                 ),
                 Upgrade(
@@ -333,6 +333,27 @@ data class Save(
                         "itemName" to createObject("globals.items.Butter"),
                         "priceDivisor" to createObject(2.toBigDecimal()),
                         "slopeDivisor" to createObject(1.25.toBigDecimal()),
+                    )
+                ),
+                Upgrade(
+                    pageName = "Butter",
+                    imageName = "Butter",
+                    name = "Dense Butter",
+                    price = 5,
+                    cakeTier = 1,
+                    maxLevel = 24,
+                    onBuy = JsonMathHelpers.createDense() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(12.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(16.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(5.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(3.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Butter"),
                     )
                 ),
                 Upgrade(

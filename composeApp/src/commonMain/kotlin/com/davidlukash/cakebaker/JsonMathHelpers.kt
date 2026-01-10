@@ -220,16 +220,16 @@ object JsonMathHelpers {
     }
 
     /**
-     * This is a simple script that requires 2 parameters: variable: String, product: Number in parameters. It simply sets the variable to the variable * product
+     * This is a simple script that requires 2 parameters: variable: String, argument: Any? in parameters. It simply sets the variable to the variable <operation> product
      */
-    fun createProduct(): List<Expression> = buildExpressionList {
+    fun createOperation(operation: String): List<Expression> = buildExpressionList {
         appendFunction {
             name = "variable.set"
             expressions.add(
                 createExpression(createGetDynamic("parameters.variable"))
             )
             appendFunction {
-                name = "math.product"
+                name = operation
                 appendFunction {
                     name = "variable.get"
                     expressions.add(
@@ -238,7 +238,7 @@ object JsonMathHelpers {
                     appendBoolean(true)
                 }
                 expressions.add(
-                    createExpression(createGetDynamic("parameters.product"))
+                    createExpression(createGetDynamic("parameters.argument"))
                 )
             }
             appendBoolean(true)
