@@ -38,11 +38,11 @@ fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Uni
             Column {
                 Text(
                     item.name,
-                    style = theme.smallLabelStyle,
+                    style = theme.scaledStyles.verySmallBodyStyle,
                 )
                 Text(
                     "$${toEngNotation(item.price ?: BigDecimal.ZERO)}",
-                    style = theme.subtitleStyle
+                    style = theme.scaledStyles.mediumBodyStyle
                 )
             }
         }
@@ -56,7 +56,6 @@ fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Uni
         ) {
             Text(
                 "Buy",
-                style = theme.buttonTextStyle,
             )
         }
     }

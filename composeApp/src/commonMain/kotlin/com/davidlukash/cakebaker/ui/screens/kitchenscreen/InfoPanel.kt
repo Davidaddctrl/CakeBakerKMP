@@ -3,7 +3,6 @@ package com.davidlukash.cakebaker.ui.screens.kitchenscreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,7 +20,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
-import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
@@ -52,7 +50,7 @@ fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> U
         ) {
             Text(
                 "Information",
-                style = theme.labelStyle,
+                style = theme.scaledStyles.smallBodyStyle,
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -63,7 +61,7 @@ fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> U
             ) {
                 Text(
                     "Customer\nSatisfaction",
-                    style = theme.labelStyle,
+                    style = theme.scaledStyles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                 )
                 Column(
@@ -83,20 +81,20 @@ fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> U
                     )
                     Text(
                         "$satisfaction%",
-                        style = theme.labelStyle,
+                        style = theme.scaledStyles.smallBodyStyle,
                     )
                 }
             }
             Text(
                 "Cake Sale Price",
-                style = theme.labelStyle,
+                style = theme.scaledStyles.smallBodyStyle,
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
                 "$${toEngNotation(cakesSalePrices[currentCakeTier] ?: BigDecimal.ZERO)}",
-                style = theme.smallTitleStyle,
+                style = theme.scaledStyles.largeBodyStyle,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
@@ -104,7 +102,7 @@ fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> U
             autoOven?.let {
                 Text(
                     "Auto Oven",
-                    style = theme.labelStyle,
+                    style = theme.scaledStyles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)

@@ -42,6 +42,6 @@ fun SecondaryContainer(theme: Theme, modifier: Modifier, content: @Composable ()
 fun SecondaryContainerPreview() {
     val theme = getDefaultTheme()
     SecondaryContainer(theme = theme, modifier = Modifier.fillMaxSize()) {
-        Text("Secondary Container", style = theme.buttonTextStyle)
+        Text("Secondary Container", style = theme.scaledStyles.titleStyle)
     }
 }

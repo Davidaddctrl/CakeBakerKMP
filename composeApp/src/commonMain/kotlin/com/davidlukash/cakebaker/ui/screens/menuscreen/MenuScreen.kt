@@ -41,7 +41,7 @@ fun MenuScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
                 },
                 modifier = Modifier.width(480.dp)
             ) {
-                Text("Play", style = theme.buttonTextStyle)
+                Text("Play")
             }
             LargeThemedButton(
                 theme = theme,
@@ -50,7 +50,7 @@ fun MenuScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
                 },
                 modifier = Modifier.width(480.dp)
             ) {
-                Text("Saves", style = theme.buttonTextStyle)
+                Text("Saves")
             }
             LargeThemedButton(
                 theme = theme,
@@ -59,7 +59,7 @@ fun MenuScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
                 },
                 modifier = Modifier.width(480.dp)
             ) {
-                Text("Licenses", style = theme.buttonTextStyle)
+                Text("Licenses")
             }
             LargeThemedButton(
                 theme = theme,
@@ -68,7 +68,7 @@ fun MenuScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
                 },
                 modifier = Modifier.width(480.dp)
             ) {
-                Text("Settings", style = theme.buttonTextStyle)
+                Text("Settings")
             }
         }
     }

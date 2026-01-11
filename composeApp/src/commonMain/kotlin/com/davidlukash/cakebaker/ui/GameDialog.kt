@@ -101,7 +101,7 @@ fun BoxScope.GameDialogContent(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             CompositionLocalProvider(
-                LocalTextStyle provides theme.subtitleStyle.copy(
+                LocalTextStyle provides theme.unscaledStyles.titleStyle.copy(
                     textAlign = TextAlign.Center,
                 )
             ) {
@@ -112,21 +112,17 @@ fun BoxScope.GameDialogContent(
                 verticalArrangement = Arrangement.Center
             ) {
                 CompositionLocalProvider(
-                    LocalTextStyle provides theme.smallLabelStyle.copy(
+                    LocalTextStyle provides theme.unscaledStyles.largeBodyStyle.copy(
                         textAlign = TextAlign.Center,
                     )
                 ) {
                     content()
                 }
             }
-            CompositionLocalProvider(
-                LocalTextStyle provides theme.smallLabelStyle
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    buttons()
-                }
+                buttons()
             }
         }
     }

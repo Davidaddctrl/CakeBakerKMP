@@ -51,7 +51,7 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
             ) {
                 Text(
                     "Order for",
-                    style = theme.labelStyle,
+                    style = theme.scaledStyles.smallBodyStyle,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 cake?.let { cake ->
@@ -64,7 +64,7 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
                     ) {
                         Text(
                             "Complete",
-                            style = theme.labelStyle,
+                            style = theme.scaledStyles.smallBodyStyle,
                             modifier = Modifier.padding(horizontal = 4.dp)
                         )
                     }
@@ -73,7 +73,7 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
             cake?.let { cake ->
                 Text(
                     "${toEngNotation(order.amount.toBigDecimal())} ${cake.name}",
-                    style = theme.labelStyle,
+                    style = theme.scaledStyles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 )
@@ -81,25 +81,25 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
             if (cake == null)
                 Text(
                     "Invalid Cake Tier",
-                    style = theme.labelStyle,
+                    style = theme.scaledStyles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 )
 
             Text(
                 "Buying for",
-                style = theme.labelStyle,
+                style = theme.scaledStyles.smallBodyStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             Text(
                 "$${toEngNotation(order.salePrice)}",
-                style = theme.smallTitleStyle,
+                style = theme.scaledStyles.largeBodyStyle,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             Text(
                 "Remaining Time",
-                style = theme.labelStyle,
+                style = theme.scaledStyles.smallBodyStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             Box(
@@ -111,12 +111,12 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
                 )
                 Text(
                     "${secondsToString(order.remainingTime)} remaining",
-                    style = theme.smallLabelStyle,
+                    style = theme.scaledStyles.verySmallBodyStyle,
                 )
             }
             Text(
                 "Order ${order.id}",
-                style = theme.smallLabelStyle,
+                style = theme.scaledStyles.verySmallBodyStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
         }

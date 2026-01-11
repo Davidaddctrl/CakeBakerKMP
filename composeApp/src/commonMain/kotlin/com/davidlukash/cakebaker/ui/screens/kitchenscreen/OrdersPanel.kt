@@ -39,14 +39,14 @@ fun RowScope.OrdersPanel(theme: Theme, uiState: UIState, completeOrder: (Order) 
             Box {
                 Text(
                     "Orders",
-                    style = theme.labelStyle,
+                    style = theme.scaledStyles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 )
                 Text(
                     orders.size.toString(),
-                    style = theme.smallLabelStyle,
+                    style = theme.scaledStyles.verySmallBodyStyle,
                 )
             }
 
@@ -58,7 +58,7 @@ fun RowScope.OrdersPanel(theme: Theme, uiState: UIState, completeOrder: (Order) 
                     nextOrderRemainingTime?.let {
                         Text(
                             "${secondsToString(it)} until next order",
-                            style = theme.labelStyle,
+                            style = theme.scaledStyles.smallBodyStyle,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -66,7 +66,7 @@ fun RowScope.OrdersPanel(theme: Theme, uiState: UIState, completeOrder: (Order) 
                     if (nextOrderRemainingTime == null)
                         Text(
                         "Bake a cake to get orders",
-                        style = theme.labelStyle,
+                        style = theme.scaledStyles.smallBodyStyle,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )

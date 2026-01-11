@@ -114,7 +114,6 @@ class UIViewModel : ViewModel(), AppLogger {
             ) {
                 Text(
                     buttonText,
-                    style = theme.smallLabelStyle,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )

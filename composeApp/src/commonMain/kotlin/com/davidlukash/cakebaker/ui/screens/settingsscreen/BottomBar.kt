@@ -26,7 +26,7 @@ fun BottomBar(theme: Theme, navigateWithFade: (Screen) -> Unit) {
             },
             modifier = Modifier.width(280.dp)
         ) {
-            Text("Back", style = theme.buttonTextStyle)
+            Text("Back")
         }
     }
 }

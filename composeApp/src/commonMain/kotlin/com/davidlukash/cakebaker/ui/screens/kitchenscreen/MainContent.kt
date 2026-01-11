@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +35,6 @@ import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.ui.navigation.UpgradeScreen
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.floor
 
@@ -71,7 +69,7 @@ fun MainContent(
                 if (ovenRunning)
                     Text(
                         "${floor((1.0 - progress) * ovenTime * 10.0) / 10.0} seconds remaining",
-                        style = theme.smallLabelStyle,
+                        style = theme.scaledStyles.verySmallBodyStyle,
                         color = theme.buttonTheme.contentColor
                     )
             }

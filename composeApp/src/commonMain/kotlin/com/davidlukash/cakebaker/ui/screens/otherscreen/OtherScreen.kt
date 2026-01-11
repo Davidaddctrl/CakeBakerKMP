@@ -149,7 +149,7 @@ fun OtherScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
                     onClick = { currentLicense = key to licenses[key] },
                     modifier = Modifier.width(320.dp).height(180.dp)
                 ) {
-                    Text(key, style = theme.subtitleStyle, textAlign = TextAlign.Center)
+                    Text(key, style = theme.scaledStyles.mediumBodyStyle, textAlign = TextAlign.Center)
                 }
             }
         }

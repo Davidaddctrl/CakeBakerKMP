@@ -18,20 +18,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import androidx.compose.ui.zIndex
 import com.davidlukash.cakebaker.data.Popup
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -74,7 +70,7 @@ fun Popup(theme: Theme, remove: (Int) -> Unit, index: Int, popup: Popup) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 CompositionLocalProvider(
-                    LocalTextStyle provides theme.smallLabelStyle.copy(
+                    LocalTextStyle provides theme.unscaledStyles.smallBodyStyle.copy(
                         textAlign = TextAlign.Center,
                     )
                 ) {
@@ -92,7 +88,6 @@ fun Popup(theme: Theme, remove: (Int) -> Unit, index: Int, popup: Popup) {
                     ) {
                         Text(
                             "Dismiss",
-                            style = theme.smallLabelStyle,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center
                         )

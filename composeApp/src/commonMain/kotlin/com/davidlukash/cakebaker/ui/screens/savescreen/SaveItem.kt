@@ -3,20 +3,13 @@ package com.davidlukash.cakebaker.ui.screens.savescreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.VERSION
 import com.davidlukash.cakebaker.VERSIONCODE
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.SaveFile
@@ -25,12 +18,6 @@ import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 
-import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
-import com.davidlukash.cakebaker.ui.navigation.transitionDuration
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
-import com.davidlukash.cakebaker.withErrorHandling
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -51,12 +38,12 @@ fun SaveItem(
         ) {
             Text(
                 saveFile.name,
-                style = theme.buttonTextStyle,
+                style = theme.scaledStyles.titleStyle,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
             Text(
                 "Version: ${saveFile.save.version}",
-                style = theme.labelStyle,
+                style = theme.scaledStyles.smallBodyStyle,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
             FlowRow(
@@ -68,9 +55,9 @@ fun SaveItem(
                     onClick = {
                         exportSave(saveFile)
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).defaultMinSize(minWidth = theme.scaledStyles.buttonTextStyle.fontSize.value.dp * 6)
                 ) {
-                    Text("Export", style = theme.buttonTextStyle)
+                    Text("Export", maxLines = 1, softWrap = false)
                 }
                 if (!saveFile.isDefault)
                     LargeThemedButton(
@@ -80,17 +67,17 @@ fun SaveItem(
                         },
                         modifier = Modifier.weight(1f),
                     ) {
-                        Text("Delete", style = theme.buttonTextStyle)
+                        Text("Delete", maxLines = 1, softWrap = false)
                     }
-                if (saveFile.save.versionCode != null && saveFile.save.versionCode <= VERSIONCODE)
+                if (saveFile.save.versionCode != null && saveFile.save.versionCode < VERSIONCODE)
                     LargeThemedButton(
                         theme = theme,
                         onClick = {
                             //exportSave(saveFile)
                         },
-                        modifier = Modifier.weight(1f).defaultMinSize(minWidth = 600.dp)
+                        modifier = Modifier.weight(1f)
                     ) {
-                        Text("Migrate", style = theme.buttonTextStyle)
+                        Text("Migrate", maxLines = 1, softWrap = false)
                     }
                 LargeThemedButton(
                     theme = theme,
@@ -99,7 +86,7 @@ fun SaveItem(
                     },
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text("Rename", style = theme.buttonTextStyle)
+                    Text("Rename", maxLines = 1, softWrap = false)
                 }
                 LargeThemedButton(
                     theme = theme,
@@ -108,7 +95,7 @@ fun SaveItem(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Load", style = theme.buttonTextStyle)
+                    Text("Load", maxLines = 1, softWrap = false)
                 }
                 if (!saveFile.isDefault)
                     LargeThemedButton(
@@ -116,9 +103,9 @@ fun SaveItem(
                         onClick = {
                             overwriteSave(saveFile)
                         },
-                        modifier = Modifier.weight(1f).defaultMinSize(minWidth = 600.dp),
+                        modifier = Modifier.weight(1f),
                     ) {
-                        Text("Overwrite", style = theme.buttonTextStyle)
+                        Text("Overwrite", maxLines = 1, softWrap = false)
                     }
             }
         }

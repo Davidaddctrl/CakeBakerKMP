@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +33,6 @@ import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -78,7 +76,7 @@ fun BottomBar(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit
                             Text(
                                 page,
                                 textAlign = TextAlign.Center,
-                                style = theme.labelStyle,
+                                style = theme.scaledStyles.smallBodyStyle,
                                 fontWeight = if (page == currentPage) FontWeight.Bold else FontWeight.Normal,
                                 color = if (page == currentPage) theme.buttonTheme.containerColor else Color.Black,
                             )

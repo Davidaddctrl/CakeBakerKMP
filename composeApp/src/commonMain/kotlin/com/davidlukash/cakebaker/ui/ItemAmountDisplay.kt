@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +16,6 @@ import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -34,7 +31,7 @@ fun ItemAmountDisplay(theme: Theme, item: Item) {
             item.name.replace(" ", "\n"),
             color = Color.White,
             textAlign = TextAlign.Center,
-            style = if (item.name.contains(" ")) theme.smallLabelStyle else theme.labelStyle,
+            style = if (item.name.contains(" ")) theme.scaledStyles.verySmallBodyStyle else theme.scaledStyles.smallBodyStyle,
         )
         Column(
             modifier = Modifier.height(96.dp),
@@ -49,13 +46,13 @@ fun ItemAmountDisplay(theme: Theme, item: Item) {
             "Amount",
             color = Color.White,
             textAlign = TextAlign.Center,
-            style = theme.labelStyle,
+            style = theme.scaledStyles.smallBodyStyle,
         )
         Text(
             toEngNotation(item.amount),
             color = Color.White,
             textAlign = TextAlign.Center,
-            style = theme.labelStyle,
+            style = theme.scaledStyles.smallBodyStyle,
         )
     }
 }

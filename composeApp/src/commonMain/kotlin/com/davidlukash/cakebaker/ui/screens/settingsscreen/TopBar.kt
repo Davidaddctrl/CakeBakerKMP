@@ -15,6 +15,6 @@ fun TopBar(theme: Theme) {
         color = Color.White,
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),
-        style = theme.titleStyle,
+        style = theme.scaledStyles.titleStyle,
     )
 }

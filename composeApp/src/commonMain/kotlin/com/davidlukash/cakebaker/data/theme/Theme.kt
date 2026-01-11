@@ -33,14 +33,8 @@ import org.jetbrains.compose.resources.Font
 data class Theme(
     val nameToImageMap: Map<String, ImageData>,
     val font: FontFamily,
-    val titleStyle: TextStyle,
-    val smallTitleStyle: TextStyle,
-    val subtitleStyle: TextStyle,
-    val labelStyle: TextStyle,
-    val smallLabelStyle: TextStyle,
-    val verySmallLabelStyle: TextStyle,
-    val buttonTextStyle: TextStyle,
-    val extremelySmallLabelStyle: TextStyle,
+    val scaledStyles: TextStyles,
+    val unscaledStyles: TextStyles,
     val progressBarTheme: ProgressBarTheme,
     val buttonTheme: ButtonTheme,
     val switchButtonTheme: SwitchButtonTheme,
@@ -81,14 +75,27 @@ data class Theme(
                 "Sad Face" to ImageData(resource = Res.drawable.face_sad),
             ),
             font = FontFamily.Default,
-            titleStyle = TextStyle(fontSize = 72.sp),
-            smallTitleStyle = TextStyle(fontSize = 48.sp),
-            subtitleStyle = TextStyle(fontSize = 36.sp),
-            labelStyle = TextStyle(fontSize = 32.sp),
-            smallLabelStyle = TextStyle(fontSize = 22.sp),
-            verySmallLabelStyle = TextStyle(fontSize = 16.sp),
-            buttonTextStyle = TextStyle(fontSize = 60.sp),
-            extremelySmallLabelStyle = TextStyle(fontSize = 12.sp),
+            scaledStyles = TextStyles(
+                titleStyle = TextStyle(fontSize = 72.sp),
+                buttonTextStyle = TextStyle(fontSize = 60.sp),
+                largeBodyStyle = TextStyle(fontSize = 48.sp),
+                mediumBodyStyle = TextStyle(fontSize = 36.sp),
+                smallBodyStyle = TextStyle(fontSize = 32.sp),
+                verySmallBodyStyle = TextStyle(fontSize = 22.sp),
+            ),
+            unscaledStyles = TextStyles(
+                titleStyle = TextStyle(fontSize = 36.sp),
+                buttonTextStyle = TextStyle(fontSize = 22.sp),
+                largeBodyStyle = TextStyle(fontSize = 22.sp),
+                mediumBodyStyle = TextStyle(fontSize = 12.sp),
+                smallBodyStyle = TextStyle(fontSize = 12.sp),
+                verySmallBodyStyle = TextStyle(fontSize = 12.sp)
+            ),
+            progressBarTheme = ProgressBarTheme(
+                border = Color.Black,
+                backgroundColor = Color(127, 127, 127),
+                filledColor = Color(255, 127, 0)
+            ),
             buttonTheme = ButtonTheme(
                 containerColor = Color(8, 160, 69),
                 disabledContainerColor = Color(37, 41, 46),
@@ -96,11 +103,6 @@ data class Theme(
                 disabledContentColor = Color(128, 128, 128),
                 borderColor = Color(0, 0, 0),
                 disabledBorderColor = Color(53, 57, 62),
-            ),
-            progressBarTheme = ProgressBarTheme(
-                border = Color.Black,
-                backgroundColor = Color(127, 127, 127),
-                filledColor = Color(255, 127, 0)
             ),
             switchButtonTheme = SwitchButtonTheme(
                 borderColor = Color.Black,
@@ -140,13 +142,21 @@ fun getDefaultTheme(): Theme {
     val fontFamily = FontFamily(Font(Res.font.vcr_osd_mono))
     return theme.copy(
         font = fontFamily,
-        titleStyle = theme.titleStyle.copy(fontFamily = fontFamily),
-        smallTitleStyle = theme.smallTitleStyle.copy(fontFamily = fontFamily),
-        subtitleStyle = theme.subtitleStyle.copy(fontFamily = fontFamily),
-        labelStyle = theme.labelStyle.copy(fontFamily = fontFamily),
-        smallLabelStyle = theme.smallLabelStyle.copy(fontFamily = fontFamily),
-        verySmallLabelStyle = theme.verySmallLabelStyle.copy(fontFamily = fontFamily),
-        buttonTextStyle = theme.buttonTextStyle.copy(fontFamily = fontFamily),
-        extremelySmallLabelStyle = theme.extremelySmallLabelStyle.copy(fontFamily = fontFamily),
+        scaledStyles = TextStyles(
+            titleStyle = theme.scaledStyles.titleStyle.copy(fontFamily = fontFamily),
+            largeBodyStyle = theme.scaledStyles.largeBodyStyle.copy(fontFamily = fontFamily),
+            mediumBodyStyle = theme.scaledStyles.mediumBodyStyle.copy(fontFamily = fontFamily),
+            smallBodyStyle = theme.scaledStyles.smallBodyStyle.copy(fontFamily = fontFamily),
+            verySmallBodyStyle = theme.scaledStyles.verySmallBodyStyle.copy(fontFamily = fontFamily),
+            buttonTextStyle = theme.scaledStyles.buttonTextStyle.copy(fontFamily = fontFamily),
+        ),
+        unscaledStyles = TextStyles(
+            titleStyle = theme.unscaledStyles.titleStyle.copy(fontFamily = fontFamily),
+            largeBodyStyle = theme.unscaledStyles.largeBodyStyle.copy(fontFamily = fontFamily),
+            mediumBodyStyle = theme.unscaledStyles.mediumBodyStyle.copy(fontFamily = fontFamily),
+            smallBodyStyle = theme.unscaledStyles.smallBodyStyle.copy(fontFamily = fontFamily),
+            verySmallBodyStyle = theme.unscaledStyles.verySmallBodyStyle.copy(fontFamily = fontFamily),
+            buttonTextStyle = theme.unscaledStyles.buttonTextStyle.copy(fontFamily = fontFamily),
+        )
     )
 }

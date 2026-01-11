@@ -80,7 +80,13 @@ fun OverwriteSaveDialogPreview() {
 }
 
 @Composable
-fun CreateSaveDialog(theme: Theme, exists: (String) -> Boolean,create: (String) -> Unit, cancel: () -> Unit, isImport: Boolean = false) {
+fun CreateSaveDialog(
+    theme: Theme,
+    exists: (String) -> Boolean,
+    create: (String) -> Unit,
+    cancel: () -> Unit,
+    isImport: Boolean = false
+) {
     var saveName by remember { mutableStateOf("") }
     val containsNonAlphanumeric = saveName.contains(Regex("[^a-z0-9]"))
     val isBlank = saveName.isBlank()
@@ -97,7 +103,10 @@ fun CreateSaveDialog(theme: Theme, exists: (String) -> Boolean,create: (String) 
 
     //This is a popup internally
     GameDialog(
-        offset = IntOffset(0, position.toInt()), theme = theme, modifier = Modifier.width(512.dp), title = { Text(if (isImport) "Import Save" else "Create Save") },
+        offset = IntOffset(0, position.toInt()),
+        theme = theme,
+        modifier = Modifier.width(512.dp),
+        title = { Text(if (isImport) "Import Save" else "Create Save") },
         buttons = {
             SmallThemedButton(
                 theme = theme,
@@ -109,7 +118,10 @@ fun CreateSaveDialog(theme: Theme, exists: (String) -> Boolean,create: (String) 
         }
     ) {
         Text(
-            "Save Name", style = theme.smallLabelStyle, textAlign = TextAlign.Start, modifier = Modifier.align(
+            "Save Name",
+            style = theme.unscaledStyles.largeBodyStyle,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.align(
                 Alignment.Start
             )
         )
@@ -129,7 +141,7 @@ fun CreateSaveDialog(theme: Theme, exists: (String) -> Boolean,create: (String) 
             Text(
                 "Save Name must" + (if (isBlank) " not be blank" else "") + (if (containsNonAlphanumeric && isBlank) " and must" else "") +
                         (if (containsNonAlphanumeric) " only contain lowercase alphanumeric characters" else ""),
-                style = theme.extremelySmallLabelStyle,
+                style = theme.unscaledStyles.smallBodyStyle,
                 textAlign = TextAlign.Start,
                 color = theme.dangerColor,
                 modifier = Modifier.align(
@@ -141,7 +153,7 @@ fun CreateSaveDialog(theme: Theme, exists: (String) -> Boolean,create: (String) 
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 "A save with this name already exists",
-                style = theme.extremelySmallLabelStyle,
+                style = theme.unscaledStyles.smallBodyStyle,
                 textAlign = TextAlign.Start,
                 color = theme.dangerColor,
                 modifier = Modifier.align(

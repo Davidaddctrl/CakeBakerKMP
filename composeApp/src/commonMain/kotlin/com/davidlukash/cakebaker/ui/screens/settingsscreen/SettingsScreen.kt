@@ -38,7 +38,7 @@ fun SettingsScreen(theme: Theme, navigateWithFade: (Screen) -> Unit, setDebugCon
         ) {
             Text(
                 "Debug Console Open",
-                style = theme.labelStyle,
+                style = theme.scaledStyles.smallBodyStyle,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
             )

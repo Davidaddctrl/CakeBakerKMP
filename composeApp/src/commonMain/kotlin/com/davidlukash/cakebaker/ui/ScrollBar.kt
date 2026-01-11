@@ -17,23 +17,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.horizontalRowScroll
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -85,7 +77,7 @@ fun HorizontalScrollBarPreview() {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             repeat(10) {
-                Text("Item $it", style = theme.labelStyle)
+                Text("Item $it", style = theme.scaledStyles.smallBodyStyle)
             }
         }
         HorizontalScrollBar(theme = theme, scrollState = scrollState, coroutineScope = coroutineScope)

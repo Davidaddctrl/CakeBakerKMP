@@ -33,7 +33,7 @@ fun TopBar(theme: Theme, uiState: UIState) {
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
-                style = theme.titleStyle,
+                style = theme.scaledStyles.titleStyle,
             )
             ItemTopRow(theme, uiState)
         }

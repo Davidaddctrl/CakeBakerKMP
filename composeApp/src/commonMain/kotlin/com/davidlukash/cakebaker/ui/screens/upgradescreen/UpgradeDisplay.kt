@@ -1,40 +1,27 @@
 package com.davidlukash.cakebaker.ui.screens.upgradescreen
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.data.ImageData
-import com.davidlukash.cakebaker.data.Item
-import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
-import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 
 import com.davidlukash.cakebaker.ui.ResourceImage
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -50,7 +37,7 @@ fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit
     ) {
         Text(
             upgrade.name,
-            style = theme.labelStyle,
+            style = theme.scaledStyles.smallBodyStyle,
             color = Color.White,
             textAlign = TextAlign.Center,
         )
@@ -61,7 +48,7 @@ fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit
         Text(
             "Level ${toEngNotation(upgrade.level.toBigDecimal())}" +
                     if (upgrade.maxLevel != null) " / ${toEngNotation(upgrade.maxLevel.toBigDecimal())} " else "",
-            style = theme.labelStyle,
+            style = theme.scaledStyles.smallBodyStyle,
             color = Color.White,
             textAlign = TextAlign.Center,
         )
@@ -73,12 +60,12 @@ fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit
             if (upgrade.maxLevel?.let { upgrade.level < it } ?: true)
                 Text(
                     "${toEngNotation(upgrade.price.toBigDecimal())} ${cake?.name.toString()}",
-                    style = theme.labelStyle,
+                    style = theme.scaledStyles.smallBodyStyle,
                     color = Color.White,
                 ) else
                 Text(
                     "Max Level Reached",
-                    style = theme.labelStyle,
+                    style = theme.scaledStyles.smallBodyStyle,
                     color = Color.White,
                 )
         }
@@ -92,8 +79,7 @@ fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit
             modifier = Modifier.width(180.dp)
         ) {
             Text(
-                "Buy",
-                style = theme.buttonTextStyle,
+                "Buy"
             )
         }
     }

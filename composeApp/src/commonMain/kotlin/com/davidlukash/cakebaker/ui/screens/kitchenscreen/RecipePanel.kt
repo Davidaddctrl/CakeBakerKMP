@@ -65,7 +65,7 @@ fun RowScope.RecipePanel(theme: Theme, uiState: UIState, setCurrentCake: (Int) -
                 )
                 Text(
                     cakes[currentCakeTier]?.name ?: "Cake Tier Invalid",
-                    style = theme.subtitleStyle,
+                    style = theme.scaledStyles.mediumBodyStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.fillMaxWidth().weight(1f)
@@ -95,11 +95,11 @@ fun RowScope.RecipePanel(theme: Theme, uiState: UIState, setCurrentCake: (Int) -
                             ) {
                                 Text(
                                     "•",
-                                    style = theme.labelStyle,
+                                    style = theme.scaledStyles.smallBodyStyle,
                                 )
                                 Text(
                                     "${toEngNotation(cakePrice)} ${item.name}",
-                                    style = theme.labelStyle,
+                                    style = theme.scaledStyles.smallBodyStyle,
                                 )
                             }
                             if (item.amount >= cakePrice)
