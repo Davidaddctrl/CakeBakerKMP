@@ -70,7 +70,7 @@ fun Popup(theme: Theme, remove: (Int) -> Unit, index: Int, popup: Popup) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 CompositionLocalProvider(
-                    LocalTextStyle provides theme.unscaledStyles.smallBodyStyle.copy(
+                    LocalTextStyle provides theme.unscaledStyles.largeBodyStyle.copy(
                         textAlign = TextAlign.Center,
                     )
                 ) {
