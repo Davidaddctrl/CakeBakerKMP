@@ -58,7 +58,7 @@ fun BottomBar(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit
         }
         Container(
             theme = theme,
-            modifier = Modifier.weight(1f).padding(horizontal = 8.dp).height(280.dp),
+            modifier = Modifier.weight(1f).padding(horizontal = 8.dp).height(312.dp),
         ) {
             FlowRow(
                 modifier = Modifier.fillMaxSize(),

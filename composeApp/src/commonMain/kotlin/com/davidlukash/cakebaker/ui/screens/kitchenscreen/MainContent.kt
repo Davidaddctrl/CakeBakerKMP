@@ -6,14 +6,15 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.davidlukash.cakebaker.data.Order
@@ -55,13 +57,13 @@ fun MainContent(
     val canBake = uiState.canBake
     val ovenRunning = uiState.ovenRunning
     val fasterOvenLevel = uiState.getFasterOven()
+    val density = LocalDensity.current
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 16.dp),
         verticalAlignment = Alignment.Bottom,
     ) {
         Column(
-            horizontalAlignment = Alignment.Start,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -83,7 +85,7 @@ fun MainContent(
                 onClick = {
                     bake()
                 },
-                enabled = canBake && !ovenRunning
+                enabled = canBake && !ovenRunning,
             ) {
                 ResourceImage(
                     theme.nameToImage("Oven"),
@@ -93,7 +95,8 @@ fun MainContent(
             ImageButton(
                 onClick = {
                     navigateWithFade(IngredientScreen)
-                }
+                },
+                modifier = Modifier.align(Alignment.Start)
             ) {
                 ResourceImage(
                     theme.nameToImage("Ingredient Shop"),
@@ -101,16 +104,19 @@ fun MainContent(
                 )
             }
         }
+        Spacer(modifier = Modifier.width(8.dp))
         RecipePanel(theme, uiState, setCurrentCake)
+        Spacer(modifier = Modifier.width(16.dp))
         OrdersPanel(theme, uiState, completeOrder)
+        Spacer(modifier = Modifier.width(16.dp))
         Box(
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.BottomEnd
         ) {
             var buttonSize by remember { mutableStateOf(Size.Zero) }
             InfoPanel(theme, uiState, setAutoOvenEnabled, buttonSize.copy(
-                width = buttonSize.width + 8f,
-                height = buttonSize.height + 8f
+                width = buttonSize.width + density.run { 8.dp.toPx() },
+                height = buttonSize.height + density.run { 8.dp.toPx() }
             ))
             ImageButton(
                 onClick = {
