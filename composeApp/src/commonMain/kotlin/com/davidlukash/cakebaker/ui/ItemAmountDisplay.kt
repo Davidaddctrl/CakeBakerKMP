@@ -20,12 +20,12 @@ import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ItemAmountDisplay(theme: Theme, item: Item) {
+fun ItemAmountDisplay(theme: Theme, item: Item, modifier: Modifier = Modifier) {
     val image = theme.nameToImage(item.name)
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.defaultMinSize(minHeight = 224.dp)
+        modifier = modifier.defaultMinSize(minHeight = 224.dp, minWidth = 128.dp)
     ) {
         Text(
             item.name.replace(" ", "\n"),

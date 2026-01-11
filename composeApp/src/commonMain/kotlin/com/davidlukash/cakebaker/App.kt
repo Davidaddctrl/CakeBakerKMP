@@ -91,7 +91,7 @@ fun App() {
             Box(
                 modifier = Modifier.weight(1f).fillMaxSize(),
             ) {
-                ScaleViewport(1920.dp, 1080.dp) {
+                ScaleViewport(1920.dp, 1200.dp) {
                     Navigation(
                         theme = defaultTheme, uiState = uiState,
                         saveFiles = saveFiles,
