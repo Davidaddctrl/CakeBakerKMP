@@ -16,16 +16,22 @@ import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ItemAmountDisplay(theme: Theme, item: Item, modifier: Modifier = Modifier) {
+fun ItemAmountDisplay(
+    theme: Theme,
+    item: Item,
+    quantityChange: BigDecimal = BigDecimal.ZERO,
+    modifier: Modifier = Modifier
+) {
     val image = theme.nameToImage(item.name)
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.defaultMinSize(minHeight = 224.dp, minWidth = 128.dp)
+        modifier = modifier.defaultMinSize(minHeight = 256.dp, minWidth = 128.dp)
     ) {
         Text(
             item.name.replace(" ", "\n"),
@@ -49,10 +55,20 @@ fun ItemAmountDisplay(theme: Theme, item: Item, modifier: Modifier = Modifier) {
             style = theme.scaledStyles.smallBodyStyle,
         )
         Text(
-            toEngNotation(item.amount),
-            color = Color.White,
+            toEngNotation(item.amount + quantityChange),
+            color = if (quantityChange == BigDecimal.ZERO) Color.White else if (quantityChange > BigDecimal.ZERO) theme.successColor else theme.dangerColor,
             textAlign = TextAlign.Center,
             style = theme.scaledStyles.smallBodyStyle,
+        )
+
+        Text(
+            if (quantityChange != BigDecimal.ZERO) {
+                (if (quantityChange > BigDecimal.ZERO) "+" else "-") + toEngNotation(quantityChange.abs())
+            } else "",
+            color = if (quantityChange == BigDecimal.ZERO) Color.White else if (quantityChange > BigDecimal.ZERO) theme.successColor else theme.dangerColor,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.align(Alignment.Start),
+            style = theme.scaledStyles.verySmallBodyStyle,
         )
     }
 }
@@ -67,4 +83,28 @@ fun ItemAmountDisplayPreview() {
         amount = 10000.toBigDecimal(),
     )
     ItemAmountDisplay(theme = theme, item = item)
+}
+
+@Preview
+@Composable
+fun ItemAmountDisplayPositiveQuantityPreview() {
+    val theme = getDefaultTheme()
+    val item = Item(
+        name = "Money",
+        type = ItemType.CURRENCY,
+        amount = 10000.toBigDecimal(),
+    )
+    ItemAmountDisplay(theme = theme, item = item, quantityChange = 100.toBigDecimal())
+}
+
+@Preview
+@Composable
+fun ItemAmountDisplayNegativeQuantityPreview() {
+    val theme = getDefaultTheme()
+    val item = Item(
+        name = "Money",
+        type = ItemType.CURRENCY,
+        amount = 10000.toBigDecimal(),
+    )
+    ItemAmountDisplay(theme = theme, item = item, quantityChange = (-100).toBigDecimal())
 }

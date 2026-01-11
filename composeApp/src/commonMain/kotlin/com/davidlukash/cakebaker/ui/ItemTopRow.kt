@@ -1,41 +1,27 @@
 package com.davidlukash.cakebaker.ui
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
-import com.davidlukash.cakebaker.horizontalRowScroll
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ItemTopRow(theme: Theme, uiState: UIState) {
+fun ItemTopRow(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigDecimal> = mapOf()) {
     val items = uiState.items
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
@@ -54,7 +40,8 @@ fun ItemTopRow(theme: Theme, uiState: UIState) {
                     ItemAmountDisplay(
                         theme = theme,
                         item = item,
-                        modifier = if (shouldScroll) Modifier else Modifier.weight(1f)
+                        modifier = if (shouldScroll) Modifier else Modifier.weight(1f),
+                        quantityChange = quantityChanges[item.name] ?: BigDecimal.ZERO,
                     )
                 }
             }
@@ -65,11 +52,15 @@ fun ItemTopRow(theme: Theme, uiState: UIState) {
 }
 
 @Preview(
-    widthDp = 1500,
+    widthDp = 1920,
 )
 @Composable
 fun ItemTopRowPreview() {
     val theme = getDefaultTheme()
-    val uiState = Save.state
-    ItemTopRow(theme = theme, uiState = uiState)
+    val uiState = Save.state.copy(
+        items = Save.state.items.map {
+            if (it.name == "Money") it.copy(amount = 500.toBigDecimal()) else it
+        }
+    )
+    ItemTopRow(theme = theme, uiState = uiState, quantityChanges = mapOf("Butter" to 0.2.toBigDecimal(), "Money" to (-250).toBigDecimal()))
 }
