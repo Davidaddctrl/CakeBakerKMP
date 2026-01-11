@@ -11,18 +11,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun Container(theme: Theme, modifier: Modifier, content: @Composable () -> Unit) {
+fun Container(theme: Theme, modifier: Modifier, shape: Shape = RoundedCornerShape(16.dp), content: @Composable () -> Unit) {
     val containerTheme = theme.containerTheme
     Surface(
         modifier = modifier,
         color = containerTheme.containerColor,
-        shape = RoundedCornerShape(16.dp),
+        shape = shape,
         border = BorderStroke(8.dp, containerTheme.borderColor),
     ) {
         Box(
