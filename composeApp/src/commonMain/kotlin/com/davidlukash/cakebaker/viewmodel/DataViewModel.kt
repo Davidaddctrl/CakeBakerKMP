@@ -2,6 +2,8 @@ package com.davidlukash.cakebaker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.VERSION
+import com.davidlukash.cakebaker.VERSIONCODE
 import com.davidlukash.cakebaker.data.Item
 import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.Log
@@ -488,6 +490,8 @@ class DataViewModel(
     }
 
     fun createSave(): Save = Save(
+        version = VERSION,
+        versionCode = VERSIONCODE,
         _allItems.value,
         _currentCakeTier.value,
         _upgradesFlow.value,

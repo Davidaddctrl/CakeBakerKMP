@@ -29,7 +29,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-const val VERSION = "Beta 0.9.1"
+const val VERSION = "Beta 0.9.2"
+const val VERSIONCODE = 1
 
 @Composable
 fun App() {

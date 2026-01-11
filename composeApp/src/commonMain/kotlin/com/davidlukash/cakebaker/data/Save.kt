@@ -1,6 +1,8 @@
 package com.davidlukash.cakebaker.data
 
 import com.davidlukash.cakebaker.JsonMathHelpers
+import com.davidlukash.cakebaker.VERSION
+import com.davidlukash.cakebaker.VERSIONCODE
 import com.davidlukash.jsonmath.createObject
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
@@ -8,21 +10,25 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Save(
-    val items: List<Item>,
-    val currentCakeTier: Int,
-    val upgrades: List<Upgrade>,
-    val ovenProgress: Double,
-    val ovenRunning: Boolean,
-    val autoOvenEnabled: Boolean,
-    val tempCakeTier: Int,
-    val customerSatisfaction: Int,
-    val orderCakeSettings: Map<Int, OrderCakeSettings>,
-    val orders: List<Order>,
-    val orderCakeTimeCounters: Map<Int, Double>
+    val version: String = "Unknown",
+    val versionCode: Int? = null,
+    val items: List<Item> = listOf(),
+    val currentCakeTier: Int = 1,
+    val upgrades: List<Upgrade> = listOf(),
+    val ovenProgress: Double = 0.0,
+    val ovenRunning: Boolean = false,
+    val autoOvenEnabled: Boolean = false,
+    val tempCakeTier: Int = 1,
+    val customerSatisfaction: Int = 1,
+    val orderCakeSettings: Map<Int, OrderCakeSettings> = mapOf(),
+    val orders: List<Order> = listOf(),
+    val orderCakeTimeCounters: Map<Int, Double> = mapOf(),
 ) {
 
     companion object {
         val default = Save(
+            version = VERSION,
+            versionCode = VERSIONCODE,
             items = listOf(
                 Item(
                     name = "Butter",
@@ -339,20 +345,20 @@ data class Save(
                     pageName = "Butter",
                     imageName = "Butter",
                     name = "Dense Butter",
-                    price = 5,
+                    price = 7,
                     cakeTier = 1,
-                    maxLevel = 24,
+                    maxLevel = 7,
                     onBuy = JsonMathHelpers.createDense() + JsonMathHelpers.createLinearGrowth(),
                     parameters = mapOf(
                         "cakeTiers" to createObject(
                             mapOf(
-                                createObject(12.toBigDecimal()) to createObject(2.toBigDecimal()),
-                                createObject(16.toBigDecimal()) to createObject(3.toBigDecimal()),
+                                createObject(1.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(3.toBigDecimal()) to createObject(3.toBigDecimal()),
                             )
                         ),
                         "priceIncrement" to createObject(1.toBigDecimal()),
-                        "initialPrice" to createObject(5.toBigDecimal()),
-                        "levelsUntilPriceIncrease" to createObject(3.toBigDecimal()),
+                        "initialPrice" to createObject(7.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
                         "itemName" to createObject("globals.items.Butter"),
                     )
                 ),
