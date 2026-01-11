@@ -70,7 +70,7 @@ fun MainContent(
             ) {
                 ProgressBar(
                     theme,
-                    modifier = Modifier.width(280.dp),
+                    modifier = Modifier.width(296.dp),
                     progress
                 )
                 val ovenTime = 5.0 - fasterOvenLevel / 10.0
