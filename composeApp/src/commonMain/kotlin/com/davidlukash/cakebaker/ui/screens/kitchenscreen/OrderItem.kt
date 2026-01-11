@@ -64,7 +64,7 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
                     ) {
                         Text(
                             "Complete",
-                            style = theme.scaledStyles.smallBodyStyle,
+                            style = theme.scaledStyles.mediumBodyStyle,
                             modifier = Modifier.padding(horizontal = 4.dp)
                         )
                     }
