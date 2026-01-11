@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
@@ -34,7 +35,8 @@ fun ImageButton(
             0.dp,
             0.dp,
             0.dp
-        )
+        ),
+        contentPadding = PaddingValues(8.dp),
     ) {
         content()
     }
