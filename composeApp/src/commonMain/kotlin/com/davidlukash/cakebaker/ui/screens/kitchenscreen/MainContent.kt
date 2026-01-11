@@ -22,14 +22,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import com.davidlukash.cakebaker.data.Order
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.ImageButton
-
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
@@ -97,15 +99,21 @@ fun MainContent(
         }
         RecipePanel(theme, uiState, setCurrentCake)
         OrdersPanel(theme, uiState, completeOrder)
-        Column(
-            horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.weight(1f)
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.BottomEnd
         ) {
-            InfoPanel(theme, uiState, setAutoOvenEnabled)
+            var buttonSize by remember { mutableStateOf(Size.Zero) }
+            InfoPanel(theme, uiState, setAutoOvenEnabled, buttonSize.copy(
+                width = buttonSize.width + 8f,
+                height = buttonSize.height + 8f
+            ))
             ImageButton(
                 onClick = {
                     navigateWithFade(UpgradeScreen)
+                },
+                modifier = Modifier.onGloballyPositioned {
+                    buttonSize = it.size.toSize()
                 }
             ) {
                 ResourceImage(

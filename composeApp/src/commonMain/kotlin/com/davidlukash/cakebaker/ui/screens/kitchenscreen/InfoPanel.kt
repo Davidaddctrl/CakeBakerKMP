@@ -15,8 +15,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
@@ -24,27 +33,26 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
-
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.SwitchButton
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit) {
+fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit, cutOutSize: Size) {
     val satisfactionLevel = uiState.getSatisfactionLevel()
     val satisfaction = uiState.customerSatisfaction
     val autoOvenEnabled = uiState.autoOvenEnabled
     val currentCakeTier = uiState.currentCakeTier
     val cakesSalePrices = uiState.getCakesSalesPrices()
     val autoOven = uiState.getAutoOven()
-
     Container(
         theme = theme,
         modifier = Modifier.fillMaxWidth(),
+        shape = ShapeWithCutOut(cutOutSize, 16.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().height(408.dp),
+            modifier = Modifier.fillMaxWidth().height(720.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -122,6 +130,113 @@ fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> U
     }
 }
 
+@Composable
+fun ShapeWithCutOut(cutOutSize: Size, radius: Dp): Shape =
+    ShapeWithCutOut(cutOutSize, LocalDensity.current.run { radius.toPx() })
+
+class ShapeWithCutOut(val cutOutSize: Size, val radius: Float) : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        val w = size.width
+        val h = size.height
+        val cutW = cutOutSize.width
+        val cutH = cutOutSize.height
+        return Outline.Generic(
+            Path().apply {
+//                lineTo(0f, 0f)
+//                lineTo(size.width, 0f)
+//                lineTo(size.width, size.height - cutOutSize.height)
+//                lineTo(size.width - cutOutSize.width, size.height - cutOutSize.height)
+//                lineTo(size.width - cutOutSize.width, size.height)
+//                lineTo(0f, size.height)
+                moveTo(radius, 0f)
+                lineTo(w - radius, 0f)
+                arcTo(
+                    rect = Rect(
+                        w - radius * 2,
+                        0f,
+                        w,
+                        radius * 2),
+                    startAngleDegrees = -90f,
+                    sweepAngleDegrees = 90f,
+                    forceMoveTo = false
+                )
+
+                lineTo(w, h - cutH - radius)
+                arcTo(
+                    rect = Rect(
+                        w - radius * 2,
+                        h - cutH - radius * 2,
+                        w,
+                        h - cutH
+                    ),
+                    startAngleDegrees = 0f,
+                    sweepAngleDegrees = 90f,
+                    forceMoveTo = false
+                )
+
+                lineTo(w - cutW + radius, h - cutH)
+                arcTo(
+                    rect = Rect(
+                        w - cutW,
+                        h - cutH,
+                        w - cutW + radius * 2,
+                        h - cutH + radius * 2
+                    ),
+                    startAngleDegrees = -90f,
+                    sweepAngleDegrees = -90f,
+                    forceMoveTo = false
+                )
+
+                lineTo(w - cutW, h - radius)
+                arcTo(
+                    rect = Rect(
+                        w - cutW - radius * 2,
+                        h - radius * 2,
+                        w - cutW,
+                        h
+                    ),
+                    startAngleDegrees = 0f,
+                    sweepAngleDegrees = 90f,
+                    forceMoveTo = false
+                )
+
+                lineTo(radius, h)
+                arcTo(
+                    rect = Rect(
+                        0f,
+                        h - radius * 2,
+                        radius * 2,
+                        h
+                    ),
+                    startAngleDegrees = 90f,
+                    sweepAngleDegrees = 90f,
+                    forceMoveTo = false
+                )
+
+                lineTo(0f, radius)
+
+                arcTo(
+                    rect = Rect(
+                        0f,
+                        0f,
+                        radius * 2,
+                        radius * 2
+                    ),
+                    startAngleDegrees = 180f,
+                    sweepAngleDegrees = 90f,
+                    forceMoveTo = false
+                )
+
+                close()
+            }
+        )
+    }
+}
+
 @Preview
 @Composable
 fun InfoPanelPreview() {
@@ -140,7 +255,8 @@ fun InfoPanelPreview() {
         InfoPanel(
             theme = theme,
             uiState = uiState,
-            setAutoOvenEnabled = { autoOvenEnabled = it }
+            setAutoOvenEnabled = { autoOvenEnabled = it },
+            cutOutSize = Size(512f, 512f)
         )
     }
 }
