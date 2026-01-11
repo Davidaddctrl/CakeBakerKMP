@@ -66,7 +66,11 @@ fun MainContent(
             Box(
                 contentAlignment = Alignment.Center,
             ) {
-                ProgressBar(theme, progress)
+                ProgressBar(
+                    theme,
+                    modifier = Modifier.width(280.dp),
+                    progress
+                )
                 val ovenTime = 5.0 - fasterOvenLevel / 10.0
                 if (ovenRunning)
                     Text(

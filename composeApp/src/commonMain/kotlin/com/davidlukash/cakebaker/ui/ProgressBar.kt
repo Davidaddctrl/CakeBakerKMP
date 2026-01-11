@@ -7,6 +7,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -20,16 +21,16 @@ import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ProgressBar(theme: Theme, amount: Double) {
+fun ProgressBar(theme: Theme, modifier: Modifier = Modifier, amount: Double) {
     Surface(
-        modifier = Modifier.width(320.dp).height(48.dp),
+        modifier = modifier.width(320.dp).height(48.dp),
         shape = CircleShape,
         border = BorderStroke(8.dp, theme.progressBarTheme.border),
         color = theme.progressBarTheme.backgroundColor
     ) {
         Box {
             Surface(
-                modifier = Modifier.width((320 * amount).dp).height(48.dp),
+                modifier = Modifier.fillMaxWidth(amount.toFloat()).height(48.dp),
                 shape = CircleShape,
                 color = theme.progressBarTheme.filledColor
             ) {}
@@ -47,5 +48,5 @@ fun ProgressBarPreview() {
             animation = tween(2000, easing = LinearEasing),
         )
     )
-    ProgressBar(theme, amount.toDouble())
+    ProgressBar(theme, amount = amount.toDouble())
 }
