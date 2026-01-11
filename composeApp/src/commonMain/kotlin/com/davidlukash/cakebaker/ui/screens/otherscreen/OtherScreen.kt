@@ -53,7 +53,7 @@ import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
-import com.davidlukash.cakebaker.viewmodel.ViewModelProvided
+import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -76,7 +76,7 @@ fun OtherScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
     }
     var currentLicense by remember { mutableStateOf<Pair<String, StringResource?>?>(null) }
 
-    val trueDensity by if (ViewModelProvided.current) {
+    val trueDensity by if (LocalViewModelProvided.current) {
         LocalMainViewModel.current.uiViewModel.trueDensity.collectAsState()
     } else {
         val density = LocalDensity.current

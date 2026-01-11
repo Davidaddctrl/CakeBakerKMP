@@ -23,12 +23,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
-import com.davidlukash.cakebaker.viewmodel.ViewModelProvided
+import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -40,7 +39,7 @@ fun GameDialog(
     buttons: @Composable FlowRowScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    if (!ViewModelProvided.current)
+    if (!LocalViewModelProvided.current)
         Box {
             GameDialogContent(theme, modifier, title, buttons, content)
         }

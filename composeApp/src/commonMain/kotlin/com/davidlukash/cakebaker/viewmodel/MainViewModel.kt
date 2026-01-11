@@ -31,4 +31,4 @@ class MainViewModel(
 }
 
 val LocalMainViewModel = compositionLocalOf<MainViewModel> { throw Exception("No LocalMainViewModel provided") }
-val ViewModelProvided = compositionLocalOf<Boolean> { false }
+val LocalViewModelProvided = compositionLocalOf<Boolean> { false }

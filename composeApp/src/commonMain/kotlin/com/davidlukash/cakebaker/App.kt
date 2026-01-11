@@ -24,7 +24,7 @@ import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
 import com.davidlukash.cakebaker.ui.screens.savescreen.CreateSaveDialog
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
-import com.davidlukash.cakebaker.viewmodel.ViewModelProvided
+import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -35,30 +35,34 @@ const val VERSIONCODE = 1
 @Composable
 fun App() {
     CompositionLocalProvider(
-        ViewModelProvided provides true
+        LocalViewModelProvided provides true
     ) {
         val mainViewModel = LocalMainViewModel.current
+        val density = LocalDensity.current
         val uiViewModel = mainViewModel.uiViewModel
         val dataViewModel = mainViewModel.dataViewModel
         val themeViewModel = mainViewModel.themeViewModel
         val saveFileViewModel = mainViewModel.saveFileViewModel
-        val theme = getDefaultTheme()
+
+        val defaultTheme = getDefaultTheme()
+        val coroutineScope = rememberCoroutineScope()
+
         val uiState by dataViewModel.uiStateFlow.collectAsState(UIState.default)
         val debugConsole by uiViewModel.debugConsole.collectAsState()
-        val density = LocalDensity.current
-        val coroutineScope = rememberCoroutineScope()
         val pendingScreen by uiViewModel.pendingScreen.collectAsState()
         val popups by uiViewModel.popups.collectAsState()
         val saveFiles by saveFileViewModel.savesFlow.collectAsState(listOf())
         val trueDensity by uiViewModel.trueDensity.collectAsState()
         val importDialogOpen by uiViewModel.importDialogOpen.collectAsState()
         val importSaveData by uiViewModel.importSaveData.collectAsState()
+        val theme by themeViewModel.theme.collectAsState()
+
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)
         }
 
         LaunchedEffect(themeViewModel) {
-            themeViewModel.setTheme(theme)
+            themeViewModel.setTheme(defaultTheme)
         }
 
         if (importDialogOpen) {
@@ -89,7 +93,7 @@ fun App() {
             ) {
                 ScaleViewport(1920.dp, 1080.dp) {
                     Navigation(
-                        theme = theme, uiState = uiState,
+                        theme = defaultTheme, uiState = uiState,
                         saveFiles = saveFiles,
                         pendingScreen = pendingScreen,
                         popups = popups, trueDensity = trueDensity ?: LocalDensity.current,
