@@ -32,7 +32,7 @@ fun MainContent(
         modifier = Modifier.fillMaxSize().padding(innerPadding).padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        columns = GridCells.Adaptive(760.dp)
+        columns = GridCells.Adaptive(960.dp)
     ) {
         item {
             SaveItem(theme, exportSave, deleteSave, loadSave, overwriteSave,default)
