@@ -237,38 +237,3 @@ fun Navigation(
         )
     })
 }
-
-@Preview(
-    widthDp = 1920,
-    heightDp = 1080
-)
-@Composable
-fun NavigationPreview() {
-    val theme = getDefaultTheme()
-    val uiState = Save.state
-    var currentScreen by remember { mutableStateOf<Screen>(IngredientScreen) }
-    Navigation(
-        theme = theme,
-        uiState = uiState,
-        pendingScreen = currentScreen,
-        saveFiles = listOf(),
-        updateCurrentScreen = { currentScreen = it },
-        navigateWithFade = { currentScreen = it },
-        bake = {},
-        buyIngredient = {},
-        setAutoOvenEnabled = {},
-        completeOrder = {},
-        setCurrentCake = {},
-        exportSave = {},
-        deleteSave = {},
-        loadSave = {},
-        importSave = {},
-        overwriteSave = {},
-        buyUpgrade = {},
-        popups = listOf(),
-        trueDensity = LocalDensity.current,
-        removePopup = {},
-        consoleType = ConsoleType.NONE,
-        setDebugConsole = {}
-    )
-}
