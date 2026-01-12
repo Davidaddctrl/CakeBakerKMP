@@ -1,6 +1,7 @@
 package com.davidlukash.cakebaker.ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,10 +25,12 @@ fun LargeThemedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    interactionSource: MutableInteractionSource? = null,
     content: @Composable RowScope.() -> Unit,
 ) {
     val buttonTheme = theme.buttonTheme
     Button(
+        interactionSource = interactionSource,
         onClick = onClick,
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
