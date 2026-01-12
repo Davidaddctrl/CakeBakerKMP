@@ -1,5 +1,7 @@
 package com.davidlukash.cakebaker.ui
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
@@ -8,6 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,7 +26,13 @@ import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Unit, item: Item) {
+fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Unit, item: Item, onHoverChange: (Boolean) -> Unit = {}) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+
+    LaunchedEffect(isHovered) {
+        onHoverChange(isHovered)
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -52,7 +63,8 @@ fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Uni
                 buyIngredient(item.name)
             },
             enabled = money.amount >= (item.price ?: BigDecimal.ZERO),
-            modifier = Modifier.width(180.dp)
+            modifier = Modifier.width(180.dp),
+            interactionSource = interactionSource,
         ) {
             Text(
                 "Buy",
