@@ -13,8 +13,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.ProvideContainer
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -32,12 +32,10 @@ fun SmallContainer(
         border = BorderStroke(6.dp, containerTheme.borderColor),
         shadowElevation = shadowElevation,
     ) {
-        CompositionLocalProvider(
-            LocalContentColor provides containerTheme.contentColor,
+        Box(
+            modifier = modifier.padding(16.dp)
         ) {
-            Box(
-                modifier = modifier.padding(16.dp)
-            ) {
+            ProvideContainer(containerTheme) {
                 content()
             }
         }
@@ -47,7 +45,7 @@ fun SmallContainer(
 @Composable
 @Preview
 fun SmallContainerPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     SmallContainer(
         theme = theme,
         modifier = Modifier.size(400.dp),

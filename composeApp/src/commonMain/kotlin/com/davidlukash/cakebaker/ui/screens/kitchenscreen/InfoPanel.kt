@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.ResourceImage
@@ -240,7 +239,7 @@ class ShapeWithCutOut(val cutOutSize: Size, val radius: Float) : Shape {
 @Preview
 @Composable
 fun InfoPanelPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     var autoOvenEnabled by remember { mutableStateOf(true) }
     val uiState = Save.state.copy(
         customerSatisfaction = 50,

@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.ImageButton
 
@@ -103,7 +102,7 @@ fun BottomBar(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit
 )
 @Composable
 fun BottomBarPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val uiState = Save.state
     var currentPage by remember { mutableStateOf("") }
     BottomBar(

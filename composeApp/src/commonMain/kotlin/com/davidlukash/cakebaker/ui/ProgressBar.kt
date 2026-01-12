@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -41,7 +40,7 @@ fun ProgressBar(theme: Theme, modifier: Modifier = Modifier, amount: Double) {
 @Preview
 @Composable
 fun ProgressBarPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val infiniteTransition = rememberInfiniteTransition()
     val amount by infiniteTransition.animateFloat(
         0f, 1f, animationSpec = infiniteRepeatable(

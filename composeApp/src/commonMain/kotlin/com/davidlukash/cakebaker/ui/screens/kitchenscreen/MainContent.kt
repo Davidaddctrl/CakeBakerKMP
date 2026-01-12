@@ -32,7 +32,6 @@ import com.davidlukash.cakebaker.data.Order
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.ImageButton
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.ResourceImage
@@ -64,6 +63,7 @@ fun MainContent(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.height(720.dp)
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -92,6 +92,7 @@ fun MainContent(
                     modifier = Modifier.height(280.dp)
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
             ImageButton(
                 onClick = {
                     navigateWithFade(IngredientScreen)
@@ -141,7 +142,7 @@ fun MainContent(
 )
 @Composable
 fun MainContentPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     var autoOvenEnabled by remember { mutableStateOf(true) }
     val infiniteTransition = rememberInfiniteTransition()
     val amount by infiniteTransition.animateFloat(

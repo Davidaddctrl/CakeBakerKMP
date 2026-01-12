@@ -21,7 +21,6 @@ import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.ui.HorizontalScrollBar
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
@@ -58,7 +57,7 @@ fun MainContent(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit, i
 )
 @Composable
 fun MainContentPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val uiState = Save.state
     MainContent(
         theme = theme,

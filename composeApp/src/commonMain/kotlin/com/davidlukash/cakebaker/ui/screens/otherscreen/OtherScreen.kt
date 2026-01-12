@@ -49,7 +49,6 @@ import cakebaker.composeapp.generated.resources.ktx_serialization_license
 import cakebaker.composeapp.generated.resources.material_design_icons_license
 import cakebaker.composeapp.generated.resources.mpl_license
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
@@ -162,7 +161,7 @@ fun OtherScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
 )
 @Composable
 fun OtherScreenPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     Box(Modifier.fillMaxSize().background(theme.backgroundTheme.containerColor).padding(8.dp)) {
         OtherScreen(theme = theme) { }
     }

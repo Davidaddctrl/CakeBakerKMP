@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Item
 import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
@@ -78,7 +77,7 @@ fun ItemAmountDisplay(
 @Preview
 @Composable
 fun ItemAmountDisplayPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val item = Item(
         name = "Money",
         type = ItemType.CURRENCY,
@@ -90,7 +89,7 @@ fun ItemAmountDisplayPreview() {
 @Preview
 @Composable
 fun ItemAmountDisplayPositiveQuantityPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val item = Item(
         name = "Money",
         type = ItemType.CURRENCY,
@@ -102,7 +101,7 @@ fun ItemAmountDisplayPositiveQuantityPreview() {
 @Preview
 @Composable
 fun ItemAmountDisplayNegativeQuantityPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val item = Item(
         name = "Money",
         type = ItemType.CURRENCY,

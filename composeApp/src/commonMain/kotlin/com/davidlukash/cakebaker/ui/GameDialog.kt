@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -134,7 +133,7 @@ fun BoxScope.GameDialogContent(
     widthDp = 512, showBackground = true
 )
 fun GameDialogPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     Box {
         GameDialogContent(
             theme = theme,

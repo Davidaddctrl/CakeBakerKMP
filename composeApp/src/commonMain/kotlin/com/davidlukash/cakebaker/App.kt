@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.SaveFile
 import com.davidlukash.cakebaker.data.UIState
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.ScaleViewport
@@ -44,7 +44,6 @@ fun App() {
         val themeViewModel = mainViewModel.themeViewModel
         val saveFileViewModel = mainViewModel.saveFileViewModel
 
-        val defaultTheme = getDefaultTheme()
         val coroutineScope = rememberCoroutineScope()
 
         val uiState by dataViewModel.uiStateFlow.collectAsState(UIState.default)
@@ -62,7 +61,7 @@ fun App() {
         }
 
         LaunchedEffect(themeViewModel) {
-            themeViewModel.setTheme(defaultTheme)
+            themeViewModel.setTheme(Theme.default)
         }
 
         if (importDialogOpen) {
@@ -93,7 +92,7 @@ fun App() {
             ) {
                 ScaleViewport(1920.dp, 1200.dp) {
                     Navigation(
-                        theme = defaultTheme, uiState = uiState,
+                        theme = theme, uiState = uiState,
                         saveFiles = saveFiles,
                         pendingScreen = pendingScreen,
                         popups = popups, trueDensity = trueDensity ?: LocalDensity.current,

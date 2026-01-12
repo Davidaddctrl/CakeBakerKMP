@@ -20,7 +20,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import com.davidlukash.cakebaker.data.*
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.Background
 import com.davidlukash.cakebaker.ui.MessageManager
 import com.davidlukash.cakebaker.ui.screens.cakescreen.CakeScreen

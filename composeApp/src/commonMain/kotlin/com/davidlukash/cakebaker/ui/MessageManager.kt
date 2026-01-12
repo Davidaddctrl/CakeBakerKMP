@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.davidlukash.cakebaker.data.Popup
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -103,7 +102,7 @@ fun Popup(theme: Theme, remove: (Int) -> Unit, index: Int, popup: Popup) {
 )
 @Composable
 fun PopupPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val popup = Popup(
         content = {
             Text("Popup Preview", modifier = Modifier.fillMaxWidth())

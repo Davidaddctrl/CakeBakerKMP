@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.ProvideContainer
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -28,9 +28,7 @@ fun SecondaryContainer(theme: Theme, modifier: Modifier, content: @Composable ()
         Box(
             modifier = Modifier.padding(8.dp)
         ) {
-            CompositionLocalProvider(
-                LocalContentColor provides secondaryContainerTheme.contentColor,
-            ) {
+            ProvideContainer(secondaryContainerTheme) {
                 content()
             }
         }
@@ -40,7 +38,7 @@ fun SecondaryContainer(theme: Theme, modifier: Modifier, content: @Composable ()
 @Preview
 @Composable
 fun SecondaryContainerPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     SecondaryContainer(theme = theme, modifier = Modifier.fillMaxSize()) {
         Text("Secondary Container", style = theme.scaledStyles.titleStyle)
     }

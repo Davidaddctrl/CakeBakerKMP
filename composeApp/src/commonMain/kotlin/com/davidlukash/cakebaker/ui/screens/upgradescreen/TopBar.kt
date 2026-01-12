@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.ItemTopRow
 
 import com.davidlukash.cakebaker.ui.MenuButton
@@ -45,7 +44,7 @@ fun TopBar(theme: Theme, uiState: UIState) {
 )
 @Composable
 fun TopBarPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val uiState = Save.state
     TopBar(theme, uiState)
 }

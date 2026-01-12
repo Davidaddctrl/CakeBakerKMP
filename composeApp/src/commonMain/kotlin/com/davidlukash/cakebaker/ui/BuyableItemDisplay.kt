@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Item
 import com.davidlukash.cakebaker.data.ItemType
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
@@ -76,7 +75,7 @@ fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Uni
 @Preview
 @Composable
 fun BuyableItemDisplayPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val money = Item(
         name = "Money",
         type = ItemType.CURRENCY,

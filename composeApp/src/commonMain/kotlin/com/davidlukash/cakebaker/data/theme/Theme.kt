@@ -1,9 +1,16 @@
 package com.davidlukash.cakebaker.data.theme
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.ResourceFont
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cakebaker.composeapp.generated.resources.Res
 import cakebaker.composeapp.generated.resources.baking_powder
@@ -29,12 +36,38 @@ import cakebaker.composeapp.generated.resources.vanilla_extract
 import cakebaker.composeapp.generated.resources.vcr_osd_mono
 import com.davidlukash.cakebaker.data.ImageData
 import org.jetbrains.compose.resources.Font
+import org.jetbrains.compose.resources.FontResource
+
+@Composable
+fun convertStyles(styles: TextStyles, font: FontResource): TextStyles {
+    val fontFamily = FontFamily(Font(font))
+    return styles.copy(
+        titleStyle = convertStyle(styles.titleStyle, fontFamily),
+        buttonTextStyle = convertStyle(styles.buttonTextStyle, fontFamily),
+        largeBodyStyle = convertStyle(styles.largeBodyStyle, fontFamily),
+        mediumBodyStyle = convertStyle(styles.mediumBodyStyle, fontFamily),
+        smallBodyStyle = convertStyle(styles.smallBodyStyle, fontFamily),
+        verySmallBodyStyle = convertStyle(styles.verySmallBodyStyle, fontFamily),
+    )
+}
+
+@Composable
+fun convertStyle(style: TextStyle, fontFamily: FontFamily): TextStyle {
+    val density = LocalDensity.current
+    val shadow = if (LocalDoDropShadow.current) style.shadow else null
+    return style.copy(
+        fontFamily = fontFamily,
+        shadow = shadow?.copy(
+            offset = density.run { shadow.offset.copy(x = shadow.offset.x.dp.toPx(), y = shadow.offset.y.dp.toPx()) }
+        )
+    )
+}
 
 data class Theme(
     val nameToImageMap: Map<String, ImageData>,
-    val font: FontFamily,
-    val scaledStyles: TextStyles,
-    val unscaledStyles: TextStyles,
+    val font: FontResource,
+    val _scaledStyles: TextStyles,
+    val _unscaledStyles: TextStyles,
     val progressBarTheme: ProgressBarTheme,
     val buttonTheme: ButtonTheme,
     val switchButtonTheme: SwitchButtonTheme,
@@ -48,6 +81,14 @@ data class Theme(
     fun nameToImage(name: String): ImageData {
         return nameToImageMap[name] ?: ImageData()
     }
+
+    val scaledStyles: TextStyles
+        @Composable
+        get() = convertStyles(_scaledStyles, font)
+
+    val unscaledStyles: TextStyles
+        @Composable
+        get() = convertStyles(_unscaledStyles, font)
 
     companion object {
         //Do not use this, use getDefaultTheme instead
@@ -74,22 +115,22 @@ data class Theme(
                 "Neutral Sad Face" to ImageData(resource = Res.drawable.face_neutral_sad),
                 "Sad Face" to ImageData(resource = Res.drawable.face_sad),
             ),
-            font = FontFamily.Default,
-            scaledStyles = TextStyles(
-                titleStyle = TextStyle(fontSize = 72.sp),
-                buttonTextStyle = TextStyle(fontSize = 60.sp),
-                largeBodyStyle = TextStyle(fontSize = 48.sp),
-                mediumBodyStyle = TextStyle(fontSize = 36.sp),
-                smallBodyStyle = TextStyle(fontSize = 32.sp),
-                verySmallBodyStyle = TextStyle(fontSize = 22.sp),
+            font = Res.font.vcr_osd_mono,
+            _scaledStyles = TextStyles(
+                titleStyle = TextStyle(fontSize = 72.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 4f))),
+                buttonTextStyle = TextStyle(fontSize = 60.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 4f))),
+                largeBodyStyle = TextStyle(fontSize = 48.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 3f))),
+                mediumBodyStyle = TextStyle(fontSize = 36.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 3f))),
+                smallBodyStyle = TextStyle(fontSize = 32.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 3f))),
+                verySmallBodyStyle = TextStyle(fontSize = 22.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
             ),
-            unscaledStyles = TextStyles(
-                titleStyle = TextStyle(fontSize = 36.sp),
-                buttonTextStyle = TextStyle(fontSize = 22.sp),
-                largeBodyStyle = TextStyle(fontSize = 22.sp),
-                mediumBodyStyle = TextStyle(fontSize = 12.sp),
-                smallBodyStyle = TextStyle(fontSize = 12.sp),
-                verySmallBodyStyle = TextStyle(fontSize = 12.sp)
+            _unscaledStyles = TextStyles(
+                titleStyle = TextStyle(fontSize = 36.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
+                buttonTextStyle = TextStyle(fontSize = 22.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
+                largeBodyStyle = TextStyle(fontSize = 22.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
+                mediumBodyStyle = TextStyle(fontSize = 12.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
+                smallBodyStyle = TextStyle(fontSize = 12.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
+                verySmallBodyStyle = TextStyle(fontSize = 12.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f)))
             ),
             progressBarTheme = ProgressBarTheme(
                 border = Color.Black,
@@ -123,7 +164,8 @@ data class Theme(
             containerTheme = ContainerTheme(
                 borderColor = Color(0, 0, 0),
                 containerColor = Color(246, 255, 153),
-                contentColor = Color(0, 0, 0)
+                contentColor = Color(0, 0, 0),
+                shouldDropShadow = false
             ),
             secondaryContainerTheme = ContainerTheme(
                 borderColor = Color(0, 0, 0),
@@ -136,27 +178,6 @@ data class Theme(
     }
 }
 
-@Composable
-fun getDefaultTheme(): Theme {
-    val theme = Theme.default
-    val fontFamily = FontFamily(Font(Res.font.vcr_osd_mono))
-    return theme.copy(
-        font = fontFamily,
-        scaledStyles = TextStyles(
-            titleStyle = theme.scaledStyles.titleStyle.copy(fontFamily = fontFamily),
-            largeBodyStyle = theme.scaledStyles.largeBodyStyle.copy(fontFamily = fontFamily),
-            mediumBodyStyle = theme.scaledStyles.mediumBodyStyle.copy(fontFamily = fontFamily),
-            smallBodyStyle = theme.scaledStyles.smallBodyStyle.copy(fontFamily = fontFamily),
-            verySmallBodyStyle = theme.scaledStyles.verySmallBodyStyle.copy(fontFamily = fontFamily),
-            buttonTextStyle = theme.scaledStyles.buttonTextStyle.copy(fontFamily = fontFamily),
-        ),
-        unscaledStyles = TextStyles(
-            titleStyle = theme.unscaledStyles.titleStyle.copy(fontFamily = fontFamily),
-            largeBodyStyle = theme.unscaledStyles.largeBodyStyle.copy(fontFamily = fontFamily),
-            mediumBodyStyle = theme.unscaledStyles.mediumBodyStyle.copy(fontFamily = fontFamily),
-            smallBodyStyle = theme.unscaledStyles.smallBodyStyle.copy(fontFamily = fontFamily),
-            verySmallBodyStyle = theme.unscaledStyles.verySmallBodyStyle.copy(fontFamily = fontFamily),
-            buttonTextStyle = theme.unscaledStyles.buttonTextStyle.copy(fontFamily = fontFamily),
-        )
-    )
-}
+val LocalDoDropShadow = compositionLocalOf { true }
+
+val LocalTheme = compositionLocalOf { Theme.default }

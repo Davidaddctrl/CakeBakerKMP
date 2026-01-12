@@ -15,7 +15,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.Background
 import com.davidlukash.cakebaker.ui.SwitchButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
@@ -63,7 +62,7 @@ fun SettingsScreen(theme: Theme, navigateWithFade: (Screen) -> Unit, setDebugCon
 )
 @Composable
 fun SettingsScreenPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     Background(theme) {
         SettingsScreen(
             theme = theme,

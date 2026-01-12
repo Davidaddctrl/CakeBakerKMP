@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -96,7 +95,7 @@ fun SwitchButton(
 @Preview
 @Composable
 fun SwitchButtonPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     var checked by remember { mutableStateOf(true) }
     SwitchButton(
         theme = theme,

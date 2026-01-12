@@ -24,7 +24,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -65,7 +64,7 @@ fun HorizontalScrollBar(theme: Theme, scrollState: ScrollState, coroutineScope: 
 )
 @Composable
 fun HorizontalScrollBarPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     Column(

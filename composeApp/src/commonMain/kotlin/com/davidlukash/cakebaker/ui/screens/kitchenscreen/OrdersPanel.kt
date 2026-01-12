@@ -32,7 +32,7 @@ fun RowScope.OrdersPanel(theme: Theme, uiState: UIState, completeOrder: (Order) 
         modifier = Modifier.weight(1f).fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().height(720.dp),
+            modifier = Modifier.fillMaxWidth().height(720.dp).padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -23,7 +23,6 @@ import com.davidlukash.cakebaker.data.Order
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.secondsToString
 import com.davidlukash.cakebaker.toEngNotation
 
@@ -130,7 +129,7 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
 )
 @Composable
 fun OrderItemPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val uiState = Save.state.copy(
         items = Save.state.items.map { it.copy(amount = 10.toBigDecimal()) },
     )

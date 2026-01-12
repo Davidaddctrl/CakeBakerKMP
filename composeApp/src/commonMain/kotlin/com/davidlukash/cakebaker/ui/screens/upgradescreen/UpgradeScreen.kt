@@ -15,7 +15,6 @@ import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -42,7 +41,7 @@ fun UpgradeScreen(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> 
 )
 @Composable
 fun UpgradeScreenPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val uiState = Save.state.copy(
         items = Save.state.items.map {
             if (it.name == "Vanilla Cake") it.copy(amount = 5.toBigDecimal()) else it

@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -56,7 +55,7 @@ fun ItemTopRow(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigD
 )
 @Composable
 fun ItemTopRowPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val uiState = Save.state.copy(
         items = Save.state.items.map {
             if (it.name == "Money") it.copy(amount = 500.toBigDecimal()) else it

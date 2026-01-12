@@ -17,7 +17,6 @@ import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 
@@ -88,7 +87,7 @@ fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit
 @Preview
 @Composable
 fun UpgradeDisplayPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     val uiState = Save.state.copy(
         items = Save.state.items.map { it.copy(amount = 1000.toBigDecimal()) }
     )

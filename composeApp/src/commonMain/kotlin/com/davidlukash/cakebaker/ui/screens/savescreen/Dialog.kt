@@ -19,7 +19,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.GameDialog
 import com.davidlukash.cakebaker.ui.SmallThemedButton
 import com.davidlukash.cakebaker.ui.ThemedField
@@ -39,7 +38,7 @@ fun LoadSaveDialog(theme: Theme, saveName: String, load: () -> Unit, cancel: () 
 @Preview
 @Composable
 fun LoadSaveDialogPreview() {
-    LoadSaveDialog(theme = getDefaultTheme(), saveName = "default", load = {}, cancel = {})
+    LoadSaveDialog(theme = Theme.default, saveName = "default", load = {}, cancel = {})
 }
 
 @Composable
@@ -56,7 +55,7 @@ fun DeleteSaveDialog(theme: Theme, saveName: String, delete: () -> Unit, cancel:
 @Preview
 @Composable
 fun DeleteSaveDialogPreview() {
-    DeleteSaveDialog(theme = getDefaultTheme(), saveName = "default", delete = {}, cancel = {})
+    DeleteSaveDialog(theme = Theme.default, saveName = "default", delete = {}, cancel = {})
 }
 
 @Composable
@@ -76,7 +75,7 @@ fun OverwriteSaveDialog(theme: Theme, saveName: String, overwrite: () -> Unit, c
 @Preview
 @Composable
 fun OverwriteSaveDialogPreview() {
-    OverwriteSaveDialog(theme = getDefaultTheme(), saveName = "save.json", overwrite = {}, cancel = {})
+    OverwriteSaveDialog(theme = Theme.default, saveName = "save.json", overwrite = {}, cancel = {})
 }
 
 @Composable
@@ -167,5 +166,5 @@ fun CreateSaveDialog(
 @Preview
 @Composable
 fun CreateSaveDialogPreview() {
-    CreateSaveDialog(theme = getDefaultTheme(), exists = { true }, create = {}, cancel = {})
+    CreateSaveDialog(theme = Theme.default, exists = { true }, create = {}, cancel = {})
 }

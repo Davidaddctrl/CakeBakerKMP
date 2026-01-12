@@ -14,7 +14,6 @@ import com.davidlukash.cakebaker.VERSIONCODE
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.SaveFile
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 import com.davidlukash.cakebaker.ui.Container
 import com.davidlukash.cakebaker.ui.LargeThemedButton
 
@@ -115,7 +114,7 @@ fun SaveItem(
 @Preview(widthDp = 960)
 @Composable
 fun SaveItemPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     SaveItem(
         theme = theme,
         exportSave = {},

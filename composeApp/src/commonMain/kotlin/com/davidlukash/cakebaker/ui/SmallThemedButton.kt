@@ -13,8 +13,8 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.getDefaultTheme
 
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -52,11 +52,15 @@ fun SmallThemedButton(
         )
     ) {
         CompositionLocalProvider(
-            LocalTextStyle provides theme.unscaledStyles.buttonTextStyle.copy(
-                textAlign = TextAlign.Center,
-            )
+            LocalDoDropShadow provides true
         ) {
-            content()
+            CompositionLocalProvider(
+                LocalTextStyle provides theme.unscaledStyles.buttonTextStyle.copy(
+                    textAlign = TextAlign.Center,
+                ),
+            ) {
+                content()
+            }
         }
     }
 }
@@ -64,7 +68,7 @@ fun SmallThemedButton(
 @Preview
 @Composable
 fun SmallThemedButtonPreview() {
-    val theme = getDefaultTheme()
+    val theme = Theme.default
     SmallThemedButton(
         theme = theme,
         onClick = {},
