@@ -20,10 +20,15 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.ui.BuyableItemDisplay
 import com.davidlukash.cakebaker.ui.HorizontalScrollBar
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
-fun BoxScope.MainContent(theme: Theme, uiState: UIState, buyIngredient: (String) -> Unit) {
+fun BoxScope.MainContent(
+    theme: Theme,
+    uiState: UIState,
+    buyIngredient: (String) -> Unit,
+    setQuantityChanges: (Map<String, BigDecimal>) -> Unit
+) {
     val ingredients = uiState.getIngredients()
     val money = uiState.getMoneyItem()
     val scrollState = rememberScrollState()
@@ -38,7 +43,14 @@ fun BoxScope.MainContent(theme: Theme, uiState: UIState, buyIngredient: (String)
         ) {
             ingredients.forEach { ingredient ->
                 key(ingredient.name) {
-                    BuyableItemDisplay(theme, money, buyIngredient, ingredient)
+                    BuyableItemDisplay(theme, money, buyIngredient, ingredient) { isHovered ->
+                        if (isHovered) setQuantityChanges(
+                            mapOf(
+                                ingredient.name to (ingredient.increment ?: BigDecimal.ZERO),
+                                money.name to (ingredient.price?.negate() ?: BigDecimal.ZERO),
+                            )
+                        ) else setQuantityChanges(mapOf())
+                    }
                 }
             }
         }

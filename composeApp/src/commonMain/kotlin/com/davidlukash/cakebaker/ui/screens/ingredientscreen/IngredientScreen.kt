@@ -5,18 +5,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.navigation.Screen
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
 fun IngredientScreen(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit, buyIngredient: (String) -> Unit) {
+    var quantityChanges by remember { mutableStateOf(mapOf<String, BigDecimal>()) }
     Scaffold(
         topBar = {
-            TopBar(theme, uiState)
+            TopBar(theme, uiState, quantityChanges)
         },
         bottomBar = {
             BottomBar(theme, navigateWithFade)
@@ -26,7 +31,7 @@ fun IngredientScreen(theme: Theme, uiState: UIState, navigateWithFade: (Screen) 
         Box(
             modifier = Modifier.padding(innerPadding).fillMaxSize(),
         ) {
-            MainContent(theme, uiState, buyIngredient)
+            MainContent(theme, uiState, buyIngredient) { quantityChanges = it }
         }
     }
 }

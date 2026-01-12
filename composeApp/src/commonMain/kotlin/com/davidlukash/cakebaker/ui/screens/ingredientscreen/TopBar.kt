@@ -15,11 +15,10 @@ import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.ItemTopRow
 import com.davidlukash.cakebaker.ui.MenuButton
-
-import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
-fun TopBar(theme: Theme, uiState: UIState) {
+fun TopBar(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigDecimal>) {
     MenuButton {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -32,7 +31,7 @@ fun TopBar(theme: Theme, uiState: UIState) {
                 modifier = Modifier.fillMaxWidth(),
                 style = theme.scaledStyles.titleStyle,
             )
-            ItemTopRow(theme, uiState)
+            ItemTopRow(theme, uiState, quantityChanges)
         }
     }
 }
