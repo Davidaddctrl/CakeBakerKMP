@@ -56,16 +56,18 @@ fun ItemAmountDisplay(
         )
         Text(
             toEngNotation(item.amount + quantityChange),
-            color = if (quantityChange == BigDecimal.ZERO) Color.White else if (quantityChange > BigDecimal.ZERO) theme.successColor else theme.dangerColor,
+            color = if (quantityChange == BigDecimal.ZERO) Color.White else
+                if (quantityChange > BigDecimal.ZERO) theme.successColor else theme.dangerColor,
             textAlign = TextAlign.Center,
             style = theme.scaledStyles.smallBodyStyle,
         )
 
         Text(
-            if (quantityChange != BigDecimal.ZERO) {
+            (if (quantityChange != BigDecimal.ZERO) {
                 (if (quantityChange > BigDecimal.ZERO) "+" else "-") + toEngNotation(quantityChange.abs())
-            } else "",
-            color = if (quantityChange == BigDecimal.ZERO) Color.White else if (quantityChange > BigDecimal.ZERO) theme.successColor else theme.dangerColor,
+            } else "") + " ",
+            color = if (quantityChange == BigDecimal.ZERO) Color.White else
+                if (quantityChange > BigDecimal.ZERO) theme.successColor else theme.dangerColor,
             textAlign = TextAlign.Start,
             modifier = Modifier.align(Alignment.Start),
             style = theme.scaledStyles.verySmallBodyStyle,
