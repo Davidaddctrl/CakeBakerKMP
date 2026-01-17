@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -45,7 +46,7 @@ fun RowScope.RecipePanel(theme: Theme, uiState: UIState, setCurrentCake: (Int) -
         modifier = Modifier.weight(1f).fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().height(720.dp),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
