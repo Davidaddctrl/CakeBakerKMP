@@ -1,12 +1,12 @@
 package com.davidlukash.cakebaker.data
 
+import com.davidlukash.cakebaker.globalDecimalMode
 import com.davidlukash.cakebaker.mapDouble
 import com.davidlukash.cakebaker.viewmodel.DataViewModel
 import com.davidlukash.cakebaker.weightedRandom
 import com.davidlukash.cakebaker.weightedRandomInt
 import com.davidlukash.cakebaker.weightedRandomItem
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
-import com.ionspin.kotlin.bignum.decimal.RoundingMode
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -44,10 +44,7 @@ class OrderFactory(
                 0.0, 1.0,
                 settings.saleMinChange, settings.saleMaxChange
             ).toBigDecimal()
-        val cakePrice = baseCakePrice.multiply(cakePriceModifier).roundToDigitPositionAfterDecimalPoint(
-            2L,
-            RoundingMode.FLOOR
-        )
+        val cakePrice = baseCakePrice.multiply(cakePriceModifier, globalDecimalMode)
         val allocatedTime =
             mapDouble(
                 weightedRandom(weight, 1.0, random),
