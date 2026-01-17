@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.NavHost
@@ -30,7 +29,6 @@ import com.davidlukash.cakebaker.ui.screens.otherscreen.OtherScreen
 import com.davidlukash.cakebaker.ui.screens.savescreen.SaveScreen
 import com.davidlukash.cakebaker.ui.screens.settingsscreen.SettingsScreen
 import com.davidlukash.cakebaker.ui.screens.upgradescreen.UpgradeScreen
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 const val transitionDuration = 500
 
@@ -73,6 +71,7 @@ fun Navigation(
     navigateWithFade: (Screen) -> Unit,
     bake: () -> Unit, buyIngredient: (String) -> Unit,
     setAutoOvenEnabled: (Boolean) -> Unit,
+    setAutoOrderCompleteEnabled: (Boolean) -> Unit,
     completeOrder: (Order) -> Unit,
     setCurrentCake: (Int) -> Unit,
     exportSave: (SaveFile) -> Unit,
@@ -175,6 +174,7 @@ fun Navigation(
                                 navigateWithFade,
                                 bake,
                                 setAutoOvenEnabled,
+                                setAutoOrderCompleteEnabled,
                                 completeOrder,
                                 setCurrentCake
                             )

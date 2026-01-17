@@ -102,6 +102,7 @@ fun App() {
                         bake = { dataViewModel.bake() },
                         buyIngredient = { dataViewModel.buyIngredient(it) },
                         setAutoOvenEnabled = { dataViewModel.setAutoOvenEnabled(it) },
+                        setAutoOrderCompleteEnabled = { dataViewModel.setAutoOrderCompleteEnabled(it) },
                         completeOrder = { dataViewModel.handleCompleteOrder(it) },
                         setCurrentCake = { dataViewModel.setCurrentCake(it) },
                         exportSave = { saveFile ->

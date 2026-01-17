@@ -38,13 +38,16 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit, cutOutSize: Size) {
+fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit,
+              setAutoOrderCompleteEnabled: (Boolean) -> Unit, cutOutSize: Size) {
     val satisfactionLevel = uiState.getSatisfactionLevel()
     val satisfaction = uiState.customerSatisfaction
     val autoOvenEnabled = uiState.autoOvenEnabled
+    val autoOrderCompleteEnabled = uiState.autoOrderCompleteEnabled
     val currentCakeTier = uiState.currentCakeTier
     val cakesSalePrices = uiState.getCakesSalesPrices()
     val autoOven = uiState.getAutoOven()
+    val autoOrderComplete = uiState.getAutoOrderComplete()
     Container(
         theme = theme,
         modifier = Modifier.fillMaxWidth(),
@@ -125,6 +128,26 @@ fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> U
                     setAutoOvenEnabled(it)
                 }
             }
+
+            autoOrderComplete?.let {
+                Text(
+                    "Auto Order Complete",
+                    style = theme.scaledStyles.smallBodyStyle,
+                    textAlign = TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                )
+                SwitchButton(
+                    theme = theme,
+                    value = autoOrderCompleteEnabled,
+                    onText = "On",
+                    offText = "Off",
+                    enabled = autoOrderComplete,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    setAutoOrderCompleteEnabled(it)
+                }
+            }
         }
     }
 }
@@ -145,12 +168,6 @@ class ShapeWithCutOut(val cutOutSize: Size, val radius: Float) : Shape {
         val cutH = cutOutSize.height
         return Outline.Generic(
             Path().apply {
-//                lineTo(0f, 0f)
-//                lineTo(size.width, 0f)
-//                lineTo(size.width, size.height - cutOutSize.height)
-//                lineTo(size.width - cutOutSize.width, size.height - cutOutSize.height)
-//                lineTo(size.width - cutOutSize.width, size.height)
-//                lineTo(0f, size.height)
                 moveTo(radius, 0f)
                 lineTo(w - radius, 0f)
                 arcTo(
@@ -241,9 +258,10 @@ class ShapeWithCutOut(val cutOutSize: Size, val radius: Float) : Shape {
 fun InfoPanelPreview() {
     val theme = Theme.default
     var autoOvenEnabled by remember { mutableStateOf(true) }
+    var autoOrderCompleteEnabled by remember { mutableStateOf(true) }
     val uiState = Save.state.copy(
         customerSatisfaction = 50,
-        upgrades = Save.default.upgrades.filter { it.name == "Auto Oven" }.map {
+        upgrades = Save.default.upgrades.filter { it.name == "Auto Oven" || it.name == "Auto Order Complete" }.map {
             it.copy(level = 1)
         },
         autoOvenEnabled = autoOvenEnabled
@@ -255,6 +273,7 @@ fun InfoPanelPreview() {
             theme = theme,
             uiState = uiState,
             setAutoOvenEnabled = { autoOvenEnabled = it },
+            setAutoOrderCompleteEnabled = { autoOrderCompleteEnabled = it },
             cutOutSize = Size(512f, 512f)
         )
     }

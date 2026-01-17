@@ -14,9 +14,9 @@ fun KitchenScreen(
     navigateWithFade: (Screen) -> Unit,
     bake: () -> Unit,
     setAutoOvenEnabled: (Boolean) -> Unit,
+    setAutoOrderCompleteEnabled: (Boolean) -> Unit,
     completeOrder: (Order) -> Unit,
     setCurrentCake: (Int) -> Unit
-
 ) {
     Scaffold(
         topBar = {
@@ -24,6 +24,16 @@ fun KitchenScreen(
         },
         containerColor = Color.Transparent
     ) { innerPadding ->
-        MainContent(theme, uiState, navigateWithFade, bake, setAutoOvenEnabled, completeOrder, setCurrentCake, innerPadding)
+        MainContent(
+            theme,
+            uiState,
+            navigateWithFade,
+            bake,
+            setAutoOvenEnabled,
+            setAutoOrderCompleteEnabled,
+            completeOrder,
+            setCurrentCake,
+            innerPadding
+        )
     }
 }

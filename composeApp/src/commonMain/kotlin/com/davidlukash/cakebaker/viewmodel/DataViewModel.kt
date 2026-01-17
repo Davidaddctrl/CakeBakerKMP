@@ -130,6 +130,9 @@ class DataViewModel(
     private val _autoOvenEnabled = MutableStateFlow(false)
     val autoOvenEnabled = _autoOvenEnabled.asStateFlow()
 
+    private val _autoOrderCompleteEnabled = MutableStateFlow(false)
+    val autoOrderCompleteEnabled = _autoOrderCompleteEnabled.asStateFlow()
+
     private var tempCakeTier: Int = 1
 
     //1 to 100
@@ -162,6 +165,12 @@ class DataViewModel(
     fun setAutoOvenEnabled(enabled: Boolean) {
         viewModelScope.launch {
             _autoOvenEnabled.emit(enabled)
+        }
+    }
+
+    fun setAutoOrderCompleteEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            _autoOrderCompleteEnabled.emit(enabled)
         }
     }
 
@@ -253,8 +262,7 @@ class DataViewModel(
         tempItem = tempItem.copy(
             price = oldPrice.multiply(
                 increaseSlope,
-                globalDecimalMode
-            ) + if (fastPriceGrowth) total else BigDecimal.ZERO,
+            ).roundSignificand(globalDecimalMode) + if (fastPriceGrowth) total else BigDecimal.ZERO,
             total = total,
             amount = tempItem.amount + increment
         )
@@ -275,7 +283,7 @@ class DataViewModel(
         factors.forEach { (tier, factor) ->
             val oldAccountability = cakePriceAccountability[tier] ?: BigDecimal.ZERO
             val difference = ((price - oldPrice) / 2)
-            cakePriceAccountability[tier] = oldAccountability + factor * difference
+            cakePriceAccountability[tier] = oldAccountability + factor.multiply(difference, globalDecimalMode)
         }
 
         tempItem = tempItem.copy(
@@ -302,6 +310,7 @@ class DataViewModel(
                     tickOrderCreate(dt)
                     tickOrder(dt)
                     tickAutoOven()
+                    tickAutoOrder()
                 }
             }
         }
@@ -339,6 +348,22 @@ class DataViewModel(
         val autoOvenEnabled = autoOvenEnabled.value
         if (!ovenRunning && canBake(currentCakeTier.value) && autoOven && autoOvenEnabled) {
             bake()
+        }
+    }
+    
+    fun tickAutoOrder() {
+        val autoOrderComplete = upgradesFlow.value.find { it.name == "Auto Order Complete" }?.level?.toBoolean() ?: false
+        val autoOrderCompleteEnabled = autoOrderCompleteEnabled.value
+        val orders = ordersList.value
+        if (autoOrderComplete && autoOrderCompleteEnabled) {
+            orders.forEach { order ->
+                val cake = cakes[order.cakeTier]
+                cake?.let {
+                    if (cake.amount >= order.amount) {
+                        handleCompleteOrder(order)
+                    }
+                }
+            }
         }
     }
 
@@ -498,6 +523,7 @@ class DataViewModel(
         _ovenProgress.value,
         _ovenRunning.value,
         _autoOvenEnabled.value,
+        _autoOrderCompleteEnabled.value,
         tempCakeTier,
         _customerSatisfaction.value,
         _orderCakeSettings.value,
@@ -513,6 +539,7 @@ class DataViewModel(
             ovenProgress,
             ovenRunning,
             autoOvenEnabled,
+            autoOrderCompleteEnabled,
             customerSatisfaction,
             ordersList,
             nextOrderRemainingTime,
@@ -523,9 +550,10 @@ class DataViewModel(
             val ovenProgress = list[3] as Double
             val ovenRunning = list[4] as Boolean
             val autoOvenEnabled = list[5] as Boolean
-            val customerSatisfaction = list[6] as Int
-            val orders = list[7] as List<Order>
-            val nextOrderRemainingTime = list[8] as? Double
+            val autoOrderCompleteEnabled = list[6] as Boolean
+            val customerSatisfaction = list[7] as Int
+            val orders = list[8] as List<Order>
+            val nextOrderRemainingTime = list[9] as? Double
             val canBake = canBake(currentCakeTier)
             UIState(
                 items = items,
@@ -534,6 +562,7 @@ class DataViewModel(
                 ovenProgress = ovenProgress,
                 ovenRunning = ovenRunning,
                 autoOvenEnabled = autoOvenEnabled,
+                autoOrderCompleteEnabled = autoOrderCompleteEnabled,
                 customerSatisfaction = customerSatisfaction,
                 orders = orders,
                 nextOrderRemainingTime = nextOrderRemainingTime,
