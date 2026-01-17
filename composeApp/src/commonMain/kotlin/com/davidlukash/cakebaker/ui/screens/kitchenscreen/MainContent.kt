@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -48,6 +49,7 @@ fun MainContent(
     navigateWithFade: (Screen) -> Unit,
     bake: () -> Unit,
     setAutoOvenEnabled: (Boolean) -> Unit,
+    setAutoOrderCompleteEnabled: (Boolean) -> Unit,
     completeOrder: (Order) -> Unit,
     setCurrentCake: (Int) -> Unit,
     innerPadding: PaddingValues
@@ -63,7 +65,7 @@ fun MainContent(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.height(720.dp)
+            modifier = Modifier.fillMaxHeight()
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -115,7 +117,7 @@ fun MainContent(
             contentAlignment = Alignment.BottomEnd
         ) {
             var buttonSize by remember { mutableStateOf(Size.Zero) }
-            InfoPanel(theme, uiState, setAutoOvenEnabled, buttonSize.copy(
+            InfoPanel(theme, uiState, setAutoOvenEnabled, setAutoOrderCompleteEnabled, buttonSize.copy(
                 width = buttonSize.width + density.run { 8.dp.toPx() },
                 height = buttonSize.height + density.run { 8.dp.toPx() }
             ))
@@ -144,6 +146,7 @@ fun MainContent(
 fun MainContentPreview() {
     val theme = Theme.default
     var autoOvenEnabled by remember { mutableStateOf(true) }
+    var autoOrderCompleteEnabled by remember { mutableStateOf(true) }
     val infiniteTransition = rememberInfiniteTransition()
     val amount by infiniteTransition.animateFloat(
         0f, 1f, animationSpec = infiniteRepeatable(
@@ -154,10 +157,11 @@ fun MainContentPreview() {
         ovenRunning = true,
         ovenProgress = amount.toDouble(),
         customerSatisfaction = 50,
-        upgrades = Save.default.upgrades.filter { it.name == "Auto Oven" }.map {
+        upgrades = Save.default.upgrades.filter { it.name == "Auto Oven" || it.name == "Auto Order Complete" }.map {
             it.copy(level = 1)
         },
-        autoOvenEnabled = autoOvenEnabled
+        autoOvenEnabled = autoOvenEnabled,
+        autoOrderCompleteEnabled = autoOrderCompleteEnabled
     )
     Box(
         modifier = Modifier.fillMaxSize().background(theme.backgroundTheme.containerColor),
@@ -168,6 +172,7 @@ fun MainContentPreview() {
             navigateWithFade = { },
             bake = { },
             setAutoOvenEnabled = { autoOvenEnabled = it },
+            setAutoOrderCompleteEnabled = { autoOrderCompleteEnabled = it },
             completeOrder = { },
             setCurrentCake = {},
             innerPadding = PaddingValues(16.dp)
