@@ -32,7 +32,9 @@ fun ItemTopRow(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigD
         ScrollableRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Bottom,
+            scrollState = scrollState,
+            coroutineScope = coroutineScope
         ) { shouldScroll ->
             items.forEach { item ->
                 key(item.name) {
@@ -61,5 +63,9 @@ fun ItemTopRowPreview() {
             if (it.name == "Money") it.copy(amount = 500.toBigDecimal()) else it
         }
     )
-    ItemTopRow(theme = theme, uiState = uiState, quantityChanges = mapOf("Butter" to 0.2.toBigDecimal(), "Money" to (-250).toBigDecimal()))
+    ItemTopRow(
+        theme = theme,
+        uiState = uiState,
+        quantityChanges = mapOf("Butter" to 0.2.toBigDecimal(), "Money" to (-250).toBigDecimal())
+    )
 }
