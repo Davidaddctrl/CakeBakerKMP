@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.data.LogType
 import com.davidlukash.cakebaker.data.Save
+import com.davidlukash.cakebaker.data.SaveFile
 import com.davidlukash.cakebaker.data.SavesRepository
 import com.davidlukash.cakebaker.dumpFunctionsToFile
 import kotlin.uuid.ExperimentalUuidApi
@@ -27,6 +28,17 @@ class MainViewModel(
         it.loadSave(Save.default)
     }
     val saveFileViewModel = SaveFileViewModel(uiViewModel, savesRepository)
+
+    fun createCrashSave() {
+        var name = "crashsave"
+        var i = 1
+        var saves = savesRepository.listSaves().map { it.name }
+        while (name in saves) {
+            name = "crashsave${i++}"
+            saves = savesRepository.listSaves().map { it.name }
+        }
+        savesRepository.upsertSave(SaveFile(name, dataViewModel.createSave()))
+    }
 
 }
 

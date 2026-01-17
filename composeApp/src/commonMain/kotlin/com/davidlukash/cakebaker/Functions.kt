@@ -17,7 +17,6 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
-import com.ionspin.kotlin.bignum.integer.Platform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
@@ -150,6 +149,7 @@ expect fun Modifier.verticalDragCursor(): Modifier
 fun Modifier.horizontalRowScroll(
     coroutineScope: CoroutineScope,
     scrollState: ScrollState,
+    doScrollWheel: Boolean = true,
     reversed: Boolean = false
 ): Modifier {
     return this.pointerInput(Unit) {
@@ -158,20 +158,23 @@ fun Modifier.horizontalRowScroll(
                 scrollState.scrollBy(if (reversed) dragAmount else -dragAmount)
             }
         }
-    }
-        .pointerInput(Unit) {
-            awaitPointerEventScope {
-                while (true) {
-                    val event = awaitPointerEvent()
-                    val scrollDelta = event.changes.firstOrNull()?.scrollDelta?.y
-                    if (scrollDelta != null && scrollDelta != 0f) {
-                        coroutineScope.launch {
-                            scrollState.scrollBy(if (reversed) (scrollDelta * -96) else (scrollDelta * 96))
+    }.then(
+        if (doScrollWheel)
+            Modifier.pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        val scrollDelta = event.changes.firstOrNull()?.scrollDelta?.y
+                        if (scrollDelta != null && scrollDelta != 0f) {
+                            coroutineScope.launch {
+                                scrollState.scrollBy(if (reversed) (scrollDelta * -96) else (scrollDelta * 96))
+                            }
                         }
                     }
                 }
             }
-        }
+        else Modifier
+    )
 }
 
 @OptIn(ExperimentalUuidApi::class)
@@ -199,7 +202,11 @@ fun <T> DataViewModel.withErrorHandling(finallyBlock: () -> Unit = {}, block: ()
     withErrorHandling(this.uiViewModel, finallyBlock, block)
 
 @OptIn(ExperimentalUuidApi::class)
-suspend fun <T> withErrorHandlingAsync(appLogger: AppLogger, finallyBlock: suspend () -> Unit = {}, block: suspend () -> T): Result<T> {
+suspend fun <T> withErrorHandlingAsync(
+    appLogger: AppLogger,
+    finallyBlock: suspend () -> Unit = {},
+    block: suspend () -> T
+): Result<T> {
     try {
         return Result.success(block())
     } catch (e: CancellationException) {
@@ -218,7 +225,11 @@ suspend fun <T> withErrorHandlingAsync(appLogger: AppLogger, finallyBlock: suspe
         finallyBlock()
     }
 }
-suspend fun <T> DataViewModel.withErrorHandlingAsync(finallyBlock: suspend () -> Unit = {}, block: suspend () -> T): Result<T> =
+
+suspend fun <T> DataViewModel.withErrorHandlingAsync(
+    finallyBlock: suspend () -> Unit = {},
+    block: suspend () -> T
+): Result<T> =
     withErrorHandlingAsync(this.uiViewModel, finallyBlock, block)
 
 expect fun dumpFunctionsToFile(engine: CakeBakerEngine)
