@@ -21,7 +21,8 @@ import javax.swing.UIManager
 fun main() {
     try {
         val baseDirectory = File(".").absoluteFile.resolve("CakeBaker").also { it.mkdirs() }
-        val viewModel = MainViewModel(JVMSavesRepository(baseDirectory))
+        val savesRepository = JVMSavesRepository(baseDirectory)
+        val viewModel = MainViewModel(savesRepository)
         withErrorHandling(viewModel.uiViewModel) {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
         }

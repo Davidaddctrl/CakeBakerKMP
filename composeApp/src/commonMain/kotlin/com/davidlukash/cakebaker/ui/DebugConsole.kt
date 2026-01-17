@@ -31,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -51,16 +52,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
 import cakebaker.composeapp.generated.resources.Res
 import cakebaker.composeapp.generated.resources.add
 import cakebaker.composeapp.generated.resources.remove_drawable
-import com.davidlukash.cakebaker.currentLocalTime
+import com.davidlukash.cakebaker.App
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.data.LogType
 import com.davidlukash.cakebaker.debugTimestampFormat
@@ -68,20 +68,20 @@ import com.davidlukash.cakebaker.horizontalDragCursor
 import com.davidlukash.cakebaker.json
 import com.davidlukash.cakebaker.verticalDragCursor
 import com.davidlukash.cakebaker.viewmodel.CakeBakerScope
+import com.davidlukash.cakebaker.viewmodel.DataViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import com.davidlukash.cakebaker.viewmodel.MainViewModel
 import com.davidlukash.jsonmath.data.Expression
 import com.davidlukash.jsonmath.engine.basic.OriginNode
 import com.davidlukash.jsonmath.engine.basic.toTraceString
 import com.davidlukash.jsonmath.engine.normal.EnumScopeType
 import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.davidlukash.jsonmath.engine.normal.ScopeType
-import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 val background = Color(0xFF3D3D3D)
 val surface = Color(0xFF262626)
@@ -112,10 +112,63 @@ fun DebugSideBar() {
 
 @Composable
 fun DebugPopup() {
+    var isHidden by remember { mutableStateOf(false) }
+    DraggableResizablePopup(resizable = !isHidden) { (width, height) ->
+        DebugPanel(
+            modifier = Modifier.width(width).clip(RoundedCornerShape(8.dp)).then(
+                if (isHidden) Modifier else Modifier.height(height)
+            ),
+            canHide = true,
+            isHidden = isHidden,
+        ) { isHidden = it }
+    }
+}
+
+@Composable
+fun InternalPopup() {
+    val viewModel = LocalMainViewModel.current
+    val internalViewModel = remember { object : MainViewModel(viewModel.savesRepository) {
+        override val dataViewModel: DataViewModel = viewModel.dataViewModel
+    } }
+    val trueDensity by viewModel.uiViewModel.trueDensity.collectAsState()
+    DraggableResizablePopup { (width, height) ->
+        CompositionLocalProvider(
+            LocalMainViewModel provides internalViewModel,
+            LocalDensity provides (trueDensity ?: LocalDensity.current)
+        ) {
+            Column(
+                modifier = Modifier.background(color = background, shape = RoundedCornerShape(8.dp))
+                    .padding(16.dp)
+                    .size(width, height),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Internal View",
+                        fontFamily = FontFamily.Monospace,
+                        color = textColor,
+                        fontSize = 20.sp
+                    )
+                }
+                Box(
+                    modifier = Modifier.weight(1f).fillMaxSize().clip(RoundedCornerShape(8.dp))
+                ) {
+                    App()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DraggableResizablePopup(resizable: Boolean = true, content: @Composable (DpSize) -> Unit) {
     var width by remember { mutableStateOf(512.dp) }
     var height by remember { mutableStateOf(384.dp) }
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
-    var isHidden by remember { mutableStateOf(false) }
     val density = LocalDensity.current
 
     Box(
@@ -126,7 +179,7 @@ fun DebugPopup() {
             )
         }
     ) {
-        if (!isHidden) {
+        if (resizable) {
             Spacer(
                 modifier = Modifier.height(height).width(8.dp).draggable(
                     orientation = Orientation.Horizontal,
@@ -167,13 +220,7 @@ fun DebugPopup() {
                 PointerIcon.Hand
             ).align(Alignment.TopStart)
         )
-        DebugPanel(
-            modifier = Modifier.width(width).clip(RoundedCornerShape(8.dp)).then(
-                if (isHidden) Modifier else Modifier.height(height)
-            ),
-            canHide = true,
-            isHidden = isHidden,
-        ) { isHidden = it }
+        content(DpSize(width = width, height = height))
     }
 }
 
@@ -363,11 +410,15 @@ fun DebugPanelContent(
 )
 @Composable
 fun DebugPanelPreview() {
-    var logs by remember { mutableStateOf(listOf<Log>(
-        Log("Debug Panel Preview Message", LogType.MESSAGE),
-        Log("Debug Panel Preview Error", LogType.ERROR),
-        Log("Debug Panel Preview Result", LogType.RESULT),
-    )) }
+    var logs by remember {
+        mutableStateOf(
+            listOf<Log>(
+                Log("Debug Panel Preview Message", LogType.MESSAGE),
+                Log("Debug Panel Preview Error", LogType.ERROR),
+                Log("Debug Panel Preview Result", LogType.RESULT),
+            )
+        )
+    }
     var isHidden by remember { mutableStateOf(false) }
     DebugPanelContent(
         logs = logs,

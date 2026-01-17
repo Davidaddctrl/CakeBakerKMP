@@ -18,6 +18,7 @@ import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
+import com.davidlukash.cakebaker.ui.InternalPopup
 import com.davidlukash.cakebaker.ui.ScaleViewport
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Navigation
@@ -55,6 +56,7 @@ fun App() {
         val importDialogOpen by uiViewModel.importDialogOpen.collectAsState()
         val importSaveData by uiViewModel.importSaveData.collectAsState()
         val theme by themeViewModel.theme.collectAsState()
+        val internalShown by uiViewModel.internalShown.collectAsState()
 
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)
@@ -163,6 +165,7 @@ fun App() {
                     )
                 }
                 if (debugConsole == ConsoleType.POPUP) DebugPopup()
+                if (internalShown) InternalPopup()
             }
             if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()
         }

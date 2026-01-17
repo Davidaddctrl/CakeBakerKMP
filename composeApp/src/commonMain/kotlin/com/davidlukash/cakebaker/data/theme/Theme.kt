@@ -179,5 +179,3 @@ data class Theme(
 }
 
 val LocalDoDropShadow = compositionLocalOf { true }
-
-val LocalTheme = compositionLocalOf { Theme.default }

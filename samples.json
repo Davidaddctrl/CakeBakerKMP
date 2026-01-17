@@ -24,6 +24,36 @@
   {
     "type": "FUNCTIONCALL",
     "functionCall": {
+      "name": "console.internalShown",
+      "arguments": [
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "BOOLEAN",
+            "boolean": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "type": "FUNCTIONCALL",
+    "functionCall": {
+      "name": "console.mode",
+      "arguments": [
+        {
+          "type": "OBJECT",
+          "object": {
+            "objectType": "STRING",
+            "string": "POPUP"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "type": "FUNCTIONCALL",
+    "functionCall": {
       "name": "variable.get",
       "arguments": [
         {

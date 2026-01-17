@@ -49,7 +49,7 @@ fun SettingsScreen(theme: Theme, navigateWithFade: (Screen) -> Unit, setDebugCon
                 modifier = Modifier.width(320.dp)
             ) {
                 setDebugConsole(
-                    if (debugConsole == ConsoleType.NONE) ConsoleType.SIDEBAR else ConsoleType.NONE
+                    if (debugConsole == ConsoleType.NONE) ConsoleType.POPUP else ConsoleType.NONE
                 )
             }
         }

@@ -48,6 +48,15 @@ class UIViewModel : ViewModel(), AppLogger {
     val importDialogOpen = _importDialogOpen.asStateFlow()
     val importSaveData = _importSaveData.asStateFlow()
 
+    private val _internalShown = MutableStateFlow(false)
+    val internalShown = _internalShown.asStateFlow()
+
+    fun setInternalShown(internalShown: Boolean) {
+        viewModelScope.launch {
+            _internalShown.emit(internalShown)
+        }
+    }
+
     fun setImportDialogOpen(open: Boolean) {
         viewModelScope.launch {
             _importDialogOpen.emit(open)
