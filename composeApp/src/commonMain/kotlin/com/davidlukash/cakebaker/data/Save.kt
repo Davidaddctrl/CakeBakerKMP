@@ -18,6 +18,7 @@ data class Save(
     val ovenProgress: Double = 0.0,
     val ovenRunning: Boolean = false,
     val autoOvenEnabled: Boolean = false,
+    val autoOrderCompleteEnabled: Boolean = false,
     val tempCakeTier: Int = 1,
     val customerSatisfaction: Int = 1,
     val orderCakeSettings: Map<Int, OrderCakeSettings> = mapOf(),
@@ -38,7 +39,7 @@ data class Save(
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.2f),
+                    increaseSlope = BigDecimal.fromFloat(0.1f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -58,7 +59,7 @@ data class Save(
                     fastPriceGrowth = false,
                     total = BigDecimal.fromFloat(0f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.05f),
+                    increaseSlope = BigDecimal.fromFloat(0.09f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -78,7 +79,7 @@ data class Save(
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.3f),
+                    increaseSlope = BigDecimal.fromFloat(0.25f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -98,7 +99,7 @@ data class Save(
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.15f),
+                    increaseSlope = BigDecimal.fromFloat(0.1f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -118,7 +119,7 @@ data class Save(
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0.5f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.1f),
+                    increaseSlope = BigDecimal.fromFloat(0.05f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -138,7 +139,7 @@ data class Save(
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0.2f),
                     increment = BigDecimal.fromInt(1),
-                    increaseSlope = BigDecimal.fromFloat(0.2f),
+                    increaseSlope = BigDecimal.fromFloat(0.1f),
                     cakePriceAccountability = mapOf(
                         1 to BigDecimal.ZERO,
                         2 to BigDecimal.ZERO,
@@ -154,7 +155,7 @@ data class Save(
                     name = "Cocoa Powder",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(0f),
-                    price = BigDecimal.fromFloat(4000f),
+                    price = BigDecimal.fromFloat(8000f),
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0f),
                     increment = BigDecimal.fromInt(1),
@@ -174,7 +175,7 @@ data class Save(
                     name = "Honey Pot",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(0f),
-                    price = BigDecimal.fromFloat(7500f),
+                    price = BigDecimal.fromFloat(15000f),
                     fastPriceGrowth = true,
                     total = BigDecimal.fromFloat(0f),
                     increment = BigDecimal.fromInt(1),
@@ -195,21 +196,21 @@ data class Save(
                     type = ItemType.CAKE,
                     amount = BigDecimal.ZERO,
                     cakeTier = 1,
-                    salePrice = BigDecimal.fromFloat(1400f)
+                    salePrice = BigDecimal.fromFloat(1350f)
                 ),
                 Item(
                     name = "Chocolate Cake",
                     type = ItemType.CAKE,
                     amount = BigDecimal.ZERO,
                     cakeTier = 2,
-                    salePrice = BigDecimal.fromFloat(8000f)
+                    salePrice = BigDecimal.fromFloat(4000f)
                 ),
                 Item(
                     name = "Honey Cake",
                     type = ItemType.CAKE,
                     amount = BigDecimal.ZERO,
                     cakeTier = 3,
-                    salePrice = BigDecimal.fromFloat(17000f)
+                    salePrice = BigDecimal.fromFloat(6000f)
                 ),
                 Item(
                     name = "Money",
@@ -219,6 +220,7 @@ data class Save(
             ),
             currentCakeTier = 1,
             upgrades = listOf(
+                //region Cake Upgrades
                 Upgrade(
                     pageName = "Cake",
                     imageName = "Vanilla Cake",
@@ -284,6 +286,8 @@ data class Save(
                         "argument" to createObject(1.7.toBigDecimal()),
                     )
                 ),
+                //endregion
+                //region Oven Upgrades
                 Upgrade(
                     pageName = "Oven",
                     imageName = "Oven",
@@ -318,11 +322,30 @@ data class Save(
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
                     )
                 ),
+                //endregion
+                //region Order Upgrades
+                Upgrade(
+                    pageName = "Orders",
+                    imageName = "Happy Face",
+                    name = "Auto Order Complete",
+                    price = 5,
+                    cakeTier = 1,
+                    maxLevel = 1,
+                    onBuy = JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(mapOf()),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(1.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                    )
+                ),
+                //endregion
+                //region Butter Upgrades
                 Upgrade(
                     pageName = "Butter",
                     imageName = "Butter",
                     name = "Cheaper Butter",
-                    price = 1,
+                    price = 2,
                     cakeTier = 1,
                     maxLevel = null,
                     onBuy = JsonMathHelpers.createCheaperItem() + JsonMathHelpers.createLinearGrowth(),
@@ -333,11 +356,11 @@ data class Save(
                                 createObject(20.toBigDecimal()) to createObject(3.toBigDecimal()),
                             )
                         ),
-                        "priceIncrement" to createObject(2.toBigDecimal()),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(2.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
                         "itemName" to createObject("globals.items.Butter"),
-                        "priceDivisor" to createObject(2.toBigDecimal()),
+                        "priceDivisor" to createObject(1.75.toBigDecimal()),
                         "slopeDivisor" to createObject(1.25.toBigDecimal()),
                     )
                 ),
@@ -362,6 +385,8 @@ data class Save(
                         "itemName" to createObject("globals.items.Butter"),
                     )
                 ),
+                //endregion
+                //region Egg Upgrades
                 Upgrade(
                     pageName = "Egg",
                     imageName = "Egg",
@@ -381,8 +406,8 @@ data class Save(
                         "initialPrice" to createObject(1.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
                         "itemName" to createObject("globals.items.Egg"),
-                        "priceDivisor" to createObject(2.5.toBigDecimal()),
-                        "slopeDivisor" to createObject(1.5.toBigDecimal()),
+                        "priceDivisor" to createObject(2.toBigDecimal()),
+                        "slopeDivisor" to createObject(1.75.toBigDecimal()),
                     )
                 ),
                 Upgrade(
@@ -406,6 +431,100 @@ data class Save(
                         "itemName" to createObject("globals.items.Egg"),
                     )
                 ),
+                //endregion
+                //region Flour Upgrades
+                Upgrade(
+                    pageName = "Flour",
+                    imageName = "Flour",
+                    name = "Cheaper Flour",
+                    price = 2,
+                    cakeTier = 1,
+                    maxLevel = null,
+                    onBuy = JsonMathHelpers.createCheaperItem() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(5.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(20.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(2.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Flour"),
+                        "priceDivisor" to createObject(2.toBigDecimal()),
+                        "slopeDivisor" to createObject(1.5.toBigDecimal()),
+                    )
+                ),
+                Upgrade(
+                    pageName = "Flour",
+                    imageName = "Flour",
+                    name = "Dense Flour",
+                    price = 7,
+                    cakeTier = 2,
+                    maxLevel = 3,
+                    onBuy = JsonMathHelpers.createDense() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(0.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(1.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(7.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Flour"),
+                    )
+                ),
+                //endregion
+                //region Sugar Upgrades
+                Upgrade(
+                    pageName = "Sugar",
+                    imageName = "Sugar",
+                    name = "Cheaper Sugar",
+                    price = 2,
+                    cakeTier = 1,
+                    maxLevel = null,
+                    onBuy = JsonMathHelpers.createCheaperItem() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(5.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(20.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(2.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Sugar"),
+                        "priceDivisor" to createObject(1.75.toBigDecimal()),
+                        "slopeDivisor" to createObject(1.25.toBigDecimal()),
+                    )
+                ),
+                Upgrade(
+                    pageName = "Sugar",
+                    imageName = "Sugar",
+                    name = "Dense Sugar",
+                    price = 7,
+                    cakeTier = 1,
+                    maxLevel = 7,
+                    onBuy = JsonMathHelpers.createDense() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(1.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(3.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(7.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Sugar"),
+                    )
+                ),
+                //endregion
+                //region Vanilla Extract Upgrades
                 Upgrade(
                     pageName = "Vanilla Extract",
                     imageName = "Vanilla Extract",
@@ -423,16 +542,85 @@ data class Save(
                         ),
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(1.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Vanilla Extract"),
+                        "priceDivisor" to createObject(1.75.toBigDecimal()),
+                        "slopeDivisor" to createObject(1.5.toBigDecimal()),
+                    )
+                ),
+                Upgrade(
+                    pageName = "Vanilla Extract",
+                    imageName = "Vanilla Extract",
+                    name = "Dense Vanilla Extract",
+                    price = 5,
+                    cakeTier = 1,
+                    maxLevel = 10,
+                    onBuy = JsonMathHelpers.createDense() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(4.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(9.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(5.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
                         "itemName" to createObject("globals.items.Vanilla Extract"),
-                        "priceDivisor" to createObject(3.toBigDecimal()),
+                    )
+                ),
+                //endregion
+                //region Baking Powder Upgrades
+                Upgrade(
+                    pageName = "Baking Powder",
+                    imageName = "Baking Powder",
+                    name = "Cheaper Baking Powder",
+                    price = 2,
+                    cakeTier = 1,
+                    maxLevel = null,
+                    onBuy = JsonMathHelpers.createCheaperItem() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(5.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(20.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(2.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Baking Powder"),
+                        "priceDivisor" to createObject(1.75.toBigDecimal()),
                         "slopeDivisor" to createObject(1.25.toBigDecimal()),
                     )
                 ),
+                Upgrade(
+                    pageName = "Baking Powder",
+                    imageName = "Baking Powder",
+                    name = "Dense Baking Powder",
+                    price = 7,
+                    cakeTier = 1,
+                    maxLevel = 7,
+                    onBuy = JsonMathHelpers.createDense() + JsonMathHelpers.createLinearGrowth(),
+                    parameters = mapOf(
+                        "cakeTiers" to createObject(
+                            mapOf(
+                                createObject(1.toBigDecimal()) to createObject(2.toBigDecimal()),
+                                createObject(3.toBigDecimal()) to createObject(3.toBigDecimal()),
+                            )
+                        ),
+                        "priceIncrement" to createObject(1.toBigDecimal()),
+                        "initialPrice" to createObject(7.toBigDecimal()),
+                        "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                        "itemName" to createObject("globals.items.Baking Powder"),
+                    )
+                ),
+                //endregion
             ),
             ovenProgress = 0.0,
             ovenRunning = false,
             autoOvenEnabled = false,
+            autoOrderCompleteEnabled = false,
             tempCakeTier = 1,
             customerSatisfaction = 50,
             orderCakeSettings = mapOf(
@@ -472,6 +660,7 @@ data class Save(
             ovenProgress = default.ovenProgress,
             ovenRunning = default.ovenRunning,
             autoOvenEnabled = default.autoOvenEnabled,
+            autoOrderCompleteEnabled = default.autoOrderCompleteEnabled,
             customerSatisfaction = default.customerSatisfaction,
             orders = default.orders,
             nextOrderRemainingTime = 0.0,

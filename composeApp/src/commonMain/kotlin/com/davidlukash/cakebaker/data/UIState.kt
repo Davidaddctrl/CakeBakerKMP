@@ -11,6 +11,7 @@ data class UIState(
     val ovenProgress: Double,
     val ovenRunning: Boolean,
     val autoOvenEnabled: Boolean,
+    val autoOrderCompleteEnabled: Boolean,
     val customerSatisfaction: Int,
     val orders: List<Order>,
     val nextOrderRemainingTime: Double?,
@@ -24,6 +25,7 @@ data class UIState(
             ovenProgress = 0.0,
             ovenRunning = false,
             autoOvenEnabled = false,
+            autoOrderCompleteEnabled = false,
             customerSatisfaction = 1,
             orders = listOf(),
             nextOrderRemainingTime = 0.0,
@@ -40,6 +42,8 @@ data class UIState(
     fun getIngredients(): List<Item> = items.filter { it.type == ItemType.INGREDIENT }
 
     fun getAutoOven(): Boolean? = upgrades.find { it.name == "Auto Oven" }?.level?.toBoolean()
+
+    fun getAutoOrderComplete(): Boolean? = upgrades.find { it.name == "Auto Order Complete" }?.level?.toBoolean()
 
     fun getFasterOven(): Double = upgrades.find { it.name == "Faster Oven" }?.level?.toDouble() ?: 0.0
 
