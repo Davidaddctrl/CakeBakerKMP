@@ -17,7 +17,12 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
-fun IngredientScreen(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit, buyIngredient: (String) -> Unit) {
+fun IngredientScreen(
+    theme: Theme,
+    uiState: UIState,
+    navigateWithFade: (Screen) -> Unit,
+    buyIngredient: (String) -> Unit
+) {
     var quantityChanges by remember { mutableStateOf(mapOf<String, BigDecimal>()) }
     Scaffold(
         topBar = {
