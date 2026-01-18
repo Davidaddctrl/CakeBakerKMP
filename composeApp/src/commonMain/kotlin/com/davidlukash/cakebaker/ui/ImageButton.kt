@@ -1,18 +1,17 @@
 package com.davidlukash.cakebaker.ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.ui.navigation.Screen
 
 @Composable
 fun ImageButton(
@@ -21,6 +20,7 @@ fun ImageButton(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
+    val contentColor = LocalContentColor.current
     OutlinedButton(
         onClick = {
             onClick()
@@ -38,6 +38,10 @@ fun ImageButton(
         ),
         contentPadding = PaddingValues(8.dp),
     ) {
-        content()
+        CompositionLocalProvider(
+            LocalContentColor provides contentColor,
+        ) {
+            content()
+        }
     }
 }
