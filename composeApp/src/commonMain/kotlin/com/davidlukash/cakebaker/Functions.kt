@@ -80,7 +80,9 @@ fun toEngNotation(number: BigDecimal): String {
             it.removeSuffix(".0")
         } else it
     }
-    return "$string${suffixes[index]}"
+    return if ((suffixes.size - 1) >= index)
+        "$string${suffixes[index]}"
+    else number.toString()
 }
 
 val Color.luminance
