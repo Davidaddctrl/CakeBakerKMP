@@ -170,7 +170,7 @@ fun InternalPopup() {
 
 @Composable
 fun DraggableResizablePopup(resizable: Boolean = true, content: @Composable (DpSize) -> Unit) {
-    var width by remember { mutableStateOf(512.dp) }
+    var width by remember { mutableStateOf(768.dp) }
     var height by remember { mutableStateOf(384.dp) }
     var offset by remember { mutableStateOf(Offset(0f, 0f)) }
     val density = LocalDensity.current
@@ -498,7 +498,7 @@ fun VariableViewContent(
                             InputField(
                                 input = value,
                                 enabled = getDescriptor(descriptorName).set != null,
-                                modifier = Modifier.heightIn(96.dp, 256.dp).weight(1f)
+                                modifier = Modifier.heightIn(96.dp, 512.dp).weight(1f)
                             ) { value = it }
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp),
