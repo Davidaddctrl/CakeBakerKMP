@@ -146,7 +146,10 @@ data class Theme(
                 disabledBorderColor = Color(53, 57, 62),
             ),
             switchButtonTheme = SwitchButtonTheme(
-                borderColor = Color.Black,
+                containerColor = Color(0, 0, 0),
+                disabledContainerColor = Color(0, 0, 0),
+                borderColor = Color(0, 0, 0),
+                disabledBorderColor = Color(0, 0, 0),
                 offSelectedContainerColor = Color(255, 0, 0),
                 offUnselectedContainerColor = Color(255, 0, 0).copy(alpha = 0.3f),
                 offSelectedTextColor = Color(255, 255, 255),

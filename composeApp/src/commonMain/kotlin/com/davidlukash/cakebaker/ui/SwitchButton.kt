@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,9 +34,10 @@ fun SwitchButton(
 ) {
     val switchButtonTheme = theme.switchButtonTheme
     Surface(
-        color = switchButtonTheme.borderColor,
-        border = BorderStroke(8.dp, switchButtonTheme.borderColor),
+        color = if (enabled) switchButtonTheme.containerColor else switchButtonTheme.disabledContainerColor,
+        border = BorderStroke(8.dp, if (enabled) switchButtonTheme.borderColor else switchButtonTheme.disabledBorderColor),
         modifier = Modifier.clickable(onClick = { onClick(!value) }, enabled = enabled),
+        shape = RoundedCornerShape(4.dp)
     ) {
         Row(modifier = modifier.height(48.dp)) {
             Box(modifier = Modifier.weight(1f)) {
