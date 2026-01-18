@@ -472,6 +472,12 @@ class DataViewModel(
         }
     }
 
+    fun setOrders(orders: List<Order>) {
+        viewModelScope.launch {
+            _ordersList.emit(orders)
+        }
+    }
+
     @OptIn(ExperimentalUuidApi::class)
     fun buyUpgrade(upgrade: Upgrade) {
         withErrorHandling {

@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.engine
 
 import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.data.Upgrade
+import com.davidlukash.cakebaker.data.order.Order
 import com.davidlukash.cakebaker.viewmodel.DataViewModel
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.Object
@@ -171,6 +172,23 @@ class CakeBakerScope(
         }
     }
 
+    fun generateOrderDescriptors(): List<VariableDescriptor> {
+        return listOf(VariableDescriptor(
+            "globals.orders",
+            expectedType = ObjectType.LIST,
+            expectedTypeNullable = false,
+            set = {
+                dataViewModel.setOrders(
+                    it.asList()!!.map { order ->
+                        Order.fromObject(order)
+                    }
+                )
+            }
+        ) {
+            createObject(dataViewModel.ordersList.value.map { it.toObject() })
+        })
+    }
+
     override fun listVariables(): List<VariableDescriptor> {
         return localVariables.keys.map { key ->
             VariableDescriptor(
@@ -178,7 +196,7 @@ class CakeBakerScope(
                 set = { localVariables[key] = it },
             ) { localVariables[key]!! }
         } + if (scopeType == ScopeType(EnumScopeType.GLOBAL)) {
-            generateUpgradeDescriptors() + generateItemDescriptors()
+            generateUpgradeDescriptors() + generateItemDescriptors() + generateOrderDescriptors()
         } else listOf()
     }
 
