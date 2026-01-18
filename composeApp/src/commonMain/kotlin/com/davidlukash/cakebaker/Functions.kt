@@ -141,7 +141,6 @@ fun secondsToString(totalSeconds: Double): String {
 val json = Json {
     prettyPrint = true
     allowStructuredMapKeys = true
-    encodeDefaults = true
 }
 
 expect fun Modifier.horizontalDragCursor(): Modifier

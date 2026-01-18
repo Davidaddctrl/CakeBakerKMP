@@ -20,6 +20,7 @@ import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.InternalPopup
 import com.davidlukash.cakebaker.ui.ScaleViewport
+import com.davidlukash.cakebaker.ui.VariableView
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
@@ -47,6 +48,7 @@ fun App() {
 
         val coroutineScope = rememberCoroutineScope()
 
+        val globalScope = dataViewModel.globalScope
         val uiState by dataViewModel.uiStateFlow.collectAsState(UIState.default)
         val debugConsole by uiViewModel.debugConsole.collectAsState()
         val pendingScreen by uiViewModel.pendingScreen.collectAsState()
@@ -57,6 +59,7 @@ fun App() {
         val importSaveData by uiViewModel.importSaveData.collectAsState()
         val theme by themeViewModel.theme.collectAsState()
         val internalShown by uiViewModel.internalShown.collectAsState()
+        val variableShown by uiViewModel.variableShown.collectAsState()
 
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)
@@ -166,6 +169,7 @@ fun App() {
                 }
                 if (debugConsole == ConsoleType.POPUP) DebugPopup()
                 if (internalShown) InternalPopup()
+                if (variableShown) VariableView(globalScope, uiViewModel)
             }
             if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()
         }

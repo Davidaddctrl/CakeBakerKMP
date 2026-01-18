@@ -10,6 +10,7 @@ import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.repository.SavesRepository
 import com.davidlukash.cakebaker.dumpFunctionsToFile
 import com.davidlukash.jsonmath.createNullObject
+import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.ObjectType
 import com.davidlukash.jsonmath.engine.normal.ArgumentDescriptor
 import com.davidlukash.jsonmath.engine.normal.FunctionDescriptor
@@ -43,14 +44,28 @@ open class MainViewModel(
             FunctionDescriptor(
                 name = "console.internalShown",
                 description = "Turns on or off the internal game runner",
-                returnType = null,
-                returnTypeNullable = true,
+                returnType = ObjectType.BOOLEAN,
+                returnTypeNullable = false,
                 arguments = listOf(
-                    ArgumentDescriptor(name = "shown", type = ObjectType.BOOLEAN),
+                    ArgumentDescriptor(name = "shown", type = ObjectType.BOOLEAN, optional = true, nullable = true),
                 )
             ) { args, _, _ ->
-                it.setInternalShown(args[0].asBoolean()!!)
-                createNullObject()
+                it.setInternalShown(args[0].asNullableBoolean("") ?: it.internalShown.value)
+                createObject(it.internalShown.value)
+            }
+        )
+        engine.registerFunction(
+            FunctionDescriptor(
+                name = "console.variableShown",
+                description = "Turns on or off the variable view",
+                returnType = ObjectType.BOOLEAN,
+                returnTypeNullable = false,
+                arguments = listOf(
+                    ArgumentDescriptor(name = "shown", type = ObjectType.BOOLEAN, optional = true, nullable = true),
+                )
+            ) { args, _, _ ->
+                it.setVariableShown(args[0].asNullableBoolean("") ?: it.variableShown.value)
+                createObject(it.variableShown.value)
             }
         )
         val functionDump = engine.getAllFunctions().joinToString("\n\n") { engine.describeFunction(it) }

@@ -10,16 +10,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -28,13 +31,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,11 +62,11 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import cakebaker.composeapp.generated.resources.Res
 import cakebaker.composeapp.generated.resources.add
 import cakebaker.composeapp.generated.resources.remove_drawable
 import com.davidlukash.cakebaker.App
+import com.davidlukash.cakebaker.AppLogger
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.log.LogType
 import com.davidlukash.cakebaker.repository.MemorySavesRepository
@@ -71,12 +77,16 @@ import com.davidlukash.cakebaker.verticalDragCursor
 import com.davidlukash.cakebaker.viewmodel.CakeBakerScope
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
+import com.davidlukash.cakebaker.withErrorHandling
+import com.davidlukash.jsonmath.buildExpression
 import com.davidlukash.jsonmath.data.Expression
 import com.davidlukash.jsonmath.engine.basic.OriginNode
 import com.davidlukash.jsonmath.engine.basic.toTraceString
 import com.davidlukash.jsonmath.engine.normal.EnumScopeType
 import com.davidlukash.jsonmath.engine.normal.LanguageException
+import com.davidlukash.jsonmath.engine.normal.Scope
 import com.davidlukash.jsonmath.engine.normal.ScopeType
+import com.davidlukash.jsonmath.engine.normal.VariableDescriptor
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.roundToInt
@@ -142,18 +152,12 @@ fun InternalPopup() {
                     .size(width, height),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        "Internal View",
-                        fontFamily = FontFamily.Monospace,
-                        color = textColor,
-                        fontSize = 20.sp
-                    )
-                }
+                Text(
+                    "Internal View",
+                    fontFamily = FontFamily.Monospace,
+                    color = textColor,
+                    fontSize = 20.sp,
+                )
                 Box(
                     modifier = Modifier.weight(1f).fillMaxSize().clip(RoundedCornerShape(8.dp))
                 ) {
@@ -327,7 +331,7 @@ fun DebugPanelContent(
             Surface(
                 color = surface,
                 shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.weight(2f).fillMaxSize().padding(
+                modifier = Modifier.weight(1f).fillMaxSize().padding(
                     bottom = 8.dp
                 )
             ) {
@@ -341,64 +345,269 @@ fun DebugPanelContent(
                         key = { logs[it].uuid }
                     ) { index ->
                         val log = logs[index]
-                        SelectionContainer {
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(style = SpanStyle(fontFamily = FontFamily.Monospace)) {
-                                        withStyle(style = SpanStyle(color = textColor.copy(alpha = 0.2f))) {
-                                            append(debugTimestampFormat.format(log.timestamp))
-                                            append(" ")
-                                        }
-                                        withStyle(
-                                            style = SpanStyle(
-                                                color = when (log.logType) {
-                                                    LogType.ERROR -> red
-                                                    LogType.RESULT -> green
-                                                    LogType.MESSAGE -> textColor
-                                                }
-                                            )
-                                        ) {
-                                            append(log.message)
-                                        }
-                                    }
-                                }
-                            )
-                        }
+                        Log(log)
                     }
                 }
             }
             Box(
                 modifier = Modifier.weight(1f)
             ) {
-                BasicTextField(
-                    value = input,
-                    onValueChange = { input = it },
-                    textStyle = TextStyle(fontFamily = FontFamily.Monospace, color = textColor),
-                    decorationBox = { innerTextField ->
-                        Box(
-                            modifier = Modifier.background(color = surface, shape = RoundedCornerShape(8.dp))
-                                .fillMaxSize().padding(8.dp).fillMaxSize()
-                        ) {
-                            innerTextField()
+                InputField(
+                    input = input,
+                    modifier = Modifier.fillMaxSize()
+                ) { input = it }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+            ) {
+                InputButton(
+                    onClick = {
+                        val expression = buildExpression {
+                            function {
+                                name = "console.internalShown"
+                                appendFunction {
+                                    name = "compare.not"
+                                    appendFunction {
+                                        name = "console.internalShown"
+                                    }
+                                }
+                            }
                         }
+                        execute(json.encodeToString(expression))
                     },
-                    modifier = Modifier.fillMaxSize(),
-                    cursorBrush = SolidColor(textColor),
-                )
-                Button(
+                ) {
+                    Text("Toggle Internal View")
+                }
+                InputButton(
+                    onClick = {
+                        val expression = buildExpression {
+                            function {
+                                name = "console.variableShown"
+                                appendFunction {
+                                    name = "compare.not"
+                                    appendFunction {
+                                        name = "console.variableShown"
+                                    }
+                                }
+                            }
+                        }
+                        execute(json.encodeToString(expression))
+                    },
+                ) {
+                    Text("Toggle Variable View")
+                }
+                InputButton(
+                    onClick = {
+                        val expression = buildExpression {
+                            function {
+                                name = "console.mode"
+                                appendString("NONE")
+                            }
+                        }
+                        execute(json.encodeToString(expression))
+                    },
+                ) {
+                    Text("Close")
+                }
+                InputButton(
                     onClick = {
                         execute(input)
                     },
-                    modifier = Modifier.align(Alignment.BottomEnd).zIndex(2f).offset(x = (-4).dp, y = (-4).dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = surface2,
-                        contentColor = textColor
-                    )
                 ) {
-                    Text("Enter", color = textColor, fontFamily = FontFamily.Monospace)
+                    Text("Execute")
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun VariableViewContent(
+    refresh: () -> Unit = {},
+    getDescriptor: (String) -> VariableDescriptor,
+    descriptorNames: List<String>,
+    appLogger: AppLogger,
+    modifier: Modifier = Modifier,
+) {
+    var searchText by remember { mutableStateOf("") }
+    val filteredDescriptorNames by derivedStateOf {
+        if (searchText.isBlank()) return@derivedStateOf descriptorNames
+        val tokens = searchText.split("/").filter { it.isNotBlank() }.map { it.trim(' ') }
+        descriptorNames.filter { descriptorName ->
+            tokens.all {
+                descriptorName.contains(it, ignoreCase = true)
+            }
+        }
+    }
+    var key by remember { mutableStateOf(0) }
+    Column(
+        modifier = modifier.background(color = background, shape = RoundedCornerShape(8.dp))
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(
+            "Variable View",
+            fontFamily = FontFamily.Monospace,
+            color = textColor,
+            fontSize = 20.sp,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                "Search:",
+                fontFamily = FontFamily.Monospace,
+                color = textColor,
+            )
+            InputField(
+                input = searchText,
+                modifier = Modifier.weight(1f),
+                maxLines = 1,
+            ) { searchText = it }
+            InputButton(
+                onClick = {
+                    refresh()
+                    key++
+                }
+            ) { Text("Refresh") }
+        }
+        key(key) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                items(filteredDescriptorNames, key = { it }) { descriptorName ->
+                    fun read(): String {
+                        val result = getDescriptor(descriptorName).get?.invoke() ?: return "Unavailable"
+                        return json.encodeToString(result)
+                    }
+
+                    var value by remember { mutableStateOf(read()) }
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text(descriptorName, fontFamily = FontFamily.Monospace, color = textColor)
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            InputField(
+                                input = value,
+                                enabled = getDescriptor(descriptorName).set != null,
+                                modifier = Modifier.heightIn(96.dp, 256.dp).weight(1f)
+                            ) { value = it }
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(2.dp),
+                            ) {
+                                if (getDescriptor(descriptorName).get != null)
+                                    InputButton(
+                                        onClick = { value = read() },
+                                        modifier = Modifier.width(96.dp)
+                                    ) { Text("Read") }
+                                if (getDescriptor(descriptorName).set != null)
+                                    InputButton(
+                                        onClick = {
+                                            withErrorHandling(appLogger) {
+                                                getDescriptor(descriptorName).set?.invoke(json.decodeFromString(value))
+                                            }
+                                        },
+                                        modifier = Modifier.width(96.dp)
+                                    ) { Text("Set") }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun VariableView(globalScope: Scope, appLogger: AppLogger) {
+    var descriptorNames by remember { mutableStateOf(globalScope.listVariables().map { it.name }) }
+    DraggableResizablePopup { (width, height) ->
+        VariableViewContent(
+            refresh = { descriptorNames = globalScope.listVariables().map { it.name } },
+            getDescriptor = { name -> globalScope.listVariables().find { it.name == name }!! },
+            descriptorNames = descriptorNames,
+            appLogger = appLogger,
+            modifier = Modifier.size(width, height)
+        )
+    }
+}
+
+@Composable
+fun Log(log: Log) {
+    SelectionContainer {
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(fontFamily = FontFamily.Monospace)) {
+                    withStyle(style = SpanStyle(color = textColor.copy(alpha = 0.2f))) {
+                        append(debugTimestampFormat.format(log.timestamp))
+                        append(" ")
+                    }
+                    withStyle(
+                        style = SpanStyle(
+                            color = when (log.logType) {
+                                LogType.ERROR -> red
+                                LogType.RESULT -> green
+                                LogType.MESSAGE -> textColor
+                            }
+                        )
+                    ) {
+                        append(log.message)
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun InputField(
+    input: String,
+    maxLines: Int = Int.MAX_VALUE,
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier,
+    onValueChange: (String) -> Unit
+) {
+    BasicTextField(
+        value = input,
+        onValueChange = onValueChange,
+        textStyle = TextStyle(fontFamily = FontFamily.Monospace, color = textColor),
+        decorationBox = { innerTextField ->
+            Box(
+                modifier = Modifier.background(color = surface, shape = RoundedCornerShape(8.dp)).padding(8.dp)
+            ) {
+                innerTextField()
+            }
+        },
+        modifier = modifier,
+        cursorBrush = SolidColor(textColor),
+        maxLines = maxLines,
+        enabled = enabled
+    )
+}
+
+@Composable
+fun InputButton(onClick: () -> Unit, modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = surface2,
+            contentColor = textColor
+        )
+    ) {
+        CompositionLocalProvider(
+            LocalTextStyle provides LocalTextStyle.current.copy(fontFamily = FontFamily.Monospace)
+        ) {
+            content()
         }
     }
 }
