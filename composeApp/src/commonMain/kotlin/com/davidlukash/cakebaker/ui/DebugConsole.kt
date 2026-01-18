@@ -63,6 +63,7 @@ import cakebaker.composeapp.generated.resources.remove_drawable
 import com.davidlukash.cakebaker.App
 import com.davidlukash.cakebaker.data.Log
 import com.davidlukash.cakebaker.data.LogType
+import com.davidlukash.cakebaker.data.MemorySavesRepository
 import com.davidlukash.cakebaker.debugTimestampFormat
 import com.davidlukash.cakebaker.horizontalDragCursor
 import com.davidlukash.cakebaker.json
@@ -127,9 +128,9 @@ fun DebugPopup() {
 @Composable
 fun InternalPopup() {
     val viewModel = LocalMainViewModel.current
-    val internalViewModel = remember { object : MainViewModel(viewModel.savesRepository) {
-        override val dataViewModel: DataViewModel = viewModel.dataViewModel
-    } }
+    val internalViewModel = remember {
+        MainViewModel(MemorySavesRepository(viewModel.savesRepository))
+    }
     val trueDensity by viewModel.uiViewModel.trueDensity.collectAsState()
     DraggableResizablePopup { (width, height) ->
         CompositionLocalProvider(
