@@ -1,7 +1,8 @@
-package com.davidlukash.cakebaker.viewmodel
+package com.davidlukash.cakebaker.engine
 
 import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.data.Upgrade
+import com.davidlukash.cakebaker.viewmodel.DataViewModel
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.Object
 import com.davidlukash.jsonmath.data.ObjectType

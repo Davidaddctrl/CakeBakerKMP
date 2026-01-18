@@ -9,7 +9,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.log.LogType
-import com.davidlukash.cakebaker.viewmodel.CakeBakerEngine
+import com.davidlukash.cakebaker.engine.CakeBakerEngine
 import com.davidlukash.cakebaker.viewmodel.DataViewModel
 import com.davidlukash.jsonmath.engine.basic.toTraceString
 import com.davidlukash.jsonmath.engine.normal.LanguageException

@@ -5,8 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.fromKeyword
 import androidx.compose.ui.input.pointer.pointerHoverIcon
-import com.davidlukash.cakebaker.viewmodel.CakeBakerEngine
-import org.jetbrains.skiko.Cursor
+import com.davidlukash.cakebaker.engine.CakeBakerEngine
 
 @OptIn(ExperimentalComposeUiApi::class)
 actual fun Modifier.horizontalDragCursor(): Modifier {

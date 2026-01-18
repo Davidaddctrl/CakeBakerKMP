@@ -3,8 +3,7 @@ package com.davidlukash.cakebaker
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
-import com.davidlukash.cakebaker.viewmodel.CakeBakerEngine
-import com.ionspin.kotlin.bignum.integer.Platform
+import com.davidlukash.cakebaker.engine.CakeBakerEngine
 import java.awt.Cursor
 import java.io.File
 import kotlin.uuid.ExperimentalUuidApi

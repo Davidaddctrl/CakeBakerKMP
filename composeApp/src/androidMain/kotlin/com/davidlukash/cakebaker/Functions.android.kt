@@ -3,7 +3,7 @@ package com.davidlukash.cakebaker
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
-import com.davidlukash.cakebaker.viewmodel.CakeBakerEngine
+import com.davidlukash.cakebaker.engine.CakeBakerEngine
 import kotlin.uuid.ExperimentalUuidApi
 import android.view.PointerIcon as AndroidPointerIcon
 

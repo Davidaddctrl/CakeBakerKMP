@@ -74,7 +74,7 @@ import com.davidlukash.cakebaker.debugTimestampFormat
 import com.davidlukash.cakebaker.horizontalDragCursor
 import com.davidlukash.cakebaker.json
 import com.davidlukash.cakebaker.verticalDragCursor
-import com.davidlukash.cakebaker.viewmodel.CakeBakerScope
+import com.davidlukash.cakebaker.engine.CakeBakerScope
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
 import com.davidlukash.cakebaker.withErrorHandling
