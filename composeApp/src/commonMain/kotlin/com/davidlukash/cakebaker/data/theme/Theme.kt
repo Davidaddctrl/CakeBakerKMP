@@ -118,19 +118,49 @@ data class Theme(
             font = Res.font.vcr_osd_mono,
             _scaledStyles = TextStyles(
                 titleStyle = TextStyle(fontSize = 72.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 4f))),
-                buttonTextStyle = TextStyle(fontSize = 60.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 4f))),
-                largeBodyStyle = TextStyle(fontSize = 48.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 3f))),
-                mediumBodyStyle = TextStyle(fontSize = 36.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 3f))),
-                smallBodyStyle = TextStyle(fontSize = 32.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 3f))),
-                verySmallBodyStyle = TextStyle(fontSize = 22.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
+                buttonTextStyle = TextStyle(
+                    fontSize = 60.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 4f))
+                ),
+                largeBodyStyle = TextStyle(
+                    fontSize = 48.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 3f))
+                ),
+                mediumBodyStyle = TextStyle(
+                    fontSize = 36.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 3f))
+                ),
+                smallBodyStyle = TextStyle(
+                    fontSize = 32.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 3f))
+                ),
+                verySmallBodyStyle = TextStyle(
+                    fontSize = 22.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))
+                ),
             ),
             _unscaledStyles = TextStyles(
                 titleStyle = TextStyle(fontSize = 36.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
-                buttonTextStyle = TextStyle(fontSize = 22.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
-                largeBodyStyle = TextStyle(fontSize = 22.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
-                mediumBodyStyle = TextStyle(fontSize = 12.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
-                smallBodyStyle = TextStyle(fontSize = 12.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))),
-                verySmallBodyStyle = TextStyle(fontSize = 12.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f)))
+                buttonTextStyle = TextStyle(
+                    fontSize = 22.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))
+                ),
+                largeBodyStyle = TextStyle(
+                    fontSize = 22.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))
+                ),
+                mediumBodyStyle = TextStyle(
+                    fontSize = 12.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))
+                ),
+                smallBodyStyle = TextStyle(
+                    fontSize = 12.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))
+                ),
+                verySmallBodyStyle = TextStyle(
+                    fontSize = 12.sp,
+                    shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))
+                )
             ),
             progressBarTheme = ProgressBarTheme(
                 border = Color.Black,
@@ -177,6 +207,96 @@ data class Theme(
             ),
             successColor = Color(58, 158, 0),
             dangerColor = Color(255, 0, 0),
+            tabSelectedColor = Color(8, 160, 69)
+        )
+
+        val darkDefault = Theme(
+            nameToImageMap = mapOf(
+                "Butter" to ImageData(resource = Res.drawable.butter),
+                "Egg" to ImageData(resource = Res.drawable.egg),
+                "Flour" to ImageData(resource = Res.drawable.flour),
+                "Sugar" to ImageData(resource = Res.drawable.sugar),
+                "Vanilla Extract" to ImageData(resource = Res.drawable.vanilla_extract),
+                "Baking Powder" to ImageData(resource = Res.drawable.baking_powder),
+                "Cocoa Powder" to ImageData(resource = Res.drawable.cocoa_powder),
+                "Honey Pot" to ImageData(resource = Res.drawable.honey_pot),
+                "Vanilla Cake" to ImageData(resource = Res.drawable.vanilla_cake),
+                "Chocolate Cake" to ImageData(resource = Res.drawable.choc_cake),
+                "Honey Cake" to ImageData(resource = Res.drawable.honey_cake),
+                "Money" to ImageData(resource = Res.drawable.money),
+                "Ingredient Shop" to ImageData(resource = Res.drawable.ingredient_shop),
+                "Upgrade Shop" to ImageData(resource = Res.drawable.upgrade_shop),
+                "Oven" to ImageData(resource = Res.drawable.oven),
+                "Happy Face" to ImageData(resource = Res.drawable.face_happy),
+                "Medium Face" to ImageData(resource = Res.drawable.face_medium),
+                "Neutral Face" to ImageData(resource = Res.drawable.face_neutral),
+                "Neutral Sad Face" to ImageData(resource = Res.drawable.face_neutral_sad),
+                "Sad Face" to ImageData(resource = Res.drawable.face_sad),
+            ),
+            font = Res.font.vcr_osd_mono,
+            _scaledStyles = TextStyles(
+                titleStyle = TextStyle(fontSize = 72.sp),
+                buttonTextStyle = TextStyle(fontSize = 60.sp),
+                largeBodyStyle = TextStyle(fontSize = 48.sp),
+                mediumBodyStyle = TextStyle(fontSize = 36.sp),
+                smallBodyStyle = TextStyle(fontSize = 32.sp),
+                verySmallBodyStyle = TextStyle(fontSize = 22.sp),
+            ),
+            _unscaledStyles = TextStyles(
+                titleStyle = TextStyle(fontSize = 36.sp),
+                buttonTextStyle = TextStyle(fontSize = 22.sp),
+                largeBodyStyle = TextStyle(fontSize = 22.sp),
+                mediumBodyStyle = TextStyle(fontSize = 12.sp),
+                smallBodyStyle = TextStyle(fontSize = 12.sp),
+                verySmallBodyStyle = TextStyle(fontSize = 12.sp)
+            ),
+            progressBarTheme = ProgressBarTheme(
+                border = Color.White,
+                backgroundColor = Color(0, 0, 0),
+                filledColor = Color(255, 127, 0)
+            ),
+            buttonTheme = ButtonTheme(
+                containerColor = Color(0, 0, 0),
+                disabledContainerColor = Color(0, 0, 0),
+                contentColor = Color(255, 255, 255),
+                disabledContentColor = Color(128, 128, 128),
+                borderColor = Color(255, 255, 255),
+                disabledBorderColor = Color(160, 160, 160),
+            ),
+            switchButtonTheme = SwitchButtonTheme(
+                containerColor = Color(0, 0, 0),
+                disabledContainerColor = Color(0, 0, 0),
+                borderColor = Color(255, 255, 255),
+                disabledBorderColor = Color(255, 255, 255),
+                offSelectedContainerColor = Color(0, 0, 0),
+                offUnselectedContainerColor = Color(0, 0, 0),
+                offSelectedTextColor = Color(255, 255, 255),
+                offUnselectedTextColor = Color(128, 128, 128),
+                onSelectedContainerColor = Color(0, 0, 0),
+                onUnselectedContainerColor = Color(0, 0, 0),
+                onSelectedTextColor = Color(255, 255, 255),
+                onUnselectedTextColor = Color(128, 128, 128)
+            ),
+            backgroundTheme = ContainerTheme(
+                borderColor = Color.Transparent,
+                containerColor = Color(0, 0, 0),
+                contentColor = Color(255, 255, 255),
+                shouldDropShadow = false
+            ),
+            containerTheme = ContainerTheme(
+                borderColor = Color(255, 255, 255),
+                containerColor = Color(0, 0, 0),
+                contentColor = Color(255, 255, 255),
+                shouldDropShadow = false
+            ),
+            secondaryContainerTheme = ContainerTheme(
+                borderColor = Color(255, 255, 255),
+                containerColor = Color(0, 0, 0),
+                contentColor = Color(255, 255, 255),
+                shouldDropShadow = false
+            ),
+            successColor = Color(255, 255, 255),
+            dangerColor = Color(255, 255, 255),
             tabSelectedColor = Color(8, 160, 69)
         )
     }
