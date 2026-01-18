@@ -1,7 +1,9 @@
 package com.davidlukash.cakebaker.ui
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
@@ -39,11 +41,13 @@ fun ItemAmountDisplay(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
         ) {
-            Text(
-                item.name.replace(" ", "\n"),
-                textAlign = TextAlign.Center,
-                style = if (item.name.contains(" ")) theme.scaledStyles.verySmallBodyStyle else theme.scaledStyles.smallBodyStyle,
-            )
+            Column(modifier = Modifier.height(theme.scaledStyles.verySmallBodyStyle.fontSize.value.dp * 2)) {
+                Text(
+                    item.name.replace(" ", "\n"),
+                    textAlign = TextAlign.Center,
+                    style = if (item.name.contains(" ")) theme.scaledStyles.verySmallBodyStyle else theme.scaledStyles.smallBodyStyle,
+                )
+            }
             Column(
                 modifier = Modifier.height(96.dp),
                 verticalArrangement = Arrangement.Center
