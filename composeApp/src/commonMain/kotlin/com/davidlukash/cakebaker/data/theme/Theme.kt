@@ -76,6 +76,7 @@ data class Theme(
     val secondaryContainerTheme: ContainerTheme,
     val successColor: Color,
     val dangerColor: Color,
+    val tabSelectedColor: Color,
 ) {
 
     fun nameToImage(name: String): ImageData {
@@ -91,7 +92,6 @@ data class Theme(
         get() = convertStyles(_unscaledStyles, font)
 
     companion object {
-        //Do not use this, use getDefaultTheme instead
         val default = Theme(
             nameToImageMap = mapOf(
                 "Butter" to ImageData(resource = Res.drawable.butter),
@@ -176,7 +176,8 @@ data class Theme(
                 contentColor = Color(255, 255, 255),
             ),
             successColor = Color(58, 158, 0),
-            dangerColor = Color(255, 0, 0)
+            dangerColor = Color(255, 0, 0),
+            tabSelectedColor = Color(8, 160, 69)
         )
     }
 }

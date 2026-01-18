@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,7 +36,13 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun BottomBar(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit, currentPage: String, setCurrentPage: (String) -> Unit) {
+fun BottomBar(
+    theme: Theme,
+    uiState: UIState,
+    navigateWithFade: (Screen) -> Unit,
+    currentPage: String,
+    setCurrentPage: (String) -> Unit
+) {
     val upgrades = uiState.upgrades
     val pages = upgrades.map { it.pageName }.distinct()
     LaunchedEffect(pages) {
@@ -77,7 +84,9 @@ fun BottomBar(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit
                                 textAlign = TextAlign.Center,
                                 style = theme.scaledStyles.smallBodyStyle,
                                 fontWeight = if (page == currentPage) FontWeight.Bold else FontWeight.Normal,
-                                color = if (page == currentPage) theme.buttonTheme.containerColor else Color.Black,
+                                color = if (page == currentPage)
+                                    theme.tabSelectedColor
+                                else LocalContentColor.current,
                             )
                         }
                     }
