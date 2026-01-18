@@ -33,7 +33,7 @@ class SaveFileViewModel(
                     emit(emptyList())
                 }
             }
-            delay(50)
+            delay(500)
 
         }
     }
