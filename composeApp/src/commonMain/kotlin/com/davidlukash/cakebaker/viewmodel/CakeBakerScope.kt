@@ -1,6 +1,6 @@
 package com.davidlukash.cakebaker.viewmodel
 
-import com.davidlukash.cakebaker.data.Item
+import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.Object

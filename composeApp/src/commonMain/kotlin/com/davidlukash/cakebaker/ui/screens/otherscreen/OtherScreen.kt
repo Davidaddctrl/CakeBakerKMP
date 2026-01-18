@@ -49,7 +49,7 @@ import cakebaker.composeapp.generated.resources.ktx_serialization_license
 import cakebaker.composeapp.generated.resources.material_design_icons_license
 import cakebaker.composeapp.generated.resources.mpl_license
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.LargeThemedButton
+import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided

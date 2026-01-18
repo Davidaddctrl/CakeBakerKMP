@@ -20,16 +20,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.data.Order
-import com.davidlukash.cakebaker.data.Save
+import com.davidlukash.cakebaker.data.order.Order
+import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.secondsToString
 import com.davidlukash.cakebaker.toEngNotation
 
 import com.davidlukash.cakebaker.ui.ProgressBar
-import com.davidlukash.cakebaker.ui.SmallThemedButton
-import com.davidlukash.cakebaker.ui.SecondaryContainer
+import com.davidlukash.cakebaker.ui.input.SmallThemedButton
+import com.davidlukash.cakebaker.ui.container.SecondaryContainer
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

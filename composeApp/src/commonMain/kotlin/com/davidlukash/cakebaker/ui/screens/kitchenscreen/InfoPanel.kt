@@ -28,13 +28,13 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.data.Save
+import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
-import com.davidlukash.cakebaker.ui.Container
+import com.davidlukash.cakebaker.ui.container.Container
 import com.davidlukash.cakebaker.ui.ResourceImage
-import com.davidlukash.cakebaker.ui.SwitchButton
+import com.davidlukash.cakebaker.ui.input.SwitchButton
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

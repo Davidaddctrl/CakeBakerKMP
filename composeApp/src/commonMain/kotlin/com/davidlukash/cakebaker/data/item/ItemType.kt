@@ -1,4 +1,4 @@
-package com.davidlukash.cakebaker.data
+package com.davidlukash.cakebaker.data.item
 
 import kotlinx.serialization.Serializable
 

@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.data.Order
+import com.davidlukash.cakebaker.data.order.Order
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.secondsToString
-import com.davidlukash.cakebaker.ui.Container
+import com.davidlukash.cakebaker.ui.container.Container
 
 @Composable
 fun RowScope.OrdersPanel(theme: Theme, uiState: UIState, completeOrder: (Order) -> Unit) {

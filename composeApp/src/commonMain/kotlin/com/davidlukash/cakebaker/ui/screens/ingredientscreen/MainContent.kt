@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -20,7 +18,7 @@ import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.ui.BuyableItemDisplay
-import com.davidlukash.cakebaker.ui.HorizontalScrollBar
+import com.davidlukash.cakebaker.ui.input.HorizontalScrollBar
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable

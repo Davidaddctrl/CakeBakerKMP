@@ -1,4 +1,7 @@
-package com.davidlukash.cakebaker.data
+package com.davidlukash.cakebaker.repository
+
+import com.davidlukash.cakebaker.data.save.Save
+import com.davidlukash.cakebaker.data.save.SaveFile
 
 class MemorySavesRepository(
     val baseRepository: SavesRepository

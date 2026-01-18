@@ -2,9 +2,9 @@ package com.davidlukash.cakebaker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.davidlukash.cakebaker.data.Save
-import com.davidlukash.cakebaker.data.SaveFile
-import com.davidlukash.cakebaker.data.SavesRepository
+import com.davidlukash.cakebaker.data.save.Save
+import com.davidlukash.cakebaker.data.save.SaveFile
+import com.davidlukash.cakebaker.repository.SavesRepository
 import com.davidlukash.cakebaker.withErrorHandling
 import com.davidlukash.cakebaker.withErrorHandlingAsync
 import kotlinx.coroutines.delay

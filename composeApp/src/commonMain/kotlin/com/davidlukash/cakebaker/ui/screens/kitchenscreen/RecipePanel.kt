@@ -32,7 +32,7 @@ import cakebaker.composeapp.generated.resources.close
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
-import com.davidlukash.cakebaker.ui.Container
+import com.davidlukash.cakebaker.ui.container.Container
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.resources.painterResource

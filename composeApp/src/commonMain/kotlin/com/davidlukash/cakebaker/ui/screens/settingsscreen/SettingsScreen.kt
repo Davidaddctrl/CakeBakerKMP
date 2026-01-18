@@ -15,8 +15,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.Background
-import com.davidlukash.cakebaker.ui.SwitchButton
+import com.davidlukash.cakebaker.ui.container.Background
+import com.davidlukash.cakebaker.ui.input.SwitchButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

@@ -1,4 +1,4 @@
-package com.davidlukash.cakebaker.data
+package com.davidlukash.cakebaker.data.order
 
 import com.davidlukash.cakebaker.data.serializers.BigDecimalSerializer
 import com.ionspin.kotlin.bignum.decimal.BigDecimal

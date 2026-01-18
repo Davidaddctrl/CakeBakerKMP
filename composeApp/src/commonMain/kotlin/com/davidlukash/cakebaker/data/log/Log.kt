@@ -1,6 +1,5 @@
-package com.davidlukash.cakebaker.data
+package com.davidlukash.cakebaker.data.log
 
-import androidx.compose.ui.graphics.Color
 import com.davidlukash.cakebaker.currentLocalTime
 import kotlinx.datetime.LocalTime
 import kotlin.time.ExperimentalTime

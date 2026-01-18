@@ -7,8 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import com.davidlukash.cakebaker.data.Save
-import com.davidlukash.cakebaker.data.SaveFile
+import com.davidlukash.cakebaker.data.save.Save
+import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.navigation.Screen
 

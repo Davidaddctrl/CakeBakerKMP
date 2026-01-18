@@ -1,4 +1,4 @@
-package com.davidlukash.cakebaker.ui
+package com.davidlukash.cakebaker.ui.input
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.border

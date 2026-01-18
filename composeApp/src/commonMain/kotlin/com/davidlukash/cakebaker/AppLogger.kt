@@ -1,7 +1,7 @@
 package com.davidlukash.cakebaker
 
 import com.davidlukash.cakebaker.data.ConsoleType
-import com.davidlukash.cakebaker.data.Log
+import com.davidlukash.cakebaker.data.log.Log
 import kotlinx.coroutines.flow.StateFlow
 
 interface AppLogger {

@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.GameDialog
-import com.davidlukash.cakebaker.ui.SmallThemedButton
-import com.davidlukash.cakebaker.ui.ThemedField
+import com.davidlukash.cakebaker.ui.input.SmallThemedButton
+import com.davidlukash.cakebaker.ui.input.ThemedField
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable

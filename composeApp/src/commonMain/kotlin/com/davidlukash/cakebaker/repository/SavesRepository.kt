@@ -1,4 +1,7 @@
-package com.davidlukash.cakebaker.data
+package com.davidlukash.cakebaker.repository
+
+import com.davidlukash.cakebaker.data.save.Save
+import com.davidlukash.cakebaker.data.save.SaveFile
 
 abstract class SavesRepository {
     abstract fun listSaves(): List<SaveFile>
@@ -9,6 +12,5 @@ abstract class SavesRepository {
 
     abstract fun exportSave(file: SaveFile): Boolean
 
-    //This should return a Save, and a String? which is the name or null
     abstract fun importSave(): Save?
 }

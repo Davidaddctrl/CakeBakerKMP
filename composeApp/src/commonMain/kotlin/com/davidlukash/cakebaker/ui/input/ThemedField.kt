@@ -1,4 +1,4 @@
-package com.davidlukash.cakebaker.ui
+package com.davidlukash.cakebaker.ui.input
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box

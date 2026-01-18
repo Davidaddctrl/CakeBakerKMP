@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import com.davidlukash.cakebaker.data.ConsoleType
-import com.davidlukash.cakebaker.data.Log
-import com.davidlukash.cakebaker.data.LogType
+import com.davidlukash.cakebaker.data.log.Log
+import com.davidlukash.cakebaker.data.log.LogType
 import com.davidlukash.cakebaker.viewmodel.CakeBakerEngine
 import com.davidlukash.cakebaker.viewmodel.DataViewModel
 import com.davidlukash.jsonmath.engine.basic.toTraceString

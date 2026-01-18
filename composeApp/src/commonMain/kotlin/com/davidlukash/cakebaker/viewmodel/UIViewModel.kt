@@ -13,11 +13,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidlukash.cakebaker.AppLogger
 import com.davidlukash.cakebaker.data.ConsoleType
-import com.davidlukash.cakebaker.data.Log
+import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.Popup
-import com.davidlukash.cakebaker.data.Save
+import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.SmallThemedButton
+import com.davidlukash.cakebaker.ui.input.SmallThemedButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

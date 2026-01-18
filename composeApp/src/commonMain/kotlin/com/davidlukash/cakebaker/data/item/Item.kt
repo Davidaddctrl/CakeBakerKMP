@@ -1,4 +1,4 @@
-package com.davidlukash.cakebaker.data
+package com.davidlukash.cakebaker.data.item
 
 import com.davidlukash.cakebaker.data.serializers.BigDecimalSerializer
 import com.davidlukash.cakebaker.roundTo1dp

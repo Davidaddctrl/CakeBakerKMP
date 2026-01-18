@@ -1,6 +1,5 @@
-package com.davidlukash.cakebaker.data
+package com.davidlukash.cakebaker.data.order
 
-import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import kotlinx.serialization.Serializable
 
 @Serializable
