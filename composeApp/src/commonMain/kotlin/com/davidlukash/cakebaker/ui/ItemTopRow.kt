@@ -5,12 +5,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.Save
 import com.davidlukash.cakebaker.data.UIState
@@ -35,14 +43,14 @@ fun ItemTopRow(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigD
             verticalAlignment = Alignment.Bottom,
             scrollState = scrollState,
             coroutineScope = coroutineScope
-        ) { shouldScroll ->
+        ) {
             items.forEach { item ->
                 key(item.name) {
                     ItemAmountDisplay(
                         theme = theme,
                         item = item,
-                        modifier = if (shouldScroll) Modifier else Modifier.weight(1f),
                         quantityChange = quantityChanges[item.name] ?: BigDecimal.ZERO,
+                        modifier = Modifier.widthIn(min = 128.dp)
                     )
                 }
             }

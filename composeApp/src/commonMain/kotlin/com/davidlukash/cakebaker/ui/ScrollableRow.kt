@@ -26,36 +26,13 @@ fun ScrollableRow(
     modifier: Modifier = Modifier,
     scrollState: ScrollState = rememberScrollState(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    content: @Composable RowScope.(Boolean) -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
-    var availableWidth by remember { mutableStateOf(0) }
-    var measuredWidth by remember { mutableStateOf(0) }
-    val shouldScroll = measuredWidth > availableWidth
-    MeasureLayout(
-        onMeasured = {
-            measuredWidth = it.width
-        }
-    ) {
-        Row(
-            modifier = Modifier,
-            horizontalArrangement = horizontalArrangement,
-            verticalAlignment = verticalAlignment,
-        ) {
-            content(true)
-        }
-    }
-
     Row(
-        modifier = modifier.onGloballyPositioned {
-            availableWidth = it.size.width
-        }.then(
-            if (shouldScroll)
-                Modifier.horizontalScroll(scrollState).horizontalRowScroll(coroutineScope, scrollState)
-            else Modifier
-        ),
+        modifier = modifier.horizontalScroll(scrollState).horizontalRowScroll(coroutineScope, scrollState),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment
     ) {
-        content(shouldScroll)
+        content()
     }
 }
