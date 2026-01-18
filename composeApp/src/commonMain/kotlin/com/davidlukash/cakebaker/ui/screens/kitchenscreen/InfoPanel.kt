@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,14 +41,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit,
               setAutoOrderCompleteEnabled: (Boolean) -> Unit, cutOutSize: Size) {
-    val satisfactionLevel = uiState.getSatisfactionLevel()
+    val satisfactionLevel by derivedStateOf { uiState.getSatisfactionLevel() }
     val satisfaction = uiState.customerSatisfaction
     val autoOvenEnabled = uiState.autoOvenEnabled
     val autoOrderCompleteEnabled = uiState.autoOrderCompleteEnabled
     val currentCakeTier = uiState.currentCakeTier
-    val cakesSalePrices = uiState.getCakesSalesPrices()
-    val autoOven = uiState.getAutoOven()
-    val autoOrderComplete = uiState.getAutoOrderComplete()
+    val cakesSalePrices by derivedStateOf { uiState.getCakesSalesPrices() }
+    val autoOven by derivedStateOf { uiState.getAutoOven() }
+    val autoOrderComplete by derivedStateOf { uiState.getAutoOrderComplete() }
     Container(
         theme = theme,
         modifier = Modifier.fillMaxWidth(),
@@ -122,7 +123,7 @@ fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> U
                     value = autoOvenEnabled,
                     onText = "On",
                     offText = "Off",
-                    enabled = autoOven,
+                    enabled = autoOven == true,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     setAutoOvenEnabled(it)
@@ -142,7 +143,7 @@ fun InfoPanel(theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> U
                     value = autoOrderCompleteEnabled,
                     onText = "On",
                     offText = "Off",
-                    enabled = autoOrderComplete,
+                    enabled = autoOrderComplete == true,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     setAutoOrderCompleteEnabled(it)

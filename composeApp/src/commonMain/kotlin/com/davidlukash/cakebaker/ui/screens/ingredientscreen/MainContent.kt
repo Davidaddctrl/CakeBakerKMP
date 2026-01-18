@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,8 +30,8 @@ fun BoxScope.MainContent(
     buyIngredient: (String) -> Unit,
     setQuantityChanges: (Map<String, BigDecimal>) -> Unit
 ) {
-    val ingredients = uiState.getIngredients()
-    val money = uiState.getMoneyItem()
+    val ingredients by derivedStateOf { uiState.getIngredients() }
+    val money by derivedStateOf { uiState.getMoneyItem() }
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     Column(

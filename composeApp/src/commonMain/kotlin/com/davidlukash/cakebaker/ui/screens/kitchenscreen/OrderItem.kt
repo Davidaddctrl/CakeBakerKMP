@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,8 +35,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: Order) {
-    val cakes = uiState.getCakes()
-    val cake = cakes[order.cakeTier]
+    val cakes by derivedStateOf { uiState.getCakes() }
+    val cake by derivedStateOf { cakes[order.cakeTier] }
     SecondaryContainer(
         theme = theme,
         modifier = Modifier.fillMaxWidth()
