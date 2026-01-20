@@ -43,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -87,6 +88,7 @@ import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.davidlukash.jsonmath.engine.normal.Scope
 import com.davidlukash.jsonmath.engine.normal.ScopeType
 import com.davidlukash.jsonmath.engine.normal.VariableDescriptor
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.roundToInt
@@ -430,17 +432,25 @@ fun VariableViewContent(
     appLogger: AppLogger,
     modifier: Modifier = Modifier,
 ) {
+    val lazyListState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
     var searchText by remember { mutableStateOf("") }
     val filteredDescriptorNames by derivedStateOf {
         if (searchText.isBlank()) return@derivedStateOf descriptorNames
         val tokens = searchText.split("/").filter { it.isNotBlank() }.map { it.trim(' ') }
+        (descriptorNames.filter { descriptorName -> tokens.any { it == descriptorName } } +
         descriptorNames.filter { descriptorName ->
             tokens.all {
                 descriptorName.contains(it, ignoreCase = true)
             }
-        }
+        }).distinct()
     }
     var key by remember { mutableStateOf(0) }
+    LaunchedEffect(searchText) {
+        coroutineScope.launch {
+            lazyListState.scrollToItem(0)
+        }
+    }
     Column(
         modifier = modifier.background(color = background, shape = RoundedCornerShape(8.dp))
             .padding(16.dp),
@@ -479,14 +489,15 @@ fun VariableViewContent(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
+                state = lazyListState
             ) {
                 items(filteredDescriptorNames, key = { it }) { descriptorName ->
-                    fun read(): String {
-                        val result = getDescriptor(descriptorName).get?.invoke() ?: return "Unavailable"
-                        return json.encodeToString(result)
+                    var value by remember {
+                        mutableStateOf(
+                            getDescriptor(descriptorName).get?.invoke()
+                                ?.let { json.encodeToString(it) } ?: "Not Readable"
+                        )
                     }
-
-                    var value by remember { mutableStateOf(read()) }
                     Column(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -498,16 +509,11 @@ fun VariableViewContent(
                             InputField(
                                 input = value,
                                 enabled = getDescriptor(descriptorName).set != null,
-                                modifier = Modifier.heightIn(96.dp, 512.dp).weight(1f)
+                                modifier = Modifier.heightIn(48.dp, 512.dp).weight(1f)
                             ) { value = it }
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp),
                             ) {
-                                if (getDescriptor(descriptorName).get != null)
-                                    InputButton(
-                                        onClick = { value = read() },
-                                        modifier = Modifier.width(96.dp)
-                                    ) { Text("Read") }
                                 if (getDescriptor(descriptorName).set != null)
                                     InputButton(
                                         onClick = {
