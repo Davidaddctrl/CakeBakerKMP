@@ -16,7 +16,7 @@ class CakeBakerScope(
     val localVariables = mutableMapOf<String, Object>()
 
     fun generateUpgradeDescriptors(): List<VariableDescriptor> {
-        return dataViewModel.upgradesFlow.value.flatMap { upgrade ->
+        return dataViewModel.upgrades.value.flatMap { upgrade ->
             val directDescriptors = upgrade.toObject().asDictionary()!!.flatMap { (key, value) ->
                 val keyString = key.asString()!!
                 listOf(
@@ -91,12 +91,12 @@ class CakeBakerScope(
                 )
             }
         ) {
-            createObject(dataViewModel.upgradesFlow.value.map { it.toObject() })
+            createObject(dataViewModel.upgrades.value.map { it.toObject() })
         }
     }
 
     fun generateItemDescriptors(): List<VariableDescriptor> {
-        return dataViewModel.allItemsFlow.value.flatMap { item ->
+        return dataViewModel.items.value.flatMap { item ->
             val directDescriptors = item.toObject().asDictionary()!!.map { (key, value) ->
                 val keyString = key.asString()!!
                 VariableDescriptor(
@@ -168,7 +168,7 @@ class CakeBakerScope(
                 )
             }
         ) {
-            createObject(dataViewModel.allItemsFlow.value.map { it.toObject() })
+            createObject(dataViewModel.items.value.map { it.toObject() })
         }
     }
 
@@ -185,7 +185,7 @@ class CakeBakerScope(
                 )
             }
         ) {
-            createObject(dataViewModel.ordersList.value.map { it.toObject() })
+            createObject(dataViewModel.orders.value.map { it.toObject() })
         })
     }
 
@@ -227,7 +227,7 @@ class CakeBakerScope(
                     parts.getOrNull(1) ?: throw createVariableNameInvalidException(name) // eg. upgrades
                 when (second) {
                     "upgrades" -> {
-                        val upgrades = dataViewModel.upgradesFlow.value
+                        val upgrades = dataViewModel.upgrades.value
                         val third = parts.getOrNull(2) ?: throw createVariableNameInvalidException(
                             name,
                         ) //eg. Faster Oven

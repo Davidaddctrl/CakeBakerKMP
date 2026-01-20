@@ -51,248 +51,10 @@ class DataViewModel(
 
     var loopJob: Job? = null
 
-    init {
-        startLoop()
-    }
-
-    private val _allItems = MutableStateFlow(
-        listOf<Item>()
-    )
-
-    val allItemsFlow = _allItems.asStateFlow()
-
-    val ingredientsFlow = allItemsFlow.map { items ->
-        items.filter { it.type == ItemType.INGREDIENT }
-    }
-
-    val ingredients: List<Item>
-        get() {
-            return _allItems.value.filter { it.type == ItemType.INGREDIENT }
-        }
-    val cakes: Map<Int, Item>
-        get() {
-            return _allItems.value.filter { it.type == ItemType.CAKE && it.cakeTier != null }
-                .associateBy { it.cakeTier!! }
-        }
-
-    val cakesFlow = allItemsFlow.map { items ->
-        items.filter { it.type == ItemType.CAKE && it.cakeTier != null }.associateBy { it.cakeTier!! }
-    }
-
-    val cakePricesFlow = combine(cakesFlow, ingredientsFlow) { cakes: Map<Int, Item>, ingredients: List<Item> ->
-        cakes.map { (tier, cake) ->
-            tier to calculateCakePrice(cake, ingredients)
-        }.toMap()
-    }
-
-    val itemMoney: Item
-        get() {
-            return _allItems.value.find { it.name == "Money" } ?: Item("Money", ItemType.CURRENCY, BigDecimal.ZERO)
-        }
-
-    val itemMoneyFlow = allItemsFlow.map { items ->
-        items.find { it.name == "Money" } ?: Item("Money", ItemType.CURRENCY, BigDecimal.ZERO)
-    }
-
-    private val _currentCakeTier = MutableStateFlow(1)
-    val currentCakeTier = _currentCakeTier.asStateFlow()
-
-    val currentCake = combine(currentCakeTier, cakesFlow) { currentCakeTier: Int, cakes: Map<Int, Item> ->
-        cakes[currentCakeTier]
-    }
-
-    private val _upgradesFlow = MutableStateFlow(
-        listOf<Upgrade>()
-    )
-
-    val upgradesFlow = _upgradesFlow.asStateFlow()
-
-    private val _ovenProgress = MutableStateFlow(0.0)
-    private val _ovenRunning = MutableStateFlow(false)
-
-    val ovenProgress = _ovenProgress.asStateFlow()
-    val ovenRunning = _ovenRunning.asStateFlow()
-
-    val canBakeFlow = ingredientsFlow.combine(currentCakeTier) { ingredients, currentCakeTier ->
-        ingredients.forEach { ingredient ->
-            if (ingredient.amount < (ingredient.cakePrices?.get(currentCakeTier) ?: 0)) return@combine false
-        }
-        true
-    }
-
-    fun canBake(tier: Int): Boolean {
-        ingredients.forEach { ingredient ->
-            if (ingredient.amount < (ingredient.cakePrices?.get(tier) ?: 0)) return false
-        }
-        return true
-    }
-
-    private val _autoOvenEnabled = MutableStateFlow(false)
-    val autoOvenEnabled = _autoOvenEnabled.asStateFlow()
-
-    private val _autoOrderCompleteEnabled = MutableStateFlow(false)
-    val autoOrderCompleteEnabled = _autoOrderCompleteEnabled.asStateFlow()
-
-    private var tempCakeTier: Int = 1
-
-    //1 to 100
-    private val _customerSatisfaction = MutableStateFlow(80)
-    val customerSatisfaction = _customerSatisfaction.asStateFlow()
-
-
-    val orderFactory = OrderFactory(this)
-
-    private val _orderCakeSettings = MutableStateFlow(
-        mapOf<Int, OrderCakeSettings>()
-    )
-
-    val orderCakeSettings = _orderCakeSettings.asStateFlow()
-
-    private val _ordersList = MutableStateFlow(listOf<Order>())
-    val ordersList = _ordersList.asStateFlow()
-
     var random = Random(Random.nextLong())
 
-
-    fun updateOrderSettings(tier: Int, settings: OrderCakeSettings) {
-        viewModelScope.launch {
-            _orderCakeSettings.emit(
-                _orderCakeSettings.value + (tier to settings)
-            )
-        }
-    }
-
-    fun setAutoOvenEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            _autoOvenEnabled.emit(enabled)
-        }
-    }
-
-    fun setAutoOrderCompleteEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            _autoOrderCompleteEnabled.emit(enabled)
-        }
-    }
-
-    fun setCurrentCake(tier: Int) {
-        viewModelScope.launch {
-            _currentCakeTier.emit(tier)
-        }
-    }
-
-    fun updateItem(item: Item) {
-        viewModelScope.launch {
-            _allItems.emit(
-                _allItems.value.map {
-                    if (it.name == item.name) item else it
-                }
-            )
-        }
-    }
-
-    fun setItems(items: List<Item>) {
-        viewModelScope.launch {
-            _allItems.emit(items)
-        }
-    }
-
-    fun updateUpgrade(upgrade: Upgrade) {
-        viewModelScope.launch {
-            _upgradesFlow.emit(
-                _upgradesFlow.value.map {
-                    if (it.name == upgrade.name) upgrade else it
-                }
-            )
-        }
-    }
-
-    fun setUpgrades(upgrades: List<Upgrade>) {
-        viewModelScope.launch {
-            _upgradesFlow.emit(upgrades)
-        }
-    }
-
-    fun calculateCakePrice(tier: Int): BigDecimal {
-        val cake = cakes[tier]
-            ?: throw IllegalArgumentException("Cake with tier $tier does not exist")
-        return calculateCakePrice(cake, ingredients)
-    }
-
-    fun calculateCakePrice(cake: Item, ingredients: List<Item>): BigDecimal {
-        var cakePrice = cake.salePrice ?: BigDecimal.ZERO
-        ingredients.forEach { ingredient ->
-            cakePrice += ingredient.cakePriceAccountability?.get(cake.cakeTier ?: 1) ?: BigDecimal.ZERO
-        }
-        return cakePrice
-    }
-
-    fun bake() {
-        viewModelScope.launch {
-            tempCakeTier = currentCakeTier.value
-            ingredients.forEach { item ->
-                updateItem(
-                    item.copy(
-                        amount = item.amount - (item.cakePrices?.get(tempCakeTier) ?: BigDecimal.ZERO)
-                    )
-                )
-            }
-            _ovenRunning.emit(true)
-        }
-    }
-
-    fun buyIngredient(name: String) {
-        val item = ingredients.find { it.name == name }
-            ?: throw IllegalArgumentException("Ingredient $name does not exist")
-        var tempItem = item
-        if (itemMoney.amount < (item.price ?: BigDecimal.ZERO)) {
-            uiViewModel.addTextPopup("You do not have enough money to buy $name")
-            return
-        }
-        updateItem(
-            itemMoney.copy(
-                amount = itemMoney.amount - (item.price ?: BigDecimal.ZERO)
-            )
-        )
-        val oldPrice = tempItem.price ?: BigDecimal.ZERO
-        val increment = tempItem.increment ?: BigDecimal.ZERO
-        val total = (tempItem.total ?: BigDecimal.ZERO) + increment
-        val increaseSlope = (tempItem.increaseSlope ?: BigDecimal.ZERO) + BigDecimal.ONE
-        val fastPriceGrowth = tempItem.fastPriceGrowth ?: false
-        val cakePriceAccountability = (tempItem.cakePriceAccountability ?: emptyMap()).toMutableMap()
-        tempItem = tempItem.copy(
-            price = oldPrice.multiply(
-                increaseSlope,
-            ).roundSignificand(globalDecimalMode) + if (fastPriceGrowth) total else BigDecimal.ZERO,
-            total = total,
-            amount = tempItem.amount + increment
-        )
-
-        val price = tempItem.price ?: BigDecimal.ZERO
-        val maxTier = cakePriceAccountability.keys.maxOrNull() ?: 1
-        val minTier = cakePriceAccountability.keys.minOrNull() ?: 1
-        val tiers = cakePriceAccountability.keys.size
-        val denominator = (tiers + 1).toBigDecimal()
-        //Low tier cakes get a smaller price accountabiliy than higher tier
-        val factors = (minTier..maxTier).associateWith { tier -> //1: 2/4 2: 3/4 3: 4/4
-            val numerator = (tier + 1).toBigDecimal()
-            numerator.divide(
-                denominator,
-                decimalMode = globalDecimalMode,
-            )
-        }
-        factors.forEach { (tier, factor) ->
-            val oldAccountability = cakePriceAccountability[tier] ?: BigDecimal.ZERO
-            val difference = ((price - oldPrice) / 2)
-            cakePriceAccountability[tier] = oldAccountability + factor.multiply(difference, globalDecimalMode)
-        }
-
-        tempItem = tempItem.copy(
-            cakePriceAccountability = cakePriceAccountability.toMap()
-        )
-
-        updateItem(
-            tempItem
-        )
+    init {
+        startLoop()
     }
 
     @OptIn(ExperimentalTime::class)
@@ -307,7 +69,9 @@ class DataViewModel(
                     val dt = newTime - time
                     time = newTime
                     tickOven(dt)
+                    tickOrderCounterCreate()
                     tickOrderCreate(dt)
+                    tickOrderCounterCreate()
                     tickOrder(dt)
                     tickAutoOven()
                     tickAutoOrder()
@@ -321,9 +85,17 @@ class DataViewModel(
         loopJob = null
     }
 
+    private val _ovenProgress = MutableStateFlow(0.0)
+    private val _ovenRunning = MutableStateFlow(false)
+
+    val ovenProgress = _ovenProgress.asStateFlow()
+    val ovenRunning = _ovenRunning.asStateFlow()
+
+    private var tempCakeTier: Int = 1
+
     suspend fun tickOven(dt: Long) {
         val ovenRunning = ovenRunning.value
-        val fasterOven = upgradesFlow.value.find { it.name == "Faster Oven" }
+        val fasterOven = upgrades.value.find { it.name == "Faster Oven" }
         val level = fasterOven?.level ?: 0
         if (ovenRunning) {
             val speed = 5000.0 - level.toDouble() * 100.0
@@ -342,19 +114,26 @@ class DataViewModel(
         }
     }
 
+    private val _autoOvenEnabled = MutableStateFlow(false)
+    val autoOvenEnabled = _autoOvenEnabled.asStateFlow()
+
     fun tickAutoOven() {
         val ovenRunning = ovenRunning.value
-        val autoOven = upgradesFlow.value.find { it.name == "Auto Oven" }?.level?.toBoolean() ?: false
+        val autoOven = upgrades.value.find { it.name == "Auto Oven" }?.level?.toBoolean() ?: false
         val autoOvenEnabled = autoOvenEnabled.value
         if (!ovenRunning && canBake(currentCakeTier.value) && autoOven && autoOvenEnabled) {
             bake()
         }
     }
-    
+
+    private val _autoOrderCompleteEnabled = MutableStateFlow(false)
+    val autoOrderCompleteEnabled = _autoOrderCompleteEnabled.asStateFlow()
+
     fun tickAutoOrder() {
-        val autoOrderComplete = upgradesFlow.value.find { it.name == "Auto Order Complete" }?.level?.toBoolean() ?: false
+        val autoOrderComplete =
+            upgrades.value.find { it.name == "Auto Order Complete" }?.level?.toBoolean() ?: false
         val autoOrderCompleteEnabled = autoOrderCompleteEnabled.value
-        val orders = ordersList.value
+        val orders = orders.value
         if (autoOrderComplete && autoOrderCompleteEnabled) {
             orders.forEach { order ->
                 val cake = cakes[order.cakeTier]
@@ -367,11 +146,56 @@ class DataViewModel(
         }
     }
 
+    private val _items = MutableStateFlow(
+        listOf<Item>()
+    )
+
+    val items = _items.asStateFlow()
+
+    val ingredients: List<Item>
+        get() {
+            return _items.value.filter { it.type == ItemType.INGREDIENT }
+        }
+    val cakes: Map<Int, Item>
+        get() {
+            return _items.value.filter { it.type == ItemType.CAKE && it.cakeTier != null }
+                .associateBy { it.cakeTier!! }
+        }
+
+    val money: Item
+        get() {
+            return _items.value.find { it.name == "Money" } ?: Item("Money", ItemType.CURRENCY, BigDecimal.ZERO)
+        }
+
+    private val _currentCakeTier = MutableStateFlow(1)
+    val currentCakeTier = _currentCakeTier.asStateFlow()
+
+    private val _upgrades = MutableStateFlow(
+        listOf<Upgrade>()
+    )
+
+    val upgrades = _upgrades.asStateFlow()
+
+    //1 to 100
+    private val _customerSatisfaction = MutableStateFlow(80)
+    val customerSatisfaction = _customerSatisfaction.asStateFlow()
+
+    private val _orderCakeSettings = MutableStateFlow(
+        mapOf<Int, OrderCakeSettings>()
+    )
+
+    val orderCakeSettings = _orderCakeSettings.asStateFlow()
+
+    private val _orders = MutableStateFlow(listOf<Order>())
+    val orders = _orders.asStateFlow()
+
     private val _orderCakeTimeCounters = MutableStateFlow(mapOf<Int, Double>())
 
     val nextOrderRemainingTime = _orderCakeTimeCounters.map { if (it.values.isEmpty()) null else it.values.min() }
 
-    suspend fun tickOrderCreate(dt: Long) {
+    val orderFactory = OrderFactory(this)
+
+    suspend fun tickOrderCounterCreate() {
         val nextTier = orderFactory.selectCakeTier(_orderCakeTimeCounters.value.keys.toList())
         nextTier?.let { nextTier ->
             val settings = orderCakeSettings.value[nextTier] ?: return@let
@@ -385,6 +209,9 @@ class DataViewModel(
             )
             _orderCakeTimeCounters.emit(_orderCakeTimeCounters.value + (nextTier to waitTime))
         }
+    }
+
+    suspend fun tickOrderCreate(dt: Long) {
         _orderCakeTimeCounters.emit(
             _orderCakeTimeCounters.value.mapNotNull { entry ->
                 val cakeTier = entry.key
@@ -398,8 +225,8 @@ class DataViewModel(
                         ?: throw IllegalArgumentException("Cake with tier $cakeTier does not exist")
                     if (uiViewModel.currentScreen.value != KitchenScreen)
                         uiViewModel.addTextPopup("New Order for ${order.amount} ${cake.name}")
-                    _ordersList.emit(
-                        _ordersList.value + order
+                    _orders.emit(
+                        _orders.value + order
                     )
                     return@mapNotNull null
                 }
@@ -410,8 +237,8 @@ class DataViewModel(
 
     suspend fun tickOrder(dt: Long) {
         val seconds = dt.toDouble() / 1000.0
-        _ordersList.emit(
-            _ordersList.value.mapNotNull {
+        _orders.emit(
+            _orders.value.mapNotNull {
                 val new = it.copy(
                     remainingTime = it.remainingTime - seconds
                 )
@@ -457,13 +284,13 @@ class DataViewModel(
             )
             updateItem(cake)
             updateItem(
-                itemMoney.copy(
-                    amount = itemMoney.amount + order.salePrice
+                money.copy(
+                    amount = money.amount + order.salePrice
                 )
             )
             viewModelScope.launch {
-                _ordersList.emit(
-                    _ordersList.value.filter { it.id != order.id }
+                _orders.emit(
+                    _orders.value.filter { it.id != order.id }
                 )
                 _customerSatisfaction.emit(
                     minOf(100, _customerSatisfaction.value + modifier * order.amount)
@@ -474,8 +301,156 @@ class DataViewModel(
 
     fun setOrders(orders: List<Order>) {
         viewModelScope.launch {
-            _ordersList.emit(orders)
+            _orders.emit(orders)
         }
+    }
+
+    fun canBake(tier: Int): Boolean {
+        ingredients.forEach { ingredient ->
+            if (ingredient.amount < (ingredient.cakePrices?.get(tier) ?: 0)) return false
+        }
+        return true
+    }
+
+    fun updateOrderSettings(tier: Int, settings: OrderCakeSettings) {
+        viewModelScope.launch {
+            _orderCakeSettings.emit(
+                _orderCakeSettings.value + (tier to settings)
+            )
+        }
+    }
+
+    fun setAutoOvenEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            _autoOvenEnabled.emit(enabled)
+        }
+    }
+
+    fun setAutoOrderCompleteEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            _autoOrderCompleteEnabled.emit(enabled)
+        }
+    }
+
+    fun setCurrentCake(tier: Int) {
+        viewModelScope.launch {
+            _currentCakeTier.emit(tier)
+        }
+    }
+
+    fun updateItem(item: Item) {
+        viewModelScope.launch {
+            _items.emit(
+                _items.value.map {
+                    if (it.name == item.name) item else it
+                }
+            )
+        }
+    }
+
+    fun setItems(items: List<Item>) {
+        viewModelScope.launch {
+            _items.emit(items)
+        }
+    }
+
+    fun updateUpgrade(upgrade: Upgrade) {
+        viewModelScope.launch {
+            _upgrades.emit(
+                _upgrades.value.map {
+                    if (it.name == upgrade.name) upgrade else it
+                }
+            )
+        }
+    }
+
+    fun setUpgrades(upgrades: List<Upgrade>) {
+        viewModelScope.launch {
+            _upgrades.emit(upgrades)
+        }
+    }
+
+    fun calculateCakePrice(tier: Int): BigDecimal {
+        val cake = cakes[tier]
+            ?: throw IllegalArgumentException("Cake with tier $tier does not exist")
+        return calculateCakePrice(cake, ingredients)
+    }
+
+    fun calculateCakePrice(cake: Item, ingredients: List<Item>): BigDecimal {
+        var cakePrice = cake.salePrice ?: BigDecimal.ZERO
+        ingredients.forEach { ingredient ->
+            cakePrice += ingredient.cakePriceAccountability?.get(cake.cakeTier ?: 1) ?: BigDecimal.ZERO
+        }
+        return cakePrice
+    }
+
+    fun bake() {
+        viewModelScope.launch {
+            tempCakeTier = currentCakeTier.value
+            ingredients.forEach { item ->
+                updateItem(
+                    item.copy(
+                        amount = item.amount - (item.cakePrices?.get(tempCakeTier) ?: BigDecimal.ZERO)
+                    )
+                )
+            }
+            _ovenRunning.emit(true)
+        }
+    }
+
+    fun buyIngredient(name: String) {
+        val item = ingredients.find { it.name == name }
+            ?: throw IllegalArgumentException("Ingredient $name does not exist")
+        var tempItem = item
+        if (money.amount < (item.price ?: BigDecimal.ZERO)) {
+            uiViewModel.addTextPopup("You do not have enough money to buy $name")
+            return
+        }
+        updateItem(
+            money.copy(
+                amount = money.amount - (item.price ?: BigDecimal.ZERO)
+            )
+        )
+        val oldPrice = tempItem.price ?: BigDecimal.ZERO
+        val increment = tempItem.increment ?: BigDecimal.ZERO
+        val total = (tempItem.total ?: BigDecimal.ZERO) + increment
+        val increaseSlope = (tempItem.increaseSlope ?: BigDecimal.ZERO) + BigDecimal.ONE
+        val fastPriceGrowth = tempItem.fastPriceGrowth ?: false
+        val cakePriceAccountability = (tempItem.cakePriceAccountability ?: emptyMap()).toMutableMap()
+        tempItem = tempItem.copy(
+            price = oldPrice.multiply(
+                increaseSlope,
+            ).roundSignificand(globalDecimalMode) + if (fastPriceGrowth) total else BigDecimal.ZERO,
+            total = total,
+            amount = tempItem.amount + increment
+        )
+
+        val price = tempItem.price ?: BigDecimal.ZERO
+        val maxTier = cakePriceAccountability.keys.maxOrNull() ?: 1
+        val minTier = cakePriceAccountability.keys.minOrNull() ?: 1
+        val tiers = cakePriceAccountability.keys.size
+        val denominator = (tiers + 1).toBigDecimal()
+        //Low tier cakes get a smaller price accountabiliy than higher tier
+        val factors = (minTier..maxTier).associateWith { tier -> //1: 2/4 2: 3/4 3: 4/4
+            val numerator = (tier + 1).toBigDecimal()
+            numerator.divide(
+                denominator,
+                decimalMode = globalDecimalMode,
+            )
+        }
+        factors.forEach { (tier, factor) ->
+            val oldAccountability = cakePriceAccountability[tier] ?: BigDecimal.ZERO
+            val difference = ((price - oldPrice) / 2)
+            cakePriceAccountability[tier] = oldAccountability + factor.multiply(difference, globalDecimalMode)
+        }
+
+        tempItem = tempItem.copy(
+            cakePriceAccountability = cakePriceAccountability.toMap()
+        )
+
+        updateItem(
+            tempItem
+        )
     }
 
     @OptIn(ExperimentalUuidApi::class)
@@ -506,16 +481,17 @@ class DataViewModel(
 
     fun loadSave(save: Save) {
         viewModelScope.launch {
-            _allItems.emit(save.items)
+            _items.emit(save.items)
             _currentCakeTier.emit(save.currentCakeTier)
-            _upgradesFlow.emit(save.upgrades)
+            _upgrades.emit(save.upgrades)
             _ovenProgress.emit(save.ovenProgress)
             _ovenRunning.emit(save.ovenRunning)
             _autoOvenEnabled.emit(save.autoOvenEnabled)
+            _autoOrderCompleteEnabled.emit(save.autoOrderCompleteEnabled)
             tempCakeTier = save.tempCakeTier
             _customerSatisfaction.emit(save.customerSatisfaction)
             _orderCakeSettings.emit(save.orderCakeSettings)
-            _ordersList.emit(save.orders)
+            _orders.emit(save.orders)
             _orderCakeTimeCounters.emit(save.orderCakeTimeCounters)
         }
     }
@@ -523,9 +499,9 @@ class DataViewModel(
     fun createSave(): Save = Save(
         version = VERSION,
         versionCode = VERSIONCODE,
-        _allItems.value,
+        _items.value,
         _currentCakeTier.value,
-        _upgradesFlow.value,
+        _upgrades.value,
         _ovenProgress.value,
         _ovenRunning.value,
         _autoOvenEnabled.value,
@@ -533,21 +509,21 @@ class DataViewModel(
         tempCakeTier,
         _customerSatisfaction.value,
         _orderCakeSettings.value,
-        _ordersList.value,
+        _orders.value,
         _orderCakeTimeCounters.value
     )
 
     val uiStateFlow =
         combine(
-            allItemsFlow,
+            items,
             currentCakeTier,
-            upgradesFlow,
+            upgrades,
             ovenProgress,
             ovenRunning,
             autoOvenEnabled,
             autoOrderCompleteEnabled,
             customerSatisfaction,
-            ordersList,
+            orders,
             nextOrderRemainingTime,
         ) { list ->
             val items = list[0] as List<Item>
