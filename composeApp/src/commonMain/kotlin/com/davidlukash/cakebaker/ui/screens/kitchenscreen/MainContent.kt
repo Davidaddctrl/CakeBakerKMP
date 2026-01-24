@@ -40,6 +40,7 @@ import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.ui.navigation.UpgradeScreen
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.floor
 
@@ -53,11 +54,13 @@ fun MainContent(
     setAutoOrderCompleteEnabled: (Boolean) -> Unit,
     completeOrder: (Order) -> Unit,
     setCurrentCake: (Int) -> Unit,
+    ovenProgress: Double,
+    ovenRunning: Boolean,
+    nextOrderRemainingTime: Double?,
+    orders: List<Order>,
     innerPadding: PaddingValues
 ) {
-    val progress = uiState.ovenProgress
     val canBake = uiState.canBake
-    val ovenRunning = uiState.ovenRunning
     val fasterOvenLevel by derivedStateOf { uiState.getFasterOven() }
     val density = LocalDensity.current
     Row(
@@ -74,12 +77,12 @@ fun MainContent(
                 ProgressBar(
                     theme,
                     modifier = Modifier.width(296.dp),
-                    progress
+                    ovenProgress
                 )
                 val ovenTime = 5.0 - fasterOvenLevel / 10.0
                 if (ovenRunning)
                     Text(
-                        "${floor((1.0 - progress) * ovenTime * 10.0) / 10.0} seconds remaining",
+                        "${floor((1.0 - ovenProgress) * ovenTime * 10.0) / 10.0} seconds remaining",
                         style = theme.scaledStyles.verySmallBodyStyle,
                         color = theme.buttonTheme.contentColor
                     )
@@ -111,14 +114,15 @@ fun MainContent(
         Spacer(modifier = Modifier.width(8.dp))
         RecipePanel(theme, uiState, setCurrentCake)
         Spacer(modifier = Modifier.width(16.dp))
-        OrdersPanel(theme, uiState, completeOrder)
+        OrdersPanel(theme, uiState, completeOrder, nextOrderRemainingTime, orders)
         Spacer(modifier = Modifier.width(16.dp))
         Box(
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.BottomEnd
         ) {
             var buttonSize by remember { mutableStateOf(Size.Zero) }
-            InfoPanel(theme, uiState, setAutoOvenEnabled, setAutoOrderCompleteEnabled, buttonSize.copy(
+            InfoPanel(
+                theme, uiState, setAutoOvenEnabled, setAutoOrderCompleteEnabled, buttonSize.copy(
                 width = buttonSize.width + density.run { 8.dp.toPx() },
                 height = buttonSize.height + density.run { 8.dp.toPx() }
             ))
@@ -154,9 +158,12 @@ fun MainContentPreview() {
             animation = tween(5000, easing = LinearEasing),
         )
     )
+    val orderRemainingTime by infiniteTransition.animateFloat(
+        120f, 0f, animationSpec = infiniteRepeatable(
+            animation = tween(120000, easing = LinearEasing),
+        )
+    )
     val uiState = Save.state.copy(
-        ovenRunning = true,
-        ovenProgress = amount.toDouble(),
         customerSatisfaction = 50,
         upgrades = Save.default.upgrades.filter { it.name == "Auto Oven" || it.name == "Auto Order Complete" }.map {
             it.copy(level = 1)
@@ -176,7 +183,19 @@ fun MainContentPreview() {
             setAutoOrderCompleteEnabled = { autoOrderCompleteEnabled = it },
             completeOrder = { },
             setCurrentCake = {},
-            innerPadding = PaddingValues(16.dp)
+            innerPadding = PaddingValues(16.dp),
+            ovenRunning = true,
+            ovenProgress = amount.toDouble(),
+            nextOrderRemainingTime = 30.0,
+            orders = listOf(
+                Order(
+                    cakeTier = 1,
+                    amount = 1,
+                    salePrice = 1500.toBigDecimal(),
+                    remainingTime = orderRemainingTime.toDouble(),
+                    totalTime = 120.0,
+                )
+            ),
         )
     }
 }

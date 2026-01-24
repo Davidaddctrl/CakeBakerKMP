@@ -16,7 +16,11 @@ fun KitchenScreen(
     setAutoOvenEnabled: (Boolean) -> Unit,
     setAutoOrderCompleteEnabled: (Boolean) -> Unit,
     completeOrder: (Order) -> Unit,
-    setCurrentCake: (Int) -> Unit
+    setCurrentCake: (Int) -> Unit,
+    ovenProgress: Double,
+    ovenRunning: Boolean,
+    nextOrderRemainingTime: Double?,
+    orders: List<Order>,
 ) {
     Scaffold(
         topBar = {
@@ -33,6 +37,10 @@ fun KitchenScreen(
             setAutoOrderCompleteEnabled,
             completeOrder,
             setCurrentCake,
+            ovenProgress,
+            ovenRunning,
+            nextOrderRemainingTime,
+            orders,
             innerPadding
         )
     }

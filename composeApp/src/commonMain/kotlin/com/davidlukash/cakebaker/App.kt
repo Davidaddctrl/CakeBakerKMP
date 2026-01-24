@@ -60,6 +60,10 @@ fun App() {
         val theme by themeViewModel.theme.collectAsState()
         val internalShown by uiViewModel.internalShown.collectAsState()
         val variableShown by uiViewModel.variableShown.collectAsState()
+        val ovenProgress by dataViewModel.ovenProgress.collectAsState()
+        val ovenRunning by dataViewModel.ovenRunning.collectAsState()
+        val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = null)
+        val orders by dataViewModel.orders.collectAsState()
 
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)
@@ -164,7 +168,11 @@ fun App() {
                         },
                         buyUpgrade = { dataViewModel.buyUpgrade(it) },
                         setDebugConsole = { uiViewModel.setDebugConsole(it) },
-                        consoleType = debugConsole
+                        consoleType = debugConsole,
+                        ovenProgress = ovenProgress,
+                        ovenRunning = ovenRunning,
+                        nextOrderRemainingTime = nextOrderRemainingTime,
+                        orders = orders,
                     )
                 }
                 if (debugConsole == ConsoleType.POPUP) DebugPopup()

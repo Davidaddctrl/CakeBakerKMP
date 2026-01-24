@@ -11,13 +11,9 @@ data class UIState(
     val items: List<Item>,
     val currentCakeTier: Int,
     val upgrades: List<Upgrade>,
-    val ovenProgress: Double,
-    val ovenRunning: Boolean,
     val autoOvenEnabled: Boolean,
     val autoOrderCompleteEnabled: Boolean,
     val customerSatisfaction: Int,
-    val orders: List<Order>,
-    val nextOrderRemainingTime: Double?,
     val canBake: Boolean,
 ) {
     companion object {
@@ -25,13 +21,9 @@ data class UIState(
             items = listOf(),
             currentCakeTier = 1,
             upgrades = listOf(),
-            ovenProgress = 0.0,
-            ovenRunning = false,
             autoOvenEnabled = false,
             autoOrderCompleteEnabled = false,
             customerSatisfaction = 1,
-            orders = listOf(),
-            nextOrderRemainingTime = 0.0,
             canBake = false,
         )
     }

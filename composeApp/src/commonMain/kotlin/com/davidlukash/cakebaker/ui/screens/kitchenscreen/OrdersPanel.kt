@@ -23,10 +23,7 @@ import com.davidlukash.cakebaker.secondsToString
 import com.davidlukash.cakebaker.ui.container.Container
 
 @Composable
-fun RowScope.OrdersPanel(theme: Theme, uiState: UIState, completeOrder: (Order) -> Unit) {
-    val nextOrderRemainingTime = uiState.nextOrderRemainingTime
-    val orders = uiState.orders
-
+fun RowScope.OrdersPanel(theme: Theme, uiState: UIState, completeOrder: (Order) -> Unit, nextOrderRemainingTime: Double?, orders: List<Order>) {
     Container(
         theme = theme,
         modifier = Modifier.weight(1f).fillMaxWidth(),

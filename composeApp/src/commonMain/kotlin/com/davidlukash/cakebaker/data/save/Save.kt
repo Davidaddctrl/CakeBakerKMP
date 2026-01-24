@@ -662,13 +662,9 @@ data class Save(
             items = default.items,
             currentCakeTier = default.currentCakeTier,
             upgrades = default.upgrades,
-            ovenProgress = default.ovenProgress,
-            ovenRunning = default.ovenRunning,
             autoOvenEnabled = default.autoOvenEnabled,
             autoOrderCompleteEnabled = default.autoOrderCompleteEnabled,
             customerSatisfaction = default.customerSatisfaction,
-            orders = default.orders,
-            nextOrderRemainingTime = 0.0,
             canBake = false
         )
     }
