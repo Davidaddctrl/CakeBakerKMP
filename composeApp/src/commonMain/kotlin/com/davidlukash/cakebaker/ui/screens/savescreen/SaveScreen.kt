@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker.ui.screens.savescreen
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -7,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.data.theme.Theme
@@ -96,7 +98,8 @@ fun SaveScreen(
         },
         bottomBar = {
             BottomBar(theme, import = { importSave() }, create = { dialogType = SaveDialogType.CREATE }, navigateWithFade)
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
         MainContent(
             theme, saveFiles, exportSave,

@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.ui.screens.menuscreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -28,6 +29,7 @@ fun MenuScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
         topBar = {
             TopBar(theme)
         },
+        contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 32.dp),

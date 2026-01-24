@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.ui.screens.settingsscreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,7 +30,8 @@ fun SettingsScreen(theme: Theme, navigateWithFade: (Screen) -> Unit, setDebugCon
         },
         bottomBar = {
             BottomBar(theme, navigateWithFade)
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 32.dp),

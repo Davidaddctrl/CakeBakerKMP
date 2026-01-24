@@ -3,6 +3,7 @@ package com.davidlukash.cakebaker.ui.screens.otherscreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -134,7 +135,8 @@ fun OtherScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
         },
         bottomBar = {
             BottomBar(theme, navigateWithFade)
-        }
+        },
+        contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Adaptive(320.dp),

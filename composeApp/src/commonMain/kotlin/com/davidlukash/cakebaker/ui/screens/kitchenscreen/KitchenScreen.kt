@@ -1,8 +1,10 @@
 package com.davidlukash.cakebaker.ui.screens.kitchenscreen
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.order.Order
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
@@ -26,7 +28,8 @@ fun KitchenScreen(
         topBar = {
             TopBar(theme, uiState)
         },
-        containerColor = Color.Transparent
+        containerColor = Color.Transparent,
+        contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
         MainContent(
             theme,
