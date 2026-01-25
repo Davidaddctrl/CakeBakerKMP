@@ -67,7 +67,6 @@ import cakebaker.composeapp.generated.resources.Res
 import cakebaker.composeapp.generated.resources.add
 import cakebaker.composeapp.generated.resources.remove_drawable
 import com.davidlukash.cakebaker.App
-import com.davidlukash.cakebaker.AppLogger
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.log.LogType
 import com.davidlukash.cakebaker.repository.MemorySavesRepository
@@ -78,7 +77,7 @@ import com.davidlukash.cakebaker.verticalDragCursor
 import com.davidlukash.cakebaker.engine.CakeBakerScope
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
-import com.davidlukash.cakebaker.withErrorHandling
+import com.davidlukash.cakebaker.withResult
 import com.davidlukash.jsonmath.buildExpression
 import com.davidlukash.jsonmath.data.Expression
 import com.davidlukash.jsonmath.engine.basic.OriginNode
@@ -429,7 +428,6 @@ fun VariableViewContent(
     refresh: () -> Unit = {},
     getDescriptor: (String) -> VariableDescriptor,
     descriptorNames: List<String>,
-    appLogger: AppLogger,
     modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
@@ -517,7 +515,7 @@ fun VariableViewContent(
                                 if (getDescriptor(descriptorName).set != null)
                                     InputButton(
                                         onClick = {
-                                            withErrorHandling(appLogger) {
+                                            withResult {
                                                 getDescriptor(descriptorName).set?.invoke(json.decodeFromString(value))
                                             }
                                         },
@@ -533,14 +531,13 @@ fun VariableViewContent(
 }
 
 @Composable
-fun VariableView(globalScope: Scope, appLogger: AppLogger) {
+fun VariableView(globalScope: Scope) {
     var descriptorNames by remember { mutableStateOf(globalScope.listVariables().map { it.name }) }
     DraggableResizablePopup { (width, height) ->
         VariableViewContent(
             refresh = { descriptorNames = globalScope.listVariables().map { it.name } },
             getDescriptor = { name -> globalScope.listVariables().find { it.name == name }!! },
             descriptorNames = descriptorNames,
-            appLogger = appLogger,
             modifier = Modifier.size(width, height)
         )
     }
