@@ -29,11 +29,12 @@ import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
+import kotlin.uuid.ExperimentalUuidApi
 
 const val VERSION = "Beta 0.9.2"
 const val VERSIONCODE = 1
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun App() {
     CompositionLocalProvider(
@@ -80,10 +81,21 @@ fun App() {
                     saveFiles.map { it.name.uppercase() }.contains(name.uppercase())
                 },
                 create = {
-                    saveFileViewModel.upsertSave(SaveFile(it, importSaveData!!))
-                    uiViewModel.setImportSaveData(null)
-                    uiViewModel.setImportDialogOpen(false)
-                    uiViewModel.addTextPopup("Save Imported")
+                    coroutineScope.launch {
+                        importSaveData?.let { importSaveData ->
+                            saveFileViewModel.upsertSave(SaveFile(it, importSaveData))
+                                .onSuccess {
+                                    uiViewModel.setImportSaveData(null)
+                                    uiViewModel.setImportDialogOpen(false)
+                                    uiViewModel.addTextPopup("Save Imported")
+                                }
+                                .onFailure {
+                                    uiViewModel.setImportSaveData(null)
+                                    uiViewModel.setImportDialogOpen(false)
+                                    uiViewModel.addTextPopup("Failed to import save")
+                                }
+                        }
+                    }
                 },
                 cancel = {
                     uiViewModel.setImportSaveData(null)
@@ -115,55 +127,72 @@ fun App() {
                         completeOrder = { dataViewModel.handleCompleteOrder(it) },
                         setCurrentCake = { dataViewModel.setCurrentCake(it) },
                         exportSave = { saveFile ->
-                            val result = saveFileViewModel.exportSave(saveFile)
-                            result.onSuccess { exported ->
-                                if (exported) uiViewModel.addTextPopup("Save Exported")
-                            }
-                            result.onFailure {
-                                uiViewModel.addTextPopup("Save Error. Check debug console")
+                            coroutineScope.launch {
+                                saveFileViewModel.exportSave(saveFile)
+                                    .onSuccess { exported ->
+                                        if (exported) uiViewModel.addTextPopup("Save \"${saveFile.name}\" Exported")
+                                    }
+                                    .onFailure {
+                                        uiViewModel.addTextPopup("Failed to export save \"${saveFile.name}\"")
+                                    }
                             }
                         },
                         deleteSave = { saveFile ->
-                            saveFileViewModel.deleteSave(saveFile.name)
-                            uiViewModel.addTextPopup("Save Deleted")
+                            coroutineScope.launch {
+                                saveFileViewModel.deleteSave(saveFile.name)
+                                    .onSuccess { exists ->
+                                        uiViewModel.addTextPopup(
+                                            if (exists) "Save \"${saveFile.name}\" Deleted"
+                                            else "Save \"${saveFile.name}\" Does Not Exist"
+                                        )
+                                    }.onFailure {
+                                        uiViewModel.addTextPopup(
+                                            "Failed to delete save \"${saveFile.name}\""
+                                        )
+                                    }
+                            }
                         },
                         loadSave = { saveFile ->
                             coroutineScope.launch {
                                 dataViewModel.loadSave(saveFile.save)
                                 uiViewModel.navigateWithFade(KitchenScreen)
-                                delay(transitionDuration.toLong() / 2L)
+                                delay(transitionDuration.toLong())
                                 uiViewModel.addTextPopup("Save Loaded")
                             }
                         },
                         overwriteSave = { saveFile ->
-                            val result = withErrorHandling(uiViewModel) {
+                            coroutineScope.launch {
+                                val saveNames = saveFiles.map { it.name.uppercase() }
                                 saveFileViewModel.upsertSave(
                                     saveFile.copy(
                                         save = dataViewModel.createSave()
                                     )
-                                )
-                            }
-                            val saveNames = saveFiles.map { it.name.uppercase() }
-                            result.onSuccess {
-                                if (!saveNames.contains(saveFile.name.uppercase()))
-                                    uiViewModel.addTextPopup("Save Created")
-                                else
-                                    uiViewModel.addTextPopup("Save Overwritten")
-                            }
-                            result.onFailure {
-                                uiViewModel.addTextPopup("Save Error. Check debug console")
+                                ).onSuccess { existsBefore ->
+                                    uiViewModel.addTextPopup(
+                                        if (!existsBefore) "Save \"${saveFile.name}\" Created"
+                                        else "Save \"${saveFile.name}\" Overwritten"
+                                    )
+                                }.onFailure {
+                                    val existsBefore = saveNames.contains(saveFile.name.uppercase())
+                                    uiViewModel.addTextPopup(
+                                        if (!existsBefore) "Failed to create save \"${saveFile.name}\""
+                                        else "Failed to overwrite save \"${saveFile.name}\""
+                                    )
+                                }
                             }
                         },
                         importSave = {
-                            val result = saveFileViewModel.importSave()
-                            result.onSuccess { save ->
-                                if (save != null) {
-                                    uiViewModel.setImportSaveData(save)
-                                    uiViewModel.setImportDialogOpen(true)
+                            coroutineScope.launch {
+                                saveFileViewModel.importSave()
+                                .onSuccess { save ->
+                                    if (save != null) {
+                                        uiViewModel.setImportSaveData(save)
+                                        uiViewModel.setImportDialogOpen(true)
+                                    }
                                 }
-                            }
-                            result.onFailure {
-                                uiViewModel.addTextPopup("Save Error. Check debug console")
+                                .onFailure {
+                                    uiViewModel.addTextPopup("Failed to import save")
+                                }
                             }
                         },
                         buyUpgrade = { dataViewModel.buyUpgrade(it) },
@@ -177,7 +206,7 @@ fun App() {
                 }
                 if (debugConsole == ConsoleType.POPUP) DebugPopup()
                 if (internalShown) InternalPopup()
-                if (variableShown) VariableView(globalScope, uiViewModel)
+                if (variableShown) VariableView(globalScope)
             }
             if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()
         }
