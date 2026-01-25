@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -30,13 +30,16 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.container.SmallContainer
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun MessageManager(
     theme: Theme,
     popups: List<Popup>,
     trueDensity: Density,
-    removePopup: (Int) -> Unit,
+    removePopup: (Uuid) -> Unit,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
     LaunchedEffect(popups) {
@@ -44,22 +47,23 @@ fun MessageManager(
             lazyListState.scrollToItem(popups.size - 1)
     }
     CompositionLocalProvider(
-        LocalDensity provides (trueDensity ?: LocalDensity.current),
+        LocalDensity provides trueDensity,
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Bottom),
             modifier = Modifier.width(320.dp).zIndex(2f).padding(16.dp),
             state = lazyListState
         ) {
-            itemsIndexed(popups, key = { _, (_, id) -> id }) { index, popup ->
-                Popup(theme, { removePopup(index) }, index, popup)
+            items(popups, key = { it.uuid }) { popup ->
+                Popup(theme, { removePopup(popup.uuid) }, popup)
             }
         }
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
-fun Popup(theme: Theme, remove: (Int) -> Unit, index: Int, popup: Popup) {
+fun Popup(theme: Theme, remove: () -> Unit, popup: Popup) {
     Box {
         SmallContainer(
             theme = theme,
@@ -84,7 +88,7 @@ fun Popup(theme: Theme, remove: (Int) -> Unit, index: Int, popup: Popup) {
                     SmallThemedButton(
                         theme = theme,
                         onClick = {
-                            remove(index)
+                            remove()
                         }
                     ) {
                         Text(
@@ -99,6 +103,7 @@ fun Popup(theme: Theme, remove: (Int) -> Unit, index: Int, popup: Popup) {
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Preview(
     heightDp = 120,
 )
@@ -109,7 +114,6 @@ fun PopupPreview() {
         content = {
             Text("Popup Preview", modifier = Modifier.fillMaxWidth())
         },
-        id = 0
     )
-    Popup(theme = theme, remove = {}, -1, popup)
+    Popup(theme = theme, remove = {}, popup)
 }

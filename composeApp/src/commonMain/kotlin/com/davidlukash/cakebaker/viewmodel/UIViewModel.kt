@@ -22,6 +22,8 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class UIViewModel : ViewModel(), AppLogger {
     private val _pendingScreen = MutableStateFlow<Screen?>(null)
@@ -77,8 +79,6 @@ class UIViewModel : ViewModel(), AppLogger {
         }
     }
 
-    private var nextId = 0
-
     override fun appendLog(log: Log) {
         viewModelScope.launch {
             _logs.emit(
@@ -95,10 +95,11 @@ class UIViewModel : ViewModel(), AppLogger {
 
     override fun getDebugConsole(): ConsoleType = debugConsole.value
 
+    @OptIn(ExperimentalUuidApi::class)
     fun addPopup(shouldHaveDefaultButton: Boolean = true, content: @Composable Pair<Popup, Theme>.() -> Unit) {
         viewModelScope.launch {
             _popups.emit(
-                _popups.value + Popup(content, nextId++, shouldHaveDefaultButton)
+                _popups.value + Popup(content, shouldHaveDefaultButton)
             )
         }
     }
@@ -112,6 +113,7 @@ class UIViewModel : ViewModel(), AppLogger {
         }
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     fun addTextButtonPopup(text: String, shouldHaveDefaultButton: Boolean = true, buttonText: String, onClick: () -> Unit) {
         addPopup(shouldHaveDefaultButton) {
             val popup = first
@@ -125,7 +127,7 @@ class UIViewModel : ViewModel(), AppLogger {
                 theme = theme,
                 onClick = {
                     onClick()
-                    removePopup(popup.index)
+                    removePopup(popup.uuid)
                 },
                 modifier = Modifier.fillMaxWidth(),
             ) {
@@ -138,10 +140,11 @@ class UIViewModel : ViewModel(), AppLogger {
         }
     }
 
-    fun removePopup(index: Int) {
+    @OptIn(ExperimentalUuidApi::class)
+    fun removePopup(uuid: Uuid) {
         viewModelScope.launch {
             _popups.emit(
-                _popups.value.filterIndexed { thisIndex, _ -> thisIndex != index }
+                _popups.value.filter { it.uuid != uuid }
             )
         }
     }

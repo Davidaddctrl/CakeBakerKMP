@@ -2,11 +2,11 @@ package com.davidlukash.cakebaker.data
 
 import androidx.compose.runtime.Composable
 import com.davidlukash.cakebaker.data.theme.Theme
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-data class Popup(
+data class Popup @OptIn(ExperimentalUuidApi::class) constructor(
     val content: @Composable Pair<Popup, Theme>.() -> Unit,
-    val id: Int,
     val shouldHaveDefaultButton: Boolean = true,
-    //set later
-    val index: Int = -1
+    val uuid: Uuid = Uuid.random(),
 )
