@@ -18,11 +18,10 @@ import com.davidlukash.cakebaker.engine.CakeBakerEngine
 import com.davidlukash.cakebaker.engine.CakeBakerScope
 import com.davidlukash.cakebaker.globalDecimalMode
 import com.davidlukash.cakebaker.mapDouble
+import com.davidlukash.cakebaker.mapDoubleBiased
 import com.davidlukash.cakebaker.toBoolean
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.weightedRandomInt
-import com.davidlukash.cakebaker.withErrorHandling
-import com.davidlukash.cakebaker.withErrorHandlingAsync
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.engine.basic.OriginNode
 import com.davidlukash.jsonmath.engine.normal.EnumScopeType
@@ -193,13 +192,18 @@ class DataViewModel(
 
     val nextOrderRemainingTime = _orderCakeTimeCounters.map { if (it.values.isEmpty()) null else it.values.min() }
 
-    val orderFactory = OrderFactory(this)
+    val orderFactory = OrderFactory()
 
     suspend fun tickOrderCounterCreate() {
-        val nextTier = orderFactory.selectCakeTier(_orderCakeTimeCounters.value.keys.toList())
+        val nextTier = orderFactory.selectCakeTier(
+            cakes,
+            customerSatisfaction.value,
+            random,
+            _orderCakeTimeCounters.value.keys.toList()
+        )
         nextTier?.let { nextTier ->
             val settings = orderCakeSettings.value[nextTier] ?: return@let
-            val weight = mapDouble(customerSatisfaction.value.toDouble(), 1.0, 100.0, 0.5, 2.5)
+            val weight = mapDoubleBiased(customerSatisfaction.value.toDouble(), 1.0, 100.0, 0.5, 2.5, -1.5)
             val waitTime = mapDouble(
                 weightedRandomInt(weight, 10001, random).toDouble(),
                 0.0,
@@ -218,9 +222,14 @@ class DataViewModel(
                 val remainingTime = entry.value
                 val nextRemainingTime = remainingTime - dt.toDouble() / 1000.0
                 if (nextRemainingTime <= 0) {
-                    val order = orderFactory.createOrder(cakeTier).copy(
-                        id = random.nextInt(10000, 99999)
-                    )
+                    val order = orderFactory.createOrder(
+                        cakeTier,
+                        cakes,
+                        customerSatisfaction.value,
+                        random,
+                        orderCakeSettings.value,
+                        calculateCakePrice(cakeTier)
+                    ).copy(id = random.nextInt(10000, 99999))
                     val cake = cakes[cakeTier]
                         ?: throw IllegalArgumentException("Cake with tier $cakeTier does not exist")
                     if (uiViewModel.currentScreen.value != KitchenScreen)

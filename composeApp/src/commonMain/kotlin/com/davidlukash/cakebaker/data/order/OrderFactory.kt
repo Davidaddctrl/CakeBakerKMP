@@ -1,34 +1,45 @@
 package com.davidlukash.cakebaker.data.order
 
+import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.globalDecimalMode
 import com.davidlukash.cakebaker.mapDouble
-import com.davidlukash.cakebaker.viewmodel.DataViewModel
+import com.davidlukash.cakebaker.mapDoubleBiased
 import com.davidlukash.cakebaker.weightedRandom
 import com.davidlukash.cakebaker.weightedRandomInt
 import com.davidlukash.cakebaker.weightedRandomItem
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
+import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 
-class OrderFactory(
-    val dataViewModel: DataViewModel,
-) {
-    fun selectCakeTier(exclusions: List<Int> = listOf()): Int? {
-        val cakes = dataViewModel.cakes.filter { it.value.amount != BigDecimal.ZERO }
+class OrderFactory {
+    fun selectCakeTier(
+        cakes: Map<Int, Item>,
+        customerSatisfaction: Int,
+        random: Random,
+        exclusions: List<Int> = listOf()
+    ): Int? {
+        val cakes = cakes.filter { it.value.amount != BigDecimal.ZERO }
         if (cakes.isEmpty()) return null
-        val weight = mapDouble(dataViewModel.customerSatisfaction.value.toDouble(), 1.0, 100.0, 0.5, 2.5)
-        val random = dataViewModel.random
+        val weight = mapDoubleBiased(customerSatisfaction.toDouble(), 1.0, 100.0, 0.5, 2.5, -1.5)
+        val random = random
         val cakeTiers = cakes.map { it.value.cakeTier ?: 1 }.filter { it !in exclusions }
         val cakeTier = weightedRandomItem(weight, cakeTiers, random)
         return cakeTier
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun createOrder(cakeTier: Int): Order {
-        val cakes = dataViewModel.cakes
-        val weight = mapDouble(dataViewModel.customerSatisfaction.value.toDouble(), 1.0, 100.0, 0.5, 2.0)
-        val random = dataViewModel.random
-        val settings = dataViewModel.orderCakeSettings.value[cakeTier]
+    fun createOrder(
+        cakeTier: Int,
+        cakes: Map<Int, Item>,
+        customerSatisfaction: Int,
+        random: Random,
+        orderCakeSettings: Map<Int, OrderCakeSettings>,
+        baseCakePrice: BigDecimal,
+    ): Order {
+        val weight = mapDoubleBiased(customerSatisfaction.toDouble(), 1.0, 100.0, 0.5, 2.5, -1.5)
+        val random = random
+        val settings = orderCakeSettings[cakeTier]
             ?: throw IllegalArgumentException("Order Cake Settings with tier $cakeTier does not exist")
         val cake = cakes[cakeTier]
             ?: throw IllegalArgumentException("Cake with tier $cakeTier does not exist")
@@ -37,7 +48,6 @@ class OrderFactory(
             maxOf(cake.amount.doubleValue(false).toInt(), 1),
             weightedRandomInt(weight, maxAmount, random) + 1
         )
-        val baseCakePrice = dataViewModel.calculateCakePrice(cakeTier)
         val cakePriceModifier =
             mapDouble(
                 weightedRandom(weight, 1.0, random),
