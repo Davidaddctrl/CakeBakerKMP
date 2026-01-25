@@ -8,6 +8,8 @@ import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.json
 import com.davidlukash.cakebaker.repository.SavesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 const val EXPORT_SAVE = 1
@@ -20,28 +22,28 @@ class AndroidSavesRepository(
     val saveDirectory = baseDirectory.resolve("saves").also { it.mkdirs() }
 
 
-    override fun listSaves(): List<SaveFile> {
-        return saveDirectory.listFiles { it.isFile }?.map {
+    override suspend fun listSaves(): List<SaveFile> = withContext(Dispatchers.IO) {
+        saveDirectory.listFiles { it.isFile }?.map {
             val text = it.readText()
             SaveFile(it.name, json.decodeFromString<Save>(text))
         } ?: emptyList()
     }
 
-    override fun deleteSave(name: String): Boolean {
+    override suspend fun deleteSave(name: String): Boolean = withContext(Dispatchers.IO) {
         val saveFile = saveDirectory.resolve(name)
-        if (!saveFile.exists()) return false
+        if (!saveFile.exists()) return@withContext false
         saveFile.delete()
-        return true
+        true
     }
 
-    override fun upsertSave(file: SaveFile): Boolean {
+    override suspend fun upsertSave(file: SaveFile): Boolean = withContext(Dispatchers.IO) {
         val saveFile = saveDirectory.resolve(file.name)
         val existsBefore = saveFile.createNewFile()
         saveFile.writeText(json.encodeToString(file.save))
-        return existsBefore
+        existsBefore
     }
 
-    override fun exportSave(file: SaveFile): Boolean {
+    override suspend fun exportSave(file: SaveFile): Boolean {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"
@@ -54,7 +56,7 @@ class AndroidSavesRepository(
         return false
     }
 
-    override fun importSave(): Save? {
+    override suspend fun importSave(): Save? {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/json"

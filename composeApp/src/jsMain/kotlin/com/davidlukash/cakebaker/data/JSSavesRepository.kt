@@ -25,13 +25,13 @@ class JSSavesRepository : SavesRepository() {
         localStorage.setItem("saves", json.encodeToString(list))
     }
 
-    override fun listSaves(): List<SaveFile> {
+    override suspend fun listSaves(): List<SaveFile> {
         val savesString = localStorage.getItem("saves") ?: "[]"
         val saves = json.decodeFromString<List<SaveFile>>(savesString)
         return saves
     }
 
-    override fun deleteSave(name: String): Boolean {
+    override suspend fun deleteSave(name: String): Boolean {
         val saves = listSaves()
         if (!saves.map { it.name }.contains(name)) return false
         updateSaves(
@@ -40,14 +40,14 @@ class JSSavesRepository : SavesRepository() {
         return true
     }
 
-    override fun upsertSave(file: SaveFile): Boolean {
+    override suspend fun upsertSave(file: SaveFile): Boolean {
         val saves = listSaves()
         val existsBefore = saves.map { it.name }.contains(file.name)
         updateSaves((listOf(file) + saves).distinctBy { it.name })
         return existsBefore
     }
 
-    override fun exportSave(file: SaveFile): Boolean {
+    override suspend fun exportSave(file: SaveFile): Boolean {
         val blob = Blob(arrayOf(json.encodeToString(file.save)), options = BlobPropertyBag(type = "application/json"))
         val url = URL.createObjectURL(blob)
         val a = document.createElement("a") as HTMLAnchorElement
@@ -58,7 +58,7 @@ class JSSavesRepository : SavesRepository() {
         return false
     }
 
-    override fun importSave(): Save? {
+    override suspend fun importSave(): Save? {
         val input = document.createElement("input") as HTMLInputElement
         input.type = "file"
         input.accept = "application/json"

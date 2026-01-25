@@ -4,6 +4,8 @@ import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.json
 import com.davidlukash.cakebaker.repository.SavesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import javax.swing.JFileChooser
 
@@ -12,44 +14,44 @@ class JVMSavesRepository(
 ) : SavesRepository() {
     val saveDirectory = baseDirectory.resolve("saves").also { it.mkdirs() }
 
-    override fun listSaves(): List<SaveFile> {
-        return saveDirectory.listFiles { it.isFile }.map {
+    override suspend fun listSaves(): List<SaveFile> = withContext(Dispatchers.IO) {
+        saveDirectory.listFiles { it.isFile }.map {
             val text = it.readText()
             SaveFile(it.name, json.decodeFromString<Save>(text))
         }
     }
 
-    override fun deleteSave(name: String): Boolean {
+    override suspend fun deleteSave(name: String): Boolean = withContext(Dispatchers.IO) {
         val saveFile = saveDirectory.resolve(name)
-        if (!saveFile.exists()) return false
+        if (!saveFile.exists()) return@withContext false
         saveFile.delete()
-        return true
+        return@withContext true
     }
 
-    override fun upsertSave(file: SaveFile): Boolean {
+    override suspend fun upsertSave(file: SaveFile): Boolean = withContext(Dispatchers.IO) {
         val saveFile = saveDirectory.resolve(file.name)
         val existsBefore = saveFile.createNewFile()
         saveFile.writeText(json.encodeToString(file.save))
-        return existsBefore
+        existsBefore
     }
 
-    override fun exportSave(file: SaveFile): Boolean {
+    override suspend fun exportSave(file: SaveFile): Boolean = withContext(Dispatchers.IO) {
         val fileChooser = JFileChooser()
         val option = fileChooser.showSaveDialog(null)
         if (option == JFileChooser.APPROVE_OPTION) {
             val selectedFile = fileChooser.selectedFile
             selectedFile.writeText(json.encodeToString(file.save))
-            return true
-        } else return false
+            true
+        } else false
     }
 
-    override fun importSave(): Save? {
+    override suspend fun importSave(): Save? = withContext(Dispatchers.IO) {
         val fileChooser = JFileChooser()
         val option = fileChooser.showOpenDialog(null)
         if (option == JFileChooser.APPROVE_OPTION) {
             val selectedFile = fileChooser.selectedFile
             val save = json.decodeFromString<Save>(selectedFile.readText())
-            return save
-        } else return null
+            save
+        } else null
     }
 }

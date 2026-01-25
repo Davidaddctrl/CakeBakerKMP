@@ -25,20 +25,20 @@ class WASMSavesRepository : SavesRepository() {
         localStorage.setItem("saves", json.encodeToString(list))
     }
 
-    override fun listSaves(): List<SaveFile> {
+    override suspend fun listSaves(): List<SaveFile> {
         val savesString = localStorage.getItem("saves") ?: "[]"
         val saves = json.decodeFromString<List<SaveFile>>(savesString)
         return saves
     }
 
-    override fun deleteSave(name: String): Boolean {
+    override suspend fun deleteSave(name: String): Boolean {
         val saves = listSaves()
         if (!saves.map { it.name }.contains(name)) return false
         updateSaves(saves.filterNot { it.name == name })
         return true
     }
 
-    override fun upsertSave(file: SaveFile): Boolean {
+    override suspend fun upsertSave(file: SaveFile): Boolean {
         val saves = listSaves()
         val existsBefore = saves.map { it.name }.contains(file.name)
         updateSaves((listOf(file) + saves).distinctBy { it.name })
@@ -46,7 +46,7 @@ class WASMSavesRepository : SavesRepository() {
     }
 
     @OptIn(ExperimentalWasmJsInterop::class)
-    override fun exportSave(file: SaveFile): Boolean {
+    override suspend fun exportSave(file: SaveFile): Boolean {
         val jsArray = JsArray<JsAny?>()
         jsArray[0] = json.encodeToString(file.save).toJsString()
         val blob = Blob(jsArray, options = BlobPropertyBag(type = "application/json"))
@@ -60,7 +60,7 @@ class WASMSavesRepository : SavesRepository() {
     }
 
     @OptIn(ExperimentalWasmJsInterop::class)
-    override fun importSave(): Save? {
+    override suspend fun importSave(): Save? {
         val input = document.createElement("input") as HTMLInputElement
         input.type = "file"
         input.accept = "application/json"

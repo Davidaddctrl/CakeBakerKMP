@@ -9,15 +9,15 @@ class MemorySavesRepository(
 
     var saves = listOf<SaveFile>()
 
-    override fun listSaves(): List<SaveFile> = saves
+    override suspend fun listSaves(): List<SaveFile> = saves
 
-    override fun deleteSave(name: String): Boolean {
+    override suspend fun deleteSave(name: String): Boolean {
         val result = saves.any { it.name == name }
         saves = saves.filter { it.name != name }
         return result
     }
 
-    override fun upsertSave(file: SaveFile): Boolean {
+    override suspend fun upsertSave(file: SaveFile): Boolean {
         val existsBefore = saves.any { it.name == file.name }
         if (!existsBefore) saves = saves + file
         else {
@@ -29,10 +29,10 @@ class MemorySavesRepository(
         return existsBefore
     }
 
-    override fun exportSave(file: SaveFile): Boolean {
+    override suspend fun exportSave(file: SaveFile): Boolean {
         baseRepository.upsertSave(file)
         return true
     }
 
-    override fun importSave(): Save? = null
+    override suspend fun importSave(): Save? = null
 }

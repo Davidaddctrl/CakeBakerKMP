@@ -4,13 +4,13 @@ import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
 
 abstract class SavesRepository {
-    abstract fun listSaves(): List<SaveFile>
+    abstract suspend fun listSaves(): List<SaveFile>
 
-    abstract fun deleteSave(name: String): Boolean
+    abstract suspend fun deleteSave(name: String): Boolean
 
-    abstract fun upsertSave(file: SaveFile): Boolean
+    abstract suspend fun upsertSave(file: SaveFile): Boolean
 
-    abstract fun exportSave(file: SaveFile): Boolean
+    abstract suspend fun exportSave(file: SaveFile): Boolean
 
-    abstract fun importSave(): Save?
+    abstract suspend fun importSave(): Save?
 }
