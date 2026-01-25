@@ -16,12 +16,16 @@ import com.davidlukash.cakebaker.data.IMPORT_SAVE
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
 class MainActivity : ComponentActivity() {
     var saveToBeExported: Save? = null
     lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
@@ -61,38 +65,42 @@ class MainActivity : ComponentActivity() {
         super.onActivityResult(requestCode, resultCode, data, caller)
         if (requestCode == EXPORT_SAVE && resultCode == RESULT_OK) {
             val content = saveToBeExported?.let { json.encodeToString(it) }
-            content?.let {
-                data?.data?.also { uri ->
-                    val result = withErrorHandling(mainViewModel.uiViewModel) {
-                        contentResolver.openFileDescriptor(uri, "w")?.use {
-                            FileOutputStream(it.fileDescriptor).use { fileOutputStream ->
-                                fileOutputStream.write(content.toByteArray())
+            CoroutineScope(Dispatchers.IO).launch {
+                content?.let {
+                    data?.data?.also { uri ->
+                        val result = withResultSuspend {
+                            contentResolver.openFileDescriptor(uri, "w")?.use {
+                                FileOutputStream(it.fileDescriptor).use { fileOutputStream ->
+                                    fileOutputStream.write(content.toByteArray())
+                                }
                             }
                         }
-                    }
-                    result.onSuccess {
-                        mainViewModel.uiViewModel.addTextPopup("Save Exported")
-                    }
-                    result.onFailure {
-                        mainViewModel.uiViewModel.addTextPopup("Save Error. Check debug console")
+                        result.onSuccess {
+                            mainViewModel.uiViewModel.addTextPopup("Save Exported")
+                        }
+                        result.onFailure {
+                            mainViewModel.uiViewModel.addTextPopup("Save Error")
+                        }
                     }
                 }
             }
         }
         if (requestCode == IMPORT_SAVE && resultCode == RESULT_OK) {
-            data?.data?.also { uri ->
-                val result = withErrorHandling(mainViewModel.uiViewModel) {
-                    contentResolver.openFileDescriptor(uri, "r")?.use {
-                        FileInputStream(it.fileDescriptor).use { fileInputStream ->
-                            val text = fileInputStream.readBytes().decodeToString()
-                            val save = json.decodeFromString<Save>(text)
-                            mainViewModel.uiViewModel.setImportDialogOpen(true)
-                            mainViewModel.uiViewModel.setImportSaveData(save)
+            CoroutineScope(Dispatchers.IO).launch {
+                data?.data?.also { uri ->
+                    val result = withResultSuspend {
+                        contentResolver.openFileDescriptor(uri, "r")?.use {
+                            FileInputStream(it.fileDescriptor).use { fileInputStream ->
+                                val text = fileInputStream.readBytes().decodeToString()
+                                val save = json.decodeFromString<Save>(text)
+                                mainViewModel.uiViewModel.setImportDialogOpen(true)
+                                mainViewModel.uiViewModel.setImportSaveData(save)
+                            }
                         }
                     }
-                }
-                result.onFailure {
-                    mainViewModel.uiViewModel.addTextPopup("Save Error. Check debug console")
+                    result.onFailure {
+                        mainViewModel.uiViewModel.addTextPopup("Save Error")
+                    }
                 }
             }
         }
