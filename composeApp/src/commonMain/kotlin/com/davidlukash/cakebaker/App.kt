@@ -120,7 +120,7 @@ fun App() {
                         removePopup = { uiViewModel.removePopup(it) },
                         updateCurrentScreen = { uiViewModel.updateCurrentScreen(it) },
                         navigateWithFade = { uiViewModel.navigateWithFade(it) },
-                        bake = { dataViewModel.bake() },
+                        bake = { dataViewModel.startBake() },
                         buyIngredient = { dataViewModel.buyIngredient(it) },
                         setAutoOvenEnabled = { dataViewModel.setAutoOvenEnabled(it) },
                         setAutoOrderCompleteEnabled = { dataViewModel.setAutoOrderCompleteEnabled(it) },

@@ -4,6 +4,7 @@ import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.globalDecimalMode
 import com.davidlukash.cakebaker.mapDouble
 import com.davidlukash.cakebaker.mapDoubleBiased
+import com.davidlukash.cakebaker.takeOrNullWithWarn
 import com.davidlukash.cakebaker.weightedRandom
 import com.davidlukash.cakebaker.weightedRandomInt
 import com.davidlukash.cakebaker.weightedRandomItem
@@ -12,7 +13,9 @@ import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 
-class OrderFactory {
+class OrderFactory(
+    val addTextPopup: (String) -> Unit
+) {
     fun selectCakeTier(
         cakes: Map<Int, Item>,
         customerSatisfaction: Int,
@@ -20,10 +23,10 @@ class OrderFactory {
         exclusions: List<Int> = listOf()
     ): Int? {
         val cakes = cakes.filter { it.value.amount != BigDecimal.ZERO }
-        if (cakes.isEmpty()) return null
+        if (cakes.isEmpty())
+            return null
         val weight = mapDoubleBiased(customerSatisfaction.toDouble(), 1.0, 100.0, 0.5, 2.5, -1.5)
-        val random = random
-        val cakeTiers = cakes.map { it.value.cakeTier ?: 1 }.filter { it !in exclusions }
+        val cakeTiers = cakes.keys.filter { it !in exclusions }
         val cakeTier = weightedRandomItem(weight, cakeTiers, random)
         return cakeTier
     }
@@ -36,13 +39,19 @@ class OrderFactory {
         random: Random,
         orderCakeSettings: Map<Int, OrderCakeSettings>,
         baseCakePrice: BigDecimal,
-    ): Order {
+    ): Order? {
         val weight = mapDoubleBiased(customerSatisfaction.toDouble(), 1.0, 100.0, 0.5, 2.5, -1.5)
-        val random = random
-        val settings = orderCakeSettings[cakeTier]
-            ?: throw IllegalArgumentException("Order Cake Settings with tier $cakeTier does not exist")
-        val cake = cakes[cakeTier]
-            ?: throw IllegalArgumentException("Cake with tier $cakeTier does not exist")
+        val settings =
+            orderCakeSettings[cakeTier].takeOrNullWithWarn("Order cake settings with tier $cakeTier does not exist")
+        if (settings == null) {
+            addTextPopup("Cake with tier $cakeTier is not configured for orders therefore the order was not created and its creation has been aborted")
+            return null
+        }
+        val cake = cakes[cakeTier].takeOrNullWithWarn("Cake with tier $cakeTier does not exist")
+        if (cake == null) {
+            addTextPopup("Cake with tier $cakeTier does not exist therefore the order was not created and its creation has been aborted")
+            return null
+        }
         val maxAmount = settings.maxAmount
         val cakeAmount = minOf(
             maxOf(cake.amount.doubleValue(false).toInt(), 1),
@@ -66,7 +75,8 @@ class OrderFactory {
             cakeAmount,
             cakePrice * cakeAmount,
             allocatedTime,
-            allocatedTime
+            allocatedTime,
+            random.nextInt(10000, 99999)
         )
     }
 }

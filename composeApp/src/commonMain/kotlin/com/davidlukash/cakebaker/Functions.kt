@@ -280,3 +280,19 @@ expect fun dumpFunctionsToFile(engine: CakeBakerEngine)
 fun BigDecimal.roundTo1dp(): BigDecimal = this.roundSignificand(globalDecimalMode)
 
 expect val platform: com.davidlukash.cakebaker.data.Platform
+
+fun <T : Any> T?.takeOrDefaultWithWarn(warnMessage: String, default: T): T {
+    if (this == null) {
+        logger.logWarn(warnMessage)
+        return default
+    }
+    return this
+}
+
+fun <T : Any> T?.takeOrNullWithWarn(warnMessage: String): T? {
+    if (this == null) {
+        logger.logWarn(warnMessage)
+        return null
+    }
+    return this
+}
