@@ -21,7 +21,9 @@ import com.davidlukash.cakebaker.mapDouble
 import com.davidlukash.cakebaker.mapDoubleBiased
 import com.davidlukash.cakebaker.toBoolean
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
+import com.davidlukash.cakebaker.ui.navigation.SaveScreen
 import com.davidlukash.cakebaker.weightedRandomInt
+import com.davidlukash.cakebaker.withResultSuspend
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.engine.basic.OriginNode
 import com.davidlukash.jsonmath.engine.normal.EnumScopeType
@@ -56,14 +58,15 @@ class DataViewModel(
         startLoop()
     }
 
+    var shouldListSaves = true
+
     @OptIn(ExperimentalTime::class)
     fun startLoop() {
         if (loopJob?.isActive == true) return
         loopJob = viewModelScope.launch {
             var time = Clock.System.now().toEpochMilliseconds()
             while (isActive) {
-                withErrorHandlingAsync {
-                    delay(100)
+                withResultSuspend {
                     val newTime = Clock.System.now().toEpochMilliseconds()
                     val dt = newTime - time
                     time = newTime
@@ -74,6 +77,22 @@ class DataViewModel(
                     tickOrder(dt)
                     tickAutoOven()
                     tickAutoOrderComplete()
+                    if (uiViewModel.currentScreen.value == SaveScreen) {
+                        if (shouldListSaves) {
+                            saveFileViewModel.listSavesSuspend().onFailure {
+                                shouldListSaves = false
+                                uiViewModel.addTextButtonPopup("Error Listing Saves", false, "Retry") {
+                                    shouldListSaves = true
+                                }
+                            }
+                        }
+                    }
+                    delay(100)
+                }.onFailure {
+                    stopLoop()
+                    uiViewModel.addTextButtonPopup("The main loop has failed", false, "Retry") {
+                        startLoop()
+                    }
                 }
             }
         }

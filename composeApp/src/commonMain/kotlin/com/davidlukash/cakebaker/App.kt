@@ -54,7 +54,7 @@ fun App() {
         val debugConsole by uiViewModel.debugConsole.collectAsState()
         val pendingScreen by uiViewModel.pendingScreen.collectAsState()
         val popups by uiViewModel.popups.collectAsState()
-        val saveFiles by saveFileViewModel.savesFlow.collectAsState(listOf())
+        val saveFiles by saveFileViewModel.saves.collectAsState()
         val trueDensity by uiViewModel.trueDensity.collectAsState()
         val importDialogOpen by uiViewModel.importDialogOpen.collectAsState()
         val importSaveData by uiViewModel.importSaveData.collectAsState()

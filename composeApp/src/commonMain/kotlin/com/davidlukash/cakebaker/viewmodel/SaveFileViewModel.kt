@@ -4,65 +4,36 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
+import com.davidlukash.cakebaker.repository.ResultSavesRepositoryWrapper
 import com.davidlukash.cakebaker.repository.SavesRepository
-import com.davidlukash.cakebaker.withErrorHandling
-import com.davidlukash.cakebaker.withErrorHandlingAsync
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SaveFileViewModel(
     val uiViewModel: UIViewModel,
-    private val savesRepository: SavesRepository,
+    private val _savesRepository: SavesRepository,
 ) : ViewModel() {
-    var shouldRetry = true
+    private val savesRepository = ResultSavesRepositoryWrapper(_savesRepository)
+    private val _saves = MutableStateFlow(emptyList<SaveFile>())
+    val saves = _saves.asStateFlow()
 
-    val savesFlow = flow {
-        while (true) {
-            if (shouldRetry) {
-                val result = withErrorHandlingAsync(uiViewModel) {
-                    val saveFiles = savesRepository.listSaves()
-                    emit(saveFiles)
-                    true
-                }
-                result.onFailure {
-                    shouldRetry = false
-                    uiViewModel.addTextButtonPopup("Save Error. Check debug console", false, "Retry") {
-                        shouldRetry = true
-                    }
-                    emit(emptyList())
-                }
-            }
-            delay(500)
-
-        }
+    suspend fun listSavesSuspend(): Result<List<SaveFile>> {
+       return savesRepository.listSaves().onSuccess {
+           _saves.emit(it)
+       }
     }
 
-    fun deleteSave(name: String) {
-        viewModelScope.launch {
-            withErrorHandling(uiViewModel) {
-                savesRepository.deleteSave(name)
-            }
-        }
-    }
+    suspend fun deleteSave(name: String): Result<Boolean> = savesRepository.deleteSave(name)
 
-    fun upsertSave(file: SaveFile) {
-        viewModelScope.launch {
-            withErrorHandling(uiViewModel) {
-                savesRepository.upsertSave(file)
-            }
-        }
-    }
+    suspend fun upsertSave(file: SaveFile) = savesRepository.upsertSave(file)
 
-    fun exportSave(file: SaveFile): Result<Boolean> {
-        return withErrorHandling(uiViewModel) {
-            savesRepository.exportSave(file)
-        }
-    }
+    suspend fun exportSave(file: SaveFile): Result<Boolean> = savesRepository.exportSave(file)
 
-    fun importSave(): Result<Save?> {
-        return withErrorHandling(uiViewModel) {
-            savesRepository.importSave()
-        }
-    }
+    suspend fun importSave(): Result<Save?> = savesRepository.importSave()
 }

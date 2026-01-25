@@ -72,10 +72,10 @@ open class MainViewModel(
         logger.logInfo("Welcome to JsonMath 1.0.8")
         logger.logDebug("List of all available functions:\n$functionDump")
     }
-    open val dataViewModel = DataViewModel(uiViewModel, engine).also {
+    open val saveFileViewModel = SaveFileViewModel(uiViewModel, savesRepository)
+    open val dataViewModel = DataViewModel(uiViewModel, saveFileViewModel, engine).also {
         it.loadSave(Save.default)
     }
-    open val saveFileViewModel = SaveFileViewModel(uiViewModel, savesRepository)
 }
 
 val LocalMainViewModel = compositionLocalOf<MainViewModel> { throw Exception("No LocalMainViewModel provided") }
