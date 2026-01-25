@@ -15,6 +15,7 @@ import com.davidlukash.cakebaker.logger.AppLogger
 import com.davidlukash.cakebaker.ui.DebugPanel
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
+import org.jetbrains.skiko.setSystemLookAndFeel
 import java.io.File
 
 val baseDirectory
@@ -32,6 +33,7 @@ fun main() {
     withResult {
         val savesRepository = JVMSavesRepository(baseDirectory)
         val viewModel = MainViewModel(savesRepository)
+        setSystemLookAndFeel()
         application {
             val localMainViewModel = remember { viewModel }
             CompositionLocalProvider(
