@@ -13,7 +13,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.davidlukash.cakebaker.data.AndroidSavesRepository
 import com.davidlukash.cakebaker.data.EXPORT_SAVE
 import com.davidlukash.cakebaker.data.IMPORT_SAVE
+import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.save.Save
+import com.davidlukash.cakebaker.logger.AppLogger
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +41,15 @@ class MainActivity : ComponentActivity() {
 
         val savesRepository = AndroidSavesRepository(baseDirectory = filesDir, activity = this)
         mainViewModel = MainViewModel(savesRepository)
+
+        logger.registerLogger(
+            object : AppLogger() {
+                override fun appendLog(log: Log) {
+                    val logFile = filesDir.resolve("log.txt").also { it.createNewFile() }
+                    logFile.appendText("${log.toLogString()}\n")
+                }
+            }
+        )
 
         setContent {
             CompositionLocalProvider(

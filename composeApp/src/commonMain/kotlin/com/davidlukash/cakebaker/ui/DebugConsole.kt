@@ -75,15 +75,14 @@ import com.davidlukash.cakebaker.horizontalDragCursor
 import com.davidlukash.cakebaker.json
 import com.davidlukash.cakebaker.verticalDragCursor
 import com.davidlukash.cakebaker.engine.CakeBakerScope
+import com.davidlukash.cakebaker.logger
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
 import com.davidlukash.cakebaker.withResult
 import com.davidlukash.jsonmath.buildExpression
 import com.davidlukash.jsonmath.data.Expression
 import com.davidlukash.jsonmath.engine.basic.OriginNode
-import com.davidlukash.jsonmath.engine.basic.toTraceString
 import com.davidlukash.jsonmath.engine.normal.EnumScopeType
-import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.davidlukash.jsonmath.engine.normal.Scope
 import com.davidlukash.jsonmath.engine.normal.ScopeType
 import com.davidlukash.jsonmath.engine.normal.VariableDescriptor
@@ -98,8 +97,9 @@ val background = Color(0xFF3D3D3D)
 val surface = Color(0xFF262626)
 val surface2 = Color(0xFF0A0A0A)
 val red = Color.Red
-val green = Color.Green
 val textColor = Color.White
+
+val orange = Color(255, 127, 0)
 
 
 @Composable
@@ -246,7 +246,7 @@ fun DebugPanel(
     DebugPanelContent(
         logs,
         execute = {
-            uiViewModel.appendLog(Log(it, LogType.MESSAGE))
+            logger.logDebug(it)
             try {
                 val code = json.decodeFromString<Expression>(it)
                 val output = engine.evaluateExpression(
@@ -254,11 +254,9 @@ fun DebugPanel(
                     listOf(globalScope, localScope),
                     listOf(OriginNode("Debug Console", listOf(code)))
                 )
-                uiViewModel.appendLog(Log("Result: $output", LogType.RESULT))
-            } catch (e: LanguageException) {
-                uiViewModel.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
+                logger.logDebug("Result: $output")
             } catch (e: Exception) {
-                uiViewModel.appendLog(Log(e.toString() + e.stackTraceToString(), LogType.ERROR))
+                logger.logError(e)
             }
         },
         modifier = modifier,
@@ -552,13 +550,20 @@ fun Log(log: Log) {
                     withStyle(style = SpanStyle(color = textColor.copy(alpha = 0.2f))) {
                         append(debugTimestampFormat.format(log.timestamp))
                         append(" ")
+                        if (log.logType == LogType.INFO || log.logType == LogType.WARN)
+                            append(" ")
+                        append("[")
+                        append(log.logType.toString())
+                        append("]")
+                        append(" ")
                     }
                     withStyle(
                         style = SpanStyle(
                             color = when (log.logType) {
+                                LogType.DEBUG -> textColor.copy(alpha = 0.5f)
+                                LogType.INFO -> textColor
+                                LogType.WARN -> orange
                                 LogType.ERROR -> red
-                                LogType.RESULT -> green
-                                LogType.MESSAGE -> textColor
                             }
                         )
                     ) {
@@ -625,9 +630,10 @@ fun DebugPanelPreview() {
     var logs by remember {
         mutableStateOf(
             listOf<Log>(
-                Log("Debug Panel Preview Message", LogType.MESSAGE),
+                Log("Debug Panel Preview Debug", LogType.DEBUG),
+                Log("Debug Panel Preview Info", LogType.INFO),
+                Log("Debug Panel Preview Warn", LogType.WARN),
                 Log("Debug Panel Preview Error", LogType.ERROR),
-                Log("Debug Panel Preview Result", LogType.RESULT),
             )
         )
     }
@@ -635,7 +641,7 @@ fun DebugPanelPreview() {
     DebugPanelContent(
         logs = logs,
         execute = {
-            logs = logs + Log(it, LogType.MESSAGE)
+            logs = logs + Log(it, LogType.DEBUG)
         },
         modifier = Modifier.size(800.dp, 600.dp),
         canHide = true,

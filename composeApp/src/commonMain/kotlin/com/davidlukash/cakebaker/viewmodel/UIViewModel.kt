@@ -11,12 +11,13 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.davidlukash.cakebaker.AppLogger
+import com.davidlukash.cakebaker.logger.AppLogger
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.Popup
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.logger
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class UIViewModel : ViewModel(), AppLogger {
+class UIViewModel : ViewModel() {
     private val _pendingScreen = MutableStateFlow<Screen?>(null)
     val pendingScreen = _pendingScreen.asStateFlow()
 
@@ -39,7 +40,7 @@ class UIViewModel : ViewModel(), AppLogger {
     val currentScreen = _currentScreen.asStateFlow()
 
     private val _logs = MutableStateFlow(listOf<Log>())
-    override val logs = _logs.asStateFlow()
+    val logs = _logs.asStateFlow()
 
     private val _debugConsole = MutableStateFlow(ConsoleType.NONE)
     val debugConsole = _debugConsole.asStateFlow()
@@ -79,21 +80,11 @@ class UIViewModel : ViewModel(), AppLogger {
         }
     }
 
-    override fun appendLog(log: Log) {
-        viewModelScope.launch {
-            _logs.emit(
-                _logs.value + log
-            )
-        }
-    }
-
-    override fun setDebugConsole(type: ConsoleType) {
+    fun setDebugConsole(type: ConsoleType) {
         viewModelScope.launch {
             _debugConsole.emit(type)
         }
     }
-
-    override fun getDebugConsole(): ConsoleType = debugConsole.value
 
     @OptIn(ExperimentalUuidApi::class)
     fun addPopup(shouldHaveDefaultButton: Boolean = true, content: @Composable Pair<Popup, Theme>.() -> Unit) {
@@ -173,5 +164,19 @@ class UIViewModel : ViewModel(), AppLogger {
         viewModelScope.launch {
             _trueDensity.emit(density)
         }
+    }
+
+    init {
+        logger.registerLogger(
+            object : AppLogger() {
+                override fun appendLog(log: Log) {
+                    viewModelScope.launch {
+                        _logs.emit(
+                            _logs.value + log
+                        )
+                    }
+                }
+            }
+        )
     }
 }

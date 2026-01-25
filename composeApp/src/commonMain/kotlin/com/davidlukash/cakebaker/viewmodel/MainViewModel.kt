@@ -3,18 +3,17 @@ package com.davidlukash.cakebaker.viewmodel
 import androidx.compose.runtime.compositionLocalOf
 import androidx.lifecycle.ViewModel
 import com.davidlukash.cakebaker.data.ConsoleType
-import com.davidlukash.cakebaker.data.log.Log
-import com.davidlukash.cakebaker.data.log.LogType
 import com.davidlukash.cakebaker.data.save.Save
-import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.repository.SavesRepository
 import com.davidlukash.cakebaker.dumpFunctionsToFile
 import com.davidlukash.cakebaker.engine.CakeBakerEngine
+import com.davidlukash.cakebaker.logger
 import com.davidlukash.jsonmath.createNullObject
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.ObjectType
 import com.davidlukash.jsonmath.engine.normal.ArgumentDescriptor
 import com.davidlukash.jsonmath.engine.normal.FunctionDescriptor
+import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
 open class MainViewModel(
@@ -70,25 +69,13 @@ open class MainViewModel(
             }
         )
         val functionDump = engine.getAllFunctions().joinToString("\n\n") { engine.describeFunction(it) }
-        it.appendLog(Log("Welcome to JsonMath 1.0.8", LogType.MESSAGE))
-        it.appendLog(Log("List of all available functions:\n$functionDump", LogType.MESSAGE))
+        logger.logInfo("Welcome to JsonMath 1.0.8")
+        logger.logDebug("List of all available functions:\n$functionDump")
     }
     open val dataViewModel = DataViewModel(uiViewModel, engine).also {
         it.loadSave(Save.default)
     }
     open val saveFileViewModel = SaveFileViewModel(uiViewModel, savesRepository)
-
-    fun createCrashSave() {
-        var name = "crashsave"
-        var i = 1
-        var saves = savesRepository.listSaves().map { it.name }
-        while (name in saves) {
-            name = "crashsave${i++}"
-            saves = savesRepository.listSaves().map { it.name }
-        }
-        savesRepository.upsertSave(SaveFile(name, dataViewModel.createSave()))
-    }
-
 }
 
 val LocalMainViewModel = compositionLocalOf<MainViewModel> { throw Exception("No LocalMainViewModel provided") }

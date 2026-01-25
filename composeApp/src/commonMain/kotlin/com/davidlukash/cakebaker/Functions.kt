@@ -6,13 +6,10 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.log.Log
-import com.davidlukash.cakebaker.data.log.LogType
 import com.davidlukash.cakebaker.engine.CakeBakerEngine
-import com.davidlukash.cakebaker.viewmodel.DataViewModel
-import com.davidlukash.jsonmath.engine.basic.toTraceString
-import com.davidlukash.jsonmath.engine.normal.LanguageException
+import com.davidlukash.cakebaker.logger.AppLogger
+import com.davidlukash.cakebaker.logger.CompoundAppLogger
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
@@ -30,13 +27,22 @@ import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-import kotlin.uuid.ExperimentalUuidApi
 
 val globalDecimalMode = DecimalMode(
     decimalPrecision = 34,
     roundingMode = RoundingMode.FLOOR,
     scale = 1
 )
+
+val logger = CompoundAppLogger().also {
+    it.registerLogger(
+        object : AppLogger() {
+            override fun appendLog(log: Log) {
+                println(log.toLogString())
+            }
+        }
+    )
+}
 
 fun BigDecimal.log10(): Int {
     return this.toString().split("+")[1].toInt()
@@ -254,6 +260,7 @@ fun <T> withResult(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> {
         Result.success(block())
     } catch (e: CancellationException) { throw e }
     catch (e: Exception) {
+        logger.logError(e)
         Result.failure(e)
     } finally { finallyBlock() }
 }
@@ -263,6 +270,7 @@ suspend fun <T> withResultSuspend(finallyBlock: suspend () -> Unit = {}, block: 
         Result.success(block())
     } catch (e: CancellationException) { throw e }
     catch (e: Exception) {
+        logger.logError(e)
         Result.failure(e)
     } finally { finallyBlock() }
 }
