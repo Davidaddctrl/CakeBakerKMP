@@ -63,7 +63,6 @@ kotlin {
             implementation(libs.bignum)
             implementation(libs.jsonMath)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.kermit)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
