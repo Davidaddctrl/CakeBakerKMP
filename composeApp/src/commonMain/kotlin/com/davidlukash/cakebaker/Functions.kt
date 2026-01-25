@@ -115,6 +115,21 @@ fun mapDouble(n: Double, inMin: Double, inMax: Double, outMin: Double, outMax: D
     return (n - inMin) * (outMax - outMin) / (inMax - inMin) + outMin
 }
 
+fun mapDoubleBiased(
+    n: Double,
+    inMin: Double,
+    inMax: Double,
+    outMin: Double,
+    outMax: Double,
+    bias: Double
+): Double {
+    val bias = -bias
+    val normalized = (n - inMin) / (inMax - inMin)
+
+    val biased = normalized.pow(if (bias >= 0.0) (bias + 1.0) else (1.0 - bias))
+    return if (bias >= 0) outMin + biased * (outMax - outMin) else outMax - biased * (outMax - outMin)
+}
+
 fun weightedRandom(weight: Double, max: Double, random: Random): Double {
     val n = random.nextDouble()
     val weighted = n.pow(1f / weight)
@@ -179,60 +194,78 @@ fun Modifier.horizontalRowScroll(
     )
 }
 
-@OptIn(ExperimentalUuidApi::class)
-fun <T> withErrorHandling(appLogger: AppLogger, finallyBlock: () -> Unit = {}, block: () -> T): Result<T> {
-    try {
-        return Result.success(block())
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: LanguageException) {
-        if (appLogger.getDebugConsole() == ConsoleType.NONE)
-            appLogger.setDebugConsole(ConsoleType.POPUP)
-        appLogger.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
-        return Result.failure(e)
-    } catch (e: Exception) {
-        if (appLogger.getDebugConsole() == ConsoleType.NONE)
-            appLogger.setDebugConsole(ConsoleType.POPUP)
-        appLogger.appendLog(Log(e.stackTraceToString(), LogType.ERROR))
-        return Result.failure(e)
-    } finally {
-        finallyBlock()
-    }
+//@OptIn(ExperimentalUuidApi::class)
+//fun <T> withErrorHandling(appLogger: AppLogger, finallyBlock: () -> Unit = {}, block: () -> T): Result<T> {
+//    try {
+//        return Result.success(block())
+//    } catch (e: CancellationException) {
+//        throw e
+//    } catch (e: LanguageException) {
+//        if (appLogger.getDebugConsole() == ConsoleType.NONE)
+//            appLogger.setDebugConsole(ConsoleType.POPUP)
+//        appLogger.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
+//        return Result.failure(e)
+//    } catch (e: Exception) {
+//        if (appLogger.getDebugConsole() == ConsoleType.NONE)
+//            appLogger.setDebugConsole(ConsoleType.POPUP)
+//        appLogger.appendLog(Log(e.stackTraceToString(), LogType.ERROR))
+//        return Result.failure(e)
+//    } finally {
+//        finallyBlock()
+//    }
+//}
+//
+//fun <T> DataViewModel.withErrorHandling(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> =
+//    withErrorHandling(this.uiViewModel, finallyBlock, block)
+//
+//@OptIn(ExperimentalUuidApi::class)
+//suspend fun <T> withErrorHandlingAsync(
+//    appLogger: AppLogger,
+//    finallyBlock: suspend () -> Unit = {},
+//    block: suspend () -> T
+//): Result<T> {
+//    try {
+//        return Result.success(block())
+//    } catch (e: CancellationException) {
+//        throw e
+//    } catch (e: LanguageException) {
+//        if (appLogger.getDebugConsole() == ConsoleType.NONE)
+//            appLogger.setDebugConsole(ConsoleType.POPUP)
+//        appLogger.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
+//        return Result.failure(e)
+//    } catch (e: Exception) {
+//        if (appLogger.getDebugConsole() == ConsoleType.NONE)
+//            appLogger.setDebugConsole(ConsoleType.POPUP)
+//        appLogger.appendLog(Log(e.stackTraceToString(), LogType.ERROR))
+//        return Result.failure(e)
+//    } finally {
+//        finallyBlock()
+//    }
+//}
+//
+//suspend fun <T> DataViewModel.withErrorHandlingAsync(
+//    finallyBlock: suspend () -> Unit = {},
+//    block: suspend () -> T
+//): Result<T> =
+//    withErrorHandlingAsync(this.uiViewModel, finallyBlock, block)
+
+fun <T> withResult(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> {
+    return try {
+        Result.success(block())
+    } catch (e: CancellationException) { throw e }
+    catch (e: Exception) {
+        Result.failure(e)
+    } finally { finallyBlock() }
 }
 
-fun <T> DataViewModel.withErrorHandling(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> =
-    withErrorHandling(this.uiViewModel, finallyBlock, block)
-
-@OptIn(ExperimentalUuidApi::class)
-suspend fun <T> withErrorHandlingAsync(
-    appLogger: AppLogger,
-    finallyBlock: suspend () -> Unit = {},
-    block: suspend () -> T
-): Result<T> {
-    try {
-        return Result.success(block())
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: LanguageException) {
-        if (appLogger.getDebugConsole() == ConsoleType.NONE)
-            appLogger.setDebugConsole(ConsoleType.POPUP)
-        appLogger.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
-        return Result.failure(e)
-    } catch (e: Exception) {
-        if (appLogger.getDebugConsole() == ConsoleType.NONE)
-            appLogger.setDebugConsole(ConsoleType.POPUP)
-        appLogger.appendLog(Log(e.stackTraceToString(), LogType.ERROR))
-        return Result.failure(e)
-    } finally {
-        finallyBlock()
-    }
+suspend fun <T> withResultSuspend(finallyBlock: suspend () -> Unit = {}, block: suspend () -> T): Result<T> {
+    return try {
+        Result.success(block())
+    } catch (e: CancellationException) { throw e }
+    catch (e: Exception) {
+        Result.failure(e)
+    } finally { finallyBlock() }
 }
-
-suspend fun <T> DataViewModel.withErrorHandlingAsync(
-    finallyBlock: suspend () -> Unit = {},
-    block: suspend () -> T
-): Result<T> =
-    withErrorHandlingAsync(this.uiViewModel, finallyBlock, block)
 
 expect fun dumpFunctionsToFile(engine: CakeBakerEngine)
 
