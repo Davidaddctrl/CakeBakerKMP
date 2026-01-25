@@ -31,15 +31,18 @@ import com.davidlukash.cakebaker.ui.screens.otherscreen.OtherScreen
 import com.davidlukash.cakebaker.ui.screens.savescreen.SaveScreen
 import com.davidlukash.cakebaker.ui.screens.settingsscreen.SettingsScreen
 import com.davidlukash.cakebaker.ui.screens.upgradescreen.UpgradeScreen
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 const val transitionDuration = 500
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun NormalScreenMessageManager(
     theme: Theme,
     popups: List<Popup>,
     trueDensity: Density,
-    removePopup: (Int) -> Unit,
+    removePopup: (Uuid) -> Unit,
     lazyListState: LazyListState,
     content: @Composable () -> Unit
 ) {
@@ -62,6 +65,7 @@ fun NormalScreenMessageManager(
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun Navigation(
     theme: Theme, uiState: UIState,
@@ -69,7 +73,7 @@ fun Navigation(
     saveFiles: List<SaveFile>,
     popups: List<Popup>,
     trueDensity: Density,
-    removePopup: (Int) -> Unit,
+    removePopup: (Uuid) -> Unit,
     updateCurrentScreen: (Screen) -> Unit,
     navigateWithFade: (Screen) -> Unit,
     bake: () -> Unit, buyIngredient: (String) -> Unit,
