@@ -27,9 +27,14 @@ abstract class AppLogger {
     @OptIn(ExperimentalUuidApi::class)
     fun logError(error: Exception) {
         if (error is LanguageException) {
-            appendLog(Log(error.toString() + error.origins?.toTraceString(), LogType.ERROR))
+            logErrorMessage(error.toString() + error.origins?.toTraceString())
         } else {
-            appendLog(Log(error.stackTraceToString(), LogType.ERROR))
+            logErrorMessage(error.stackTraceToString())
         }
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun logErrorMessage(message: String) {
+        appendLog(Log(message, LogType.ERROR))
     }
 }

@@ -44,12 +44,12 @@ class OrderFactory(
         val settings =
             orderCakeSettings[cakeTier].takeOrNullWithWarn("Order cake settings with tier $cakeTier does not exist")
         if (settings == null) {
-            addTextPopup("Cake with tier $cakeTier is not configured for orders therefore the order was not created and its creation has been aborted")
+            addTextPopup("Failed to create order")
             return null
         }
         val cake = cakes[cakeTier].takeOrNullWithWarn("Cake with tier $cakeTier does not exist")
         if (cake == null) {
-            addTextPopup("Cake with tier $cakeTier does not exist therefore the order was not created and its creation has been aborted")
+            addTextPopup("Failed to create order")
             return null
         }
         val maxAmount = settings.maxAmount
