@@ -125,7 +125,11 @@ class DataViewModel(
                 _ovenRunning.emit(false)
                 _ovenProgress.emit(0.0)
                 val cake =
-                    cakes[tempCakeTier].takeOrNullWithWarn("Cake with tier $tempCakeTier does not exist, doing nothing") ?: return
+                    cakes[tempCakeTier].takeOrNullWithWarn("Cake with tier $tempCakeTier does not exist")
+                if (cake == null) {
+                    uiViewModel.addTextPopup("Failed to bake cake")
+                    return
+                }
                 updateItem(
                     cake.copy(
                         amount = cake.amount + 1
@@ -158,7 +162,7 @@ class DataViewModel(
         if (autoOrderComplete && autoOrderCompleteEnabled) {
             orders.forEach { order ->
                 val cake =
-                    cakes[order.cakeTier].takeOrNullWithWarn("Cake with tier ${order.cakeTier} does not exist, doing nothing")
+                    cakes[order.cakeTier].takeOrNullWithWarn("Cake with tier ${order.cakeTier} does not exist")
                         ?: return@forEach
                 if (cake.amount >= order.amount) {
                     handleCompleteOrder(order)
@@ -251,11 +255,15 @@ class DataViewModel(
                         random,
                         orderCakeSettings.value,
                         calculateCakePrice(cakeTier)
-                    ) ?: return@mapNotNull null
+                    )
+                    if (order == null) {
+                        uiViewModel.addTextPopup("Failed to create order, deleting timer")
+                        return@mapNotNull null
+                    }
                     val cake =
-                        cakes[cakeTier].takeOrNullWithWarn("Cake with tier $cakeTier does not exist, removing cake time counter")
+                        cakes[cakeTier].takeOrNullWithWarn("Cake with tier $cakeTier does not exist")
                     if (cake == null) {
-                        uiViewModel.addTextPopup("Cake with tier $cakeTier does not exist therefore the order was not created and its creation has been aborted")
+                        uiViewModel.addTextPopup("Failed to create order, deleting timer")
                         return@mapNotNull null
                     }
                     if (uiViewModel.currentScreen.value != KitchenScreen)
@@ -287,9 +295,9 @@ class DataViewModel(
     }
 
     suspend fun handleFailedOrder(order: Order) {
-        val settings = orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist, cancelling order failure")
+        val settings = orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist")
         if (settings == null) {
-            uiViewModel.addTextPopup("Order with id ${order.id} has a cake tier that is not configured. It has been deleted")
+            uiViewModel.addTextPopup("Failed to fail order, deleting order")
             viewModelScope.launch {
                 _orders.emit(
                     _orders.value.filter { it.id != order.id }
@@ -310,9 +318,9 @@ class DataViewModel(
     }
 
     fun handleCompleteOrder(order: Order) {
-        val settings = orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist, cancelling order completion")
+        val settings = orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist")
         if (settings == null) {
-            uiViewModel.addTextPopup("Order with id ${order.id} has a cake tier that is not configured. It has been deleted")
+            uiViewModel.addTextPopup("Failed to complete order, deleting order")
             viewModelScope.launch {
                 _orders.emit(
                     _orders.value.filter { it.id != order.id }
