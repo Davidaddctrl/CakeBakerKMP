@@ -9,4 +9,5 @@ data class ButtonTheme(
     val disabledContentColor: Color,
     val borderColor: Color,
     val disabledBorderColor: Color,
+    val shouldDropShadow: Boolean,
 )

@@ -52,7 +52,7 @@ fun SmallThemedButton(
         )
     ) {
         CompositionLocalProvider(
-            LocalDoDropShadow provides true
+            LocalDoDropShadow provides buttonTheme.shouldDropShadow
         ) {
             CompositionLocalProvider(
                 LocalTextStyle provides theme.unscaledStyles.buttonTextStyle.copy(

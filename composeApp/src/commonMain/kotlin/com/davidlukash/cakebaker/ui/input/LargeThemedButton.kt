@@ -55,7 +55,7 @@ fun LargeThemedButton(
         )
     ) {
         CompositionLocalProvider(
-            LocalDoDropShadow provides true
+            LocalDoDropShadow provides buttonTheme.shouldDropShadow
         ) {
             CompositionLocalProvider(
                 LocalTextStyle provides theme.scaledStyles.buttonTextStyle.copy(textAlign = TextAlign.Center),
