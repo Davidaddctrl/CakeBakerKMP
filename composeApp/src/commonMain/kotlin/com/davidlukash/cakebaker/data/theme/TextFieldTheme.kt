@@ -9,5 +9,5 @@ data class TextFieldTheme(
     val placeholderColor: Color,
     val containerColor: Color,
     val borderColor: Color,
-    val doDropShadow: Boolean
+    val shouldDropShadow: Boolean
 )

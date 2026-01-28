@@ -25,7 +25,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun SmallThemedTextField(modifier: Modifier = Modifier, placeholder: String, value: String, singleLine: Boolean = true, setValue: (String) -> Unit) {
     CompositionLocalProvider(
         LocalIsScaled provides false,
-        LocalDoDropShadow provides Theme.TextFieldTheme.doDropShadow
+        LocalDoDropShadow provides Theme.TextFieldTheme.shouldDropShadow
     ) {
         BasicTextField(
             value,

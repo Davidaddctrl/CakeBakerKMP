@@ -28,7 +28,7 @@ import androidx.compose.ui.zIndex
 import com.davidlukash.cakebaker.data.Popup
 import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.container.SmallContainer
+import com.davidlukash.cakebaker.ui.container.SmallPrimaryContainer
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.uuid.ExperimentalUuidApi
@@ -69,7 +69,7 @@ fun Popup(remove: () -> Unit, popup: Popup) {
         LocalIsScaled provides false
     ) {
         Box {
-            SmallContainer(
+            SmallPrimaryContainer(
                 modifier = Modifier.width(320.dp),
                 shadowElevation = 8.dp,
                 {

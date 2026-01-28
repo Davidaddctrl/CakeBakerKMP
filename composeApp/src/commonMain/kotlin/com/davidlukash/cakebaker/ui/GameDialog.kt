@@ -26,7 +26,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.container.SmallContainer
+import com.davidlukash.cakebaker.ui.container.SmallPrimaryContainer
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
@@ -95,7 +95,7 @@ fun BoxScope.GameDialogContent(
     CompositionLocalProvider(
         LocalIsScaled provides false
     ) {
-        SmallContainer(
+        SmallPrimaryContainer(
             modifier = modifier.align(Alignment.Center),
             content = {
                 Column(

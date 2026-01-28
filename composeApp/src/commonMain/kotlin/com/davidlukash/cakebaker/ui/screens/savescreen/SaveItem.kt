@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.container.Container
+import com.davidlukash.cakebaker.ui.container.PrimaryContainer
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -26,7 +26,7 @@ fun SaveItem(
     overwriteSave: (SaveFile) -> Unit,
     saveFile: SaveFile
 ) {
-    Container(
+    PrimaryContainer(
         modifier = Modifier.fillMaxWidth(),
         content = {
             Column(

@@ -20,11 +20,11 @@ import com.davidlukash.cakebaker.data.order.Order
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.secondsToString
-import com.davidlukash.cakebaker.ui.container.Container
+import com.davidlukash.cakebaker.ui.container.PrimaryContainer
 
 @Composable
 fun RowScope.OrdersPanel(uiState: UIState, completeOrder: (Order) -> Unit, nextOrderRemainingTime: Double?, orders: List<Order>) {
-    Container(
+    PrimaryContainer(
         modifier = Modifier.weight(1f).fillMaxWidth(),
         content = {
             Column(

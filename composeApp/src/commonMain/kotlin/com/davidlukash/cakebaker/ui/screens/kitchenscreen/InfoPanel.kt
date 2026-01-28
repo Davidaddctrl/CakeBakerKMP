@@ -32,7 +32,7 @@ import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
-import com.davidlukash.cakebaker.ui.container.Container
+import com.davidlukash.cakebaker.ui.container.PrimaryContainer
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.input.SwitchButton
 import com.davidlukash.jsonmath.createObject
@@ -50,7 +50,7 @@ fun InfoPanel(
     val cakesSalePrices by derivedStateOf { uiState.getCakesSalesPrices() }
     val autoOven by derivedStateOf { uiState.getAutoOven() }
     val autoOrderComplete by derivedStateOf { uiState.getAutoOrderComplete() }
-    Container(
+    PrimaryContainer(
         modifier = Modifier.fillMaxWidth(),
         shape = ShapeWithCutOut(cutOutSize, 16.dp),
         {

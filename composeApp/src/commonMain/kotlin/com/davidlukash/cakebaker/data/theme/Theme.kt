@@ -1,9 +1,9 @@
 package com.davidlukash.cakebaker.data.theme
 
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.SolidColor
@@ -149,7 +149,7 @@ data class Theme(
 
         @Composable
         fun getImage(name: String): ImageData {
-            return LocalTheme.current.nameToImageMap[name] ?: ImageData()
+            return LocalTheme.current.nameToImage(name)
         }
 
         val default = Theme(
@@ -252,20 +252,32 @@ data class Theme(
                 onUnselectedTextColor = Color(255, 255, 255).copy(alpha = 0.3f),
             ),
             backgroundTheme = ContainerTheme(
-                borderColor = Color.Transparent,
-                containerColor = Color(0, 120, 255),
+                borderColorBrush = SolidColor(Color.Transparent),
+                containerColorBrush = Brush.verticalGradient(
+                    listOf(
+                        Color(0, 100, 217, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                    )
+                ),
                 contentColor = Color(255, 255, 255),
+                shouldDropShadow = true
             ),
             containerTheme = ContainerTheme(
-                borderColor = Color(0, 0, 0),
-                containerColor = Color(246, 255, 153),
+                borderColorBrush = SolidColor(Color(0, 0, 0)),
+                containerColorBrush = SolidColor(Color(246, 255, 153)),
                 contentColor = Color(0, 0, 0),
                 shouldDropShadow = false
             ),
             secondaryContainerTheme = ContainerTheme(
-                borderColor = Color(0, 0, 0),
-                containerColor = Color(8, 160, 69),
+                borderColorBrush = SolidColor(Color(0, 0, 0)),
+                containerColorBrush = SolidColor(Color(8, 160, 69)),
                 contentColor = Color(255, 255, 255),
+                shouldDropShadow = true
             ),
             textFieldTheme = TextFieldTheme(
                 cursorBrush = SolidColor(Color.White),
@@ -273,7 +285,7 @@ data class Theme(
                 placeholderColor = Color(128, 128, 128),
                 containerColor = Color(53, 57, 62),
                 borderColor = Color(37, 41, 46),
-                doDropShadow = false
+                shouldDropShadow = false
             ),
             successColor = Color(58, 158, 0),
             dangerColor = Color(255, 0, 0),
