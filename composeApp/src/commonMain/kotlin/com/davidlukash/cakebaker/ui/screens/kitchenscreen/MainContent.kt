@@ -37,6 +37,7 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.input.ImageButton
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.ResourceImage
+import com.davidlukash.cakebaker.ui.container.Background
 import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.ui.navigation.UpgradeScreen
@@ -46,7 +47,6 @@ import kotlin.math.floor
 
 @Composable
 fun MainContent(
-    theme: Theme,
     uiState: UIState,
     navigateWithFade: (Screen) -> Unit,
     bake: () -> Unit,
@@ -75,7 +75,6 @@ fun MainContent(
                 contentAlignment = Alignment.Center,
             ) {
                 ProgressBar(
-                    theme,
                     modifier = Modifier.width(296.dp),
                     ovenProgress
                 )
@@ -83,8 +82,8 @@ fun MainContent(
                 if (ovenRunning)
                     Text(
                         "${floor((1.0 - ovenProgress) * ovenTime * 10.0) / 10.0} seconds remaining",
-                        style = theme.scaledStyles.verySmallBodyStyle,
-                        color = theme.buttonTheme.contentColor
+                        style = Theme.Styles.verySmallBodyStyle,
+                        color = Theme.ProgressBarTheme.contentColor
                     )
             }
             ImageButton(
@@ -94,7 +93,7 @@ fun MainContent(
                 enabled = canBake && !ovenRunning,
             ) {
                 ResourceImage(
-                    theme.nameToImage("Oven"),
+                    Theme.getImage("Oven"),
                     modifier = Modifier.height(280.dp)
                 )
             }
@@ -106,15 +105,15 @@ fun MainContent(
                 modifier = Modifier.align(Alignment.Start)
             ) {
                 ResourceImage(
-                    theme.nameToImage("Ingredient Shop"),
+                    Theme.getImage("Ingredient Shop"),
                     modifier = Modifier.height(280.dp)
                 )
             }
         }
         Spacer(modifier = Modifier.width(8.dp))
-        RecipePanel(theme, uiState, setCurrentCake)
+        RecipePanel(uiState, setCurrentCake)
         Spacer(modifier = Modifier.width(16.dp))
-        OrdersPanel(theme, uiState, completeOrder, nextOrderRemainingTime, orders)
+        OrdersPanel(uiState, completeOrder, nextOrderRemainingTime, orders)
         Spacer(modifier = Modifier.width(16.dp))
         Box(
             modifier = Modifier.weight(1f),
@@ -122,7 +121,7 @@ fun MainContent(
         ) {
             var buttonSize by remember { mutableStateOf(Size.Zero) }
             InfoPanel(
-                theme, uiState, setAutoOvenEnabled, setAutoOrderCompleteEnabled, buttonSize.copy(
+                uiState, setAutoOvenEnabled, setAutoOrderCompleteEnabled, buttonSize.copy(
                 width = buttonSize.width + density.run { 8.dp.toPx() },
                 height = buttonSize.height + density.run { 8.dp.toPx() }
             ))
@@ -135,7 +134,7 @@ fun MainContent(
                 }
             ) {
                 ResourceImage(
-                    theme.nameToImage("Upgrade Shop"),
+                    Theme.getImage("Upgrade Shop"),
                     modifier = Modifier.height(280.dp)
                 )
             }
@@ -149,7 +148,6 @@ fun MainContent(
 )
 @Composable
 fun MainContentPreview() {
-    val theme = Theme.default
     var autoOvenEnabled by remember { mutableStateOf(true) }
     var autoOrderCompleteEnabled by remember { mutableStateOf(true) }
     val infiniteTransition = rememberInfiniteTransition()
@@ -169,11 +167,8 @@ fun MainContentPreview() {
             it.copy(level = 1)
         },
     )
-    Box(
-        modifier = Modifier.fillMaxSize().background(theme.backgroundTheme.containerColor),
-    ) {
+    Background {
         MainContent(
-            theme = theme,
             uiState = uiState,
             navigateWithFade = { },
             bake = { },
@@ -181,9 +176,8 @@ fun MainContentPreview() {
             setAutoOrderCompleteEnabled = { autoOrderCompleteEnabled = it },
             completeOrder = { },
             setCurrentCake = {},
-            innerPadding = PaddingValues(16.dp),
-            ovenRunning = true,
             ovenProgress = amount.toDouble(),
+            ovenRunning = true,
             nextOrderRemainingTime = 30.0,
             orders = listOf(
                 Order(
@@ -194,6 +188,7 @@ fun MainContentPreview() {
                     totalTime = 120.0,
                 )
             ),
+            innerPadding = PaddingValues(16.dp),
         )
     }
 }

@@ -36,6 +36,5 @@ fun ResourceImage(data: ImageData, contentDescription: String? = null, modifier:
 @Preview
 @Composable
 fun ResourceImagePreview() {
-    val theme = Theme.default
-    ResourceImage(theme.nameToImage("Oven"))
+    ResourceImage(Theme.getImage("Oven"))
 }

@@ -17,24 +17,25 @@ import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.ui.container.Background
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun UpgradeScreen(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> Unit, buyUpgrade: (Upgrade) -> Unit) {
+fun UpgradeScreen(uiState: UIState, navigateWithFade: (Screen) -> Unit, buyUpgrade: (Upgrade) -> Unit) {
     var currentPage by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
-            TopBar(theme, uiState)
+            TopBar(uiState)
         },
         bottomBar = {
-            BottomBar(theme, uiState, navigateWithFade, currentPage) { currentPage = it }
+            BottomBar(uiState, navigateWithFade, currentPage) { currentPage = it }
         },
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
-        MainContent(theme, uiState, buyUpgrade, innerPadding, currentPage)
+        MainContent(uiState, buyUpgrade, innerPadding, currentPage)
     }
 }
 
@@ -44,20 +45,15 @@ fun UpgradeScreen(theme: Theme, uiState: UIState, navigateWithFade: (Screen) -> 
 )
 @Composable
 fun UpgradeScreenPreview() {
-    val theme = Theme.default
     val uiState = Save.state.copy(
         items = Save.state.items.map {
             if (it.name == "Vanilla Cake") it.copy(amount = 5.toBigDecimal()) else it
         },
     )
-    Box(
-        modifier = Modifier.fillMaxSize().background(theme.backgroundTheme.containerColor),
-    ) {
+    Background {
         UpgradeScreen(
-            theme,
             uiState,
-            {},
             {}
-        )
+        ) {}
     }
 }

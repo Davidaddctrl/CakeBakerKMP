@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
@@ -23,11 +22,11 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.ui.navigation.SettingsScreen
 
 @Composable
-fun MenuScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
+fun MenuScreen(navigateWithFade: (Screen) -> Unit) {
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            TopBar(theme)
+            TopBar()
         },
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
@@ -37,41 +36,41 @@ fun MenuScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             LargeThemedButton(
-                theme = theme,
                 onClick = {
                     navigateWithFade(KitchenScreen)
                 },
-                modifier = Modifier.width(480.dp)
-            ) {
-                Text("Play")
-            }
+                modifier = Modifier.width(480.dp),
+                content = {
+                    Text("Play")
+                }
+            )
             LargeThemedButton(
-                theme = theme,
                 onClick = {
                     navigateWithFade(SaveScreen)
                 },
-                modifier = Modifier.width(480.dp)
-            ) {
-                Text("Saves")
-            }
+                modifier = Modifier.width(480.dp),
+                content = {
+                    Text("Saves")
+                }
+            )
             LargeThemedButton(
-                theme = theme,
                 onClick = {
                     navigateWithFade(OtherScreen)
                 },
-                modifier = Modifier.width(480.dp)
-            ) {
-                Text("Licenses")
-            }
+                modifier = Modifier.width(480.dp),
+                content = {
+                    Text("Licenses")
+                }
+            )
             LargeThemedButton(
-                theme = theme,
                 onClick = {
                     navigateWithFade(SettingsScreen)
                 },
-                modifier = Modifier.width(480.dp)
-            ) {
-                Text("Settings")
-            }
+                modifier = Modifier.width(480.dp),
+                content = {
+                    Text("Settings")
+                }
+            )
         }
     }
 }

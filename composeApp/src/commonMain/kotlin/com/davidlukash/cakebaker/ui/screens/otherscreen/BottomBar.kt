@@ -8,25 +8,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 import com.davidlukash.cakebaker.ui.navigation.MenuScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 
 @Composable
-fun BottomBar(theme: Theme, navigateWithFade: (Screen) -> Unit) {
+fun BottomBar(navigateWithFade: (Screen) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         LargeThemedButton(
-            theme = theme,
             onClick = {
                 navigateWithFade(MenuScreen)
             },
-            modifier = Modifier.width(280.dp)
-        ) {
-            Text("Back")
-        }
+            modifier = Modifier.width(280.dp),
+            content = {
+                Text("Back")
+            }
+        )
     }
 }

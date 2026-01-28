@@ -16,7 +16,7 @@ import com.davidlukash.cakebaker.ui.ItemTopRow
 import com.davidlukash.cakebaker.ui.input.MenuButton
 
 @Composable
-fun TopBar(theme: Theme, uiState: UIState) {
+fun TopBar(uiState: UIState) {
     MenuButton {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -24,12 +24,11 @@ fun TopBar(theme: Theme, uiState: UIState) {
         ) {
             Text(
                 "Kitchen",
-                color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
-                style = theme.scaledStyles.titleStyle,
+                style = Theme.Styles.titleStyle,
             )
-            ItemTopRow(theme, uiState)
+            ItemTopRow(uiState)
         }
     }
 }

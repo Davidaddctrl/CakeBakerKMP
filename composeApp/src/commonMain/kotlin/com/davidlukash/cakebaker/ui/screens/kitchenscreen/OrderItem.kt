@@ -34,11 +34,10 @@ import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: Order) {
+fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
     val cakes by derivedStateOf { uiState.getCakes() }
     val cake by derivedStateOf { cakes[order.cakeTier] }
     SecondaryContainer(
-        theme = theme,
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
@@ -52,29 +51,29 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
             ) {
                 Text(
                     "Order for",
-                    style = theme.scaledStyles.smallBodyStyle,
+                    style = Theme.Styles.smallBodyStyle,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 cake?.let { cake ->
                     SmallThemedButton(
-                        theme = theme,
                         onClick = {
                             completeOrder()
                         },
-                        enabled = cake.amount >= order.amount
-                    ) {
-                        Text(
-                            "Complete",
-                            style = theme.scaledStyles.mediumBodyStyle,
-                            modifier = Modifier.padding(horizontal = 4.dp)
-                        )
-                    }
+                        enabled = cake.amount >= order.amount,
+                        content = {
+                            Text(
+                                "Complete",
+                                style = Theme.Styles.mediumBodyStyle,
+                                modifier = Modifier.padding(horizontal = 4.dp)
+                            )
+                        }
+                    )
                 }
             }
             cake?.let { cake ->
                 Text(
                     "${toEngNotation(order.amount.toBigDecimal())} ${cake.name}",
-                    style = theme.scaledStyles.smallBodyStyle,
+                    style = Theme.Styles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 )
@@ -82,43 +81,42 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
             if (cake == null)
                 Text(
                     "Invalid Cake Tier",
-                    style = theme.scaledStyles.smallBodyStyle,
+                    style = Theme.Styles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 )
 
             Text(
                 "Buying for",
-                style = theme.scaledStyles.smallBodyStyle,
+                style = Theme.Styles.smallBodyStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             Text(
                 "$${toEngNotation(order.salePrice)}",
-                style = theme.scaledStyles.largeBodyStyle,
+                style = Theme.Styles.largeBodyStyle,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             Text(
                 "Remaining Time",
-                style = theme.scaledStyles.smallBodyStyle,
+                style = Theme.Styles.smallBodyStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             Box(
                 contentAlignment = Alignment.Center,
             ) {
                 ProgressBar(
-                    theme,
                     modifier = Modifier.width(320.dp),
                     amount = order.remainingTime / order.totalTime,
                 )
                 Text(
                     "${secondsToString(order.remainingTime)} remaining",
-                    style = theme.scaledStyles.verySmallBodyStyle,
+                    style = Theme.Styles.verySmallBodyStyle,
                 )
             }
             Text(
                 "Order ${order.id}",
-                style = theme.scaledStyles.verySmallBodyStyle,
+                style = Theme.Styles.verySmallBodyStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
         }
@@ -130,7 +128,6 @@ fun OrderItem(theme: Theme, uiState: UIState, completeOrder: () -> Unit, order: 
 )
 @Composable
 fun OrderItemPreview() {
-    val theme = Theme.default
     val uiState = Save.state.copy(
         items = Save.state.items.map { it.copy(amount = 10.toBigDecimal()) },
     )
@@ -148,5 +145,5 @@ fun OrderItemPreview() {
         totalTime = 30.0,
         id = 988756,
     )
-    OrderItem(theme = theme, uiState = uiState, completeOrder = {}, order = order)
+    OrderItem(uiState = uiState, completeOrder = {}, order = order)
 }

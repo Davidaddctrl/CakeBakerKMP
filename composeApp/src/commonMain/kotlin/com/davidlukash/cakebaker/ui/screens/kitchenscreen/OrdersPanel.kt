@@ -23,64 +23,64 @@ import com.davidlukash.cakebaker.secondsToString
 import com.davidlukash.cakebaker.ui.container.Container
 
 @Composable
-fun RowScope.OrdersPanel(theme: Theme, uiState: UIState, completeOrder: (Order) -> Unit, nextOrderRemainingTime: Double?, orders: List<Order>) {
+fun RowScope.OrdersPanel(uiState: UIState, completeOrder: (Order) -> Unit, nextOrderRemainingTime: Double?, orders: List<Order>) {
     Container(
-        theme = theme,
         modifier = Modifier.weight(1f).fillMaxWidth(),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box {
-                Text(
-                    "Orders",
-                    style = theme.scaledStyles.smallBodyStyle,
-                    textAlign = TextAlign.Center,
-                    textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-                )
-                Text(
-                    orders.size.toString(),
-                    style = theme.scaledStyles.verySmallBodyStyle,
-                )
-            }
-
-            Box(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
-                contentAlignment = Alignment.Center
+        content = {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (orders.isEmpty()) {
-                    nextOrderRemainingTime?.let {
-                        Text(
-                            "${secondsToString(it)} until next order",
-                            style = theme.scaledStyles.smallBodyStyle,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                    if (nextOrderRemainingTime == null)
-                        Text(
-                        "Bake a cake to get orders",
-                        style = theme.scaledStyles.smallBodyStyle,
+                Box {
+                    Text(
+                        "Orders",
+                        style = Theme.Styles.smallBodyStyle,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    )
+                    Text(
+                        orders.size.toString(),
+                        style = Theme.Styles.verySmallBodyStyle,
                     )
                 }
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxHeight()
+
+                Box(
+                    modifier = Modifier.weight(1f).fillMaxWidth(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    items(
-                        orders.size,
-                        key = { orders[it].id }
-                    ) { orderIndex ->
-                        val order = orders[orderIndex]
-                        OrderItem(theme, uiState, { completeOrder(order) }, order)
+                    if (orders.isEmpty()) {
+                        nextOrderRemainingTime?.let {
+                            Text(
+                                "${secondsToString(it)} until next order",
+                                style = Theme.Styles.smallBodyStyle,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        if (nextOrderRemainingTime == null)
+                            Text(
+                                "Bake a cake to get orders",
+                                style = Theme.Styles.smallBodyStyle,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                    }
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
+                        items(
+                            orders.size,
+                            key = { orders[it].id }
+                        ) { orderIndex ->
+                            val order = orders[orderIndex]
+                            OrderItem(uiState, { completeOrder(order) }, order)
+                        }
                     }
                 }
             }
-        }
-    }
+        },
+    )
 }

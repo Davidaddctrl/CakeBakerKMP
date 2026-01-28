@@ -22,14 +22,14 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SettingsScreen(theme: Theme, navigateWithFade: (Screen) -> Unit, setDebugConsole: (ConsoleType) -> Unit, debugConsole: ConsoleType) {
+fun SettingsScreen(navigateWithFade: (Screen) -> Unit, setDebugConsole: (ConsoleType) -> Unit, debugConsole: ConsoleType) {
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            TopBar(theme)
+            TopBar()
         },
         bottomBar = {
-            BottomBar(theme, navigateWithFade)
+            BottomBar(navigateWithFade)
         },
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
@@ -39,12 +39,11 @@ fun SettingsScreen(theme: Theme, navigateWithFade: (Screen) -> Unit, setDebugCon
         ) {
             Text(
                 "Debug Console Open",
-                style = theme.scaledStyles.smallBodyStyle,
+                style = Theme.Styles.smallBodyStyle,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
             )
             SwitchButton(
-                theme = theme,
                 value = debugConsole != ConsoleType.NONE,
                 onText = "Open",
                 offText = "Closed",
@@ -64,13 +63,11 @@ fun SettingsScreen(theme: Theme, navigateWithFade: (Screen) -> Unit, setDebugCon
 )
 @Composable
 fun SettingsScreenPreview() {
-    val theme = Theme.default
-    Background(theme) {
+    Background({
         SettingsScreen(
-            theme = theme,
             navigateWithFade = {},
             setDebugConsole = {},
             debugConsole = ConsoleType.SIDEBAR
         )
-    }
+    })
 }

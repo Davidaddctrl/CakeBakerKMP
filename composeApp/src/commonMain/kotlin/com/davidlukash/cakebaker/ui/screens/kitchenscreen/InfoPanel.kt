@@ -41,7 +41,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun InfoPanel(
-    theme: Theme, uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit,
+    uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit,
     setAutoOrderCompleteEnabled: (Boolean) -> Unit, cutOutSize: Size
 ) {
     val satisfactionLevel by derivedStateOf { uiState.getSatisfactionLevel() }
@@ -51,107 +51,105 @@ fun InfoPanel(
     val autoOven by derivedStateOf { uiState.getAutoOven() }
     val autoOrderComplete by derivedStateOf { uiState.getAutoOrderComplete() }
     Container(
-        theme = theme,
         modifier = Modifier.fillMaxWidth(),
-        shape = ShapeWithCutOut(cutOutSize, 16.dp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                "Information",
-                style = theme.scaledStyles.smallBodyStyle,
-                textAlign = TextAlign.Center,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+        shape = ShapeWithCutOut(cutOutSize, 16.dp),
+        {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Customer\nSatisfaction",
-                    style = theme.scaledStyles.smallBodyStyle,
+                    "Information",
+                    style = Theme.Styles.smallBodyStyle,
                     textAlign = TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 )
-                Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    ResourceImage(
-                        data = when (satisfactionLevel) {
-                            1 -> theme.nameToImage("Sad Face")
-                            2 -> theme.nameToImage("Neutral Sad Face")
-                            3 -> theme.nameToImage("Neutral Face")
-                            4 -> theme.nameToImage("Medium Face")
-                            5 -> theme.nameToImage("Happy Face")
-                            else -> theme.nameToImage("Happy Face")
-                        },
-                        modifier = Modifier.size(36.dp),
-                    )
                     Text(
-                        "$satisfaction%",
-                        style = theme.scaledStyles.smallBodyStyle,
+                        "Customer\nSatisfaction",
+                        style = Theme.Styles.smallBodyStyle,
+                        textAlign = TextAlign.Center,
                     )
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        ResourceImage(
+                            data = when (satisfactionLevel) {
+                                1 -> Theme.getImage("Sad Face")
+                                2 -> Theme.getImage("Neutral Sad Face")
+                                3 -> Theme.getImage("Neutral Face")
+                                4 -> Theme.getImage("Medium Face")
+                                5 -> Theme.getImage("Happy Face")
+                                else -> Theme.getImage("Happy Face")
+                            },
+                            modifier = Modifier.size(36.dp),
+                        )
+                        Text(
+                            "$satisfaction%",
+                            style = Theme.Styles.smallBodyStyle,
+                        )
+                    }
                 }
-            }
-            Text(
-                "Cake Sale Price",
-                style = theme.scaledStyles.smallBodyStyle,
-                textAlign = TextAlign.Center,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Text(
-                "$${toEngNotation(cakesSalePrices[currentCakeTier] ?: BigDecimal.ZERO)}",
-                style = theme.scaledStyles.largeBodyStyle,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
-            )
-
-            autoOven?.let { autoOven ->
                 Text(
-                    "Auto Oven",
-                    style = theme.scaledStyles.smallBodyStyle,
+                    "Cake Sale Price",
+                    style = Theme.Styles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-                )
-                SwitchButton(
-                    theme = theme,
-                    value = autoOven.second,
-                    onText = "On",
-                    offText = "Off",
-                    enabled = autoOven.first,
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    setAutoOvenEnabled(it)
-                }
-            }
-
-            autoOrderComplete?.let { autoOrderComplete ->
+                )
                 Text(
-                    "Auto Order Complete",
-                    style = theme.scaledStyles.smallBodyStyle,
+                    "$${toEngNotation(cakesSalePrices[currentCakeTier] ?: BigDecimal.ZERO)}",
+                    style = Theme.Styles.largeBodyStyle,
                     textAlign = TextAlign.Center,
-                    textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
                 )
-                SwitchButton(
-                    theme = theme,
-                    value = autoOrderComplete.second,
-                    onText = "On",
-                    offText = "Off",
-                    enabled = autoOrderComplete.first,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    setAutoOrderCompleteEnabled(it)
+
+                autoOven?.let { autoOven ->
+                    Text(
+                        "Auto Oven",
+                        style = Theme.Styles.smallBodyStyle,
+                        textAlign = TextAlign.Center,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                    )
+                    SwitchButton(
+                        value = autoOven.second,
+                        onText = "On",
+                        offText = "Off",
+                        enabled = autoOven.first,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        setAutoOvenEnabled(it)
+                    }
+                }
+
+                autoOrderComplete?.let { autoOrderComplete ->
+                    Text(
+                        "Auto Order Complete",
+                        style = Theme.Styles.smallBodyStyle,
+                        textAlign = TextAlign.Center,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                    )
+                    SwitchButton(
+                        value = autoOrderComplete.second,
+                        onText = "On",
+                        offText = "Off",
+                        enabled = autoOrderComplete.first,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        setAutoOrderCompleteEnabled(it)
+                    }
                 }
             }
         }
-    }
+    )
 }
 
 @Composable
@@ -259,7 +257,6 @@ class ShapeWithCutOut(val cutOutSize: Size, val radius: Float) : Shape {
 @Preview
 @Composable
 fun InfoPanelPreview() {
-    val theme = Theme.default
     var autoOvenEnabled by remember { mutableStateOf(true) }
     var autoOrderCompleteEnabled by remember { mutableStateOf(true) }
     val uiState = remember(autoOrderCompleteEnabled, autoOvenEnabled) { Save.state.copy(
@@ -275,7 +272,6 @@ fun InfoPanelPreview() {
         modifier = Modifier.size(400.dp, 720.dp)
     ) {
         InfoPanel(
-            theme = theme,
             uiState = uiState,
             setAutoOvenEnabled = { autoOvenEnabled = it },
             setAutoOrderCompleteEnabled = { autoOrderCompleteEnabled = it },

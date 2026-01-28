@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.data.UIState
+import com.davidlukash.cakebaker.data.theme.LocalTheme
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
@@ -74,141 +75,145 @@ fun App() {
             themeViewModel.setTheme(Theme.default)
         }
 
-        if (importDialogOpen) {
-            CreateSaveDialog(
-                theme = theme,
-                exists = { name ->
-                    saveFiles.map { it.name.uppercase() }.contains(name.uppercase())
-                },
-                create = {
-                    coroutineScope.launch {
-                        importSaveData?.let { importSaveData ->
-                            saveFileViewModel.upsertSave(SaveFile(it, importSaveData))
-                                .onSuccess {
-                                    uiViewModel.setImportSaveData(null)
-                                    uiViewModel.setImportDialogOpen(false)
-                                    uiViewModel.addTextPopup("Save Imported")
-                                }
-                                .onFailure {
-                                    uiViewModel.setImportSaveData(null)
-                                    uiViewModel.setImportDialogOpen(false)
-                                    uiViewModel.addTextPopup("Failed to import save")
-                                }
-                        }
-                    }
-                },
-                cancel = {
-                    uiViewModel.setImportSaveData(null)
-                    uiViewModel.setImportDialogOpen(false)
-                },
-                isImport = true,
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxSize(),
+        CompositionLocalProvider(
+            LocalTheme provides theme
         ) {
-            Box(
-                modifier = Modifier.weight(1f).fillMaxSize(),
-            ) {
-                ScaleViewport(1920.dp, 1200.dp) {
-                    Navigation(
-                        theme = theme, uiState = uiState,
-                        saveFiles = saveFiles,
-                        pendingScreen = pendingScreen,
-                        popups = popups, trueDensity = trueDensity ?: LocalDensity.current,
-                        removePopup = { uiViewModel.removePopup(it) },
-                        updateCurrentScreen = { uiViewModel.updateCurrentScreen(it) },
-                        navigateWithFade = { uiViewModel.navigateWithFade(it) },
-                        bake = { dataViewModel.startBake() },
-                        buyIngredient = { dataViewModel.buyIngredient(it) },
-                        setAutoOvenEnabled = { dataViewModel.setAutoOvenEnabled(it) },
-                        setAutoOrderCompleteEnabled = { dataViewModel.setAutoOrderCompleteEnabled(it) },
-                        completeOrder = { dataViewModel.handleCompleteOrder(it) },
-                        setCurrentCake = { dataViewModel.setCurrentCake(it) },
-                        exportSave = { saveFile ->
-                            coroutineScope.launch {
-                                saveFileViewModel.exportSave(saveFile)
-                                    .onSuccess { exported ->
-                                        if (exported) uiViewModel.addTextPopup("Save \"${saveFile.name}\" Exported")
+            if (importDialogOpen) {
+                CreateSaveDialog(
+                    exists = { name ->
+                        saveFiles.map { it.name.uppercase() }.contains(name.uppercase())
+                    },
+                    create = {
+                        coroutineScope.launch {
+                            importSaveData?.let { importSaveData ->
+                                saveFileViewModel.upsertSave(SaveFile(it, importSaveData))
+                                    .onSuccess {
+                                        uiViewModel.setImportSaveData(null)
+                                        uiViewModel.setImportDialogOpen(false)
+                                        uiViewModel.addTextPopup("Save Imported")
                                     }
                                     .onFailure {
-                                        uiViewModel.addTextPopup("Failed to export save \"${saveFile.name}\"")
+                                        uiViewModel.setImportSaveData(null)
+                                        uiViewModel.setImportDialogOpen(false)
+                                        uiViewModel.addTextPopup("Failed to import save")
                                     }
                             }
-                        },
-                        deleteSave = { saveFile ->
-                            coroutineScope.launch {
-                                saveFileViewModel.deleteSave(saveFile.name)
-                                    .onSuccess { exists ->
+                        }
+                    },
+                    cancel = {
+                        uiViewModel.setImportSaveData(null)
+                        uiViewModel.setImportDialogOpen(false)
+                    },
+                    isImport = true,
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                Box(
+                    modifier = Modifier.weight(1f).fillMaxSize(),
+                ) {
+                    ScaleViewport(1920.dp, 1200.dp) {
+                        Navigation(
+                            uiState = uiState,
+                            pendingScreen = pendingScreen,
+                            saveFiles = saveFiles,
+                            popups = popups,
+                            trueDensity = trueDensity ?: LocalDensity.current,
+                            removePopup = { uiViewModel.removePopup(it) },
+                            updateCurrentScreen = { uiViewModel.updateCurrentScreen(it) },
+                            navigateWithFade = { uiViewModel.navigateWithFade(it) },
+                            bake = { dataViewModel.startBake() },
+                            buyIngredient = { dataViewModel.buyIngredient(it) },
+                            setAutoOvenEnabled = { dataViewModel.setAutoOvenEnabled(it) },
+                            setAutoOrderCompleteEnabled = { dataViewModel.setAutoOrderCompleteEnabled(it) },
+                            completeOrder = { dataViewModel.handleCompleteOrder(it) },
+                            setCurrentCake = { dataViewModel.setCurrentCake(it) },
+                            exportSave = { saveFile ->
+                                coroutineScope.launch {
+                                    saveFileViewModel.exportSave(saveFile)
+                                        .onSuccess { exported ->
+                                            if (exported) uiViewModel.addTextPopup("Save \"${saveFile.name}\" Exported")
+                                        }
+                                        .onFailure {
+                                            uiViewModel.addTextPopup("Failed to export save \"${saveFile.name}\"")
+                                        }
+                                }
+                            },
+                            deleteSave = { saveFile ->
+                                coroutineScope.launch {
+                                    saveFileViewModel.deleteSave(saveFile.name)
+                                        .onSuccess { exists ->
+                                            uiViewModel.addTextPopup(
+                                                if (exists) "Save \"${saveFile.name}\" Deleted"
+                                                else "Save \"${saveFile.name}\" Does Not Exist"
+                                            )
+                                        }.onFailure {
+                                            uiViewModel.addTextPopup(
+                                                "Failed to delete save \"${saveFile.name}\""
+                                            )
+                                        }
+                                }
+                            },
+                            loadSave = { saveFile ->
+                                coroutineScope.launch {
+                                    dataViewModel.loadSave(saveFile.save)
+                                    uiViewModel.navigateWithFade(KitchenScreen)
+                                    delay(transitionDuration.toLong())
+                                    uiViewModel.addTextPopup("Save Loaded")
+                                }
+                            },
+                            importSave = {
+                                coroutineScope.launch {
+                                    saveFileViewModel.importSave()
+                                        .onSuccess { save ->
+                                            if (save != null) {
+                                                uiViewModel.setImportSaveData(save)
+                                                uiViewModel.setImportDialogOpen(true)
+                                            }
+                                        }
+                                        .onFailure {
+                                            uiViewModel.addTextPopup("Failed to import save")
+                                        }
+                                }
+                            },
+                            overwriteSave = { saveFile ->
+                                coroutineScope.launch {
+                                    val saveNames = saveFiles.map { it.name.uppercase() }
+                                    saveFileViewModel.upsertSave(
+                                        saveFile.copy(
+                                            save = dataViewModel.createSave()
+                                        )
+                                    ).onSuccess { existsBefore ->
                                         uiViewModel.addTextPopup(
-                                            if (exists) "Save \"${saveFile.name}\" Deleted"
-                                            else "Save \"${saveFile.name}\" Does Not Exist"
+                                            if (!existsBefore) "Save \"${saveFile.name}\" Created"
+                                            else "Save \"${saveFile.name}\" Overwritten"
                                         )
                                     }.onFailure {
+                                        val existsBefore = saveNames.contains(saveFile.name.uppercase())
                                         uiViewModel.addTextPopup(
-                                            "Failed to delete save \"${saveFile.name}\""
+                                            if (!existsBefore) "Failed to create save \"${saveFile.name}\""
+                                            else "Failed to overwrite save \"${saveFile.name}\""
                                         )
                                     }
-                            }
-                        },
-                        loadSave = { saveFile ->
-                            coroutineScope.launch {
-                                dataViewModel.loadSave(saveFile.save)
-                                uiViewModel.navigateWithFade(KitchenScreen)
-                                delay(transitionDuration.toLong())
-                                uiViewModel.addTextPopup("Save Loaded")
-                            }
-                        },
-                        overwriteSave = { saveFile ->
-                            coroutineScope.launch {
-                                val saveNames = saveFiles.map { it.name.uppercase() }
-                                saveFileViewModel.upsertSave(
-                                    saveFile.copy(
-                                        save = dataViewModel.createSave()
-                                    )
-                                ).onSuccess { existsBefore ->
-                                    uiViewModel.addTextPopup(
-                                        if (!existsBefore) "Save \"${saveFile.name}\" Created"
-                                        else "Save \"${saveFile.name}\" Overwritten"
-                                    )
-                                }.onFailure {
-                                    val existsBefore = saveNames.contains(saveFile.name.uppercase())
-                                    uiViewModel.addTextPopup(
-                                        if (!existsBefore) "Failed to create save \"${saveFile.name}\""
-                                        else "Failed to overwrite save \"${saveFile.name}\""
-                                    )
                                 }
-                            }
-                        },
-                        importSave = {
-                            coroutineScope.launch {
-                                saveFileViewModel.importSave()
-                                .onSuccess { save ->
-                                    if (save != null) {
-                                        uiViewModel.setImportSaveData(save)
-                                        uiViewModel.setImportDialogOpen(true)
-                                    }
-                                }
-                                .onFailure {
-                                    uiViewModel.addTextPopup("Failed to import save")
-                                }
-                            }
-                        },
-                        buyUpgrade = { dataViewModel.buyUpgrade(it) },
-                        setDebugConsole = { uiViewModel.setDebugConsole(it) },
-                        consoleType = debugConsole,
-                        ovenProgress = ovenProgress,
-                        ovenRunning = ovenRunning,
-                        nextOrderRemainingTime = nextOrderRemainingTime,
-                        orders = orders,
-                    )
+                            },
+                            buyUpgrade = { dataViewModel.buyUpgrade(it) },
+                            setDebugConsole = { uiViewModel.setDebugConsole(it) },
+                            consoleType = debugConsole,
+                            ovenProgress = ovenProgress,
+                            ovenRunning = ovenRunning,
+                            nextOrderRemainingTime = nextOrderRemainingTime,
+                            orders = orders,
+                        )
+                    }
+                    if (debugConsole == ConsoleType.POPUP) DebugPopup()
+                    if (internalShown) InternalPopup()
+                    if (variableShown) VariableView(globalScope)
                 }
-                if (debugConsole == ConsoleType.POPUP) DebugPopup()
-                if (internalShown) InternalPopup()
-                if (variableShown) VariableView(globalScope)
+                if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()
             }
-            if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()
         }
     }
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.davidlukash.cakebaker.data.Popup
+import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.container.SmallContainer
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
@@ -36,7 +37,6 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun MessageManager(
-    theme: Theme,
     popups: List<Popup>,
     trueDensity: Density,
     removePopup: (Uuid) -> Unit,
@@ -48,6 +48,7 @@ fun MessageManager(
     }
     CompositionLocalProvider(
         LocalDensity provides trueDensity,
+        LocalIsScaled provides false
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Bottom),
@@ -55,7 +56,7 @@ fun MessageManager(
             state = lazyListState
         ) {
             items(popups, key = { it.uuid }) { popup ->
-                Popup(theme, { removePopup(popup.uuid) }, popup)
+                Popup({ removePopup(popup.uuid) }, popup)
             }
         }
     }
@@ -63,42 +64,46 @@ fun MessageManager(
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun Popup(theme: Theme, remove: () -> Unit, popup: Popup) {
-    Box {
-        SmallContainer(
-            theme = theme,
-            modifier = Modifier.width(320.dp),
-            shadowElevation = 8.dp
-        ) {
-            Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                CompositionLocalProvider(
-                    LocalTextStyle provides theme.unscaledStyles.largeBodyStyle.copy(
-                        textAlign = TextAlign.Center,
-                    )
-                ) {
-                    popup.content.invoke(
-                        popup to theme
-                    )
-                }
-                if (popup.shouldHaveDefaultButton) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    SmallThemedButton(
-                        theme = theme,
-                        onClick = {
-                            remove()
-                        }
+fun Popup(remove: () -> Unit, popup: Popup) {
+    CompositionLocalProvider(
+        LocalIsScaled provides false
+    ) {
+        Box {
+            SmallContainer(
+                modifier = Modifier.width(320.dp),
+                shadowElevation = 8.dp,
+                {
+                    Column(
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        Text(
-                            "Dismiss",
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
+                        CompositionLocalProvider(
+                            LocalTextStyle provides Theme.Styles.largeBodyStyle.copy(
+                                textAlign = TextAlign.Center,
+                            )
+                        ) {
+                            popup.content.invoke(
+                                popup
+                            )
+                        }
+                        if (popup.shouldHaveDefaultButton) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            SmallThemedButton(
+                                onClick = {
+                                    remove()
+                                },
+                                content = {
+                                    Text(
+                                        "Dismiss",
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
-            }
+            )
         }
     }
 }
@@ -109,11 +114,10 @@ fun Popup(theme: Theme, remove: () -> Unit, popup: Popup) {
 )
 @Composable
 fun PopupPreview() {
-    val theme = Theme.default
     val popup = Popup(
         content = {
             Text("Popup Preview", modifier = Modifier.fillMaxWidth())
         },
     )
-    Popup(theme = theme, remove = {}, popup)
+    Popup(remove = {}, popup)
 }

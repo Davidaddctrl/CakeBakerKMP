@@ -26,7 +26,7 @@ import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit, upgrade: Upgrade) {
+fun UpgradeDisplay(uiState: UIState, buyUpgrade: (Upgrade) -> Unit, upgrade: Upgrade) {
     val cakes = uiState.getCakes()
     val cake = cakes[upgrade.cakeTier]
     Column(
@@ -36,19 +36,17 @@ fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit
     ) {
         Text(
             upgrade.name,
-            style = theme.scaledStyles.smallBodyStyle,
-            color = Color.White,
+            style = Theme.Styles.smallBodyStyle,
             textAlign = TextAlign.Center,
         )
         ResourceImage(
-            theme.nameToImage(upgrade.imageName),
+            Theme.getImage(upgrade.imageName),
             modifier = Modifier.height(192.dp)
         )
         Text(
             "Level ${toEngNotation(upgrade.level.toBigDecimal())}" +
                     if (upgrade.maxLevel != null) " / ${toEngNotation(upgrade.maxLevel.toBigDecimal())} " else "",
-            style = theme.scaledStyles.smallBodyStyle,
-            color = Color.White,
+            style = Theme.Styles.smallBodyStyle,
             textAlign = TextAlign.Center,
         )
 
@@ -59,41 +57,37 @@ fun UpgradeDisplay(theme: Theme, uiState: UIState, buyUpgrade: (Upgrade) -> Unit
             if (upgrade.maxLevel?.let { upgrade.level < it } ?: true)
                 Text(
                     "${toEngNotation(upgrade.price.toBigDecimal())} ${cake?.name.toString()}",
-                    style = theme.scaledStyles.smallBodyStyle,
-                    color = Color.White,
+                    style = Theme.Styles.smallBodyStyle,
                 ) else
                 Text(
                     "Max Level Reached",
-                    style = theme.scaledStyles.smallBodyStyle,
-                    color = Color.White,
+                    style = Theme.Styles.smallBodyStyle,
                 )
         }
         LargeThemedButton(
-            theme = theme,
             onClick = {
                 buyUpgrade(upgrade)
             },
+            modifier = Modifier.width(180.dp),
             enabled = (cake?.amount
                 ?: BigDecimal.ZERO) >= upgrade.price && (upgrade.maxLevel?.let { upgrade.level < it } ?: true),
-            modifier = Modifier.width(180.dp)
-        ) {
-            Text(
-                "Buy"
-            )
-        }
+            content = {
+                Text(
+                    "Buy"
+                )
+            }
+        )
     }
 }
 
 @Preview
 @Composable
 fun UpgradeDisplayPreview() {
-    val theme = Theme.default
     val uiState = Save.state.copy(
         items = Save.state.items.map { it.copy(amount = 1000.toBigDecimal()) }
     )
     val upgrade = uiState.upgrades.first()
     UpgradeDisplay(
-        theme = theme,
         uiState = uiState,
         buyUpgrade = {},
         upgrade = upgrade

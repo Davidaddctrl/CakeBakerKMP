@@ -33,7 +33,6 @@ fun MenuButton(content: @Composable () -> Unit) {
                 painter = painterResource(Res.drawable.menu),
                 contentDescription = "Menu",
                 modifier = Modifier.size(48.dp),
-                tint = Color.White
             )
         }
     }

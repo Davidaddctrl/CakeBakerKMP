@@ -16,7 +16,7 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.ui.navigation.UpgradeScreen
 
 @Composable
-fun BottomBar(theme: Theme, navigateWithFade: (Screen) -> Unit) {
+fun BottomBar(navigateWithFade: (Screen) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(),
@@ -28,7 +28,7 @@ fun BottomBar(theme: Theme, navigateWithFade: (Screen) -> Unit) {
             },
         ) {
             ResourceImage(
-                theme.nameToImage("Oven"),
+                Theme.getImage("Oven"),
                 modifier = Modifier.height(280.dp)
             )
         }
@@ -39,7 +39,7 @@ fun BottomBar(theme: Theme, navigateWithFade: (Screen) -> Unit) {
             },
         ) {
             ResourceImage(
-                theme.nameToImage("Upgrade Shop"),
+                Theme.getImage("Upgrade Shop"),
                 modifier = Modifier.height(280.dp)
             )
         }

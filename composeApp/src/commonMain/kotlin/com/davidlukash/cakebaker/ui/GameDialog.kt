@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.container.SmallContainer
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
@@ -33,7 +34,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun GameDialog(
-    theme: Theme,
     modifier: Modifier = Modifier,
     offset: IntOffset = IntOffset.Zero,
     title: @Composable ColumnScope.() -> Unit,
@@ -42,7 +42,7 @@ fun GameDialog(
 ) {
     if (!LocalViewModelProvided.current)
         Box {
-            GameDialogContent(theme, modifier, title, buttons, content)
+            GameDialogContent(modifier, title, buttons, content)
         }
     else {
         val uiViewModel = LocalMainViewModel.current.uiViewModel
@@ -78,7 +78,7 @@ fun GameDialog(
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    GameDialogContent(theme, modifier, title, buttons, content)
+                    GameDialogContent(modifier, title, buttons, content)
                 }
             }
         }
@@ -87,45 +87,48 @@ fun GameDialog(
 
 @Composable
 fun BoxScope.GameDialogContent(
-    theme: Theme,
     modifier: Modifier = Modifier,
     title: @Composable ColumnScope.() -> Unit,
     buttons: @Composable FlowRowScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    SmallContainer(
-        theme = theme,
-        modifier = modifier.align(Alignment.Center),
+    CompositionLocalProvider(
+        LocalIsScaled provides false
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides theme.unscaledStyles.titleStyle.copy(
-                    textAlign = TextAlign.Center,
-                )
-            ) {
-                title()
-            }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CompositionLocalProvider(
-                    LocalTextStyle provides theme.unscaledStyles.largeBodyStyle.copy(
-                        textAlign = TextAlign.Center,
-                    )
+        SmallContainer(
+            modifier = modifier.align(Alignment.Center),
+            content = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    content()
+                    CompositionLocalProvider(
+                        LocalTextStyle provides Theme.Styles.titleStyle.copy(
+                            textAlign = TextAlign.Center,
+                        )
+                    ) {
+                        title()
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides Theme.Styles.largeBodyStyle.copy(
+                                textAlign = TextAlign.Center,
+                            )
+                        ) {
+                            content()
+                        }
+                    }
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        buttons()
+                    }
                 }
-            }
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                buttons()
-            }
-        }
+            },
+        )
     }
 }
 
@@ -135,30 +138,25 @@ fun BoxScope.GameDialogContent(
     widthDp = 512, showBackground = true
 )
 fun GameDialogPreview() {
-    val theme = Theme.default
     Box {
         GameDialogContent(
-            theme = theme,
             title = {
                 Text("Are you sure?")
             },
             buttons = {
                 SmallThemedButton(
-                    theme = theme,
                     onClick = {},
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Overwrite")
                 }
                 SmallThemedButton(
-                    theme = theme,
                     onClick = {},
                     modifier = Modifier
                 ) {
                     Text("Import under different name")
                 }
                 SmallThemedButton(
-                    theme = theme,
                     onClick = {},
                     modifier = Modifier.weight(1f)
                 ) {

@@ -15,18 +15,17 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SecondaryContainer(theme: Theme, modifier: Modifier, content: @Composable () -> Unit) {
-    val secondaryContainerTheme = theme.secondaryContainerTheme
+fun SecondaryContainer(modifier: Modifier, content: @Composable () -> Unit) {
     Surface(
         modifier = modifier,
-        color = secondaryContainerTheme.containerColor,
+        color = Theme.SecondaryContainerTheme.containerColor,
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(4.dp, secondaryContainerTheme.borderColor)
+        border = BorderStroke(4.dp, Theme.SecondaryContainerTheme.borderColor)
     ) {
         Box(
             modifier = Modifier.padding(8.dp)
         ) {
-            ProvideContainer(secondaryContainerTheme) {
+            ProvideContainer(Theme.SecondaryContainerTheme) {
                 content()
             }
         }
@@ -36,8 +35,7 @@ fun SecondaryContainer(theme: Theme, modifier: Modifier, content: @Composable ()
 @Preview
 @Composable
 fun SecondaryContainerPreview() {
-    val theme = Theme.default
-    SecondaryContainer(theme = theme, modifier = Modifier.fillMaxSize()) {
-        Text("Secondary Container", style = theme.scaledStyles.titleStyle)
-    }
+    SecondaryContainer(modifier = Modifier.fillMaxSize(), {
+        Text("Secondary Container", style = Theme.Styles.titleStyle)
+    })
 }

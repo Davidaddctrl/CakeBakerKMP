@@ -1,15 +1,15 @@
 package com.davidlukash.cakebaker.data.theme
 
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.ResourceFont
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cakebaker.composeapp.generated.resources.Res
@@ -74,6 +74,7 @@ data class Theme(
     val backgroundTheme: ContainerTheme,
     val containerTheme: ContainerTheme,
     val secondaryContainerTheme: ContainerTheme,
+    val textFieldTheme: TextFieldTheme,
     val successColor: Color,
     val dangerColor: Color,
     val tabSelectedColor: Color,
@@ -83,15 +84,74 @@ data class Theme(
         return nameToImageMap[name] ?: ImageData()
     }
 
-    val scaledStyles: TextStyles
-        @Composable
-        get() = convertStyles(_scaledStyles, font)
+//    val scaledStyles: TextStyles
+//        @Composable
+//        get() = convertStyles(_scaledStyles, font)
+//
+//    val unscaledStyles: TextStyles
+//        @Composable
+//        get() = convertStyles(_unscaledStyles, font)
 
-    val unscaledStyles: TextStyles
+    val styles: TextStyles
         @Composable
-        get() = convertStyles(_unscaledStyles, font)
+        get() {
+            return convertStyles(
+                if (LocalIsScaled.current) {
+                    _scaledStyles
+                } else _unscaledStyles, font
+            )
+        }
 
     companion object {
+        val Styles: TextStyles
+            @Composable
+            get() = LocalTheme.current.styles
+
+        val ProgressBarTheme: ProgressBarTheme
+            @Composable
+            get() = LocalTheme.current.progressBarTheme
+
+        val ButtonTheme: ButtonTheme
+            @Composable
+            get() = LocalTheme.current.buttonTheme
+
+        val SwitchButtonTheme: SwitchButtonTheme
+            @Composable
+            get() = LocalTheme.current.switchButtonTheme
+
+        val BackgroundTheme: ContainerTheme
+            @Composable
+            get() = LocalTheme.current.backgroundTheme
+
+        val ContainerTheme: ContainerTheme
+            @Composable
+            get() = LocalTheme.current.containerTheme
+
+        val SecondaryContainerTheme: ContainerTheme
+            @Composable
+            get() = LocalTheme.current.secondaryContainerTheme
+
+        val TextFieldTheme: TextFieldTheme
+            @Composable
+            get() = LocalTheme.current.textFieldTheme
+
+        val SuccessColor: Color
+            @Composable
+            get() = LocalTheme.current.successColor
+
+        val DangerColor: Color
+            @Composable
+            get() = LocalTheme.current.dangerColor
+
+        val TabSelectedColor: Color
+            @Composable
+            get() = LocalTheme.current.tabSelectedColor
+
+        @Composable
+        fun getImage(name: String): ImageData {
+            return LocalTheme.current.nameToImageMap[name] ?: ImageData()
+        }
+
         val default = Theme(
             nameToImageMap = mapOf(
                 "Butter" to ImageData(resource = Res.drawable.butter),
@@ -165,7 +225,8 @@ data class Theme(
             progressBarTheme = ProgressBarTheme(
                 border = Color.Black,
                 backgroundColor = Color(127, 127, 127),
-                filledColor = Color(255, 127, 0)
+                filledColor = Color(255, 127, 0),
+                contentColor = Color.White
             ),
             buttonTheme = ButtonTheme(
                 containerColor = Color(8, 160, 69),
@@ -205,6 +266,14 @@ data class Theme(
                 borderColor = Color(0, 0, 0),
                 containerColor = Color(8, 160, 69),
                 contentColor = Color(255, 255, 255),
+            ),
+            textFieldTheme = TextFieldTheme(
+                cursorBrush = SolidColor(Color.White),
+                contentColor = Color.White,
+                placeholderColor = Color(128, 128, 128),
+                containerColor = Color(53, 57, 62),
+                borderColor = Color(37, 41, 46),
+                doDropShadow = false
             ),
             successColor = Color(58, 158, 0),
             dangerColor = Color(255, 0, 0),

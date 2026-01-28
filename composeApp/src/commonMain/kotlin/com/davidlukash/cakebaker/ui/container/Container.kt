@@ -16,18 +16,17 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun Container(theme: Theme, modifier: Modifier, shape: Shape = RoundedCornerShape(16.dp), content: @Composable () -> Unit) {
-    val containerTheme = theme.containerTheme
+fun Container(modifier: Modifier, shape: Shape = RoundedCornerShape(16.dp), content: @Composable () -> Unit) {
     Surface(
         modifier = modifier,
-        color = containerTheme.containerColor,
+        color = Theme.ContainerTheme.containerColor,
         shape = shape,
-        border = BorderStroke(8.dp, containerTheme.borderColor),
+        border = BorderStroke(8.dp, Theme.ContainerTheme.borderColor),
     ) {
         Box(
             modifier = Modifier.padding(16.dp)
         ) {
-            ProvideContainer(containerTheme) {
+            ProvideContainer(Theme.ContainerTheme) {
                 content()
             }
         }
@@ -37,10 +36,9 @@ fun Container(theme: Theme, modifier: Modifier, shape: Shape = RoundedCornerShap
 @Preview
 @Composable
 fun ContainerPreview() {
-    val theme = Theme.default
     Container(
-        theme, Modifier.size(400.dp)
-    ) {
-        Text(text = "Container Preview", style = theme.scaledStyles.smallBodyStyle)
-    }
+        Modifier.size(400.dp), content = {
+            Text(text = "Container Preview", style = Theme.Styles.smallBodyStyle)
+        }
+    )
 }

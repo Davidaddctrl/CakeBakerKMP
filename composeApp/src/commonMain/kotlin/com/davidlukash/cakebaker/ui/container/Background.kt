@@ -11,12 +11,11 @@ import com.davidlukash.cakebaker.data.theme.ProvideContainer
 import com.davidlukash.cakebaker.data.theme.Theme
 
 @Composable
-fun Background(theme: Theme, content: @Composable () -> Unit) {
-    val backgroundTheme = theme.backgroundTheme
+fun Background(content: @Composable () -> Unit) {
     Box(
-        modifier = Modifier.fillMaxSize().background(backgroundTheme.containerColor).padding(16.dp)
+        modifier = Modifier.fillMaxSize().background(Theme.BackgroundTheme.containerColor).padding(16.dp)
     ) {
-        ProvideContainer(theme.backgroundTheme) {
+        ProvideContainer(Theme.BackgroundTheme) {
             content()
         }
     }

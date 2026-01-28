@@ -15,7 +15,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.davidlukash.cakebaker.data.UIState
-import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.horizontalRowScroll
 import com.davidlukash.cakebaker.ui.BuyableItemDisplay
 import com.davidlukash.cakebaker.ui.input.HorizontalScrollBar
@@ -23,7 +22,6 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
 fun BoxScope.MainContent(
-    theme: Theme,
     uiState: UIState,
     buyIngredient: (String) -> Unit,
     setQuantityChanges: (Map<String, BigDecimal>) -> Unit
@@ -42,7 +40,7 @@ fun BoxScope.MainContent(
         ) {
             ingredients.forEach { ingredient ->
                 key(ingredient.name) {
-                    BuyableItemDisplay(theme, money, buyIngredient, ingredient) { isHovered ->
+                    BuyableItemDisplay(money, buyIngredient, ingredient) { isHovered ->
                         if (isHovered) setQuantityChanges(
                             mapOf(
                                 ingredient.name to (ingredient.increment ?: BigDecimal.ZERO),
@@ -53,6 +51,6 @@ fun BoxScope.MainContent(
                 }
             }
         }
-        HorizontalScrollBar(theme, scrollState, coroutineScope)
+        HorizontalScrollBar(scrollState, coroutineScope)
     }
 }

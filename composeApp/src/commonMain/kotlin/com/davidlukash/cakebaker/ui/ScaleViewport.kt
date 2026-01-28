@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import com.davidlukash.cakebaker.data.theme.LocalIsScaled
+
 @Composable
 fun ScaleViewport(baseWidth: Dp, baseHeight: Dp, doAspectRatio: Boolean = false, content: @Composable () -> Unit) {
     BoxWithConstraints(
@@ -23,6 +25,7 @@ fun ScaleViewport(baseWidth: Dp, baseHeight: Dp, doAspectRatio: Boolean = false,
         CompositionLocalProvider(
             //We set font scale to 1f as the game needs to have correct font sizes
             LocalDensity provides Density(density.density * scale, 1f),
+            LocalIsScaled provides true
         ) {
             Box(
                 modifier = Modifier.align(Alignment.Center).then(

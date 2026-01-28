@@ -36,7 +36,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun BottomBar(
-    theme: Theme,
     uiState: UIState,
     navigateWithFade: (Screen) -> Unit,
     currentPage: String,
@@ -57,48 +56,48 @@ fun BottomBar(
             }
         ) {
             ResourceImage(
-                theme.nameToImage("Ingredient Shop"),
+                Theme.getImage("Ingredient Shop"),
                 modifier = Modifier.height(280.dp)
             )
         }
         Container(
-            theme = theme,
             modifier = Modifier.weight(1f).padding(horizontal = 8.dp).height(312.dp),
-        ) {
-            FlowRow(
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                pages.forEach { page ->
-                    key(page) {
-                        ImageButton(
-                            onClick = {
-                                setCurrentPage(page)
-                            },
-                            modifier = Modifier.defaultMinSize(minWidth = 200.dp, minHeight = 80.dp).weight(1f)
-                        ) {
-                            Text(
-                                page,
-                                textAlign = TextAlign.Center,
-                                style = theme.scaledStyles.smallBodyStyle,
-                                fontWeight = if (page == currentPage) FontWeight.Bold else FontWeight.Normal,
-                                color = if (page == currentPage)
-                                    theme.tabSelectedColor
-                                else LocalContentColor.current,
-                            )
+            content = {
+                FlowRow(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    pages.forEach { page ->
+                        key(page) {
+                            ImageButton(
+                                onClick = {
+                                    setCurrentPage(page)
+                                },
+                                modifier = Modifier.defaultMinSize(minWidth = 200.dp, minHeight = 80.dp).weight(1f)
+                            ) {
+                                Text(
+                                    page,
+                                    textAlign = TextAlign.Center,
+                                    style = Theme.Styles.smallBodyStyle,
+                                    fontWeight = if (page == currentPage) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (page == currentPage)
+                                        Theme.TabSelectedColor
+                                    else LocalContentColor.current,
+                                )
+                            }
                         }
                     }
                 }
-            }
-        }
+            },
+        )
         ImageButton(
             onClick = {
                 navigateWithFade(KitchenScreen)
             }
         ) {
             ResourceImage(
-                theme.nameToImage("Oven"),
+                Theme.getImage("Oven"),
                 modifier = Modifier.height(280.dp)
             )
         }
@@ -110,11 +109,9 @@ fun BottomBar(
 )
 @Composable
 fun BottomBarPreview() {
-    val theme = Theme.default
     val uiState = Save.state
     var currentPage by remember { mutableStateOf("") }
     BottomBar(
-        theme = theme,
         uiState = uiState,
         navigateWithFade = {},
         currentPage = currentPage,

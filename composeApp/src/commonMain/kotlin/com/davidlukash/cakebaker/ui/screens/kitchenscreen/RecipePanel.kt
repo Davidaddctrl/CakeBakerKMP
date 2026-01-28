@@ -38,91 +38,91 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun RowScope.RecipePanel(theme: Theme, uiState: UIState, setCurrentCake: (Int) -> Unit) {
+fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
     val cakes  by derivedStateOf { uiState.getCakes() }
     val ingredients by derivedStateOf { uiState.getIngredients() }
     val currentCakeTier = uiState.currentCakeTier
 
     Container(
-        theme = theme,
         modifier = Modifier.weight(1f).fillMaxWidth(),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier.fillMaxWidth().height(72.dp),
-                verticalAlignment = Alignment.CenterVertically,
+        content = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.chevron_backward),
-                    contentDescription = "Previous Tier Cake",
-                    modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
-                        enabled = currentCakeTier != 1
-                    ) {
-                        setCurrentCake(currentCakeTier - 1)
-                    },
-                    tint = if (currentCakeTier != 1) LocalContentColor.current else Color.Transparent
-                )
-                Text(
-                    cakes[currentCakeTier]?.name ?: "Cake Tier Invalid",
-                    style = theme.scaledStyles.mediumBodyStyle,
-                    textAlign = TextAlign.Center,
-                    textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.fillMaxWidth().weight(1f)
-                )
-                Icon(
-                    painter = painterResource(Res.drawable.chevron_forward),
-                    contentDescription = "Next Tier Cake",
-                    modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
-                        enabled = currentCakeTier != cakes.size
-                    ) {
-                        setCurrentCake(currentCakeTier + 1)
-                    },
-                    tint = if (currentCakeTier != cakes.size) LocalContentColor.current else Color.Transparent
-                )
-            }
-            ingredients.forEach { item ->
-                key(item.name) {
-                    val cakePrice = item.cakePrices?.get(currentCakeTier) ?: BigDecimal.ZERO
-                    if (cakePrice != BigDecimal.ZERO) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier.fillMaxWidth().height(72.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.chevron_backward),
+                        contentDescription = "Previous Tier Cake",
+                        modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
+                            enabled = currentCakeTier != 1
                         ) {
+                            setCurrentCake(currentCakeTier - 1)
+                        },
+                        tint = if (currentCakeTier != 1) LocalContentColor.current else Color.Transparent
+                    )
+                    Text(
+                        cakes[currentCakeTier]?.name ?: "Cake Tier Invalid",
+                        style = Theme.Styles.mediumBodyStyle,
+                        textAlign = TextAlign.Center,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.fillMaxWidth().weight(1f)
+                    )
+                    Icon(
+                        painter = painterResource(Res.drawable.chevron_forward),
+                        contentDescription = "Next Tier Cake",
+                        modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
+                            enabled = currentCakeTier != cakes.size
+                        ) {
+                            setCurrentCake(currentCakeTier + 1)
+                        },
+                        tint = if (currentCakeTier != cakes.size) LocalContentColor.current else Color.Transparent
+                    )
+                }
+                ingredients.forEach { item ->
+                    key(item.name) {
+                        val cakePrice = item.cakePrices?.get(currentCakeTier) ?: BigDecimal.ZERO
+                        if (cakePrice != BigDecimal.ZERO) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(
-                                    "•",
-                                    style = theme.scaledStyles.smallBodyStyle,
-                                )
-                                Text(
-                                    "${toEngNotation(cakePrice)} ${item.name}",
-                                    style = theme.scaledStyles.smallBodyStyle,
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        "•",
+                                        style = Theme.Styles.smallBodyStyle,
+                                    )
+                                    Text(
+                                        "${toEngNotation(cakePrice)} ${item.name}",
+                                        style = Theme.Styles.smallBodyStyle,
+                                    )
+                                }
+                                if (item.amount >= cakePrice)
+                                    Icon(
+                                        painter = painterResource(Res.drawable.check),
+                                        contentDescription = "Enough",
+                                        tint = Theme.SuccessColor,
+                                        modifier = Modifier.size(36.dp)
+                                    )
+                                else
+                                    Icon(
+                                        painter = painterResource(Res.drawable.close),
+                                        contentDescription = "Not Enough",
+                                        tint = Theme.DangerColor,
+                                        modifier = Modifier.size(36.dp)
+                                    )
                             }
-                            if (item.amount >= cakePrice)
-                                Icon(
-                                    painter = painterResource(Res.drawable.check),
-                                    contentDescription = "Enough",
-                                    tint = theme.successColor,
-                                    modifier = Modifier.size(36.dp)
-                                )
-                            else
-                                Icon(
-                                    painter = painterResource(Res.drawable.close),
-                                    contentDescription = "Not Enough",
-                                    tint = theme.dangerColor,
-                                    modifier = Modifier.size(36.dp)
-                                )
                         }
                     }
                 }
             }
-        }
-    }
+        },
+    )
 }

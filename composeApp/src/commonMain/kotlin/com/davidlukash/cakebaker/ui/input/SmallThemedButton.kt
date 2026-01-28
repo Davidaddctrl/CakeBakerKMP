@@ -14,52 +14,55 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
+import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.data.theme.Theme
 
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SmallThemedButton(
-    theme: Theme,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val buttonTheme = theme.buttonTheme
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(8.dp),
-        enabled = enabled,
-        contentPadding = PaddingValues(8.dp),
-        border = BorderStroke(
-            width = 4.dp,
-            color = if (enabled) buttonTheme.borderColor else buttonTheme.disabledBorderColor,
-        ),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = buttonTheme.containerColor,
-            disabledContainerColor = buttonTheme.disabledContainerColor,
-            contentColor = buttonTheme.contentColor,
-            disabledContentColor = buttonTheme.disabledContentColor,
-        ),
-        elevation = ButtonDefaults.buttonElevation(
-            0.dp,
-            0.dp,
-            0.dp,
-            0.dp,
-            0.dp
-        )
+    CompositionLocalProvider(
+        LocalIsScaled provides false
     ) {
-        CompositionLocalProvider(
-            LocalDoDropShadow provides buttonTheme.shouldDropShadow
+        Button(
+            onClick = onClick,
+            modifier = modifier,
+            shape = RoundedCornerShape(8.dp),
+            enabled = enabled,
+            contentPadding = PaddingValues(8.dp),
+            border = BorderStroke(
+                width = 4.dp,
+                color = if (enabled) Theme.ButtonTheme.borderColor else Theme.ButtonTheme.disabledBorderColor,
+            ),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Theme.ButtonTheme.containerColor,
+                disabledContainerColor = Theme.ButtonTheme.disabledContainerColor,
+                contentColor = Theme.ButtonTheme.contentColor,
+                disabledContentColor = Theme.ButtonTheme.disabledContentColor,
+            ),
+            elevation = ButtonDefaults.buttonElevation(
+                0.dp,
+                0.dp,
+                0.dp,
+                0.dp,
+                0.dp
+            )
         ) {
             CompositionLocalProvider(
-                LocalTextStyle provides theme.unscaledStyles.buttonTextStyle.copy(
-                    textAlign = TextAlign.Center,
-                ),
+                LocalDoDropShadow provides Theme.ButtonTheme.shouldDropShadow
             ) {
-                content()
+                CompositionLocalProvider(
+                    LocalTextStyle provides Theme.Styles.buttonTextStyle.copy(
+                        textAlign = TextAlign.Center,
+                    ),
+                ) {
+                    content()
+                }
             }
         }
     }
@@ -68,11 +71,10 @@ fun SmallThemedButton(
 @Preview
 @Composable
 fun SmallThemedButtonPreview() {
-    val theme = Theme.default
     SmallThemedButton(
-        theme = theme,
         onClick = {},
-    ) {
-        Text("Small Button Preview")
-    }
+        content = {
+            Text("Small Button Preview")
+        },
+    )
 }

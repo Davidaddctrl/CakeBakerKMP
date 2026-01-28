@@ -14,13 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.UIState
-import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
 fun IngredientScreen(
-    theme: Theme,
     uiState: UIState,
     navigateWithFade: (Screen) -> Unit,
     buyIngredient: (String) -> Unit
@@ -28,10 +26,10 @@ fun IngredientScreen(
     var quantityChanges by remember { mutableStateOf(mapOf<String, BigDecimal>()) }
     Scaffold(
         topBar = {
-            TopBar(theme, uiState, quantityChanges)
+            TopBar(uiState, quantityChanges)
         },
         bottomBar = {
-            BottomBar(theme, navigateWithFade)
+            BottomBar(navigateWithFade)
         },
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
@@ -39,7 +37,7 @@ fun IngredientScreen(
         Box(
             modifier = Modifier.padding(innerPadding).fillMaxSize(),
         ) {
-            MainContent(theme, uiState, buyIngredient) { quantityChanges = it }
+            MainContent(uiState, buyIngredient) { quantityChanges = it }
         }
     }
 }

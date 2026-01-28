@@ -7,12 +7,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.order.Order
 import com.davidlukash.cakebaker.data.UIState
-import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.navigation.Screen
 
 @Composable
 fun KitchenScreen(
-    theme: Theme, uiState: UIState,
+    uiState: UIState,
     navigateWithFade: (Screen) -> Unit,
     bake: () -> Unit,
     setAutoOvenEnabled: (Boolean) -> Unit,
@@ -26,13 +25,12 @@ fun KitchenScreen(
 ) {
     Scaffold(
         topBar = {
-            TopBar(theme, uiState)
+            TopBar(uiState)
         },
         containerColor = Color.Transparent,
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
         MainContent(
-            theme,
             uiState,
             navigateWithFade,
             bake,

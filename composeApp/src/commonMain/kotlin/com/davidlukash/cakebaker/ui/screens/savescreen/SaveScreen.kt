@@ -11,12 +11,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
-import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.navigation.Screen
 
 @Composable
 fun SaveScreen(
-    theme: Theme,
     saveFiles: List<SaveFile>,
     navigateWithFade: (Screen) -> Unit,
     exportSave: (SaveFile) -> Unit,
@@ -31,7 +29,6 @@ fun SaveScreen(
         SaveDialogType.NONE -> {}
         SaveDialogType.LOAD -> {
             LoadSaveDialog(
-                theme = theme,
                 saveName = dialogData?.name!!,
                 load = {
                     dialogType = SaveDialogType.NONE
@@ -47,39 +44,34 @@ fun SaveScreen(
 
         SaveDialogType.DELETE -> {
             DeleteSaveDialog(
-                theme = theme,
                 saveName = dialogData?.name!!,
                 delete = {
                     dialogType = SaveDialogType.NONE
                     deleteSave(dialogData!!)
                     dialogData = null
                 },
-                cancel = {
-                    dialogType = SaveDialogType.NONE
-                    dialogData = null
-                },
-            )
+            ) {
+                dialogType = SaveDialogType.NONE
+                dialogData = null
+            }
         }
 
         SaveDialogType.OVERWRITE -> {
             OverwriteSaveDialog(
-                theme = theme,
                 saveName = dialogData?.name!!,
                 overwrite = {
                     dialogType = SaveDialogType.NONE
                     overwriteSave(dialogData!!)
                     dialogData = null
                 },
-                cancel = {
-                    dialogType = SaveDialogType.NONE
-                    dialogData = null
-                },
-            )
+            ) {
+                dialogType = SaveDialogType.NONE
+                dialogData = null
+            }
         }
 
         SaveDialogType.CREATE -> {
             CreateSaveDialog(
-                theme = theme,
                 exists = { name ->
                     saveFiles.map { it.name.uppercase() }.contains(name.uppercase())
                 },
@@ -94,15 +86,15 @@ fun SaveScreen(
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            TopBar(theme)
+            TopBar()
         },
         bottomBar = {
-            BottomBar(theme, import = { importSave() }, create = { dialogType = SaveDialogType.CREATE }, navigateWithFade)
+            BottomBar(import = { importSave() }, create = { dialogType = SaveDialogType.CREATE }, navigateWithFade)
         },
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
         MainContent(
-            theme, saveFiles, exportSave,
+            saveFiles, exportSave,
             deleteSave = {
                 dialogType = SaveDialogType.DELETE
                 dialogData = it

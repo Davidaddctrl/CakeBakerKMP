@@ -50,6 +50,7 @@ import cakebaker.composeapp.generated.resources.ktx_serialization_license
 import cakebaker.composeapp.generated.resources.material_design_icons_license
 import cakebaker.composeapp.generated.resources.mpl_license
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.ui.container.Background
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
@@ -59,7 +60,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun OtherScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
+fun OtherScreen(navigateWithFade: (Screen) -> Unit) {
     val licenses = remember {
         mapOf(
             "Cake Baker" to Res.string.mpl_license,
@@ -131,10 +132,10 @@ fun OtherScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            TopBar(theme)
+            TopBar()
         },
         bottomBar = {
-            BottomBar(theme, navigateWithFade)
+            BottomBar(navigateWithFade)
         },
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
@@ -146,12 +147,12 @@ fun OtherScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
         ) {
             items(licenses.keys.toList()) { key ->
                 LargeThemedButton(
-                    theme = theme,
                     onClick = { currentLicense = key to licenses[key] },
-                    modifier = Modifier.width(320.dp).height(180.dp)
-                ) {
-                    Text(key, style = theme.scaledStyles.mediumBodyStyle, textAlign = TextAlign.Center)
-                }
+                    modifier = Modifier.width(320.dp).height(180.dp),
+                    content = {
+                        Text(key, style = Theme.Styles.mediumBodyStyle, textAlign = TextAlign.Center)
+                    }
+                )
             }
         }
     }
@@ -163,8 +164,7 @@ fun OtherScreen(theme: Theme, navigateWithFade: (Screen) -> Unit) {
 )
 @Composable
 fun OtherScreenPreview() {
-    val theme = Theme.default
-    Box(Modifier.fillMaxSize().background(theme.backgroundTheme.containerColor).padding(8.dp)) {
-        OtherScreen(theme = theme) { }
+    Background {
+        OtherScreen { }
     }
 }

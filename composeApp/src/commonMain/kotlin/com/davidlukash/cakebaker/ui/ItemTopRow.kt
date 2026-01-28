@@ -15,14 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.UIState
-import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.input.HorizontalScrollBar
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ItemTopRow(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigDecimal> = mapOf()) {
+fun ItemTopRow(uiState: UIState, quantityChanges: Map<String, BigDecimal> = mapOf()) {
     val items = uiState.items
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
@@ -41,7 +40,6 @@ fun ItemTopRow(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigD
             items.forEach { item ->
                 key(item.name) {
                     ItemAmountDisplay(
-                        theme = theme,
                         item = item,
                         quantityChange = quantityChanges[item.name] ?: BigDecimal.ZERO,
                         modifier = Modifier.widthIn(min = 128.dp)
@@ -50,7 +48,7 @@ fun ItemTopRow(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigD
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        HorizontalScrollBar(theme, scrollState, coroutineScope)
+        HorizontalScrollBar(scrollState, coroutineScope)
     }
 }
 
@@ -59,14 +57,12 @@ fun ItemTopRow(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigD
 )
 @Composable
 fun ItemTopRowPreview() {
-    val theme = Theme.default
     val uiState = Save.state.copy(
         items = Save.state.items.map {
             if (it.name == "Money") it.copy(amount = 500.toBigDecimal()) else it
         }
     )
     ItemTopRow(
-        theme = theme,
         uiState = uiState,
         quantityChanges = mapOf("Butter" to 0.2.toBigDecimal(), "Money" to (-250).toBigDecimal())
     )

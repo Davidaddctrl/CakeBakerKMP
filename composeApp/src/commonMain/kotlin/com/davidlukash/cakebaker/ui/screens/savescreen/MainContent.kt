@@ -12,11 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
-import com.davidlukash.cakebaker.data.theme.Theme
 
 @Composable
 fun MainContent(
-    theme: Theme,
     saveFiles: List<SaveFile>,
     exportSave: (SaveFile) -> Unit,
     deleteSave: (SaveFile) -> Unit,
@@ -32,11 +30,11 @@ fun MainContent(
         columns = GridCells.Adaptive(900.dp)
     ) {
         item {
-            SaveItem(theme, exportSave, deleteSave, loadSave, overwriteSave,default)
+            SaveItem(exportSave, deleteSave, loadSave, overwriteSave, default)
         }
         items(saveFiles.size) { index ->
             val saveFile = saveFiles[index]
-            SaveItem(theme, exportSave, deleteSave, loadSave, overwriteSave, saveFile)
+            SaveItem(exportSave, deleteSave, loadSave, overwriteSave, saveFile)
         }
     }
 }

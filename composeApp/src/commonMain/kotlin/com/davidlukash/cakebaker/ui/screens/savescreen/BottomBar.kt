@@ -9,47 +9,46 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 
 import com.davidlukash.cakebaker.ui.navigation.MenuScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 
 @Composable
-fun BottomBar(theme: Theme, import: () -> Unit, create: () -> Unit, navigateWithFade: (Screen) -> Unit) {
+fun BottomBar(import: () -> Unit, create: () -> Unit, navigateWithFade: (Screen) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         LargeThemedButton(
-            theme = theme,
             onClick = {
                 navigateWithFade(MenuScreen)
             },
-            modifier = Modifier.width(280.dp)
-        ) {
-            Text("Back")
-        }
+            modifier = Modifier.width(280.dp),
+            content = {
+                Text("Back")
+            }
+        )
         Spacer(
             modifier = Modifier.weight(1f)
         )
         LargeThemedButton(
-            theme = theme,
             onClick = {
                 import()
             },
-            modifier = Modifier.width(280.dp)
-        ) {
-            Text("Import")
-        }
+            modifier = Modifier.width(280.dp),
+            content = {
+                Text("Import")
+            }
+        )
         LargeThemedButton(
-            theme = theme,
             onClick = {
                 create()
             },
-            modifier = Modifier.width(280.dp)
-        ) {
-            Text("Create")
-        }
+            modifier = Modifier.width(280.dp),
+            content = {
+                Text("Create")
+            }
+        )
     }
 }

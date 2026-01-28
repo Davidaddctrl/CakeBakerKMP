@@ -24,12 +24,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ItemAmountDisplay(
-    theme: Theme,
     item: Item,
     quantityChange: BigDecimal = BigDecimal.ZERO,
     modifier: Modifier = Modifier
 ) {
-    val image = theme.nameToImage(item.name)
+    val image = Theme.getImage(item.name)
     val localContentColor = if (LocalInspectionMode.current) Color.White else LocalContentColor.current
     CompositionLocalProvider(
         LocalContentColor provides localContentColor
@@ -39,11 +38,11 @@ fun ItemAmountDisplay(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
         ) {
-            Column(modifier = Modifier.height(theme.scaledStyles.verySmallBodyStyle.fontSize.value.dp * 2)) {
+            Column(modifier = Modifier.height(Theme.Styles.verySmallBodyStyle.fontSize.value.dp * 2)) {
                 Text(
                     item.name.replace(" ", "\n"),
                     textAlign = TextAlign.Center,
-                    style = if (item.name.contains(" ")) theme.scaledStyles.verySmallBodyStyle else theme.scaledStyles.smallBodyStyle,
+                    style = if (item.name.contains(" ")) Theme.Styles.verySmallBodyStyle else Theme.Styles.smallBodyStyle,
                 )
             }
             Column(
@@ -58,24 +57,24 @@ fun ItemAmountDisplay(
             Text(
                 "Amount",
                 textAlign = TextAlign.Center,
-                style = theme.scaledStyles.smallBodyStyle,
+                style = Theme.Styles.smallBodyStyle,
             )
             Text(
                 toEngNotation(item.amount.add(quantityChange, globalDecimalMode)),
-                color = if (quantityChange == BigDecimal.ZERO) Color.White else
-                    if (quantityChange > BigDecimal.ZERO) theme.successColor else theme.dangerColor,
+                color = if (quantityChange == BigDecimal.ZERO) Color.Unspecified else
+                    if (quantityChange > BigDecimal.ZERO) Theme.SuccessColor else Theme.DangerColor,
                 textAlign = TextAlign.Center,
-                style = theme.scaledStyles.smallBodyStyle,
+                style = Theme.Styles.smallBodyStyle,
             )
             Text(
                 (if (quantityChange != BigDecimal.ZERO) {
                     (if (quantityChange > BigDecimal.ZERO) "+" else "-") + toEngNotation(quantityChange.abs())
                 } else "") + " ",
-                color = if (quantityChange == BigDecimal.ZERO) Color.White else
-                    if (quantityChange > BigDecimal.ZERO) theme.successColor else theme.dangerColor,
+                color = if (quantityChange == BigDecimal.ZERO) Color.Unspecified else
+                    if (quantityChange > BigDecimal.ZERO) Theme.SuccessColor else Theme.DangerColor,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.align(Alignment.Start),
-                style = theme.scaledStyles.verySmallBodyStyle,
+                style = Theme.Styles.verySmallBodyStyle,
             )
         }
     }
@@ -86,35 +85,32 @@ const val backgroundColor = 0xFF0078FFL
 @Preview(showBackground = true, backgroundColor = backgroundColor)
 @Composable
 fun ItemAmountDisplayPreview() {
-    val theme = Theme.default
     val item = Item(
         name = "Butter",
         type = ItemType.CURRENCY,
         amount = 10000.toBigDecimal(),
     )
-    ItemAmountDisplay(theme = theme, item = item)
+    ItemAmountDisplay(item = item)
 }
 
 @Preview(showBackground = true, backgroundColor = backgroundColor)
 @Composable
 fun ItemAmountDisplayPositiveQuantityPreview() {
-    val theme = Theme.default
     val item = Item(
         name = "Butter",
         type = ItemType.CURRENCY,
         amount = 10000.toBigDecimal(),
     )
-    ItemAmountDisplay(theme = theme, item = item, quantityChange = 100.toBigDecimal())
+    ItemAmountDisplay(item = item, quantityChange = 100.toBigDecimal())
 }
 
 @Preview(showBackground = true, backgroundColor = backgroundColor)
 @Composable
 fun ItemAmountDisplayNegativeQuantityPreview() {
-    val theme = Theme.default
     val item = Item(
         name = "Butter",
         type = ItemType.CURRENCY,
         amount = 10000.toBigDecimal(),
     )
-    ItemAmountDisplay(theme = theme, item = item, quantityChange = (-100).toBigDecimal())
+    ItemAmountDisplay(item = item, quantityChange = (-100).toBigDecimal())
 }

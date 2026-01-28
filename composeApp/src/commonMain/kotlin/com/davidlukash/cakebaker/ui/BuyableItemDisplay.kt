@@ -27,7 +27,7 @@ import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Unit, item: Item, onHoverChange: (Boolean) -> Unit = {}) {
+fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item, onHoverChange: (Boolean) -> Unit = {}) {
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
 
@@ -40,44 +40,43 @@ fun BuyableItemDisplay(theme: Theme, money: Item, buyIngredient: (String) -> Uni
         modifier = Modifier.padding(16.dp)
     ) {
         ResourceImage(
-            theme.nameToImage(item.name),
+            Theme.getImage(item.name),
             modifier = Modifier.height(128.dp)
         )
         Container(
-            theme = theme,
-            modifier = Modifier.defaultMinSize(minWidth = 208.dp)
-        ) {
-            Column {
-                Text(
-                    item.name,
-                    style = theme.scaledStyles.verySmallBodyStyle,
-                )
-                Text(
-                    "$${toEngNotation(item.price ?: BigDecimal.ZERO)}",
-                    style = theme.scaledStyles.mediumBodyStyle
-                )
+            modifier = Modifier.defaultMinSize(minWidth = 208.dp),
+            content = {
+                Column {
+                    Text(
+                        item.name,
+                        style = Theme.Styles.verySmallBodyStyle,
+                    )
+                    Text(
+                        "$${toEngNotation(item.price ?: BigDecimal.ZERO)}",
+                        style = Theme.Styles.mediumBodyStyle
+                    )
+                }
             }
-        }
+        )
         LargeThemedButton(
-            theme = theme,
             onClick = {
                 buyIngredient(item.name)
             },
-            enabled = money.amount >= (item.price ?: BigDecimal.ZERO),
             modifier = Modifier.width(180.dp),
+            enabled = money.amount >= (item.price ?: BigDecimal.ZERO),
             interactionSource = interactionSource,
-        ) {
-            Text(
-                "Buy",
-            )
-        }
+            {
+                Text(
+                    "Buy",
+                )
+            },
+        )
     }
 }
 
 @Preview
 @Composable
 fun BuyableItemDisplayPreview() {
-    val theme = Theme.default
     val money = Item(
         name = "Money",
         type = ItemType.CURRENCY,
@@ -90,7 +89,6 @@ fun BuyableItemDisplayPreview() {
         price = 200.toBigDecimal()
     )
     BuyableItemDisplay(
-        theme = theme,
         money = money,
         buyIngredient = { },
         item = item

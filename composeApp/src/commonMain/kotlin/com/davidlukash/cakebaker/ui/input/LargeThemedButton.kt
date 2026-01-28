@@ -21,14 +21,12 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun LargeThemedButton(
-    theme: Theme,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val buttonTheme = theme.buttonTheme
     Button(
         interactionSource = interactionSource,
         onClick = onClick,
@@ -38,13 +36,13 @@ fun LargeThemedButton(
         contentPadding = PaddingValues(16.dp),
         border = BorderStroke(
             width = 8.dp,
-            color = if (enabled) buttonTheme.borderColor else buttonTheme.disabledBorderColor,
+            color = if (enabled) Theme.ButtonTheme.borderColor else Theme.ButtonTheme.disabledBorderColor,
         ),
         colors = ButtonDefaults.buttonColors(
-            containerColor = buttonTheme.containerColor,
-            disabledContainerColor = buttonTheme.disabledContainerColor,
-            contentColor = buttonTheme.contentColor,
-            disabledContentColor = buttonTheme.disabledContentColor,
+            containerColor = Theme.ButtonTheme.containerColor,
+            disabledContainerColor = Theme.ButtonTheme.disabledContainerColor,
+            contentColor = Theme.ButtonTheme.contentColor,
+            disabledContentColor = Theme.ButtonTheme.disabledContentColor,
         ),
         elevation = ButtonDefaults.buttonElevation(
             0.dp,
@@ -55,10 +53,10 @@ fun LargeThemedButton(
         )
     ) {
         CompositionLocalProvider(
-            LocalDoDropShadow provides buttonTheme.shouldDropShadow
+            LocalDoDropShadow provides Theme.ButtonTheme.shouldDropShadow
         ) {
             CompositionLocalProvider(
-                LocalTextStyle provides theme.scaledStyles.buttonTextStyle.copy(textAlign = TextAlign.Center),
+                LocalTextStyle provides Theme.Styles.buttonTextStyle.copy(textAlign = TextAlign.Center),
             ) {
                 content()
             }
@@ -71,11 +69,10 @@ fun LargeThemedButton(
 )
 @Composable
 fun LargeThemedButtonPreview() {
-    val theme = Theme.default
     LargeThemedButton(
-        theme,
         onClick = {},
-    ) {
-        Text("Button Preview")
-    }
+        content = {
+            Text("Button Preview")
+        },
+    )
 }

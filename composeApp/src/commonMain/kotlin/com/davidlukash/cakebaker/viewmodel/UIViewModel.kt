@@ -87,7 +87,7 @@ class UIViewModel : ViewModel() {
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addPopup(shouldHaveDefaultButton: Boolean = true, content: @Composable Pair<Popup, Theme>.() -> Unit) {
+    fun addPopup(shouldHaveDefaultButton: Boolean = true, content: @Composable Popup.() -> Unit) {
         viewModelScope.launch {
             _popups.emit(
                 _popups.value + Popup(content, shouldHaveDefaultButton)
@@ -107,27 +107,25 @@ class UIViewModel : ViewModel() {
     @OptIn(ExperimentalUuidApi::class)
     fun addTextButtonPopup(text: String, shouldHaveDefaultButton: Boolean = true, buttonText: String, onClick: () -> Unit) {
         addPopup(shouldHaveDefaultButton) {
-            val popup = first
-            val theme = second
             Text(
                 text,
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(modifier = Modifier.height(8.dp))
             SmallThemedButton(
-                theme = theme,
                 onClick = {
                     onClick()
-                    removePopup(popup.uuid)
+                    removePopup(uuid)
                 },
                 modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    buttonText,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            }
+                content = {
+                    Text(
+                        buttonText,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                },
+            )
         }
     }
 

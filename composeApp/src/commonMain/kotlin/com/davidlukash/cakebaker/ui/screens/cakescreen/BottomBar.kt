@@ -4,18 +4,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.davidlukash.cakebaker.VERSION
 import com.davidlukash.cakebaker.data.theme.Theme
 
 @Composable
-fun BottomBar(theme: Theme) {
+fun BottomBar() {
     Text(
         "Kotlin $VERSION",
-        color = Color.White,
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),
-        style = theme.scaledStyles.mediumBodyStyle,
+        style = Theme.Styles.mediumBodyStyle,
     )
 }

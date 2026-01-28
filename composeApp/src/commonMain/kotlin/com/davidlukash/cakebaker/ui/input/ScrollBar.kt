@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun HorizontalScrollBar(theme: Theme, scrollState: ScrollState, coroutineScope: CoroutineScope) {
+fun HorizontalScrollBar(scrollState: ScrollState, coroutineScope: CoroutineScope) {
     val density = LocalDensity.current
     val viewportWidth = density.run { scrollState.viewportSize.toDp() }
     val maxValue = density.run { scrollState.maxValue.toDp() } + viewportWidth
@@ -42,7 +42,7 @@ fun HorizontalScrollBar(theme: Theme, scrollState: ScrollState, coroutineScope: 
             contentAlignment = Alignment.CenterStart
         ) {
             Surface(
-                color = theme.buttonTheme.containerColor,
+                color = Theme.ButtonTheme.containerColor,
                 modifier = Modifier.fillMaxWidth(visibleFraction).height(32.dp)
                     .absoluteOffset(x = value * visibleFraction)
                     .pointerInput(Unit) {
@@ -51,7 +51,7 @@ fun HorizontalScrollBar(theme: Theme, scrollState: ScrollState, coroutineScope: 
                                 scrollState.scrollBy(dragAmount / visibleFraction)
                             }
                         }
-                    }.border(6.dp, theme.buttonTheme.borderColor)
+                    }.border(6.dp, Theme.ButtonTheme.borderColor)
             ) {
 
             }
@@ -64,7 +64,6 @@ fun HorizontalScrollBar(theme: Theme, scrollState: ScrollState, coroutineScope: 
 )
 @Composable
 fun HorizontalScrollBarPreview() {
-    val theme = Theme.default
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     Column(
@@ -76,9 +75,9 @@ fun HorizontalScrollBarPreview() {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             repeat(10) {
-                Text("Item $it", style = theme.scaledStyles.smallBodyStyle)
+                Text("Item $it", style = Theme.Styles.smallBodyStyle)
             }
         }
-        HorizontalScrollBar(theme = theme, scrollState = scrollState, coroutineScope = coroutineScope)
+        HorizontalScrollBar(scrollState = scrollState, coroutineScope = coroutineScope)
     }
 }

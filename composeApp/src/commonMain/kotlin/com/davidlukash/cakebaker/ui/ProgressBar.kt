@@ -20,18 +20,18 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ProgressBar(theme: Theme, modifier: Modifier = Modifier, amount: Double) {
+fun ProgressBar(modifier: Modifier = Modifier, amount: Double) {
     Surface(
         modifier = modifier.width(320.dp).height(48.dp),
         shape = CircleShape,
-        border = BorderStroke(8.dp, theme.progressBarTheme.border),
-        color = theme.progressBarTheme.backgroundColor
+        border = BorderStroke(8.dp, Theme.ProgressBarTheme.border),
+        color = Theme.ProgressBarTheme.backgroundColor
     ) {
         Box {
             Surface(
                 modifier = Modifier.fillMaxWidth(amount.toFloat()).height(48.dp),
                 shape = CircleShape,
-                color = theme.progressBarTheme.filledColor
+                color = Theme.ProgressBarTheme.filledColor
             ) {}
         }
     }
@@ -40,12 +40,11 @@ fun ProgressBar(theme: Theme, modifier: Modifier = Modifier, amount: Double) {
 @Preview
 @Composable
 fun ProgressBarPreview() {
-    val theme = Theme.default
     val infiniteTransition = rememberInfiniteTransition()
     val amount by infiniteTransition.animateFloat(
         0f, 1f, animationSpec = infiniteRepeatable(
             animation = tween(2000, easing = LinearEasing),
         )
     )
-    ProgressBar(theme, amount = amount.toDouble())
+    ProgressBar(amount = amount.toDouble())
 }

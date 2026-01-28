@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.UIState
@@ -16,7 +15,7 @@ import com.davidlukash.cakebaker.ui.input.MenuButton
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 
 @Composable
-fun TopBar(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigDecimal>) {
+fun TopBar(uiState: UIState, quantityChanges: Map<String, BigDecimal>) {
     MenuButton {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -24,12 +23,11 @@ fun TopBar(theme: Theme, uiState: UIState, quantityChanges: Map<String, BigDecim
         ) {
             Text(
                 "Ingredient Shop",
-                color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
-                style = theme.scaledStyles.titleStyle,
+                style = Theme.Styles.titleStyle,
             )
-            ItemTopRow(theme, uiState, quantityChanges)
+            ItemTopRow(uiState, quantityChanges)
         }
     }
 }

@@ -9,12 +9,11 @@ import androidx.compose.ui.text.style.TextAlign
 import com.davidlukash.cakebaker.data.theme.Theme
 
 @Composable
-fun TopBar(theme: Theme) {
+fun TopBar() {
     Text(
         "Cake Baker",
-        color = Color.White,
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),
-        style = theme.scaledStyles.titleStyle,
+        style = Theme.Styles.titleStyle,
     )
 }

@@ -24,7 +24,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SwitchButton(
-    theme: Theme,
     value: Boolean,
     onText: String,
     offText: String,
@@ -32,10 +31,9 @@ fun SwitchButton(
     modifier: Modifier = Modifier,
     onClick: (Boolean) -> Unit
 ) {
-    val switchButtonTheme = theme.switchButtonTheme
     Surface(
-        color = if (enabled) switchButtonTheme.containerColor else switchButtonTheme.disabledContainerColor,
-        border = BorderStroke(8.dp, if (enabled) switchButtonTheme.borderColor else switchButtonTheme.disabledBorderColor),
+        color = if (enabled) Theme.SwitchButtonTheme.containerColor else Theme.SwitchButtonTheme.disabledContainerColor,
+        border = BorderStroke(8.dp, if (enabled) Theme.SwitchButtonTheme.borderColor else Theme.SwitchButtonTheme.disabledBorderColor),
         modifier = Modifier.clickable(onClick = { onClick(!value) }, enabled = enabled),
         shape = RoundedCornerShape(4.dp)
     ) {
@@ -43,9 +41,9 @@ fun SwitchButton(
             Box(modifier = Modifier.weight(1f)) {
                 Surface(
                     color = if (!value && enabled)
-                        switchButtonTheme.offSelectedContainerColor
+                        Theme.SwitchButtonTheme.offSelectedContainerColor
                     else
-                        switchButtonTheme.offUnselectedContainerColor,
+                        Theme.SwitchButtonTheme.offUnselectedContainerColor,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Box(
@@ -54,11 +52,11 @@ fun SwitchButton(
                     ) {
                         Text(
                             offText,
-                            style = theme.scaledStyles.verySmallBodyStyle,
+                            style = Theme.Styles.verySmallBodyStyle,
                             color = if (!value && enabled)
-                                switchButtonTheme.offSelectedTextColor
+                                Theme.SwitchButtonTheme.offSelectedTextColor
                             else
-                                switchButtonTheme.offUnselectedTextColor,
+                                Theme.SwitchButtonTheme.offUnselectedTextColor,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -68,9 +66,9 @@ fun SwitchButton(
             Box(modifier = Modifier.weight(1f)) {
                 Surface(
                     color = if (value && enabled)
-                        switchButtonTheme.onSelectedContainerColor
+                        Theme.SwitchButtonTheme.onSelectedContainerColor
                     else
-                        switchButtonTheme.onUnselectedContainerColor,
+                        Theme.SwitchButtonTheme.onUnselectedContainerColor,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Box(
@@ -79,11 +77,11 @@ fun SwitchButton(
                     ) {
                         Text(
                             onText,
-                            style = theme.scaledStyles.verySmallBodyStyle,
+                            style = Theme.Styles.verySmallBodyStyle,
                             color = if (value && enabled)
-                                switchButtonTheme.onSelectedTextColor
+                                Theme.SwitchButtonTheme.onSelectedTextColor
                             else
-                                switchButtonTheme.onUnselectedTextColor,
+                                Theme.SwitchButtonTheme.onUnselectedTextColor,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -97,10 +95,8 @@ fun SwitchButton(
 @Preview
 @Composable
 fun SwitchButtonPreview() {
-    val theme = Theme.default
     var checked by remember { mutableStateOf(true) }
     SwitchButton(
-        theme = theme,
         value = checked,
         onText = "On",
         offText = "Off",
