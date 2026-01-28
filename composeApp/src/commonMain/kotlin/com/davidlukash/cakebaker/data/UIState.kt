@@ -11,8 +11,6 @@ data class UIState(
     val items: List<Item>,
     val currentCakeTier: Int,
     val upgrades: List<Upgrade>,
-    val autoOvenEnabled: Boolean,
-    val autoOrderCompleteEnabled: Boolean,
     val customerSatisfaction: Int,
     val canBake: Boolean,
 ) {
@@ -21,8 +19,6 @@ data class UIState(
             items = listOf(),
             currentCakeTier = 1,
             upgrades = listOf(),
-            autoOvenEnabled = false,
-            autoOrderCompleteEnabled = false,
             customerSatisfaction = 1,
             canBake = false,
         )
@@ -36,9 +32,31 @@ data class UIState(
 
     fun getIngredients(): List<Item> = items.filter { it.type == ItemType.INGREDIENT }
 
-    fun getAutoOven(): Boolean? = upgrades.find { it.name == "Auto Oven" }?.level?.toBoolean()
+    /**
+     * This gets whether the Auto Oven upgrade is bought and enabled
+     *
+     * @return bought to enabled or null
+     */
+    fun getAutoOven(): Pair<Boolean, Boolean>? {
+        val autoOven = upgrades.find { it.name == "Auto Oven" }
+        if (autoOven == null) return null
+        val enabled = autoOven.parameters["enabled"]?.asBoolean() ?: false
+        val bought = autoOven.level.toBoolean()
+        return bought to enabled
+    }
 
-    fun getAutoOrderComplete(): Boolean? = upgrades.find { it.name == "Auto Order Complete" }?.level?.toBoolean()
+    /**
+     * This gets whether the Auto Order Complete upgrade is bought and enabled
+     *
+     * @return bought to enabled or null
+     */
+    fun getAutoOrderComplete(): Pair<Boolean, Boolean>? {
+        val autoOrderComplete = upgrades.find { it.name == "Auto Order Complete" }
+        if (autoOrderComplete == null) return null
+        val enabled = autoOrderComplete.parameters["enabled"]?.asBoolean() ?: false
+        val bought = autoOrderComplete.level.toBoolean()
+        return bought to enabled
+    }
 
     fun getFasterOven(): Double = upgrades.find { it.name == "Faster Oven" }?.level?.toDouble() ?: 0.0
 

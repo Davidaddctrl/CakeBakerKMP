@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker.data.save
 
+import com.davidlukash.cakebaker.ForMigrationSupport
 import com.davidlukash.cakebaker.JsonMathHelpers
 import com.davidlukash.cakebaker.VERSION
 import com.davidlukash.cakebaker.VERSIONCODE
@@ -23,8 +24,10 @@ data class Save(
     val upgrades: List<Upgrade> = listOf(),
     val ovenProgress: Double = 0.0,
     val ovenRunning: Boolean = false,
-    val autoOvenEnabled: Boolean = false,
-    val autoOrderCompleteEnabled: Boolean = false,
+    @ForMigrationSupport
+    val autoOvenEnabled: Boolean? = null,
+    @ForMigrationSupport
+    val autoOrderCompleteEnabled: Boolean? = null,
     val tempCakeTier: Int = 1,
     val customerSatisfaction: Int = 1,
     val orderCakeSettings: Map<Int, OrderCakeSettings> = mapOf(),
@@ -325,6 +328,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(1.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                        "enabled" to createObject(false),
                     )
                 ),
                 //endregion
@@ -342,6 +346,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(1.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
+                        "enabled" to createObject(false),
                     )
                 ),
                 //endregion
@@ -662,8 +667,6 @@ data class Save(
             items = default.items,
             currentCakeTier = default.currentCakeTier,
             upgrades = default.upgrades,
-            autoOvenEnabled = default.autoOvenEnabled,
-            autoOrderCompleteEnabled = default.autoOrderCompleteEnabled,
             customerSatisfaction = default.customerSatisfaction,
             canBake = false
         )

@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.ForMigrationSupport
 import com.davidlukash.cakebaker.VERSION
 import com.davidlukash.cakebaker.VERSIONCODE
 import com.davidlukash.cakebaker.data.item.Item
@@ -139,27 +140,56 @@ class DataViewModel(
         }
     }
 
-    private val _autoOvenEnabled = MutableStateFlow(false)
-    val autoOvenEnabled = _autoOvenEnabled.asStateFlow()
-
     fun tickAutoOven() {
         val ovenRunning = ovenRunning.value
-        val autoOven = upgrades.value.find { it.name == "Auto Oven" }?.level?.toBoolean() ?: false
-        val autoOvenEnabled = autoOvenEnabled.value
-        if (!ovenRunning && canBake(currentCakeTier.value) && autoOven && autoOvenEnabled) {
+        val autoOven = upgrades.value.find { it.name == "Auto Oven" }
+            .takeOrNullWithWarn("Auto Oven upgrade not found, aborting tick auto oven")
+        if (autoOven == null) {
+            return
+        }
+        val bought = autoOven.level.toBoolean()
+        val enabled = autoOven.parameters["enabled"]?.asBoolean().takeOrDefaultWithWarn(
+            "Auto Oven upgrade does not have enabled boolean in parameters, defaulting to false and updating it",
+            false
+        )
+        if (autoOven.parameters["enabled"]?.asBoolean() == null) {
+            updateUpgrade(
+                autoOven.copy(
+                    parameters = autoOven.parameters + mapOf(
+                        "enabled" to createObject(false)
+                    )
+                )
+            )
+        }
+        if (!ovenRunning && canBake(currentCakeTier.value) && bought && enabled) {
             startBake()
         }
     }
 
-    private val _autoOrderCompleteEnabled = MutableStateFlow(false)
-    val autoOrderCompleteEnabled = _autoOrderCompleteEnabled.asStateFlow()
-
     fun tickAutoOrderComplete() {
-        val autoOrderComplete =
-            upgrades.value.find { it.name == "Auto Order Complete" }?.level?.toBoolean() ?: false
-        val autoOrderCompleteEnabled = autoOrderCompleteEnabled.value
         val orders = orders.value
-        if (autoOrderComplete && autoOrderCompleteEnabled) {
+
+        val autoOrderComplete = upgrades.value.find { it.name == "Auto Order Complete" }
+            .takeOrNullWithWarn("Auto Order Complete upgrade not found, aborting tick auto order complete")
+        if (autoOrderComplete == null) {
+            return
+        }
+        val bought = autoOrderComplete.level.toBoolean()
+        val enabled = autoOrderComplete.parameters["enabled"]?.asBoolean().takeOrDefaultWithWarn(
+            "Auto Order Complete upgrade does not have enabled boolean in parameters, defaulting to false and updating it",
+            false
+        )
+        if (autoOrderComplete.parameters["enabled"]?.asBoolean() == null) {
+            updateUpgrade(
+                autoOrderComplete.copy(
+                    parameters = autoOrderComplete.parameters + mapOf(
+                        "enabled" to createObject(false)
+                    )
+                )
+            )
+        }
+
+        if (bought && enabled) {
             orders.forEach { order ->
                 val cake =
                     cakes[order.cakeTier].takeOrNullWithWarn("Cake with tier ${order.cakeTier} does not exist")
@@ -295,7 +325,8 @@ class DataViewModel(
     }
 
     suspend fun handleFailedOrder(order: Order) {
-        val settings = orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist")
+        val settings =
+            orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist")
         if (settings == null) {
             uiViewModel.addTextPopup("Failed to fail order, deleting order")
             viewModelScope.launch {
@@ -318,7 +349,8 @@ class DataViewModel(
     }
 
     fun handleCompleteOrder(order: Order) {
-        val settings = orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist")
+        val settings =
+            orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist")
         if (settings == null) {
             uiViewModel.addTextPopup("Failed to complete order, deleting order")
             viewModelScope.launch {
@@ -336,7 +368,8 @@ class DataViewModel(
             settings.minFulfilledCustomerSatisfaction.toDouble(),
             settings.maxFulfilledCustomerSatisfaction.toDouble()
         ).toInt()
-        var cake = cakes[order.cakeTier].takeOrNullWithWarn("Cake with tier ${order.cakeTier} does not exist, cancelling order completion")
+        var cake =
+            cakes[order.cakeTier].takeOrNullWithWarn("Cake with tier ${order.cakeTier} does not exist, cancelling order completion")
         if (cake == null) {
             uiViewModel.addTextPopup("Order with id ${order.id} has an invalid cake tier. It has been deleted")
             viewModelScope.launch {
@@ -395,13 +428,35 @@ class DataViewModel(
 
     fun setAutoOvenEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            _autoOvenEnabled.emit(enabled)
+            val autoOven = upgrades.value.find { it.name == "Auto Oven" }
+                .takeOrNullWithWarn("Auto Oven upgrade not found, aborting set auto oven enabled")
+            if (autoOven == null) {
+                return@launch
+            }
+            updateUpgrade(
+                autoOven.copy(
+                    parameters = autoOven.parameters + mapOf(
+                        "enabled" to createObject(enabled)
+                    )
+                )
+            )
         }
     }
 
     fun setAutoOrderCompleteEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            _autoOrderCompleteEnabled.emit(enabled)
+            val autoOrderComplete = upgrades.value.find { it.name == "Auto Order Complete" }
+                .takeOrNullWithWarn("Auto Order Complete upgrade not found, aborting set auto order complete enabled")
+            if (autoOrderComplete == null) {
+                return@launch
+            }
+            updateUpgrade(
+                autoOrderComplete.copy(
+                    parameters = autoOrderComplete.parameters + mapOf(
+                        "enabled" to createObject(enabled)
+                    )
+                )
+            )
         }
     }
 
@@ -571,7 +626,7 @@ class DataViewModel(
         )
         val tiers = cakePriceAccountability.keys.size
         val denominator = (tiers + 1).toBigDecimal()
-        //Low tier cakes get a smaller price accountabiliy than higher tier
+        //Low tier cakes get a smaller price accountability than higher tier
         val factors = (minTier..maxTier).associateWith { tier -> //1: 2/4 2: 3/4 3: 4/4
             val numerator = (tier + 1).toBigDecimal()
             numerator.divide(
@@ -635,6 +690,7 @@ class DataViewModel(
         }
     }
 
+    @OptIn(ForMigrationSupport::class)
     fun loadSave(save: Save) {
         viewModelScope.launch {
             _items.emit(save.items)
@@ -642,13 +698,56 @@ class DataViewModel(
             _upgrades.emit(save.upgrades)
             _ovenProgress.emit(save.ovenProgress)
             _ovenRunning.emit(save.ovenRunning)
-            _autoOvenEnabled.emit(save.autoOvenEnabled)
-            _autoOrderCompleteEnabled.emit(save.autoOrderCompleteEnabled)
             tempCakeTier = save.tempCakeTier
             _customerSatisfaction.emit(save.customerSatisfaction)
             _orderCakeSettings.emit(save.orderCakeSettings)
             _orders.emit(save.orders)
             _orderCakeTimeCounters.emit(save.orderCakeTimeCounters)
+
+            val autoOven = upgrades.value.find { it.name == "Auto Oven" }
+            if (autoOven != null) {
+                if (save.autoOvenEnabled != null) {
+                    updateUpgrade(
+                        autoOven.copy(
+                            parameters = autoOven.parameters + mapOf(
+                                "enabled" to createObject(save.autoOvenEnabled)
+                            )
+                        )
+                    )
+                }
+                if (autoOven.parameters["enabled"]?.asBoolean() == null) {
+                    updateUpgrade(
+                        autoOven.copy(
+                            parameters = autoOven.parameters + mapOf(
+                                "enabled" to createObject(false)
+                            )
+                        )
+                    )
+                }
+            }
+            
+            val autoOrderComplete = upgrades.value.find { it.name == "Auto Order Complete" }
+            if (autoOrderComplete != null) {
+                if (save.autoOrderCompleteEnabled != null) {
+                    updateUpgrade(
+                        autoOrderComplete.copy(
+                            parameters = autoOrderComplete.parameters + mapOf(
+                                "enabled" to createObject(save.autoOrderCompleteEnabled)
+                            )
+                        )
+                    )
+                }
+                if (autoOrderComplete.parameters["enabled"]?.asBoolean() == null) {
+                    updateUpgrade(
+                        autoOrderComplete.copy(
+                            parameters = autoOrderComplete.parameters + mapOf(
+                                "enabled" to createObject(false)
+                            )
+                        )
+                    )
+                }
+            }
+
         }
     }
 
@@ -660,8 +759,8 @@ class DataViewModel(
         _upgrades.value,
         _ovenProgress.value,
         _ovenRunning.value,
-        _autoOvenEnabled.value,
-        _autoOrderCompleteEnabled.value,
+        null,
+        null,
         tempCakeTier,
         _customerSatisfaction.value,
         _orderCakeSettings.value,
@@ -674,23 +773,17 @@ class DataViewModel(
             items,
             currentCakeTier,
             upgrades,
-            autoOvenEnabled,
-            autoOrderCompleteEnabled,
             customerSatisfaction,
         ) { list ->
             val items = list[0] as List<Item>
             val currentCakeTier = list[1] as Int
             val upgrades = list[2] as List<Upgrade>
-            val autoOvenEnabled = list[3] as Boolean
-            val autoOrderCompleteEnabled = list[4] as Boolean
-            val customerSatisfaction = list[5] as Int
+            val customerSatisfaction = list[3] as Int
             val canBake = canBake(currentCakeTier)
             UIState(
                 items = items,
                 currentCakeTier = currentCakeTier,
                 upgrades = upgrades,
-                autoOvenEnabled = autoOvenEnabled,
-                autoOrderCompleteEnabled = autoOrderCompleteEnabled,
                 customerSatisfaction = customerSatisfaction,
                 canBake = canBake,
             )

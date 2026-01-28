@@ -168,8 +168,6 @@ fun MainContentPreview() {
         upgrades = Save.default.upgrades.filter { it.name == "Auto Oven" || it.name == "Auto Order Complete" }.map {
             it.copy(level = 1)
         },
-        autoOvenEnabled = autoOvenEnabled,
-        autoOrderCompleteEnabled = autoOrderCompleteEnabled
     )
     Box(
         modifier = Modifier.fillMaxSize().background(theme.backgroundTheme.containerColor),
