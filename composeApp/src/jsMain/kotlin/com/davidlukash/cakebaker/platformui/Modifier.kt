@@ -28,11 +28,13 @@ fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
                 }
             }
         }
+        
         if (node is ModifierNode.WeightNode) {
             style {
                 property("flex", node.weight.toString())
             }
         }
+        
         if (node is ModifierNode.HorizontalAlignNode) {
             style {
                 property(
@@ -45,6 +47,7 @@ fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
                 )
             }
         }
+        
         if (node is ModifierNode.VerticalAlignNode) {
             style {
                 property(
@@ -55,6 +58,18 @@ fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
                         else -> "flex-start"
                     }
                 )
+            }
+        }
+
+        if (node is ModifierNode.FillMaxWidthNode) {
+            style {
+                property("width", "calc(100% * ${node.fraction})")
+            }
+        }
+
+        if (node is ModifierNode.FillMaxHeightNode) {
+            style {
+                property("height", "calc(100% * ${node.fraction})")
             }
         }
     }

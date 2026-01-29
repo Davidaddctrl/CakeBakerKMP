@@ -11,11 +11,11 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun PrimaryContainer(modifier: Modifier, shape: Shape = RoundedCornerShape(16.dp), content: @Composable () -> Unit) {
+fun PrimaryContainer(modifier: Modifier, content: @Composable () -> Unit) {
     BaseContainer(
         modifier = modifier,
         theme = Theme.ContainerTheme,
-        shape = shape,
+        borderRadius = 16.dp,
         borderWidth = 8.dp,
         padding = 16.dp,
         shadowElevation = 0.dp,

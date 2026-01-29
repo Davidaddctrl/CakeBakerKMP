@@ -30,4 +30,8 @@ sealed class ModifierNode {
     ) : ModifierNode()
 
     class NativeComposeNode(val modifier: Modifier) : ModifierNode()
+
+    class FillMaxWidthNode(val fraction: Float) : ModifierNode()
+
+    class FillMaxHeightNode(val fraction: Float) : ModifierNode()
 }

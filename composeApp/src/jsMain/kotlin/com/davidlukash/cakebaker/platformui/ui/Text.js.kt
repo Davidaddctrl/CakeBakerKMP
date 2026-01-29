@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker.platformui.ui
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
@@ -16,6 +17,7 @@ actual fun Text(
     modifier: Modifier
 ) {
     val doDropShadow = LocalDoDropShadow.current
+    val localContentColor = LocalContentColor.current
     Span(
         attrs = {
             modifiers(modifier)
@@ -23,6 +25,7 @@ actual fun Text(
                 property("font-size", style.fontSize.value.toString() + "px")
                 property("text-align", style.textAlign.toString().lowercase())
                 property("font-family", "vcr-osd-mono, monoscape")
+                property("color", localContentColor.toCSS())
                 if (doDropShadow) {
                     style.shadow?.let { shadow ->
                         property(

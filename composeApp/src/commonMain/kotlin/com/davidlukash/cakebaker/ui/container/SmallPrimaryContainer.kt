@@ -1,7 +1,6 @@
 package com.davidlukash.cakebaker.ui.container
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -24,7 +23,7 @@ fun SmallPrimaryContainer(
         BaseContainer(
             modifier = modifier,
             theme = Theme.ContainerTheme,
-            shape = RoundedCornerShape(8.dp),
+            borderRadius = 8.dp,
             borderWidth = 6.dp,
             padding = 16.dp,
             shadowElevation = shadowElevation,
