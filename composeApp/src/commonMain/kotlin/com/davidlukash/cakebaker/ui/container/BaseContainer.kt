@@ -25,8 +25,8 @@ fun BaseContainer(
 ) {
     Box(
         modifier = modifier
-            .background(theme.containerColorBrush, RoundedCornerShape(borderRadius))
-            .border(BorderStroke(borderWidth, theme.borderColorBrush), RoundedCornerShape(borderRadius))
+            .background(theme.containerColor, RoundedCornerShape(borderRadius))
+            .border(BorderStroke(borderWidth, theme.borderColor), RoundedCornerShape(borderRadius))
             .shadow(shadowElevation, RoundedCornerShape(borderRadius))
             .padding(padding)
     ) {

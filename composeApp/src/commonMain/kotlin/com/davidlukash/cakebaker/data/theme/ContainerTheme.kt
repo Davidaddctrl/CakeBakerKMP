@@ -7,8 +7,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 data class ContainerTheme(
-    val borderColorBrush: Brush,
-    val containerColorBrush: Brush,
+    val borderColor: Color,
+    val containerColor: Color,
     val contentColor: Color,
     val shouldDropShadow: Boolean
 )

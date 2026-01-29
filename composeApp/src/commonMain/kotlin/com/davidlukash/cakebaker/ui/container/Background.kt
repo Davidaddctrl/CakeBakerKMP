@@ -13,7 +13,7 @@ import com.davidlukash.cakebaker.data.theme.Theme
 @Composable
 fun Background(content: @Composable () -> Unit) {
     Box(
-        modifier = Modifier.fillMaxSize().background(Theme.BackgroundTheme.containerColorBrush).padding(16.dp)
+        modifier = Modifier.fillMaxSize().background(Theme.BackgroundTheme.containerColor).padding(16.dp)
     ) {
         ProvideContainer(Theme.BackgroundTheme) {
             content()

@@ -3,7 +3,6 @@ package com.davidlukash.cakebaker.data.theme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.SolidColor
@@ -255,35 +254,25 @@ data class Theme(
                 onUnselectedTextColor = Color(255, 255, 255).copy(alpha = 0.3f),
             ),
             backgroundTheme = ContainerTheme(
-                borderColorBrush = SolidColor(Color.Transparent),
-                containerColorBrush = Brush.verticalGradient(
-                    listOf(
-                        Color(0, 100, 217, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                    )
-                ),
+                borderColor = Color.Transparent,
+                containerColor = Color(0, 120, 255),
                 contentColor = Color(255, 255, 255),
                 shouldDropShadow = true
             ),
             containerTheme = ContainerTheme(
-                borderColorBrush = SolidColor(Color(0, 0, 0)),
-                containerColorBrush = SolidColor(Color(246, 255, 153)),
+                borderColor = Color(0, 0, 0),
+                containerColor = Color(246, 255, 153),
                 contentColor = Color(0, 0, 0),
                 shouldDropShadow = false
             ),
             secondaryContainerTheme = ContainerTheme(
-                borderColorBrush = SolidColor(Color(0, 0, 0)),
-                containerColorBrush = SolidColor(Color(8, 160, 69)),
+                borderColor = Color(0, 0, 0),
+                containerColor = Color(8, 160, 69),
                 contentColor = Color(255, 255, 255),
                 shouldDropShadow = true
             ),
             textFieldTheme = TextFieldTheme(
-                cursorBrush = SolidColor(Color.White),
+                cursorColor = Color.White,
                 contentColor = Color.White,
                 placeholderColor = Color(128, 128, 128),
                 containerColor = Color(53, 57, 62),

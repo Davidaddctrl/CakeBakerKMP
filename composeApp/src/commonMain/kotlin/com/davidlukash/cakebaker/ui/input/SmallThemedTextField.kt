@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
 import com.davidlukash.cakebaker.data.theme.LocalIsScaled
@@ -31,7 +32,7 @@ fun SmallThemedTextField(modifier: Modifier = Modifier, placeholder: String, val
             value,
             onValueChange = { setValue(it) },
             modifier = modifier,
-            cursorBrush = Theme.TextFieldTheme.cursorBrush,
+            cursorBrush = SolidColor(Theme.TextFieldTheme.cursorColor),
             textStyle = Theme.Styles.largeBodyStyle.copy(color = Theme.TextFieldTheme.contentColor),
             singleLine = singleLine,
             decorationBox = { innerTextField ->
