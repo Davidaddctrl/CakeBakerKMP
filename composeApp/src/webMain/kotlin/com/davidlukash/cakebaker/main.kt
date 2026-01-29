@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -13,10 +14,12 @@ val savesRepository = createSavesRepository()
 val mainViewModel = MainViewModel(savesRepository)
 expect fun registerLogger()
 
+expect fun viewport(content: @Composable () -> Unit)
+
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     registerLogger()
-    ComposeViewport {
+    viewport {
         CompositionLocalProvider(
             LocalMainViewModel provides mainViewModel
         ) {

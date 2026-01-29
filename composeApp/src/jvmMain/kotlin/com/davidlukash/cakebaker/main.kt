@@ -1,6 +1,8 @@
 package com.davidlukash.cakebaker
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,7 +35,7 @@ fun main() {
     withResult {
         val savesRepository = JVMSavesRepository(baseDirectory)
         val viewModel = MainViewModel(savesRepository)
-        setSystemLookAndFeel()
+        //setSystemLookAndFeel()
         application {
             val localMainViewModel = remember { viewModel }
             CompositionLocalProvider(

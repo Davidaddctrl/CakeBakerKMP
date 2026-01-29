@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.engine.CakeBakerEngine
@@ -258,21 +259,27 @@ fun Modifier.horizontalRowScroll(
 fun <T> withResult(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> {
     return try {
         Result.success(block())
-    } catch (e: CancellationException) { throw e }
-    catch (e: Exception) {
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
         logger.logError(e)
         Result.failure(e)
-    } finally { finallyBlock() }
+    } finally {
+        finallyBlock()
+    }
 }
 
 suspend fun <T> withResultSuspend(finallyBlock: suspend () -> Unit = {}, block: suspend () -> T): Result<T> {
     return try {
         Result.success(block())
-    } catch (e: CancellationException) { throw e }
-    catch (e: Exception) {
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
         logger.logError(e)
         Result.failure(e)
-    } finally { finallyBlock() }
+    } finally {
+        finallyBlock()
+    }
 }
 
 expect fun dumpFunctionsToFile(engine: CakeBakerEngine)
@@ -295,4 +302,17 @@ fun <T : Any> T?.takeOrNullWithWarn(warnMessage: String): T? {
         return null
     }
     return this
+}
+
+fun Color.toCSS(): String {
+    return "rgba(${red * 255.0}, ${green * 255.0}, ${blue * 255.0}, ${alpha * 255.0})"
+}
+
+fun Color.lighten(amount: Float): Color {
+    return Color(
+        lerp(red, 1f, amount),
+        lerp(green, 1f, amount),
+        lerp(blue, 1f, amount),
+        alpha
+    )
 }

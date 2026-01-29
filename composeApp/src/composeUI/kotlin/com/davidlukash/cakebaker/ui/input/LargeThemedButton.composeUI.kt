@@ -2,49 +2,47 @@ package com.davidlukash.cakebaker.ui.input
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.ButtonTokens
 import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
 import com.davidlukash.cakebaker.data.theme.Theme
-
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
-@Composable
-expect fun LargeThemedButton(
-    onClick: () -> Unit,
-    modifier: com.davidlukash.cakebaker.platformui.Modifier = com.davidlukash.cakebaker.platformui.Modifier,
-    enabled: Boolean = true,
-    onHoverChange: (Boolean) -> Unit = {},
-    content: @Composable () -> Unit
-)
+import com.davidlukash.cakebaker.platformui.Modifier
+import com.davidlukash.cakebaker.platformui.modifiers
 
 @Composable
-fun LargeThemedButton(
+actual fun LargeThemedButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    interactionSource: MutableInteractionSource? = null,
-    content: @Composable RowScope.() -> Unit,
+    modifier: Modifier,
+    enabled: Boolean,
+    onHoverChange: (Boolean) -> Unit,
+    content: @Composable (() -> Unit)
 ) {
+    val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+    LaunchedEffect(isHovered) {
+        onHoverChange(isHovered)
+    }
     Button(
         interactionSource = interactionSource,
         onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
+        modifier = modifiers(modifier),
+        shape = RoundedCornerShape(ButtonTokens.largeBorderRadius),
         enabled = enabled,
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = PaddingValues(ButtonTokens.largePadding),
         border = BorderStroke(
-            width = 8.dp,
+            width = ButtonTokens.largeBorderWidth,
             color = if (enabled) Theme.ButtonTheme.borderColor else Theme.ButtonTheme.disabledBorderColor,
         ),
         colors = ButtonDefaults.buttonColors(
@@ -71,18 +69,4 @@ fun LargeThemedButton(
             }
         }
     }
-}
-
-@Preview(
-    widthDp = 768
-)
-@Composable
-fun LargeThemedButtonPreview() {
-    LargeThemedButton(
-        onClick = {},
-        modifier = Modifier,
-        content = {
-            Text("Button Preview")
-        },
-    )
 }

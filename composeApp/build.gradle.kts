@@ -42,9 +42,28 @@ kotlin {
     }
 
     sourceSets {
+        val composeUI by creating {
+            dependsOn(commonMain.get())
+        }
+
+        jvmMain {
+            dependsOn(composeUI)
+        }
+
+        androidMain {
+            dependsOn(composeUI)
+        }
+
+        wasmJsMain {
+            dependsOn(composeUI)
+        }
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+        }
+        jsMain.dependencies {
+            implementation(compose.html.core)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

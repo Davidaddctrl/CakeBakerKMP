@@ -35,11 +35,14 @@ import cakebaker.composeapp.generated.resources.vanilla_cake
 import cakebaker.composeapp.generated.resources.vanilla_extract
 import cakebaker.composeapp.generated.resources.vcr_osd_mono
 import com.davidlukash.cakebaker.data.ImageData
+import com.davidlukash.cakebaker.data.Platform
+import com.davidlukash.cakebaker.platform
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.FontResource
 
 @Composable
 fun convertStyles(styles: TextStyles, font: FontResource): TextStyles {
+    if (platform == Platform.JS) return styles
     val fontFamily = FontFamily(Font(font))
     return styles.copy(
         titleStyle = convertStyle(styles.titleStyle, fontFamily),

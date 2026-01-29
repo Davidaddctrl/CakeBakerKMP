@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,19 +10,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import cakebaker.composeapp.generated.resources.Res
+import cakebaker.composeapp.generated.resources.baking_powder
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.LocalTheme
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.platformui.HorizontalArrangement
+import com.davidlukash.cakebaker.platformui.VerticalArrangement
+import com.davidlukash.cakebaker.platformui.ui.Column
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.InternalPopup
 import com.davidlukash.cakebaker.ui.ScaleViewport
+import com.davidlukash.cakebaker.platformui.ui.Text
 import com.davidlukash.cakebaker.ui.VariableView
+import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
@@ -66,6 +75,29 @@ fun App() {
         val ovenRunning by dataViewModel.ovenRunning.collectAsState()
         val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = null)
         val orders by dataViewModel.orders.collectAsState()
+
+
+        com.davidlukash.cakebaker.platformui.ui.Row(
+            modifier = com.davidlukash.cakebaker.platformui.Modifier.size(height = 512.dp, width = 768.dp),
+            horizontalArrangement = HorizontalArrangement.SpacedBy(16.dp, Alignment.Start)
+        ) {
+            LargeThemedButton(
+                onClick = {},
+                modifier = com.davidlukash.cakebaker.platformui.Modifier.size(width = 360.dp),
+            ) {
+                Text("Hello")
+            }
+
+            LargeThemedButton(
+                onClick = {},
+                modifier = com.davidlukash.cakebaker.platformui.Modifier.align(Alignment.Bottom),
+                enabled = false
+            ) {
+                Text("Hello")
+            }
+        }
+
+        return@CompositionLocalProvider
 
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)

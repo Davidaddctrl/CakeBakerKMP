@@ -1,5 +1,8 @@
 package com.davidlukash.cakebaker
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.window.ComposeViewport
 import com.davidlukash.cakebaker.repository.SavesRepository
 import com.davidlukash.cakebaker.data.WASMSavesRepository
 import com.davidlukash.cakebaker.data.log.Log
@@ -17,4 +20,11 @@ actual fun registerLogger() {
             }
         }
     )
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+actual fun viewport(content: @Composable (() -> Unit)) {
+    ComposeViewport {
+        content()
+    }
 }
