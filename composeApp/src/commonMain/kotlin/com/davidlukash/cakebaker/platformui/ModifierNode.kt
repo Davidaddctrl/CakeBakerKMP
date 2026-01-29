@@ -28,4 +28,6 @@ sealed class ModifierNode {
         val alignment: Alignment.Vertical,
         val modifier: Modifier? = null
     ) : ModifierNode()
+
+    class NativeComposeNode(val modifier: Modifier) : ModifierNode()
 }

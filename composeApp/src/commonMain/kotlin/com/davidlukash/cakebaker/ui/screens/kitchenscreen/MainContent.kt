@@ -5,7 +5,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,11 +24,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import com.davidlukash.cakebaker.data.order.Order
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.UIState
@@ -62,7 +58,6 @@ fun MainContent(
 ) {
     val canBake = uiState.canBake
     val fasterOvenLevel by derivedStateOf { uiState.getFasterOven() }
-    val density = LocalDensity.current
     Row(
         modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 16.dp),
         verticalAlignment = Alignment.Bottom,
@@ -115,29 +110,19 @@ fun MainContent(
         Spacer(modifier = Modifier.width(16.dp))
         OrdersPanel(uiState, completeOrder, nextOrderRemainingTime, orders)
         Spacer(modifier = Modifier.width(16.dp))
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.BottomEnd
+        InfoPanel(
+            uiState, setAutoOvenEnabled, setAutoOrderCompleteEnabled
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        ImageButton(
+            onClick = {
+                navigateWithFade(UpgradeScreen)
+            },
         ) {
-            var buttonSize by remember { mutableStateOf(Size.Zero) }
-            InfoPanel(
-                uiState, setAutoOvenEnabled, setAutoOrderCompleteEnabled, buttonSize.copy(
-                width = buttonSize.width + density.run { 8.dp.toPx() },
-                height = buttonSize.height + density.run { 8.dp.toPx() }
-            ))
-            ImageButton(
-                onClick = {
-                    navigateWithFade(UpgradeScreen)
-                },
-                modifier = Modifier.onGloballyPositioned {
-                    buttonSize = it.size.toSize()
-                }
-            ) {
-                ResourceImage(
-                    Theme.getImage("Upgrade Shop"),
-                    modifier = Modifier.height(280.dp)
-                )
-            }
+            ResourceImage(
+                Theme.getImage("Upgrade Shop"),
+                modifier = Modifier.height(280.dp)
+            )
         }
     }
 }

@@ -44,6 +44,10 @@ fun modifiers(modifier: com.davidlukash.cakebaker.platformui.Modifier): Modifier
                 composeModifier = composeModifier.then(it)
             }
         }
+
+        if (node is ModifierNode.NativeComposeNode) {
+            composeModifier = composeModifier.then(node.modifier)
+        }
     }
     return composeModifier
 }

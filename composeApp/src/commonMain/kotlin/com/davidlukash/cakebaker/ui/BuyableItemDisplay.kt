@@ -28,12 +28,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item, onHoverChange: (Boolean) -> Unit = {}) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isHovered by interactionSource.collectIsHoveredAsState()
-
-    LaunchedEffect(isHovered) {
-        onHoverChange(isHovered)
-    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -64,8 +58,8 @@ fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item,
             },
             modifier = Modifier.width(180.dp),
             enabled = money.amount >= (item.price ?: BigDecimal.ZERO),
-            interactionSource = interactionSource,
-            {
+            onHoverChange = onHoverChange,
+            content = {
                 Text(
                     "Buy",
                 )

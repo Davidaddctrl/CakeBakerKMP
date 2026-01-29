@@ -1,7 +1,6 @@
 package com.davidlukash.cakebaker.ui.input
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,44 +32,16 @@ fun LargeThemedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    interactionSource: MutableInteractionSource? = null,
-    content: @Composable RowScope.() -> Unit,
+    onHoverChange: (Boolean) -> Unit = {},
+    content: @Composable () -> Unit,
 ) {
-    Button(
-        interactionSource = interactionSource,
+    LargeThemedButton(
         onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
+        modifier = com.davidlukash.cakebaker.platformui.Modifier.nativeComposeModifier(modifier),
         enabled = enabled,
-        contentPadding = PaddingValues(16.dp),
-        border = BorderStroke(
-            width = 8.dp,
-            color = if (enabled) Theme.ButtonTheme.borderColor else Theme.ButtonTheme.disabledBorderColor,
-        ),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Theme.ButtonTheme.containerColor,
-            disabledContainerColor = Theme.ButtonTheme.disabledContainerColor,
-            contentColor = Theme.ButtonTheme.contentColor,
-            disabledContentColor = Theme.ButtonTheme.disabledContentColor,
-        ),
-        elevation = ButtonDefaults.buttonElevation(
-            0.dp,
-            0.dp,
-            0.dp,
-            0.dp,
-            0.dp
-        )
-    ) {
-        CompositionLocalProvider(
-            LocalDoDropShadow provides Theme.ButtonTheme.shouldDropShadow
-        ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides Theme.Styles.buttonTextStyle.copy(textAlign = TextAlign.Center),
-            ) {
-                content()
-            }
-        }
-    }
+        onHoverChange = onHoverChange,
+        content = content
+    )
 }
 
 @Preview(

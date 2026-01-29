@@ -77,27 +77,26 @@ fun App() {
         val orders by dataViewModel.orders.collectAsState()
 
 
-        com.davidlukash.cakebaker.platformui.ui.Row(
-            modifier = com.davidlukash.cakebaker.platformui.Modifier.size(height = 512.dp, width = 768.dp),
-            horizontalArrangement = HorizontalArrangement.SpacedBy(16.dp, Alignment.Start)
-        ) {
-            LargeThemedButton(
-                onClick = {},
-                modifier = com.davidlukash.cakebaker.platformui.Modifier.size(width = 360.dp),
-            ) {
-                Text("Hello")
-            }
+//        com.davidlukash.cakebaker.platformui.ui.Row(
+//            modifier = com.davidlukash.cakebaker.platformui.Modifier.size(height = 512.dp, width = 768.dp),
+//            horizontalArrangement = HorizontalArrangement.SpacedBy(16.dp, Alignment.Start)
+//        ) {
+//            LargeThemedButton(
+//                onClick = {},
+//                modifier = com.davidlukash.cakebaker.platformui.Modifier.size(width = 360.dp),
+//            ) {
+//                Text("Hello")
+//            }
+//
+//            LargeThemedButton(
+//                onClick = {},
+//                modifier = com.davidlukash.cakebaker.platformui.Modifier.align(Alignment.Bottom),
+//                enabled = false
+//            ) {
+//                Text("Hello")
+//            }
+//        }
 
-            LargeThemedButton(
-                onClick = {},
-                modifier = com.davidlukash.cakebaker.platformui.Modifier.align(Alignment.Bottom),
-                enabled = false
-            ) {
-                Text("Hello")
-            }
-        }
-
-        return@CompositionLocalProvider
 
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)
