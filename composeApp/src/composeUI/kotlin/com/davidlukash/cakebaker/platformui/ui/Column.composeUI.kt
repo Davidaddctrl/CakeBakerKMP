@@ -25,23 +25,20 @@ actual fun Column(
     ) {
         val scope = remember {
             object : ColumnScope {
-                override fun Modifier.weight(weight: Float): Modifier {
-                    return Modifier(
-                        this.nodes + ModifierNode.WeightNode(
-                            weight,
-                            androidx.compose.ui.Modifier.weight(weight)
-                        )
+                override fun Modifier.weight(weight: Float): Modifier = combineWithNode(
+                    ModifierNode.WeightNode(
+                        weight,
+                        androidx.compose.ui.Modifier.weight(weight)
                     )
-                }
+                )
 
-                override fun Modifier.align(alignment: Alignment.Horizontal): Modifier {
-                    return Modifier(
-                        this.nodes + ModifierNode.HorizontalAlignNode(
-                            alignment,
-                            androidx.compose.ui.Modifier.align(alignment)
-                        )
+
+                override fun Modifier.align(alignment: Alignment.Horizontal): Modifier = combineWithNode(
+                    ModifierNode.HorizontalAlignNode(
+                        alignment,
+                        androidx.compose.ui.Modifier.align(alignment)
                     )
-                }
+                )
             }
         }
         scope.content()

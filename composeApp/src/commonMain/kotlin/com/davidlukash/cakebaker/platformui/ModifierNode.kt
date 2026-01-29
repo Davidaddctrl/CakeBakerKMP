@@ -29,6 +29,11 @@ sealed class ModifierNode {
         val modifier: Modifier? = null
     ) : ModifierNode()
 
+    class AlignmentNode(
+        val alignment: Alignment,
+        val modifier: Modifier? = null
+    ) : ModifierNode()
+
     class NativeComposeNode(val modifier: Modifier) : ModifierNode()
 
     class FillMaxWidthNode(val fraction: Float) : ModifierNode()

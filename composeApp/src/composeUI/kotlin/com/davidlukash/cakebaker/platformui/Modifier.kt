@@ -14,22 +14,22 @@ fun modifiers(modifier: com.davidlukash.cakebaker.platformui.Modifier): Modifier
     modifier.nodes.forEach { node ->
         if (node is ModifierNode.SizeNode) {
             node.width?.let {
-                composeModifier = Modifier.width(it)
+                composeModifier = composeModifier.width(it)
             }
             node.height?.let {
-                composeModifier = Modifier.height(it)
+                composeModifier = composeModifier.height(it)
             }
             node.minWidth?.let {
-                composeModifier = Modifier.sizeIn(minWidth = it)
+                composeModifier = composeModifier.sizeIn(minWidth = it)
             }
             node.maxWidth?.let {
-                composeModifier = Modifier.sizeIn(maxWidth = it)
+                composeModifier = composeModifier.sizeIn(maxWidth = it)
             }
             node.minHeight?.let {
-                composeModifier = Modifier.sizeIn(minHeight = it)
+                composeModifier = composeModifier.sizeIn(minHeight = it)
             }
             node.maxHeight?.let {
-                composeModifier = Modifier.sizeIn(maxHeight = it)
+                composeModifier = composeModifier.sizeIn(maxHeight = it)
             }
         }
         
@@ -46,6 +46,12 @@ fun modifiers(modifier: com.davidlukash.cakebaker.platformui.Modifier): Modifier
         }
         
         if (node is ModifierNode.VerticalAlignNode) {
+            node.modifier?.let {
+                composeModifier = composeModifier.then(it)
+            }
+        }
+
+        if (node is ModifierNode.AlignmentNode) {
             node.modifier?.let {
                 composeModifier = composeModifier.then(it)
             }

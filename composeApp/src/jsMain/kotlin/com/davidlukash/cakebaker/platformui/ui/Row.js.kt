@@ -53,13 +53,11 @@ actual fun Row(
     ) {
         val scope = remember {
             object : RowScope {
-                override fun Modifier.weight(weight: Float): Modifier {
-                    return Modifier(this.nodes + ModifierNode.WeightNode(weight))
-                }
+                override fun Modifier.weight(weight: Float): Modifier = combineWithNode(ModifierNode.WeightNode(weight))
 
-                override fun Modifier.align(alignment: Alignment.Vertical): Modifier {
-                    return Modifier(this.nodes + ModifierNode.VerticalAlignNode(alignment))
-                }
+
+                override fun Modifier.align(alignment: Alignment.Vertical): Modifier =
+                    combineWithNode(ModifierNode.VerticalAlignNode(alignment))
             }
         }
         content(scope)

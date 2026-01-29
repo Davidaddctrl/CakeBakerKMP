@@ -1,6 +1,7 @@
 package com.davidlukash.cakebaker.platformui
 
 import androidx.compose.ui.Alignment
+import com.davidlukash.cakebaker.toClass
 import org.jetbrains.compose.web.attributes.AttrsScope
 import org.w3c.dom.Element
 
@@ -71,6 +72,10 @@ fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
             style {
                 property("height", "calc(100% * ${node.fraction})")
             }
+        }
+
+        if (node is ModifierNode.AlignmentNode) {
+            classes(node.alignment.toClass())
         }
     }
 }
