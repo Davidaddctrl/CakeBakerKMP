@@ -24,13 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.order.Order
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.input.ImageButton
+import com.davidlukash.cakebaker.ui.input.TransparentButton
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.container.Background
@@ -81,7 +80,7 @@ fun MainContent(
                         color = Theme.ProgressBarTheme.contentColor
                     )
             }
-            ImageButton(
+            TransparentButton(
                 onClick = {
                     bake()
                 },
@@ -93,7 +92,7 @@ fun MainContent(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            ImageButton(
+            TransparentButton(
                 onClick = {
                     navigateWithFade(IngredientScreen)
                 },
@@ -106,7 +105,7 @@ fun MainContent(
             }
         }
         Spacer(modifier = Modifier.width(8.dp))
-        RecipePanel(uiState, setCurrentCake)
+        RecipePanel(com.davidlukash.cakebaker.platformui.Modifier.nativeComposeModifier(Modifier.weight(1f)), uiState, setCurrentCake)
         Spacer(modifier = Modifier.width(16.dp))
         OrdersPanel(uiState, completeOrder, nextOrderRemainingTime, orders)
         Spacer(modifier = Modifier.width(16.dp))
@@ -114,7 +113,7 @@ fun MainContent(
             uiState, setAutoOvenEnabled, setAutoOrderCompleteEnabled
         )
         Spacer(modifier = Modifier.width(8.dp))
-        ImageButton(
+        TransparentButton(
             onClick = {
                 navigateWithFade(UpgradeScreen)
             },

@@ -2,13 +2,18 @@ package com.davidlukash.cakebaker
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.HorizontalAlignmentLine
+import androidx.compose.ui.layout.Measured
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.ConsoleType
@@ -24,12 +29,14 @@ import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.InternalPopup
 import com.davidlukash.cakebaker.ui.ScaleViewport
 import com.davidlukash.cakebaker.ui.VariableView
+import com.davidlukash.cakebaker.ui.container.Background
 import com.davidlukash.cakebaker.ui.container.PrimaryContainer
 import com.davidlukash.cakebaker.ui.container.SecondaryContainer
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
+import com.davidlukash.cakebaker.ui.screens.kitchenscreen.RecipePanel
 import com.davidlukash.cakebaker.ui.screens.savescreen.CreateSaveDialog
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
@@ -72,35 +79,11 @@ fun App() {
         val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = null)
         val orders by dataViewModel.orders.collectAsState()
 
-        com.davidlukash.cakebaker.platformui.ui.Row(
-            horizontalArrangement = HorizontalArrangement.SpacedBy(8.dp),
-        ) {
-            PrimaryContainer(
-                modifier = Modifier.size(256.dp, 512.dp)
-            ) {
-
-            }
-            SecondaryContainer(
-                modifier = Modifier.size(256.dp, 512.dp)
-            ) {
-
-            }
-
-            LargeThemedButton(
-                onClick = {},
-                modifier = Modifier.size(512.dp),
-                enabled = true
-            ) {
-                Text("Enabled")
-            }
-
-            LargeThemedButton(
-                onClick = {},
-                modifier = Modifier.size(512.dp),
-                enabled = false
-            ) {
-                Text("Disabled")
-            }
+        Background {
+            RecipePanel(
+                modifier = Modifier.size(450.dp, 630.dp),
+                uiState = uiState,
+            ) { dataViewModel.setCurrentCake(it) }
         }
 
         return@CompositionLocalProvider

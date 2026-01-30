@@ -1,10 +1,6 @@
 package com.davidlukash.cakebaker.ui.screens.kitchenscreen
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,13 +8,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -31,6 +25,12 @@ import cakebaker.composeapp.generated.resources.chevron_forward
 import cakebaker.composeapp.generated.resources.close
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.platformui.HorizontalArrangement
+import com.davidlukash.cakebaker.platformui.Modifier
+import com.davidlukash.cakebaker.platformui.VerticalArrangement
+import com.davidlukash.cakebaker.platformui.ui.Column
+import com.davidlukash.cakebaker.platformui.ui.Row
+import com.davidlukash.cakebaker.platformui.ui.Text
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.container.PrimaryContainer
 
@@ -38,50 +38,51 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
+fun RecipePanel(modifier: Modifier, uiState: UIState, setCurrentCake: (Int) -> Unit) {
     val cakes  by derivedStateOf { uiState.getCakes() }
     val ingredients by derivedStateOf { uiState.getIngredients() }
     val currentCakeTier = uiState.currentCakeTier
 
     PrimaryContainer(
-        modifier = Modifier.weight(1f).fillMaxWidth(),
+        modifier = modifier,
         content = {
             Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = VerticalArrangement.SpacedBy(8.dp)
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.SpaceAround,
+                    horizontalArrangement = HorizontalArrangement.SpaceAround,
                     modifier = Modifier.fillMaxWidth().height(72.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(
-                        painter = painterResource(Res.drawable.chevron_backward),
-                        contentDescription = "Previous Tier Cake",
-                        modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
-                            enabled = currentCakeTier != 1
-                        ) {
-                            setCurrentCake(currentCakeTier - 1)
-                        },
-                        tint = if (currentCakeTier != 1) LocalContentColor.current else Color.Transparent
-                    )
+//                    Icon(
+//                        painter = painterResource(Res.drawable.chevron_backward),
+//                        contentDescription = "Previous Tier Cake",
+//                        modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
+//                            enabled = currentCakeTier != 1
+//                        ) {
+//                            setCurrentCake(currentCakeTier - 1)
+//                        },
+//                        tint = if (currentCakeTier != 1) LocalContentColor.current else Color.Transparent
+//                    )
                     Text(
                         cakes[currentCakeTier]?.name ?: "Cake Tier Invalid",
-                        style = Theme.Styles.mediumBodyStyle,
-                        textAlign = TextAlign.Center,
-                        textDecoration = TextDecoration.Underline,
+                        style = Theme.Styles.mediumBodyStyle.copy(
+                            textAlign = TextAlign.Center,
+                            textDecoration = TextDecoration.Underline,
+                        ),
                         modifier = Modifier.fillMaxWidth().weight(1f)
                     )
-                    Icon(
-                        painter = painterResource(Res.drawable.chevron_forward),
-                        contentDescription = "Next Tier Cake",
-                        modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
-                            enabled = currentCakeTier != cakes.size
-                        ) {
-                            setCurrentCake(currentCakeTier + 1)
-                        },
-                        tint = if (currentCakeTier != cakes.size) LocalContentColor.current else Color.Transparent
-                    )
+//                    Icon(
+//                        painter = painterResource(Res.drawable.chevron_forward),
+//                        contentDescription = "Next Tier Cake",
+//                        modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
+//                            enabled = currentCakeTier != cakes.size
+//                        ) {
+//                            setCurrentCake(currentCakeTier + 1)
+//                        },
+//                        tint = if (currentCakeTier != cakes.size) LocalContentColor.current else Color.Transparent
+//                    )
                 }
                 ingredients.forEach { item ->
                     key(item.name) {
@@ -104,20 +105,20 @@ fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
                                         style = Theme.Styles.smallBodyStyle,
                                     )
                                 }
-                                if (item.amount >= cakePrice)
-                                    Icon(
-                                        painter = painterResource(Res.drawable.check),
-                                        contentDescription = "Enough",
-                                        tint = Theme.SuccessColor,
-                                        modifier = Modifier.size(36.dp)
-                                    )
-                                else
-                                    Icon(
-                                        painter = painterResource(Res.drawable.close),
-                                        contentDescription = "Not Enough",
-                                        tint = Theme.DangerColor,
-                                        modifier = Modifier.size(36.dp)
-                                    )
+//                                if (item.amount >= cakePrice)
+//                                    Icon(
+//                                        painter = painterResource(Res.drawable.check),
+//                                        contentDescription = "Enough",
+//                                        tint = Theme.SuccessColor,
+//                                        modifier = Modifier.size(36.dp)
+//                                    )
+//                                else
+//                                    Icon(
+//                                        painter = painterResource(Res.drawable.close),
+//                                        contentDescription = "Not Enough",
+//                                        tint = Theme.DangerColor,
+//                                        modifier = Modifier.size(36.dp)
+//                                    )
                             }
                         }
                     }

@@ -26,7 +26,7 @@ import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.container.PrimaryContainer
-import com.davidlukash.cakebaker.ui.input.ImageButton
+import com.davidlukash.cakebaker.ui.input.TransparentButton
 
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
@@ -50,7 +50,7 @@ fun BottomBar(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Bottom,
     ) {
-        ImageButton(
+        TransparentButton(
             onClick = {
                 navigateWithFade(IngredientScreen)
             }
@@ -70,7 +70,7 @@ fun BottomBar(
                 ) {
                     pages.forEach { page ->
                         key(page) {
-                            ImageButton(
+                            TransparentButton(
                                 onClick = {
                                     setCurrentPage(page)
                                 },
@@ -91,7 +91,7 @@ fun BottomBar(
                 }
             },
         )
-        ImageButton(
+        TransparentButton(
             onClick = {
                 navigateWithFade(KitchenScreen)
             }

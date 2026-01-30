@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.input.ImageButton
+import com.davidlukash.cakebaker.ui.input.TransparentButton
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
@@ -22,7 +22,7 @@ fun BottomBar(navigateWithFade: (Screen) -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Bottom,
     ) {
-        ImageButton(
+        TransparentButton(
             onClick = {
                 navigateWithFade(KitchenScreen)
             },
@@ -33,7 +33,7 @@ fun BottomBar(navigateWithFade: (Screen) -> Unit) {
             )
         }
 
-        ImageButton(
+        TransparentButton(
             onClick = {
                 navigateWithFade(UpgradeScreen)
             },

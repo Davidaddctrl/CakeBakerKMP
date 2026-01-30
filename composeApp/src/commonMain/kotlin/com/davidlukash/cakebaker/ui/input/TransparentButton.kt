@@ -11,14 +11,16 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ImageButton(
+fun TransparentButton(
     onClick: () -> Unit,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
+    padding: Dp = 8.dp,
+    content: @Composable () -> Unit
 ) {
     val contentColor = LocalContentColor.current
     OutlinedButton(
@@ -36,7 +38,7 @@ fun ImageButton(
             0.dp,
             0.dp
         ),
-        contentPadding = PaddingValues(8.dp),
+        contentPadding = PaddingValues(padding),
     ) {
         CompositionLocalProvider(
             LocalContentColor provides contentColor,

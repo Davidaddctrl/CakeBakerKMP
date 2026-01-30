@@ -19,6 +19,10 @@ open class Modifier(val nodes: List<ModifierNode>) {
     ): Modifier =
         combineWithNode(ModifierNode.SizeNode(width, height, minWidth, maxWidth, minHeight, maxHeight))
 
+    fun width(width: Dp) = size(width = width)
+
+    fun height(height: Dp) = size(height = height)
+
     fun nativeComposeModifier(modifier: androidx.compose.ui.Modifier): Modifier =
         combineWithNode(ModifierNode.NativeComposeNode(modifier))
 
