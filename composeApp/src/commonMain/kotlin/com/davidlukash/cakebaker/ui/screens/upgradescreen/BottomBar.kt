@@ -53,7 +53,8 @@ fun BottomBar(
         TransparentButton(
             onClick = {
                 navigateWithFade(IngredientScreen)
-            }
+            },
+            modifier = Modifier
         ) {
             ResourceImage(
                 Theme.getImage("Ingredient Shop"),
@@ -94,7 +95,8 @@ fun BottomBar(
         TransparentButton(
             onClick = {
                 navigateWithFade(KitchenScreen)
-            }
+            },
+            modifier = Modifier
         ) {
             ResourceImage(
                 Theme.getImage("Oven"),

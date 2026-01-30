@@ -26,6 +26,7 @@ fun BottomBar(navigateWithFade: (Screen) -> Unit) {
             onClick = {
                 navigateWithFade(KitchenScreen)
             },
+            modifier = Modifier
         ) {
             ResourceImage(
                 Theme.getImage("Oven"),
@@ -37,6 +38,7 @@ fun BottomBar(navigateWithFade: (Screen) -> Unit) {
             onClick = {
                 navigateWithFade(UpgradeScreen)
             },
+            modifier = Modifier
         ) {
             ResourceImage(
                 Theme.getImage("Upgrade Shop"),

@@ -1,49 +1,32 @@
 package com.davidlukash.cakebaker.ui.input
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.platformui.Modifier
 
 @Composable
 fun TransparentButton(
     onClick: () -> Unit,
     enabled: Boolean = true,
-    modifier: Modifier = Modifier,
+    modifier: androidx.compose.ui.Modifier = androidx.compose.ui.Modifier,
     padding: Dp = 8.dp,
     content: @Composable () -> Unit
 ) {
-    val contentColor = LocalContentColor.current
-    OutlinedButton(
-        onClick = {
-            onClick()
-        },
+    TransparentButton(
+        onClick = onClick,
         enabled = enabled,
-        shape = RectangleShape,
-        modifier = modifier,
-        border = BorderStroke(0.dp, Color.Transparent),
-        elevation = ButtonDefaults.buttonElevation(
-            0.dp,
-            0.dp,
-            0.dp,
-            0.dp,
-            0.dp
-        ),
-        contentPadding = PaddingValues(padding),
-    ) {
-        CompositionLocalProvider(
-            LocalContentColor provides contentColor,
-        ) {
-            content()
-        }
-    }
+        modifier = Modifier.nativeComposeModifier(modifier),
+        padding = padding,
+        content = content
+    )
 }
+
+@Composable
+expect fun TransparentButton(
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier,
+    padding: Dp = 8.dp,
+    content: @Composable () -> Unit
+)

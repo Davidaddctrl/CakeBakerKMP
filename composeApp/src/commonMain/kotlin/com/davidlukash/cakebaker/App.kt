@@ -33,6 +33,7 @@ import com.davidlukash.cakebaker.ui.container.Background
 import com.davidlukash.cakebaker.ui.container.PrimaryContainer
 import com.davidlukash.cakebaker.ui.container.SecondaryContainer
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
+import com.davidlukash.cakebaker.ui.input.TransparentButton
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
@@ -78,12 +79,15 @@ fun App() {
         val ovenRunning by dataViewModel.ovenRunning.collectAsState()
         val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = null)
         val orders by dataViewModel.orders.collectAsState()
-
         Background {
-            RecipePanel(
-                modifier = Modifier.size(450.dp, 630.dp),
-                uiState = uiState,
-            ) { dataViewModel.setCurrentCake(it) }
+            TransparentButton(
+                onClick = {
+                    println("Clicked")
+                },
+                modifier = Modifier.size(280.dp, 280.dp)
+            ) {
+                Text("Test")
+            }
         }
 
         return@CompositionLocalProvider

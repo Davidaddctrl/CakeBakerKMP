@@ -85,6 +85,7 @@ fun MainContent(
                     bake()
                 },
                 enabled = canBake && !ovenRunning,
+                modifier = Modifier
             ) {
                 ResourceImage(
                     Theme.getImage("Oven"),
@@ -117,6 +118,7 @@ fun MainContent(
             onClick = {
                 navigateWithFade(UpgradeScreen)
             },
+            modifier = Modifier
         ) {
             ResourceImage(
                 Theme.getImage("Upgrade Shop"),

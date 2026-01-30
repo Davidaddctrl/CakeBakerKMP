@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import com.davidlukash.cakebaker.data.theme.ButtonTokens
 import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
 import com.davidlukash.cakebaker.data.theme.Theme
@@ -19,14 +20,14 @@ import com.davidlukash.cakebaker.toCSS
 import org.jetbrains.compose.web.dom.Button
 
 @Composable
-actual fun LargeThemedButton(
+actual fun TransparentButton(
     onClick: () -> Unit,
-    modifier: Modifier,
     enabled: Boolean,
-    onHoverChange: (Boolean) -> Unit,
+    modifier: Modifier,
+    padding: Dp,
     content: @Composable (() -> Unit)
 ) {
-    val buttonTheme = Theme.ButtonTheme
+    val contentColor = LocalContentColor.current
     var isHovered by remember { mutableStateOf(false) }
     var isPressed by remember { mutableStateOf(false) }
     Button(
@@ -41,11 +42,9 @@ actual fun LargeThemedButton(
                 }
                 onMouseOver {
                     isHovered = true
-                    onHoverChange(true)
                 }
                 onMouseOut {
                     isHovered = false
-                    onHoverChange(false)
                 }
                 onMouseDown {
                     isPressed = true
@@ -55,35 +54,18 @@ actual fun LargeThemedButton(
                 }
             }
             style {
-                property(
-                    "background-color",
-                    when {
-                        !enabled -> buttonTheme.disabledContainerColor
-                        isPressed -> buttonTheme.containerColor.lighten(0.15f)
-                        isHovered -> buttonTheme.containerColor.lighten(0.1f)
-                        else -> buttonTheme.containerColor
-                    }.toCSS()
+                property("background-color",
+                    if (isPressed) "rgba(0, 0, 0, 0.1)"
+                    else if (isHovered) "rgba(0, 0, 0, 0.05)"
+                    else "rgba(0, 0, 0, 0)"
                 )
-                property(
-                    "color",
-                    if (enabled) buttonTheme.contentColor.toCSS()
-                    else buttonTheme.disabledContentColor.toCSS()
-                )
-                property("border-style", "solid")
-                property("border-width", ButtonTokens.largeBorderWidth.value.toString() + "px")
-                property(
-                    "border-color",
-                    if (enabled) buttonTheme.borderColor.toCSS()
-                    else buttonTheme.disabledBorderColor.toCSS()
-                )
-                property("border-radius", ButtonTokens.largeBorderRadius.value.toString() + "px")
-                property("padding", ButtonTokens.largePadding.value.toString() + "px")
+                property("border", "none")
+                property("padding", padding.value.toString() + "px")
             }
         },
     ) {
         CompositionLocalProvider(
-            LocalDoDropShadow provides Theme.ButtonTheme.shouldDropShadow,
-            LocalContentColor provides if (enabled) buttonTheme.contentColor else buttonTheme.disabledContentColor
+            LocalContentColor provides contentColor
         ) {
             CompositionLocalProvider(
                 LocalTextStyle provides Theme.Styles.buttonTextStyle.copy(textAlign = TextAlign.Center),
