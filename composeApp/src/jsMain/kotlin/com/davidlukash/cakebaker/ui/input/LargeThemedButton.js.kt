@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker.ui.input
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -81,7 +82,8 @@ actual fun LargeThemedButton(
         },
     ) {
         CompositionLocalProvider(
-            LocalDoDropShadow provides Theme.ButtonTheme.shouldDropShadow
+            LocalDoDropShadow provides Theme.ButtonTheme.shouldDropShadow,
+            LocalContentColor provides if (enabled) buttonTheme.contentColor else buttonTheme.disabledContentColor
         ) {
             CompositionLocalProvider(
                 LocalTextStyle provides Theme.Styles.buttonTextStyle.copy(textAlign = TextAlign.Center),

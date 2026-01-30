@@ -1,6 +1,7 @@
 package com.davidlukash.cakebaker.platformui
 
 import androidx.compose.ui.Alignment
+import com.davidlukash.cakebaker.toCSS
 import com.davidlukash.cakebaker.toClass
 import org.jetbrains.compose.web.attributes.AttrsScope
 import org.w3c.dom.Element
@@ -71,6 +72,33 @@ fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
         if (node is ModifierNode.FillMaxHeightNode) {
             style {
                 property("height", "calc(100% * ${node.fraction})")
+            }
+        }
+
+        if (node is ModifierNode.BackgroundNode) {
+            style {
+                property("background-color", node.backgroundColor.toCSS())
+            }
+        }
+
+        if (node is ModifierNode.BorderNode) {
+            style {
+                property("border-style", "solid")
+                property("border-radius", node.borderRadius.value.toString() + "px")
+                property("border-width", node.width.value.toString() + "px")
+                property("border-color", node.color.toCSS())
+            }
+        }
+
+        if (node is ModifierNode.ShadowNode) {
+            style {
+                property("box-shadow", "0 0 ${node.elevation.value}px 0 black")
+            }
+        }
+
+        if (node is ModifierNode.PaddingNode) {
+            style {
+                property("padding", "${node.top.value}px ${node.right.value}px ${node.bottom.value}px ${node.left.value}px")
             }
         }
 

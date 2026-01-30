@@ -1,13 +1,10 @@
 package com.davidlukash.cakebaker.ui.container
 
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.platformui.Modifier
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -19,6 +16,14 @@ fun PrimaryContainer(modifier: Modifier, content: @Composable () -> Unit) {
         borderWidth = 8.dp,
         padding = 16.dp,
         shadowElevation = 0.dp,
+        content = content
+    )
+}
+
+@Composable
+fun PrimaryContainer(modifier: androidx.compose.ui.Modifier, content: @Composable () -> Unit) {
+    PrimaryContainer(
+        modifier = Modifier.nativeComposeModifier(modifier),
         content = content
     )
 }

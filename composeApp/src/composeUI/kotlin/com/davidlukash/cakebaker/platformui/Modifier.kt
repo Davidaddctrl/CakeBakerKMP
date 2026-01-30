@@ -1,12 +1,18 @@
 package com.davidlukash.cakebaker.platformui
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import io.ktor.util.Platform
 
 fun modifiers(modifier: com.davidlukash.cakebaker.platformui.Modifier): Modifier {
@@ -64,7 +70,23 @@ fun modifiers(modifier: com.davidlukash.cakebaker.platformui.Modifier): Modifier
         if (node is ModifierNode.FillMaxHeightNode) {
             composeModifier = composeModifier.fillMaxHeight(node.fraction)
         }
-        
+
+        if (node is ModifierNode.BackgroundNode) {
+            composeModifier = composeModifier.background(node.backgroundColor, RoundedCornerShape(node.shapeRadius))
+        }
+
+        if (node is ModifierNode.BorderNode) {
+            composeModifier = composeModifier.border(BorderStroke(node.width, node.color), RoundedCornerShape(node.borderRadius))
+        }
+
+        if (node is ModifierNode.ShadowNode) {
+            composeModifier = composeModifier.shadow(node.elevation, RoundedCornerShape(node.shapeRadius))
+        }
+
+        if (node is ModifierNode.PaddingNode) {
+            composeModifier = composeModifier.padding(node.left, node.top, node.right, node.bottom)
+        }
+
         if (node is ModifierNode.NativeComposeNode) {
             composeModifier = composeModifier.then(node.modifier)
         }
