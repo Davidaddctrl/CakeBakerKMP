@@ -3,6 +3,7 @@ package com.davidlukash.cakebaker.platformui.ui
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
 import com.davidlukash.cakebaker.platformui.Modifier
 import com.davidlukash.cakebaker.platformui.modifiers
@@ -26,6 +27,9 @@ actual fun Text(
                 property("text-align", style.textAlign.toString().lowercase())
                 property("font-family", "vcr-osd-mono, monoscape")
                 property("color", localContentColor.toCSS())
+                if (style.textDecoration == TextDecoration.Underline) {
+                    property("text-decoration", "underline 2px")
+                }
                 if (doDropShadow) {
                     style.shadow?.let { shadow ->
                         property(
