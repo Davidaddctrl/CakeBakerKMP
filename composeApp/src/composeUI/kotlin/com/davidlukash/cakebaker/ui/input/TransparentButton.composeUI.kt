@@ -2,13 +2,13 @@ package com.davidlukash.cakebaker.ui.input
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.platformui.Modifier
@@ -20,6 +20,7 @@ actual fun TransparentButton(
     enabled: Boolean,
     modifier: Modifier,
     padding: Dp,
+    shapeRadius: Dp,
     content: @Composable (() -> Unit)
 ) {
     val contentColor = LocalContentColor.current
@@ -28,7 +29,7 @@ actual fun TransparentButton(
             onClick()
         },
         enabled = enabled,
-        shape = RectangleShape,
+        shape = RoundedCornerShape(shapeRadius),
         modifier = modifiers(modifier),
         border = BorderStroke(0.dp, Color.Transparent),
         elevation = ButtonDefaults.buttonElevation(

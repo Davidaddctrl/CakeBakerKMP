@@ -25,7 +25,7 @@ actual fun Text(
             style {
                 property("font-size", style.fontSize.value.toString() + "px")
                 property("text-align", style.textAlign.toString().lowercase())
-                property("font-family", "vcr-osd-mono, monoscape")
+                property("font-family", "vcr-osd-mono, monospace")
                 property("color", localContentColor.toCSS())
                 if (style.textDecoration == TextDecoration.Underline) {
                     property("text-decoration", "underline 2px")

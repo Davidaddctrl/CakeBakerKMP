@@ -25,7 +25,7 @@ actual fun Column(
                 property("flex-direction", "column")
                 when (verticalArrangement) {
                     is VerticalArrangement.SpacedBy -> {
-                        property("gap", verticalArrangement.space.value.toString() + "px")
+                        property("gap", (verticalArrangement.space.value).toString() + "px")
                         property(
                             "justify-content", when (verticalArrangement.alignment) {
                                 Alignment.Top -> "flex-start"

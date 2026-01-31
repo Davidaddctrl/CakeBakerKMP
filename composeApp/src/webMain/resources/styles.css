@@ -75,5 +75,6 @@ html, body {
 
 * {
     box-sizing: border-box;
+    line-height: 1;
     user-select: none;
 }

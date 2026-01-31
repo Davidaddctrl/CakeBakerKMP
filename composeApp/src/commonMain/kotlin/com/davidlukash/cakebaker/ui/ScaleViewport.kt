@@ -11,10 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import com.davidlukash.cakebaker.data.Platform
 import com.davidlukash.cakebaker.data.theme.LocalIsScaled
+import com.davidlukash.cakebaker.platform
 
 @Composable
 fun ScaleViewport(baseWidth: Dp, baseHeight: Dp, doAspectRatio: Boolean = false, content: @Composable () -> Unit) {
+    if (platform == Platform.JS) {
+        content()
+        return
+    }
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
     ) {

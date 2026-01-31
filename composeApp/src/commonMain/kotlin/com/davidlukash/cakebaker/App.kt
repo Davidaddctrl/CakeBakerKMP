@@ -1,7 +1,5 @@
 package com.davidlukash.cakebaker
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -23,6 +21,8 @@ import com.davidlukash.cakebaker.data.theme.LocalTheme
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.platformui.HorizontalArrangement
 import com.davidlukash.cakebaker.platformui.Modifier
+import com.davidlukash.cakebaker.platformui.ui.Box
+import com.davidlukash.cakebaker.platformui.ui.Row
 import com.davidlukash.cakebaker.platformui.ui.Text
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
@@ -79,18 +79,6 @@ fun App() {
         val ovenRunning by dataViewModel.ovenRunning.collectAsState()
         val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = null)
         val orders by dataViewModel.orders.collectAsState()
-        Background {
-            TransparentButton(
-                onClick = {
-                    println("Clicked")
-                },
-                modifier = Modifier.size(280.dp, 280.dp)
-            ) {
-                Text("Test")
-            }
-        }
-
-        return@CompositionLocalProvider
 
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)
@@ -134,10 +122,10 @@ fun App() {
             }
 
             Row(
-                modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
             ) {
                 Box(
-                    modifier = androidx.compose.ui.Modifier.weight(1f).fillMaxSize(),
+                    modifier = Modifier.weight(1f).fillMaxSize(),
                 ) {
                     ScaleViewport(1920.dp, 1200.dp) {
                         Navigation(
@@ -233,11 +221,11 @@ fun App() {
                             orders = orders,
                         )
                     }
-                    if (debugConsole == ConsoleType.POPUP) DebugPopup()
-                    if (internalShown) InternalPopup()
-                    if (variableShown) VariableView(globalScope)
+//                    if (debugConsole == ConsoleType.POPUP) DebugPopup()
+//                    if (internalShown) InternalPopup()
+//                    if (variableShown) VariableView(globalScope)
                 }
-                if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()
+                //if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()
             }
         }
     }

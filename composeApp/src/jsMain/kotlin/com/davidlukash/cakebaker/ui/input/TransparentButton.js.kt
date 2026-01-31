@@ -4,19 +4,16 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import com.davidlukash.cakebaker.data.theme.ButtonTokens
-import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.lighten
 import com.davidlukash.cakebaker.platformui.Modifier
 import com.davidlukash.cakebaker.platformui.modifiers
-import com.davidlukash.cakebaker.toCSS
 import org.jetbrains.compose.web.dom.Button
 
 @Composable
@@ -25,11 +22,18 @@ actual fun TransparentButton(
     enabled: Boolean,
     modifier: Modifier,
     padding: Dp,
+    shapeRadius: Dp,
     content: @Composable (() -> Unit)
 ) {
     val contentColor = LocalContentColor.current
     var isHovered by remember { mutableStateOf(false) }
     var isPressed by remember { mutableStateOf(false) }
+    LaunchedEffect(enabled) {
+        if (!enabled) {
+            isPressed = false
+            isHovered = false
+        }
+    }
     Button(
         attrs = {
             modifiers(modifier)
@@ -60,6 +64,7 @@ actual fun TransparentButton(
                     else "rgba(0, 0, 0, 0)"
                 )
                 property("border", "none")
+                property("border-radius", shapeRadius.value.toString() + "px")
                 property("padding", padding.value.toString() + "px")
             }
         },

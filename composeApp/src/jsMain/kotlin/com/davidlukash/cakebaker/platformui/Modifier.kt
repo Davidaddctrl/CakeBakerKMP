@@ -98,7 +98,7 @@ fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
 
         if (node is ModifierNode.PaddingNode) {
             style {
-                property("padding", "${node.top.value}px ${node.right.value}px ${node.bottom.value}px ${node.left.value}px")
+                property("padding", "${node.top.value / 2}px ${node.right.value / 2}px ${node.bottom.value / 2}px ${node.left.value / 2}px")
             }
         }
 

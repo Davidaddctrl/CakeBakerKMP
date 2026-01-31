@@ -4,6 +4,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +30,12 @@ actual fun LargeThemedButton(
     val buttonTheme = Theme.ButtonTheme
     var isHovered by remember { mutableStateOf(false) }
     var isPressed by remember { mutableStateOf(false) }
+    LaunchedEffect(enabled) {
+        if (!enabled) {
+            isPressed = false
+            isHovered = false
+        }
+    }
     Button(
         attrs = {
             modifiers(modifier)
