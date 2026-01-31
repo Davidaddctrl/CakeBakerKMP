@@ -75,6 +75,7 @@ open class MainViewModel(
     open val saveFileViewModel = SaveFileViewModel(uiViewModel, savesRepository)
     open val dataViewModel = DataViewModel(uiViewModel, saveFileViewModel, engine).also {
         it.loadSave(Save.default)
+        it.startLoop()
     }
 }
 

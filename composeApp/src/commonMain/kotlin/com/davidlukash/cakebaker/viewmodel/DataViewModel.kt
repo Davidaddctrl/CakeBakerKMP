@@ -58,10 +58,6 @@ class DataViewModel(
 
     var random = Random(Random.nextLong())
 
-    init {
-        startLoop()
-    }
-
     var shouldListSaves = true
 
     @OptIn(ExperimentalTime::class)

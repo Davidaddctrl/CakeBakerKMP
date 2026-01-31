@@ -268,8 +268,7 @@ fun <T> withResult(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> {
 suspend fun <T> withResultSuspend(finallyBlock: suspend () -> Unit = {}, block: suspend () -> T): Result<T> {
     return try {
         Result.success(block())
-    } catch (e: CancellationException) { throw e }
-    catch (e: Exception) {
+    } catch (e: Exception) {
         logger.logError(e)
         Result.failure(e)
     } finally { finallyBlock() }
