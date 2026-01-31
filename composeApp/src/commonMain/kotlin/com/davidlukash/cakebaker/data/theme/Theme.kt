@@ -36,6 +36,7 @@ import cakebaker.composeapp.generated.resources.vcr_osd_mono
 import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.Platform
 import com.davidlukash.cakebaker.platform
+import com.davidlukash.cakebaker.platformui.ImageResource
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.FontResource
 
@@ -156,26 +157,41 @@ data class Theme(
 
         val default = Theme(
             nameToImageMap = mapOf(
-                "Butter" to ImageData(resource = Res.drawable.butter),
-                "Egg" to ImageData(resource = Res.drawable.egg),
-                "Flour" to ImageData(resource = Res.drawable.flour),
-                "Sugar" to ImageData(resource = Res.drawable.sugar),
-                "Vanilla Extract" to ImageData(resource = Res.drawable.vanilla_extract),
-                "Baking Powder" to ImageData(resource = Res.drawable.baking_powder),
-                "Cocoa Powder" to ImageData(resource = Res.drawable.cocoa_powder),
-                "Honey Pot" to ImageData(resource = Res.drawable.honey_pot),
-                "Vanilla Cake" to ImageData(resource = Res.drawable.vanilla_cake),
-                "Chocolate Cake" to ImageData(resource = Res.drawable.choc_cake),
-                "Honey Cake" to ImageData(resource = Res.drawable.honey_cake),
-                "Money" to ImageData(resource = Res.drawable.money),
-                "Ingredient Shop" to ImageData(resource = Res.drawable.ingredient_shop),
-                "Upgrade Shop" to ImageData(resource = Res.drawable.upgrade_shop),
-                "Oven" to ImageData(resource = Res.drawable.oven),
-                "Happy Face" to ImageData(resource = Res.drawable.face_happy),
-                "Medium Face" to ImageData(resource = Res.drawable.face_medium),
-                "Neutral Face" to ImageData(resource = Res.drawable.face_neutral),
-                "Neutral Sad Face" to ImageData(resource = Res.drawable.face_neutral_sad),
-                "Sad Face" to ImageData(resource = Res.drawable.face_sad),
+                "Butter" to ImageData(resource = ImageResource(Res.drawable.butter, "butter.png")),
+                "Egg" to ImageData(resource = ImageResource(Res.drawable.egg, "egg.png")),
+                "Flour" to ImageData(resource = ImageResource(Res.drawable.flour, "flour.png")),
+                "Sugar" to ImageData(resource = ImageResource(Res.drawable.sugar, "sugar.png")),
+                "Vanilla Extract" to ImageData(
+                    resource = ImageResource(
+                        Res.drawable.vanilla_extract,
+                        "vanilla_extract.png"
+                    )
+                ),
+                "Baking Powder" to ImageData(resource = ImageResource(Res.drawable.baking_powder, "baking_powder.png")),
+                "Cocoa Powder" to ImageData(resource = ImageResource(Res.drawable.cocoa_powder, "cocoa_powder.png")),
+                "Honey Pot" to ImageData(resource = ImageResource(Res.drawable.honey_pot, "honey_pot.png")),
+                "Vanilla Cake" to ImageData(resource = ImageResource(Res.drawable.vanilla_cake, "vanilla_cake.png")),
+                "Chocolate Cake" to ImageData(resource = ImageResource(Res.drawable.choc_cake, "choc_cake.png")),
+                "Honey Cake" to ImageData(resource = ImageResource(Res.drawable.honey_cake, "honey_cake.png")),
+                "Money" to ImageData(resource = ImageResource(Res.drawable.money, "money.png")),
+                "Ingredient Shop" to ImageData(
+                    resource = ImageResource(
+                        Res.drawable.ingredient_shop,
+                        "ingredient_shop.png"
+                    )
+                ),
+                "Upgrade Shop" to ImageData(resource = ImageResource(Res.drawable.upgrade_shop, "upgrade_shop.png")),
+                "Oven" to ImageData(resource = ImageResource(Res.drawable.oven, "oven.png")),
+                "Happy Face" to ImageData(resource = ImageResource(Res.drawable.face_happy, "face_happy.png")),
+                "Medium Face" to ImageData(resource = ImageResource(Res.drawable.face_medium, "face_medium.png")),
+                "Neutral Face" to ImageData(resource = ImageResource(Res.drawable.face_neutral, "face_neutral.png")),
+                "Neutral Sad Face" to ImageData(
+                    resource = ImageResource(
+                        Res.drawable.face_neutral_sad,
+                        "face_neutral_sad.png"
+                    )
+                ),
+                "Sad Face" to ImageData(resource = ImageResource(Res.drawable.face_sad, "face_sad.png")),
             ),
             font = Res.font.vcr_osd_mono,
             _scaledStyles = TextStyles(

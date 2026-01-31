@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.Dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.platformui.Modifier
 import com.davidlukash.cakebaker.platformui.modifiers
-import org.jetbrains.compose.web.dom.Button
+import org.jetbrains.compose.web.dom.Div
 
 @Composable
 actual fun TransparentButton(
@@ -23,18 +23,26 @@ actual fun TransparentButton(
     modifier: Modifier,
     padding: Dp,
     shapeRadius: Dp,
+    onPress: (Boolean) -> Unit,
+    onHover: (Boolean) -> Unit,
     content: @Composable (() -> Unit)
 ) {
     val contentColor = LocalContentColor.current
     var isHovered by remember { mutableStateOf(false) }
     var isPressed by remember { mutableStateOf(false) }
+
     LaunchedEffect(enabled) {
         if (!enabled) {
             isPressed = false
             isHovered = false
         }
     }
-    Button(
+
+    LaunchedEffect(isPressed) { onPress(isPressed) }
+
+    LaunchedEffect(isHovered) { onHover(isHovered) }
+
+    Div(
         attrs = {
             modifiers(modifier)
             if (!enabled) {
@@ -58,11 +66,8 @@ actual fun TransparentButton(
                 }
             }
             style {
-                property("background-color",
-                    if (isPressed) "rgba(0, 0, 0, 0.1)"
-                    else if (isHovered) "rgba(0, 0, 0, 0.05)"
-                    else "rgba(0, 0, 0, 0)"
-                )
+                property("position", "relative")
+                property("width", "fit-content")
                 property("border", "none")
                 property("border-radius", shapeRadius.value.toString() + "px")
                 property("padding", padding.value.toString() + "px")

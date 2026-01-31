@@ -31,5 +31,7 @@ expect fun TransparentButton(
     modifier: Modifier = Modifier,
     padding: Dp = 8.dp,
     shapeRadius: Dp = 0.dp,
+    onPress: (Boolean) -> Unit = {},
+    onHover: (Boolean) -> Unit = {},
     content: @Composable () -> Unit
 )

@@ -305,7 +305,7 @@ fun <T : Any> T?.takeOrNullWithWarn(warnMessage: String): T? {
 }
 
 fun Color.toCSS(): String {
-    return "rgba(${red * 255.0}, ${green * 255.0}, ${blue * 255.0}, ${alpha * 255.0})"
+    return "rgba(${red * 255.0}, ${green * 255.0}, ${blue * 255.0}, ${alpha})"
 }
 
 fun Color.lighten(amount: Float): Color {

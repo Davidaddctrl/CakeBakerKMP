@@ -7,8 +7,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.layout.Measured
@@ -27,12 +29,14 @@ import com.davidlukash.cakebaker.platformui.ui.Text
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.InternalPopup
+import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.ScaleViewport
 import com.davidlukash.cakebaker.ui.VariableView
 import com.davidlukash.cakebaker.ui.container.Background
 import com.davidlukash.cakebaker.ui.container.PrimaryContainer
 import com.davidlukash.cakebaker.ui.container.SecondaryContainer
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
+import com.davidlukash.cakebaker.ui.input.SwitchButton
 import com.davidlukash.cakebaker.ui.input.TransparentButton
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Navigation
@@ -80,6 +84,20 @@ fun App() {
         val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = null)
         val orders by dataViewModel.orders.collectAsState()
 
+        var checked by remember { mutableStateOf(true) }
+
+        println(checked)
+
+        SwitchButton(
+            value = checked,
+            onText = "On",
+            offText = "Off",
+            modifier = Modifier.size(280.dp)
+        ) {
+            checked = it
+        }
+
+        return@CompositionLocalProvider
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)
         }

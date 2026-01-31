@@ -36,6 +36,9 @@ actual fun LargeThemedButton(
             isHovered = false
         }
     }
+    LaunchedEffect(isHovered) {
+        onHoverChange(isHovered)
+    }
     Button(
         attrs = {
             modifiers(modifier)
@@ -48,11 +51,9 @@ actual fun LargeThemedButton(
                 }
                 onMouseOver {
                     isHovered = true
-                    onHoverChange(true)
                 }
                 onMouseOut {
                     isHovered = false
-                    onHoverChange(false)
                 }
                 onMouseDown {
                     isPressed = true
