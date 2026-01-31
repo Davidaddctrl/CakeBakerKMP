@@ -23,12 +23,15 @@ import com.davidlukash.cakebaker.data.theme.LocalTheme
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.platformui.HorizontalArrangement
 import com.davidlukash.cakebaker.platformui.Modifier
+import com.davidlukash.cakebaker.platformui.VerticalArrangement
 import com.davidlukash.cakebaker.platformui.ui.Box
+import com.davidlukash.cakebaker.platformui.ui.Column
 import com.davidlukash.cakebaker.platformui.ui.Row
 import com.davidlukash.cakebaker.platformui.ui.Text
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.InternalPopup
+import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.ScaleViewport
 import com.davidlukash.cakebaker.ui.VariableView
@@ -84,17 +87,18 @@ fun App() {
         val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = null)
         val orders by dataViewModel.orders.collectAsState()
 
-        var checked by remember { mutableStateOf(true) }
-
-        println(checked)
-
-        SwitchButton(
-            value = checked,
-            onText = "On",
-            offText = "Off",
-            modifier = Modifier.size(280.dp)
+        Column(
+            verticalArrangement = VerticalArrangement.SpacedBy(8.dp),
         ) {
-            checked = it
+            ProgressBar(
+                modifier = Modifier.width(128.dp),
+                amount = 0.5
+            )
+
+            ProgressBar(
+                modifier = Modifier,
+                amount = 0.5
+            )
         }
 
         return@CompositionLocalProvider

@@ -28,67 +28,65 @@ fun SwitchButton(
     modifier: Modifier = Modifier,
     onClick: (Boolean) -> Unit
 ) {
-    key(value, enabled) {
-        TransparentButton(
-            onClick = { onClick(!value) },
-            padding = 0.dp
-        ) {
-            Row(
-                modifier = modifier.height(48.dp)
-                    .background(
-                        if (enabled) Theme.SwitchButtonTheme.containerColor
-                        else Theme.SwitchButtonTheme.disabledContainerColor,
-                        4.dp
-                    )
-                    .border(
-                        color = if (enabled) Theme.SwitchButtonTheme.borderColor else Theme.SwitchButtonTheme.disabledBorderColor,
-                        width = 8.dp,
-                        borderRadius = 4.dp
-                    )
+    TransparentButton(
+        onClick = { onClick(!value) },
+        padding = 0.dp
+    ) {
+        Row(
+            modifier = modifier.height(48.dp)
+                .background(
+                    if (enabled) Theme.SwitchButtonTheme.containerColor
+                    else Theme.SwitchButtonTheme.disabledContainerColor,
+                    4.dp
+                )
+                .border(
+                    color = if (enabled) Theme.SwitchButtonTheme.borderColor else Theme.SwitchButtonTheme.disabledBorderColor,
+                    width = 8.dp,
+                    borderRadius = 4.dp
+                )
 
-            ) {
-                Box(
-                    modifier =
-                        Modifier.weight(1f).fillMaxHeight().background(
-                            if (!value && enabled)
-                                Theme.SwitchButtonTheme.offSelectedContainerColor
-                            else
-                                Theme.SwitchButtonTheme.offUnselectedContainerColor
-                        )
-                ) {
-                    CompositionLocalProvider(
-                        LocalContentColor provides (if (!value && enabled)
-                            Theme.SwitchButtonTheme.offSelectedTextColor
+        ) {
+            Box(
+                modifier =
+                    Modifier.weight(1f).fillMaxHeight().background(
+                        if (!value && enabled)
+                            Theme.SwitchButtonTheme.offSelectedContainerColor
                         else
-                            Theme.SwitchButtonTheme.offUnselectedTextColor)
-                    ) {
-                        Text(
-                            offText,
-                            style = Theme.Styles.verySmallBodyStyle.copy(textAlign = TextAlign.Center),
-                            modifier = Modifier.fillMaxWidth().align(Alignment.Center),
-                        )
-                    }
-                }
-                Box(
-                    modifier = Modifier.weight(1f).fillMaxHeight().background(
-                        if (value && enabled)
-                            Theme.SwitchButtonTheme.onSelectedContainerColor
-                        else
-                            Theme.SwitchButtonTheme.onUnselectedContainerColor
+                            Theme.SwitchButtonTheme.offUnselectedContainerColor
                     )
+            ) {
+                CompositionLocalProvider(
+                    LocalContentColor provides (if (!value && enabled)
+                        Theme.SwitchButtonTheme.offSelectedTextColor
+                    else
+                        Theme.SwitchButtonTheme.offUnselectedTextColor)
                 ) {
-                    CompositionLocalProvider(
-                        LocalContentColor provides (if (value && enabled)
-                            Theme.SwitchButtonTheme.onSelectedTextColor
-                        else
-                            Theme.SwitchButtonTheme.onUnselectedTextColor)
-                    ) {
-                        Text(
-                            onText,
-                            style = Theme.Styles.verySmallBodyStyle.copy(textAlign = TextAlign.Center),
-                            modifier = Modifier.fillMaxWidth().align(Alignment.Center)
-                        )
-                    }
+                    Text(
+                        offText,
+                        style = Theme.Styles.verySmallBodyStyle.copy(textAlign = TextAlign.Center),
+                        modifier = Modifier.fillMaxWidth().align(Alignment.Center),
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier.weight(1f).fillMaxHeight().background(
+                    if (value && enabled)
+                        Theme.SwitchButtonTheme.onSelectedContainerColor
+                    else
+                        Theme.SwitchButtonTheme.onUnselectedContainerColor
+                )
+            ) {
+                CompositionLocalProvider(
+                    LocalContentColor provides (if (value && enabled)
+                        Theme.SwitchButtonTheme.onSelectedTextColor
+                    else
+                        Theme.SwitchButtonTheme.onUnselectedTextColor)
+                ) {
+                    Text(
+                        onText,
+                        style = Theme.Styles.verySmallBodyStyle.copy(textAlign = TextAlign.Center),
+                        modifier = Modifier.fillMaxWidth().align(Alignment.Center)
+                    )
                 }
             }
         }
@@ -104,7 +102,14 @@ fun SwitchButton(
     modifier: androidx.compose.ui.Modifier = androidx.compose.ui.Modifier,
     onClick: (Boolean) -> Unit
 ) {
-
+    SwitchButton(
+        value = value,
+        onText = onText,
+        offText = offText,
+        enabled = enabled,
+        modifier = Modifier.nativeComposeModifier(modifier),
+        onClick = onClick
+    )
 }
 
 @Preview

@@ -49,7 +49,7 @@ fun SmallPrimaryContainer(
 @Preview
 fun SmallContainerPreview() {
     SmallPrimaryContainer(
-        modifier = Modifier.size(400.dp, 400.dp),
+        modifier = Modifier.size(400.dp),
         content = {
             Text(
                 "Small Primary Container Preview",

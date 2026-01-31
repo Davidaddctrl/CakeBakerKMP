@@ -7,7 +7,7 @@ import org.jetbrains.compose.web.attributes.AttrsScope
 import org.w3c.dom.Element
 
 fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
-    modifier.nodes.forEach { node ->
+    modifier.nodes.reversed().forEach { node ->
         if (node is ModifierNode.SizeNode) {
             style {
                 node.width?.let {
@@ -77,6 +77,7 @@ fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
 
         if (node is ModifierNode.BackgroundNode) {
             style {
+                property("border-radius", node.shapeRadius.value.toString() + "px")
                 property("background-color", node.backgroundColor.toCSS())
             }
         }
@@ -92,6 +93,7 @@ fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
 
         if (node is ModifierNode.ShadowNode) {
             style {
+                property("border-radius", node.shapeRadius.value.toString() + "px")
                 property("box-shadow", "0 0 ${node.elevation.value}px 0 black")
             }
         }

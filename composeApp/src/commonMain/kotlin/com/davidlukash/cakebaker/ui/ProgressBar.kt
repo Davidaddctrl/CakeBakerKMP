@@ -1,40 +1,44 @@
 package com.davidlukash.cakebaker.ui
 
+
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.platformui.Modifier
+import com.davidlukash.cakebaker.platformui.ui.Box
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ProgressBar(modifier: Modifier = Modifier, amount: Double) {
-    Surface(
-        modifier = modifier.width(320.dp).height(48.dp),
-        shape = CircleShape,
-        border = BorderStroke(8.dp, Theme.ProgressBarTheme.border),
-        color = Theme.ProgressBarTheme.backgroundColor
+    Box(
+        modifier = modifier
+            .size(320.dp, 48.dp)
+            .background(Theme.ProgressBarTheme.backgroundColor, 24.dp)
+            .border(Theme.ProgressBarTheme.border, 8.dp, 24.dp),
     ) {
-        Box {
-            Surface(
-                modifier = Modifier.fillMaxWidth(amount.toFloat()).height(48.dp),
-                shape = CircleShape,
-                color = Theme.ProgressBarTheme.filledColor
-            ) {}
-        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(amount.toFloat())
+                .height(32.dp)
+                .align(Alignment.CenterStart)
+            .background(Theme.ProgressBarTheme.filledColor, 24.dp)
+        ) {}
     }
+}
+
+@Composable
+fun ProgressBar(modifier: androidx.compose.ui.Modifier = androidx.compose.ui.Modifier, amount: Double) {
+    ProgressBar(
+        modifier = Modifier.nativeComposeModifier(modifier),
+        amount = amount
+    )
 }
 
 @Preview
@@ -46,5 +50,5 @@ fun ProgressBarPreview() {
             animation = tween(2000, easing = LinearEasing),
         )
     )
-    ProgressBar(amount = amount.toDouble())
+    ProgressBar(amount = amount.toDouble(), modifier = Modifier)
 }

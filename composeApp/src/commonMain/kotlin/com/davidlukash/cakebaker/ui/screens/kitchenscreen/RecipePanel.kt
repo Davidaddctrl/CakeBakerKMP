@@ -50,7 +50,7 @@ fun RecipePanel(modifier: Modifier, uiState: UIState, setCurrentCake: (Int) -> U
                 ) {
                     TransparentButton(
                         onClick = { setCurrentCake(currentCakeTier - 1) },
-                        modifier = Modifier.size(64.dp, 64.dp),
+                        modifier = Modifier.size(64.dp),
                         shapeRadius = 32.dp,
                         padding = 0.dp,
                         enabled = currentCakeTier != 1
@@ -59,7 +59,7 @@ fun RecipePanel(modifier: Modifier, uiState: UIState, setCurrentCake: (Int) -> U
                             ImageResource(Res.drawable.chevron_backward, "chevron_backward_svg.svg"),
                             contentDescription = "Next Cake Tier",
                             tint = if (currentCakeTier != 1) LocalContentColor.current else Color.Transparent,
-                            modifier = Modifier.size(64.dp, 64.dp),
+                            modifier = Modifier.size(64.dp),
                         )
                     }
                     Text(
@@ -72,7 +72,7 @@ fun RecipePanel(modifier: Modifier, uiState: UIState, setCurrentCake: (Int) -> U
                     )
                     TransparentButton(
                         onClick = { setCurrentCake(currentCakeTier + 1) },
-                        modifier = Modifier.size(64.dp, 64.dp),
+                        modifier = Modifier.size(64.dp),
                         shapeRadius = 32.dp,
                         padding = 0.dp,
                         enabled = currentCakeTier != cakes.size
@@ -81,7 +81,7 @@ fun RecipePanel(modifier: Modifier, uiState: UIState, setCurrentCake: (Int) -> U
                             ImageResource(Res.drawable.chevron_forward, "chevron_forward_svg.svg"),
                             contentDescription = "Next Cake Tier",
                             tint = if (currentCakeTier != cakes.size) LocalContentColor.current else Color.Transparent,
-                            modifier = Modifier.size(64.dp, 64.dp),
+                            modifier = Modifier.size(64.dp),
                         )
                     }
                 }
@@ -111,14 +111,14 @@ fun RecipePanel(modifier: Modifier, uiState: UIState, setCurrentCake: (Int) -> U
                                         imageResource = ImageResource(Res.drawable.check, "check_svg.svg"),
                                         contentDescription = "Enough",
                                         tint = Theme.SuccessColor,
-                                        modifier = Modifier.size(36.dp, 36.dp)
+                                        modifier = Modifier.size(36.dp)
                                     )
                                 else
                                     Icon(
                                         imageResource = ImageResource(Res.drawable.close, "close_svg.svg"),
                                         contentDescription = "Not Enough",
                                         tint = Theme.DangerColor,
-                                        modifier = Modifier.size(36.dp, 36.dp)
+                                        modifier = Modifier.size(36.dp)
                                     )
                             }
                         }
