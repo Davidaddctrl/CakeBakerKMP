@@ -85,7 +85,7 @@ actual fun LargeThemedButton(
                     else buttonTheme.disabledBorderColor.toCSS()
                 )
                 property("border-radius", ButtonTokens.largeBorderRadius.value.toString() + "px")
-                property("padding", ButtonTokens.largePadding.value.toString() + "px")
+                property("padding", (ButtonTokens.largePadding.value / 2).toString() + "px")
             }
         },
     ) {

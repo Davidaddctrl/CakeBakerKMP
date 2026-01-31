@@ -48,4 +48,6 @@ sealed class ModifierNode {
     class PaddingNode(val left: Dp, val right: Dp, val top: Dp, val bottom: Dp) : ModifierNode()
 
     class NativeComposeNode(val modifier: Modifier) : ModifierNode()
+
+    class CSSNode(val property: String, val value: String) : ModifierNode()
 }

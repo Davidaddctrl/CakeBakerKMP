@@ -107,5 +107,11 @@ fun <T : Element> AttrsScope<T>.modifiers(modifier: Modifier) {
         if (node is ModifierNode.AlignmentNode) {
             classes(node.alignment.toClass())
         }
+
+        if (node is ModifierNode.CSSNode) {
+            style {
+                property(node.property, node.value)
+            }
+        }
     }
 }

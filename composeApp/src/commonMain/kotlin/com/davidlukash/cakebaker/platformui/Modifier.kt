@@ -21,13 +21,13 @@ open class Modifier(val nodes: List<ModifierNode>) {
 
     fun height(height: Dp) = combineWithNode(ModifierNode.SizeNode(height = height))
 
-    fun minSize(minWidth: Dp, minHeight: Dp) = combineWithNode(ModifierNode.SizeNode(minWidth = minWidth, minHeight = minHeight))
+    fun minSize(minWidth: Dp? = null, minHeight: Dp? = null) = combineWithNode(ModifierNode.SizeNode(minWidth = minWidth, minHeight = minHeight))
 
-    fun maxSize(maxWidth: Dp, maxHeight: Dp) = combineWithNode(ModifierNode.SizeNode(maxWidth = maxWidth, maxHeight = maxHeight))
+    fun maxSize(maxWidth: Dp? = null, maxHeight: Dp? = null) = combineWithNode(ModifierNode.SizeNode(maxWidth = maxWidth, maxHeight = maxHeight))
 
-    fun heightIn(minHeight: Dp, maxHeight: Dp) = combineWithNode(ModifierNode.SizeNode(minHeight = minHeight, maxHeight = maxHeight))
+    fun heightIn(minHeight: Dp? = null, maxHeight: Dp? = null) = combineWithNode(ModifierNode.SizeNode(minHeight = minHeight, maxHeight = maxHeight))
 
-    fun widthIn(minWidth: Dp, maxWidth: Dp) = combineWithNode(ModifierNode.SizeNode(minWidth = minWidth, minHeight = maxWidth))
+    fun widthIn(minWidth: Dp? = null, maxWidth: Dp? = null) = combineWithNode(ModifierNode.SizeNode(minWidth = minWidth, minHeight = maxWidth))
 
     fun nativeComposeModifier(modifier: androidx.compose.ui.Modifier): Modifier =
         combineWithNode(ModifierNode.NativeComposeNode(modifier))
@@ -49,6 +49,8 @@ open class Modifier(val nodes: List<ModifierNode>) {
     fun padding(all: Dp) = padding(all, all, all, all)
 
     fun padding(horizontal: Dp, vertical: Dp) = padding(horizontal, horizontal, vertical, vertical)
+
+    fun css(property: String, value: String) = combineWithNode(ModifierNode.CSSNode(property, value))
 
     companion object : Modifier(listOf())
 }

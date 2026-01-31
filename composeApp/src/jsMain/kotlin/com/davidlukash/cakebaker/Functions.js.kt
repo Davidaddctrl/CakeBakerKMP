@@ -19,3 +19,5 @@ fun Alignment.toClass(): String = when (this) {
     Alignment.BottomEnd -> "bottom-right"
     else -> "top-left"
 }
+
+actual val usingHTML: Boolean = true

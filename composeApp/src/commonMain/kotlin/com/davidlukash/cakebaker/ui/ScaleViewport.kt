@@ -14,10 +14,11 @@ import androidx.compose.ui.unit.Dp
 import com.davidlukash.cakebaker.data.Platform
 import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.platform
+import com.davidlukash.cakebaker.usingHTML
 
 @Composable
 fun ScaleViewport(baseWidth: Dp, baseHeight: Dp, doAspectRatio: Boolean = false, content: @Composable () -> Unit) {
-    if (platform == Platform.JS) {
+    if (usingHTML) {
         content()
         return
     }

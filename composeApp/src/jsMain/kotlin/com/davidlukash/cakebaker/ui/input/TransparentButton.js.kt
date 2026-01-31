@@ -71,6 +71,12 @@ actual fun TransparentButton(
                 property("border", "none")
                 property("border-radius", shapeRadius.value.toString() + "px")
                 property("padding", padding.value.toString() + "px")
+                property(
+                    "background-color",
+                    if (isPressed) "rgba(0, 0, 0, 0.1)"
+                    else if (isHovered) "rgba(0, 0, 0, 0.05)"
+                    else "rgba(0, 0, 0, 0)"
+                )
             }
         },
     ) {

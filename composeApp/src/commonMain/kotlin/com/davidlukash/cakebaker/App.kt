@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -19,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.data.UIState
+import com.davidlukash.cakebaker.data.item.Item
+import com.davidlukash.cakebaker.data.item.ItemType
 import com.davidlukash.cakebaker.data.theme.LocalTheme
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.platformui.HorizontalArrangement
@@ -28,6 +31,8 @@ import com.davidlukash.cakebaker.platformui.ui.Box
 import com.davidlukash.cakebaker.platformui.ui.Column
 import com.davidlukash.cakebaker.platformui.ui.Row
 import com.davidlukash.cakebaker.platformui.ui.Text
+import com.davidlukash.cakebaker.ui.BuyableItemDisplay
+import com.davidlukash.cakebaker.ui.CrossScrollableRow
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.InternalPopup
@@ -44,10 +49,13 @@ import com.davidlukash.cakebaker.ui.input.TransparentButton
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
+import com.davidlukash.cakebaker.ui.screens.kitchenscreen.MainContent
 import com.davidlukash.cakebaker.ui.screens.kitchenscreen.RecipePanel
 import com.davidlukash.cakebaker.ui.screens.savescreen.CreateSaveDialog
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
@@ -87,17 +95,34 @@ fun App() {
         val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = null)
         val orders by dataViewModel.orders.collectAsState()
 
-        Column(
-            verticalArrangement = VerticalArrangement.SpacedBy(8.dp),
-        ) {
-            ProgressBar(
-                modifier = Modifier.width(128.dp),
-                amount = 0.5
-            )
+        LaunchedEffect(ovenRunning, ovenProgress) {
+            println("$ovenRunning, $ovenProgress")
+        }
 
-            ProgressBar(
-                modifier = Modifier,
-                amount = 0.5
+        Background {
+            MainContent(
+                uiState = uiState,
+                navigateWithFade = {},
+                bake = {
+                    dataViewModel.startBake()
+                },
+                setAutoOvenEnabled = {
+                    dataViewModel.setAutoOvenEnabled(it)
+                },
+                setAutoOrderCompleteEnabled = {
+                    dataViewModel.setAutoOrderCompleteEnabled(it)
+                },
+                completeOrder = {
+                    dataViewModel.handleCompleteOrder(it)
+                },
+                setCurrentCake = {
+                    dataViewModel.setCurrentCake(it)
+                },
+                ovenProgress = ovenProgress,
+                ovenRunning = ovenRunning,
+                nextOrderRemainingTime = nextOrderRemainingTime,
+                orders = orders,
+                innerPadding = PaddingValues(0.dp)
             )
         }
 

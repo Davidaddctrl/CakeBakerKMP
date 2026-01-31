@@ -37,12 +37,13 @@ import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.Platform
 import com.davidlukash.cakebaker.platform
 import com.davidlukash.cakebaker.platformui.ImageResource
+import com.davidlukash.cakebaker.usingHTML
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.FontResource
 
 @Composable
 fun convertStyles(styles: TextStyles, font: FontResource): TextStyles {
-    if (platform == Platform.JS) return styles
+    if (usingHTML) return styles
     val fontFamily = FontFamily(Font(font))
     return styles.copy(
         titleStyle = convertStyle(styles.titleStyle, fontFamily),

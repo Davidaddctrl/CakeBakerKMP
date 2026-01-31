@@ -1,24 +1,15 @@
 package com.davidlukash.cakebaker.ui
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.data.item.ItemType
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.platformui.Modifier
+import com.davidlukash.cakebaker.platformui.ui.Column
+import com.davidlukash.cakebaker.platformui.VerticalArrangement
+import com.davidlukash.cakebaker.platformui.ui.Text
 import com.davidlukash.cakebaker.toEngNotation
 import com.davidlukash.cakebaker.ui.container.PrimaryContainer
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
@@ -26,19 +17,21 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+
 @Composable
 fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item, onHoverChange: (Boolean) -> Unit = {}) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = VerticalArrangement.SpacedBy(8.dp),
         modifier = Modifier.padding(16.dp)
     ) {
         ResourceImage(
             Theme.getImage(item.name),
+            contentDescription = item.name,
             modifier = Modifier.height(128.dp)
         )
         PrimaryContainer(
-            modifier = Modifier.defaultMinSize(minWidth = 208.dp),
+            modifier = Modifier.minSize(minWidth = 208.dp),
             content = {
                 Column {
                     Text(
@@ -60,9 +53,7 @@ fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item,
             enabled = money.amount >= (item.price ?: BigDecimal.ZERO),
             onHoverChange = onHoverChange,
             content = {
-                Text(
-                    "Buy",
-                )
+                Text("Buy")
             },
         )
     }
