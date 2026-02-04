@@ -60,6 +60,7 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
                             completeOrder()
                         },
                         enabled = cake.amount >= order.amount,
+                        isScaled = true,
                         content = {
                             Text(
                                 "Complete",

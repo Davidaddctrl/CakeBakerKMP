@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
 import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.data.theme.Theme
-
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -24,10 +23,11 @@ fun SmallThemedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isScaled: Boolean = false,
     content: @Composable RowScope.() -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalIsScaled provides false
+        LocalIsScaled provides isScaled
     ) {
         Button(
             onClick = onClick,
