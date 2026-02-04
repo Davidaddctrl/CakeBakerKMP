@@ -508,6 +508,40 @@ class DataViewModel(
         }
     }
 
+    fun updateOrder(order: Order) {
+        viewModelScope.launch {
+            var hasMatch = false
+            _orders.emit(
+                _orders.value.map {
+                    if (it.id == order.id) {
+                        hasMatch = true
+                        order
+                    } else it
+                }
+            )
+            if (!hasMatch) {
+                logger.logWarn("Order with id ${order.id} does not exist")
+            }
+        }
+    }
+
+    fun updateOrderAtIndex(order: Order, index: Int) {
+        viewModelScope.launch {
+            var hasMatch = false
+            _orders.emit(
+                _orders.value.mapIndexed { thisIndex, thisOrder ->
+                    if (thisIndex == index) {
+                        hasMatch = true
+                        order
+                    } else thisOrder
+                }
+            )
+            if (!hasMatch) {
+                logger.logWarn("Order at index $index does not exist")
+            }
+        }
+    }
+
     fun calculateCakePrice(tier: Int): BigDecimal {
         val cake = cakes[tier]
         if (cake == null) {
