@@ -173,20 +173,90 @@ class CakeBakerScope(
     }
 
     fun generateOrderDescriptors(): List<VariableDescriptor> {
-        return listOf(VariableDescriptor(
-            "globals.orders",
-            expectedType = ObjectType.LIST,
-            expectedTypeNullable = false,
-            set = {
-                dataViewModel.setOrders(
-                    it.asList()!!.map { order ->
-                        Order.fromObject(order)
-                    }
+        return dataViewModel.orders.value.flatMapIndexed { index, order ->
+            val directDescriptors = order.toObject().asDictionary()!!.flatMap { (key, value) ->
+                val keyString = key.asString()!!
+                listOf(
+                    VariableDescriptor(
+                        name = "globals.orders.${order.id}.$keyString",
+                        expectedType = ObjectType.NUMBER,
+                        expectedTypeNullable = false,
+                        set = {
+                            dataViewModel.updateOrder(
+                                order.mergeWith(
+                                    createObject(
+                                        mapOf(
+                                            key to it
+                                        )
+                                    )
+                                )
+                            )
+                        }
+                    ) {
+                        value
+                    },
+                    VariableDescriptor(
+                        name = "globals.orders.$index.$keyString",
+                        expectedType = ObjectType.NUMBER,
+                        expectedTypeNullable = false,
+                        set = {
+                            dataViewModel.updateOrderAtIndex(
+                                order.mergeWith(
+                                    createObject(
+                                        mapOf(
+                                            key to it
+                                        )
+                                    )
+                                ),
+                                index
+                            )
+                        }
+                    ) {
+                        value
+                    },
                 )
             }
-        ) {
-            createObject(dataViewModel.orders.value.map { it.toObject() })
-        })
+
+            directDescriptors + VariableDescriptor(
+                name = "globals.orders.${order.id}",
+                expectedType = ObjectType.DICTIONARY,
+                expectedTypeNullable = false,
+                set = {
+                    dataViewModel.updateOrder(
+                        Order.fromObject(it)
+                    )
+                }
+            ) {
+                order.toObject()
+            } + VariableDescriptor(
+                name = "globals.orders.$index",
+                expectedType = ObjectType.DICTIONARY,
+                expectedTypeNullable = false,
+                set = {
+                    dataViewModel.updateOrderAtIndex(
+                        Order.fromObject(it),
+                        index
+                    )
+                }
+            ) {
+                order.toObject()
+            }
+        } + listOf(
+            VariableDescriptor(
+                "globals.orders",
+                expectedType = ObjectType.LIST,
+                expectedTypeNullable = false,
+                set = {
+                    dataViewModel.setOrders(
+                        it.asList()!!.map { order ->
+                            Order.fromObject(order)
+                        }
+                    )
+                }
+            ) {
+                createObject(dataViewModel.orders.value.map { it.toObject() })
+            }
+        )
     }
 
     override fun listVariables(): List<VariableDescriptor> {
