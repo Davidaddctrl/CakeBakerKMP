@@ -424,7 +424,7 @@ fun DebugPanelContent(
 @Composable
 fun VariableViewContent(
     refresh: () -> Unit = {},
-    getDescriptor: (String) -> VariableDescriptor,
+    getDescriptor: (String) -> VariableDescriptor?,
     descriptorNames: List<String>,
     modifier: Modifier = Modifier,
 ) {
@@ -490,7 +490,7 @@ fun VariableViewContent(
                 items(filteredDescriptorNames, key = { it }) { descriptorName ->
                     var value by remember {
                         mutableStateOf(
-                            getDescriptor(descriptorName).get?.invoke()
+                            getDescriptor(descriptorName)?.get?.invoke()
                                 ?.let { json.encodeToString(it) } ?: "Not Readable"
                         )
                     }
@@ -504,17 +504,17 @@ fun VariableViewContent(
                         ) {
                             InputField(
                                 input = value,
-                                enabled = getDescriptor(descriptorName).set != null,
+                                enabled = getDescriptor(descriptorName)?.set != null,
                                 modifier = Modifier.heightIn(48.dp, 512.dp).weight(1f)
                             ) { value = it }
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp),
                             ) {
-                                if (getDescriptor(descriptorName).set != null)
+                                if (getDescriptor(descriptorName)?.set != null)
                                     InputButton(
                                         onClick = {
                                             withResult {
-                                                getDescriptor(descriptorName).set?.invoke(json.decodeFromString(value))
+                                                getDescriptor(descriptorName)?.set?.invoke(json.decodeFromString(value))
                                             }
                                         },
                                         modifier = Modifier.width(96.dp)
@@ -534,7 +534,7 @@ fun VariableView(globalScope: Scope) {
     DraggableResizablePopup { (width, height) ->
         VariableViewContent(
             refresh = { descriptorNames = globalScope.listVariables().map { it.name } },
-            getDescriptor = { name -> globalScope.listVariables().find { it.name == name }!! },
+            getDescriptor = { name -> globalScope.listVariables().find { it.name == name } },
             descriptorNames = descriptorNames,
             modifier = Modifier.size(width, height)
         )
