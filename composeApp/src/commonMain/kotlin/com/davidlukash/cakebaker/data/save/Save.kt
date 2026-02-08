@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker.data.save
 
+import cakebaker.composeapp.generated.resources.Res
 import com.davidlukash.cakebaker.ForMigrationSupport
 import com.davidlukash.cakebaker.JsonMathHelpers
 import com.davidlukash.cakebaker.VERSION
@@ -10,15 +11,17 @@ import com.davidlukash.cakebaker.data.order.Order
 import com.davidlukash.cakebaker.data.order.OrderCakeSettings
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.Upgrade
+import com.davidlukash.cakebaker.json
 import com.davidlukash.jsonmath.createObject
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import kotlinx.serialization.Serializable
+import kotlin.collections.plus
 
 @Serializable
 data class Save(
-    val version: String = "Beta 0.9.1",
-    val versionCode: Int? = 0,
+    val version: String = "Unknown",
+    val versionCode: Int? = null,
     val items: List<Item> = listOf(),
     val currentCakeTier: Int = 1,
     val upgrades: List<Upgrade> = listOf(),
@@ -34,7 +37,78 @@ data class Save(
     val orders: List<Order> = listOf(),
     val orderCakeTimeCounters: Map<Int, Double> = mapOf(),
 ) {
+    @OptIn(ForMigrationSupport::class)
+    fun forcedMigration(): Save {
+        var save = this
+        val autoOven = save.upgrades.find { it.name == "Auto Oven" }
+        if (autoOven != null) {
+            if (save.autoOvenEnabled != null) {
+                save = save.copy(
+                    upgrades = save.upgrades.map {
+                        if (it.name == "Auto Oven") {
+                            autoOven.copy(
+                                parameters = autoOven.parameters + mapOf(
+                                    "enabled" to createObject(save.autoOvenEnabled)
+                                )
+                            )
+                        } else it
+                    }
+                )
+            } else if (autoOven.parameters["enabled"]?.asBoolean() == null) {
+                save = save.copy(
+                    upgrades = save.upgrades.map {
+                        if (it.name == "Auto Oven") {
+                            autoOven.copy(
+                                parameters = autoOven.parameters + mapOf(
+                                    "enabled" to createObject(false)
+                                )
+                            )
+                        } else it
+                    }
+                )
+            }
+        }
+
+        val autoOrderComplete = save.upgrades.find { it.name == "Auto Order Complete" }
+        if (autoOrderComplete != null) {
+            if (save.autoOrderCompleteEnabled != null) {
+                save = save.copy(
+                    upgrades = save.upgrades.map {
+                        if (it.name == "Auto Order Complete") {
+                            autoOrderComplete.copy(
+                                parameters = autoOrderComplete.parameters + mapOf(
+                                    "enabled" to createObject(save.autoOrderCompleteEnabled)
+                                )
+                            )
+                        } else it
+                    }
+                )
+            } else if (autoOrderComplete.parameters["enabled"]?.asBoolean() == null) {
+                save = save.copy(
+                    upgrades = save.upgrades.map {
+                        if (it.name == "Auto Order Complete") {
+                            autoOrderComplete.copy(
+                                parameters = autoOrderComplete.parameters + mapOf(
+                                    "enabled" to createObject(false)
+                                )
+                            )
+                        } else it
+                    }
+                )
+            }
+        }
+        return save
+    }
+
     companion object {
+        lateinit var version0: Save
+        
+        suspend fun readOldSaves() {
+            version0 = json.decodeFromString<Save>(Res.readBytes("files/save_version_0.json").decodeToString())
+                .forcedMigration()
+
+        }
+
         val default = Save(
             version = VERSION,
             versionCode = VERSIONCODE,

@@ -11,10 +11,14 @@ import androidx.compose.ui.window.application
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.JVMSavesRepository
 import com.davidlukash.cakebaker.data.log.Log
+import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.logger.AppLogger
 import com.davidlukash.cakebaker.ui.DebugPanel
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.jetbrains.skiko.setSystemLookAndFeel
 import java.io.File
 
@@ -31,6 +35,11 @@ fun main() {
         }
     )
     withResult {
+        CoroutineScope(Dispatchers.IO).launch {
+            withResultSuspend {
+                Save.readOldSaves()
+            }
+        }
         val savesRepository = JVMSavesRepository(baseDirectory)
         val viewModel = MainViewModel(savesRepository)
         setSystemLookAndFeel()

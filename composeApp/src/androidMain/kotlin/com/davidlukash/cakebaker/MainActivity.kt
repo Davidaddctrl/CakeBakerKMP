@@ -39,6 +39,12 @@ class MainActivity : ComponentActivity() {
         windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        CoroutineScope(Dispatchers.IO).launch {
+            withResultSuspend {
+                Save.readOldSaves()
+            }
+        }
+
         val savesRepository = AndroidSavesRepository(baseDirectory = filesDir, activity = this)
         mainViewModel = MainViewModel(savesRepository)
 

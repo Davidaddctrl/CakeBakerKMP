@@ -722,6 +722,7 @@ class DataViewModel(
     @OptIn(ForMigrationSupport::class)
     fun loadSave(save: Save) {
         viewModelScope.launch {
+            val save = save.forcedMigration()
             _items.emit(save.items)
             _currentCakeTier.emit(save.currentCakeTier)
             _upgrades.emit(save.upgrades)
@@ -732,51 +733,6 @@ class DataViewModel(
             _orderCakeSettings.emit(save.orderCakeSettings)
             _orders.emit(save.orders)
             _orderCakeTimeCounters.emit(save.orderCakeTimeCounters)
-
-            val autoOven = upgrades.value.find { it.name == "Auto Oven" }
-            if (autoOven != null) {
-                if (save.autoOvenEnabled != null) {
-                    updateUpgrade(
-                        autoOven.copy(
-                            parameters = autoOven.parameters + mapOf(
-                                "enabled" to createObject(save.autoOvenEnabled)
-                            )
-                        )
-                    )
-                }
-                if (autoOven.parameters["enabled"]?.asBoolean() == null) {
-                    updateUpgrade(
-                        autoOven.copy(
-                            parameters = autoOven.parameters + mapOf(
-                                "enabled" to createObject(false)
-                            )
-                        )
-                    )
-                }
-            }
-            
-            val autoOrderComplete = upgrades.value.find { it.name == "Auto Order Complete" }
-            if (autoOrderComplete != null) {
-                if (save.autoOrderCompleteEnabled != null) {
-                    updateUpgrade(
-                        autoOrderComplete.copy(
-                            parameters = autoOrderComplete.parameters + mapOf(
-                                "enabled" to createObject(save.autoOrderCompleteEnabled)
-                            )
-                        )
-                    )
-                }
-                if (autoOrderComplete.parameters["enabled"]?.asBoolean() == null) {
-                    updateUpgrade(
-                        autoOrderComplete.copy(
-                            parameters = autoOrderComplete.parameters + mapOf(
-                                "enabled" to createObject(false)
-                            )
-                        )
-                    )
-                }
-            }
-
         }
     }
 
