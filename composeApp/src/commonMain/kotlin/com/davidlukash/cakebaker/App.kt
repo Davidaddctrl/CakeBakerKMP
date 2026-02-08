@@ -35,6 +35,14 @@ import kotlin.uuid.ExperimentalUuidApi
 const val VERSION = "Beta 0.9.2"
 const val VERSIONCODE = 1
 
+fun versionCodeToString(versionCode: Int?): String {
+    return if (versionCode == null) "Unknown" else when (versionCode) {
+        0 -> "Beta 0.9.1"
+        1 -> "Beta 0.9.2"
+        else -> "Unknown"
+    }
+}
+
 @OptIn(ExperimentalUuidApi::class)
 @Composable
 fun App() {
