@@ -138,8 +138,8 @@ class DataViewModel(
 
     fun tickAutoOven() {
         val ovenRunning = ovenRunning.value
+
         val autoOven = upgrades.value.find { it.name == "Auto Oven" }
-            .takeOrNullWithWarn("Auto Oven upgrade not found, aborting tick auto oven")
         if (autoOven == null) {
             return
         }
@@ -166,7 +166,6 @@ class DataViewModel(
         val orders = orders.value
 
         val autoOrderComplete = upgrades.value.find { it.name == "Auto Order Complete" }
-            .takeOrNullWithWarn("Auto Order Complete upgrade not found, aborting tick auto order complete")
         if (autoOrderComplete == null) {
             return
         }
