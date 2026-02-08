@@ -124,8 +124,7 @@ fun CreateSaveDialog(
                 onClick = { create(saveName) },
                 modifier = Modifier.weight(1f),
                 enabled = canCreate,
-                { Text(if (isImport) "Import" else "Create") }
-            )
+            ) { Text(if (isImport) "Import" else "Create") }
             SmallThemedButton(onClick = { cancel() }, modifier = Modifier.weight(1f), content = { Text("Cancel") })
         },
         {
