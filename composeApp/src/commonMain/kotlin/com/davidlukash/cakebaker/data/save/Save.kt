@@ -17,8 +17,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Save(
-    val version: String = "Unknown",
-    val versionCode: Int? = null,
+    val version: String = "Beta 0.9.1",
+    val versionCode: Int? = 0,
     val items: List<Item> = listOf(),
     val currentCakeTier: Int = 1,
     val upgrades: List<Upgrade> = listOf(),
