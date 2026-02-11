@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.VERSIONCODE
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.data.theme.Theme
@@ -65,6 +66,14 @@ fun SaveItem(
                                 Text("Delete", maxLines = 1, softWrap = false)
                             },
                         )
+                    if (saveFile.save.versionCode != null && saveFile.save.versionCode < VERSIONCODE)
+                        LargeThemedButton(
+                            onClick = {
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Migrate", maxLines = 1, softWrap = false)
+                        }
                     LargeThemedButton(
                         onClick = {
                             loadSave(saveFile)
