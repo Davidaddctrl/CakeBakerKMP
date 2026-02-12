@@ -53,10 +53,18 @@ fun convertStyles(styles: TextStyles, font: FontResource): TextStyles {
 
 @Composable
 fun convertStyle(style: TextStyle, fontFamily: FontFamily): TextStyle {
+    return applyShadow(
+        style.copy(
+            fontFamily = fontFamily,
+        )
+    )
+}
+
+@Composable
+fun applyShadow(style: TextStyle): TextStyle {
     val density = LocalDensity.current
     val shadow = if (LocalDoDropShadow.current) style.shadow else null
     return style.copy(
-        fontFamily = fontFamily,
         shadow = shadow?.copy(
             offset = density.run { shadow.offset.copy(x = shadow.offset.x.dp.toPx(), y = shadow.offset.y.dp.toPx()) }
         )
@@ -210,7 +218,7 @@ data class Theme(
                     shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))
                 ),
                 mediumBodyStyle = TextStyle(
-                    fontSize = 12.sp,
+                    fontSize = 18.sp,
                     shadow = Shadow(color = Color.Black, offset = Offset(0f, 2f))
                 ),
                 smallBodyStyle = TextStyle(
