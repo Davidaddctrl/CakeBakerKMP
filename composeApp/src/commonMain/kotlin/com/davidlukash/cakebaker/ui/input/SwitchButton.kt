@@ -11,15 +11,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.data.theme.applyShadow
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -29,62 +35,74 @@ fun SwitchButton(
     offText: String,
     enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = Theme.Styles.verySmallBodyStyle,
+    height: Dp = 48.dp,
+    shape: Shape = RoundedCornerShape(4.dp),
+    borderWidth: Dp = 8.dp,
     onClick: (Boolean) -> Unit
 ) {
-    Surface(
-        color = if (enabled) Theme.SwitchButtonTheme.containerColor else Theme.SwitchButtonTheme.disabledContainerColor,
-        border = BorderStroke(8.dp, if (enabled) Theme.SwitchButtonTheme.borderColor else Theme.SwitchButtonTheme.disabledBorderColor),
-        modifier = Modifier.clickable(onClick = { onClick(!value) }, enabled = enabled),
-        shape = RoundedCornerShape(4.dp)
+    CompositionLocalProvider(
+        LocalDoDropShadow provides false
     ) {
-        Row(modifier = modifier.height(48.dp)) {
-            Box(modifier = Modifier.weight(1f)) {
-                Surface(
-                    color = if (!value && enabled)
-                        Theme.SwitchButtonTheme.offSelectedContainerColor
-                    else
-                        Theme.SwitchButtonTheme.offUnselectedContainerColor,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+        val textStyle = applyShadow(textStyle)
+        Surface(
+            color = if (enabled) Theme.SwitchButtonTheme.containerColor else Theme.SwitchButtonTheme.disabledContainerColor,
+            border = BorderStroke(
+                borderWidth,
+                if (enabled) Theme.SwitchButtonTheme.borderColor else Theme.SwitchButtonTheme.disabledBorderColor
+            ),
+            modifier = Modifier.clickable(onClick = { onClick(!value) }, enabled = enabled),
+            shape = shape
+        ) {
+            Row(modifier = modifier.height(height)) {
+                Box(modifier = Modifier.weight(1f)) {
+                    Surface(
+                        color = if (!value && enabled)
+                            Theme.SwitchButtonTheme.offSelectedContainerColor
+                        else
+                            Theme.SwitchButtonTheme.offUnselectedContainerColor,
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        Text(
-                            offText,
-                            style = Theme.Styles.verySmallBodyStyle,
-                            color = if (!value && enabled)
-                                Theme.SwitchButtonTheme.offSelectedTextColor
-                            else
-                                Theme.SwitchButtonTheme.offUnselectedTextColor,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                offText,
+                                style = textStyle,
+                                color = if (!value && enabled)
+                                    Theme.SwitchButtonTheme.offSelectedTextColor
+                                else
+                                    Theme.SwitchButtonTheme.offUnselectedTextColor,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
-            }
-            Box(modifier = Modifier.weight(1f)) {
-                Surface(
-                    color = if (value && enabled)
-                        Theme.SwitchButtonTheme.onSelectedContainerColor
-                    else
-                        Theme.SwitchButtonTheme.onUnselectedContainerColor,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                Box(modifier = Modifier.weight(1f)) {
+                    Surface(
+                        color = if (value && enabled)
+                            Theme.SwitchButtonTheme.onSelectedContainerColor
+                        else
+                            Theme.SwitchButtonTheme.onUnselectedContainerColor,
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        Text(
-                            onText,
-                            style = Theme.Styles.verySmallBodyStyle,
-                            color = if (value && enabled)
-                                Theme.SwitchButtonTheme.onSelectedTextColor
-                            else
-                                Theme.SwitchButtonTheme.onUnselectedTextColor,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                onText,
+                                style = textStyle,
+                                color = if (value && enabled)
+                                    Theme.SwitchButtonTheme.onSelectedTextColor
+                                else
+                                    Theme.SwitchButtonTheme.onUnselectedTextColor,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
             }
