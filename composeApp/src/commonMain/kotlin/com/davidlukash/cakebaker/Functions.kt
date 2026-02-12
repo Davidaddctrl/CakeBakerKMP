@@ -3,13 +3,22 @@ package com.davidlukash.cakebaker
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import com.davidlukash.cakebaker.data.log.Log
+import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.engine.CakeBakerEngine
 import com.davidlukash.cakebaker.logger.AppLogger
 import com.davidlukash.cakebaker.logger.CompoundAppLogger
+import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
+import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
@@ -294,4 +303,21 @@ fun <T : Any> T?.takeOrNullWithWarn(warnMessage: String): T? {
         return null
     }
     return this
+}
+
+@Composable
+fun getTrueDensity(): Density {
+    if (LocalViewModelProvided.current) {
+        val density by LocalMainViewModel.current.uiViewModel.trueDensity.collectAsState()
+        return density ?: LocalDensity.current
+    } else return LocalDensity.current
+}
+
+@Composable
+fun ProvideLocalDensity(isScaled: Boolean = false, content: @Composable () -> Unit) {
+    CompositionLocalProvider(
+        LocalDensity provides getTrueDensity(),
+        LocalIsScaled provides isScaled,
+        content = content
+    )
 }
