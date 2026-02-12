@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.viewmodel
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.lifecycle.ViewModel
+import com.davidlukash.cakebaker.JsonMathHelpers
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.repository.SavesRepository
@@ -13,7 +14,6 @@ import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.ObjectType
 import com.davidlukash.jsonmath.engine.normal.ArgumentDescriptor
 import com.davidlukash.jsonmath.engine.normal.FunctionDescriptor
-import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
 open class MainViewModel(
@@ -24,6 +24,7 @@ open class MainViewModel(
         it.registerStandardFunctions()
         dumpFunctionsToFile(it)
     }
+
     @OptIn(ExperimentalUuidApi::class)
     open val uiViewModel = UIViewModel().also {
         engine.registerFunction(
@@ -66,6 +67,72 @@ open class MainViewModel(
             ) { args, _, _ ->
                 it.setVariableShown(args[0].asNullableBoolean("") ?: it.variableShown.value)
                 createObject(it.variableShown.value)
+            }
+        )
+        engine.registerFunction(
+            FunctionDescriptor(
+                name = "cakeBaker.linearGrowth",
+                description = "This is a helper function for linear growth",
+                returnType = ObjectType.NUMBER,
+                returnTypeNullable = false,
+                arguments = listOf()
+            ) { _, scopes, origins ->
+                engine.evaluateExpressions(
+                    JsonMathHelpers.createLinearGrowth(),
+                    scopes,
+                    origins,
+                    "Expression"
+                ).last()
+            }
+        )
+        engine.registerFunction(
+            FunctionDescriptor(
+                name = "cakeBaker.denseItem",
+                description = "This is a helper function for dense item",
+                returnType = ObjectType.DICTIONARY,
+                returnTypeNullable = false,
+                arguments = listOf()
+            ) { _, scopes, origins ->
+                engine.evaluateExpressions(
+                    JsonMathHelpers.createDenseItem(),
+                    scopes,
+                    origins,
+                    "Expression"
+                ).last()
+            }
+        )
+        engine.registerFunction(
+            FunctionDescriptor(
+                name = "cakeBaker.cheaperItem",
+                description = "This is a helper function for cheaper item",
+                returnType = ObjectType.NUMBER,
+                returnTypeNullable = false,
+                arguments = listOf()
+            ) { _, scopes, origins ->
+                engine.evaluateExpressions(
+                    JsonMathHelpers.createCheaperItem(),
+                    scopes,
+                    origins,
+                    "Expression"
+                ).last()
+            }
+        )
+        engine.registerFunction(
+            FunctionDescriptor(
+                name = "cakeBaker.operation",
+                description = "This is a helper function for operation",
+                returnType = null,
+                returnTypeNullable = true,
+                arguments = listOf(
+                    ArgumentDescriptor(name = "operation", type = ObjectType.STRING)
+                )
+            ) { args, scopes, origins ->
+                engine.evaluateExpressions(
+                    JsonMathHelpers.createOperation(args[0].asString()!!),
+                    scopes,
+                    origins,
+                    "Expression"
+                ).last()
             }
         )
         val functionDump = engine.getAllFunctions().joinToString("\n\n") { engine.describeFunction(it) }

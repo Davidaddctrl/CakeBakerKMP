@@ -75,6 +75,15 @@ object JsonMathHelpers {
         }
     }
 
+    /**
+     * This is a simple item cheaper expression list. It requires in parameters itemName (eg. globals.items.Egg), priceDivisor, slopeDivisor
+     */
+    fun createCheaperItemSmall(): List<Expression> = buildExpressionList {
+        appendFunction {
+            name = "cakeBaker.cheaperItem"
+        }
+    }
+
 
     /**
      * This creates code where the cake tier required to buy an upgrade changes depending on cakeTiers: Dictionary[Int, Int] in parameters the key should be the level and the value is the tier to change to.
@@ -219,6 +228,17 @@ object JsonMathHelpers {
         }
     }
 
+
+    /**
+     * This is a simple linear price growth. It also includes changeable cake tier. It requires cakeTiers: Dictionary[Int, Int], priceIncrement,
+     * initialPrice, levelsUntilPriceIncrease in parameters
+     */
+    fun createLinearGrowthSmall(): List<Expression> = buildExpressionList {
+        appendFunction {
+            name = "cakeBaker.linearGrowth"
+        }
+    }
+
     /**
      * This is a simple script that requires 2 parameters: variable: String, argument: Any? in parameters. It simply sets the variable to the variable <operation> product
      */
@@ -246,9 +266,19 @@ object JsonMathHelpers {
     }
 
     /**
+     * This is a simple script that requires 2 parameters: variable: String, argument: Any? in parameters. It simply sets the variable to the variable <operation> product
+     */
+    fun createOperationSmall(operation: String): List<Expression> = buildExpressionList {
+        appendFunction {
+            name = "cakeBaker.operation"
+            appendString(operation)
+        }
+    }
+
+    /**
      *  This is a script that is used for dense item upgrades. It sets each cake price to the cake price -1
      */
-    fun createDense(): List<Expression> = buildExpressionList {
+    fun createDenseItem(): List<Expression> = buildExpressionList {
         appendFunction {
             name = "variable.set"
             appendFunction {
@@ -335,6 +365,15 @@ object JsonMathHelpers {
                 }
             }
             appendBoolean(true)
+        }
+    }
+
+    /**
+     *  This is a script that is used for dense item upgrades. It sets each cake price to the cake price -1
+     */
+    fun createDenseItemSmall(): List<Expression> = buildExpressionList {
+        appendFunction {
+            name = "cakeBaker.denseItem"
         }
     }
 }
