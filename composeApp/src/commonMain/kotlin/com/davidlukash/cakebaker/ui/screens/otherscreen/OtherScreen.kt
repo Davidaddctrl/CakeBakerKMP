@@ -49,9 +49,11 @@ import cakebaker.composeapp.generated.resources.ktx_datetime_license
 import cakebaker.composeapp.generated.resources.ktx_serialization_license
 import cakebaker.composeapp.generated.resources.material_design_icons_license
 import cakebaker.composeapp.generated.resources.mpl_license
+import com.davidlukash.cakebaker.ProvideLocalDensity
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.container.Background
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
+import com.davidlukash.cakebaker.ui.input.SmallThemedButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
@@ -76,17 +78,8 @@ fun OtherScreen(navigateWithFade: (Screen) -> Unit) {
         )
     }
     var currentLicense by remember { mutableStateOf<Pair<String, StringResource?>?>(null) }
-
-    val trueDensity by if (LocalViewModelProvided.current) {
-        LocalMainViewModel.current.uiViewModel.trueDensity.collectAsState()
-    } else {
-        val density = LocalDensity.current
-        derivedStateOf { mutableStateOf(density) }
-    }
     if (currentLicense != null) {
-        CompositionLocalProvider(
-            LocalDensity provides (trueDensity as? Density ?: LocalDensity.current),
-        ) {
+        ProvideLocalDensity {
             AlertDialog(
                 onDismissRequest = {
                     currentLicense = null
@@ -139,20 +132,26 @@ fun OtherScreen(navigateWithFade: (Screen) -> Unit) {
         },
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(320.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+        Box(
+            modifier = Modifier.padding(innerPadding),
         ) {
-            items(licenses.keys.toList()) { key ->
-                LargeThemedButton(
-                    onClick = { currentLicense = key to licenses[key] },
-                    modifier = Modifier.width(320.dp).height(180.dp),
-                    content = {
-                        Text(key, style = Theme.Styles.mediumBodyStyle, textAlign = TextAlign.Center)
+            ProvideLocalDensity(true) {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(200.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    items(licenses.keys.toList()) { key ->
+                        SmallThemedButton(
+                            onClick = { currentLicense = key to licenses[key] },
+                            modifier = Modifier.width(200.dp).height(100.dp),
+                            isScaled = true
+                        ) {
+                            Text(key, style = Theme.Styles.verySmallBodyStyle, textAlign = TextAlign.Center)
+                        }
                     }
-                )
+                }
             }
         }
     }

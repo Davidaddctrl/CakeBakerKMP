@@ -1,6 +1,7 @@
 package com.davidlukash.cakebaker.ui.screens.settingsscreen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.ProvideLocalDensity
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.container.Background
@@ -22,7 +24,11 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SettingsScreen(navigateWithFade: (Screen) -> Unit, setDebugConsole: (ConsoleType) -> Unit, debugConsole: ConsoleType) {
+fun SettingsScreen(
+    navigateWithFade: (Screen) -> Unit,
+    setDebugConsole: (ConsoleType) -> Unit,
+    debugConsole: ConsoleType
+) {
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
@@ -33,25 +39,34 @@ fun SettingsScreen(navigateWithFade: (Screen) -> Unit, setDebugConsole: (Console
         },
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
-        Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        Box(
+            modifier = Modifier.padding(innerPadding).padding(top = 32.dp)
         ) {
-            Text(
-                "Debug Console Open",
-                style = Theme.Styles.smallBodyStyle,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
-            )
-            SwitchButton(
-                value = debugConsole != ConsoleType.NONE,
-                onText = "Open",
-                offText = "Closed",
-                modifier = Modifier.width(320.dp)
-            ) {
-                setDebugConsole(
-                    if (debugConsole == ConsoleType.NONE) ConsoleType.POPUP else ConsoleType.NONE
-                )
+            ProvideLocalDensity(false) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        "Debug Console Open",
+                        style = Theme.Styles.largeBodyStyle,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    SwitchButton(
+                        value = debugConsole != ConsoleType.NONE,
+                        onText = "Open",
+                        offText = "Closed",
+                        modifier = Modifier.width(320.dp),
+                        height = 36.dp,
+                        borderWidth = 6.dp,
+                        textStyle = Theme.Styles.mediumBodyStyle
+                    ) {
+                        setDebugConsole(
+                            if (debugConsole == ConsoleType.NONE) ConsoleType.POPUP else ConsoleType.NONE
+                        )
+                    }
+                }
             }
         }
     }
