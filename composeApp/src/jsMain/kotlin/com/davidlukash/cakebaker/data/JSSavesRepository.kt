@@ -42,9 +42,9 @@ class JSSavesRepository : SavesRepository() {
 
     override suspend fun upsertSave(file: SaveFile): Boolean {
         val saves = listSaves()
-        val isNew = !saves.map { it.name }.contains(file.name)
+        val existsBefore = saves.map { it.name }.contains(file.name)
         updateSaves((listOf(file) + saves).distinctBy { it.name })
-        return isNew
+        return existsBefore
     }
 
     override suspend fun exportSave(file: SaveFile): Boolean {

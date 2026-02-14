@@ -30,9 +30,9 @@ class JVMSavesRepository(
 
     override suspend fun upsertSave(file: SaveFile): Boolean = withContext(Dispatchers.IO) {
         val saveFile = saveDirectory.resolve(file.name)
-        val isNew = saveFile.createNewFile()
+        val existsBefore = !saveFile.createNewFile()
         saveFile.writeText(json.encodeToString(file.save))
-        isNew
+        existsBefore
     }
 
     override suspend fun exportSave(file: SaveFile): Boolean = withContext(Dispatchers.IO) {
