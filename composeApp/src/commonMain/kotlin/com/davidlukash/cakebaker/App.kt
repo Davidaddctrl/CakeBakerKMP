@@ -67,7 +67,6 @@ fun App() {
         val importDialogOpen by uiViewModel.importDialogOpen.collectAsState()
         val importSaveData by uiViewModel.importSaveData.collectAsState()
         val theme by themeViewModel.theme.collectAsState()
-        val internalShown by uiViewModel.internalShown.collectAsState()
         val variableShown by uiViewModel.variableShown.collectAsState()
         val ovenProgress by dataViewModel.ovenProgress.collectAsState()
         val ovenRunning by dataViewModel.ovenRunning.collectAsState()
