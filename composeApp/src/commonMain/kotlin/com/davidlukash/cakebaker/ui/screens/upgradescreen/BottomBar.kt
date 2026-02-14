@@ -44,7 +44,9 @@ fun BottomBar(
     val upgrades = uiState.upgrades
     val pages = upgrades.map { it.pageName }.distinct()
     LaunchedEffect(pages) {
-        setCurrentPage(pages.firstOrNull() ?: "")
+        if (!pages.contains(currentPage)) {
+            setCurrentPage(pages.firstOrNull() ?: "")
+        }
     }
     Row(
         modifier = Modifier.fillMaxWidth(),
