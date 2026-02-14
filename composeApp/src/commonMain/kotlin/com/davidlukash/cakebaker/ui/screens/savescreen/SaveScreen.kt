@@ -3,6 +3,7 @@ package com.davidlukash.cakebaker.ui.screens.savescreen
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,6 +17,7 @@ import com.davidlukash.cakebaker.ui.navigation.Screen
 @Composable
 fun SaveScreen(
     saveFiles: List<SaveFile>,
+    listSaves: () -> Unit,
     navigateWithFade: (Screen) -> Unit,
     exportSave: (SaveFile) -> Unit,
     deleteSave: (SaveFile) -> Unit,
@@ -23,6 +25,10 @@ fun SaveScreen(
     overwriteSave: (SaveFile) -> Unit,
     importSave: () -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        listSaves()
+    }
+
     var dialogType by remember { mutableStateOf(SaveDialogType.NONE) }
     var dialogData by remember { mutableStateOf<SaveFile?>(null) }
     when (dialogType) {

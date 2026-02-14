@@ -49,6 +49,11 @@ fun App() {
         LocalViewModelProvided provides true
     ) {
         val mainViewModel = LocalMainViewModel.current
+
+        LaunchedEffect(Unit) {
+            mainViewModel.start()
+        }
+
         val density = LocalDensity.current
         val uiViewModel = mainViewModel.uiViewModel
         val dataViewModel = mainViewModel.dataViewModel
@@ -92,11 +97,13 @@ fun App() {
                     create = {
                         coroutineScope.launch {
                             importSaveData?.let { importSaveData ->
+                                saveFileViewModel.listSavesSuspend()
                                 saveFileViewModel.upsertSave(SaveFile(it, importSaveData))
                                     .onSuccess {
                                         uiViewModel.setImportSaveData(null)
                                         uiViewModel.setImportDialogOpen(false)
                                         uiViewModel.addTextPopup("Save Imported")
+                                        saveFileViewModel.listSaves()
                                     }
                                     .onFailure {
                                         uiViewModel.setImportSaveData(null)
@@ -136,6 +143,9 @@ fun App() {
                             setAutoOrderCompleteEnabled = { dataViewModel.setAutoOrderCompleteEnabled(it) },
                             completeOrder = { dataViewModel.handleCompleteOrder(it) },
                             setCurrentCake = { dataViewModel.setCurrentCake(it) },
+                            listSaves = {
+                                saveFileViewModel.listSaves()
+                            },
                             exportSave = { saveFile ->
                                 coroutineScope.launch {
                                     saveFileViewModel.exportSave(saveFile)
@@ -155,6 +165,7 @@ fun App() {
                                                 if (exists) "Save \"${saveFile.name}\" Deleted"
                                                 else "Save \"${saveFile.name}\" Does Not Exist"
                                             )
+                                            saveFileViewModel.listSaves()
                                         }.onFailure {
                                             uiViewModel.addTextPopup(
                                                 "Failed to delete save \"${saveFile.name}\""
@@ -175,6 +186,7 @@ fun App() {
                                     saveFileViewModel.importSave()
                                         .onSuccess { save ->
                                             if (save != null) {
+                                                saveFileViewModel.listSavesSuspend()
                                                 uiViewModel.setImportSaveData(save)
                                                 uiViewModel.setImportDialogOpen(true)
                                             }
@@ -186,6 +198,7 @@ fun App() {
                             },
                             overwriteSave = { saveFile ->
                                 coroutineScope.launch {
+                                    saveFileViewModel.listSavesSuspend()
                                     val saveNames = saveFiles.map { it.name.uppercase() }
                                     saveFileViewModel.upsertSave(
                                         saveFile.copy(
@@ -196,6 +209,7 @@ fun App() {
                                             if (!existsBefore) "Save \"${saveFile.name}\" Created"
                                             else "Save \"${saveFile.name}\" Overwritten"
                                         )
+                                        saveFileViewModel.listSaves()
                                     }.onFailure {
                                         val existsBefore = saveNames.contains(saveFile.name.uppercase())
                                         uiViewModel.addTextPopup(

@@ -25,6 +25,16 @@ class SaveFileViewModel(
        }
     }
 
+    fun listSaves(onResult: (Result<List<SaveFile>>) -> Unit = {}) {
+        viewModelScope.launch {
+            onResult(
+                listSavesSuspend().onFailure {
+                    uiActions.addTextPopup("Failed to list saves.")
+                }
+            )
+        }
+    }
+
     suspend fun deleteSave(name: String): Result<Boolean> = savesRepository.deleteSave(name)
 
     suspend fun upsertSave(file: SaveFile) = savesRepository.upsertSave(file)

@@ -78,6 +78,7 @@ fun Navigation(
     setAutoOrderCompleteEnabled: (Boolean) -> Unit,
     completeOrder: (Order) -> Unit,
     setCurrentCake: (Int) -> Unit,
+    listSaves: () -> Unit,
     exportSave: (SaveFile) -> Unit,
     deleteSave: (SaveFile) -> Unit,
     loadSave: (SaveFile) -> Unit,
@@ -210,6 +211,7 @@ fun Navigation(
                     Background({
                         SaveScreen(
                             saveFiles,
+                            listSaves,
                             navigateWithFade,
                             exportSave,
                             deleteSave,

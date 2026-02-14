@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.davidlukash.cakebaker.ForMigrationSupport
 import com.davidlukash.cakebaker.VERSION
 import com.davidlukash.cakebaker.VERSIONCODE
+import com.davidlukash.cakebaker.data.DataActions
+import com.davidlukash.cakebaker.data.UIActions
 import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.data.item.ItemType
 import com.davidlukash.cakebaker.data.order.Order
@@ -23,7 +25,6 @@ import com.davidlukash.cakebaker.takeOrDefaultWithWarn
 import com.davidlukash.cakebaker.takeOrNullWithWarn
 import com.davidlukash.cakebaker.toBoolean
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
-import com.davidlukash.cakebaker.ui.navigation.SaveScreen
 import com.davidlukash.cakebaker.weightedRandomInt
 import com.davidlukash.cakebaker.withResult
 import com.davidlukash.cakebaker.withResultSuspend
@@ -77,16 +78,6 @@ class DataViewModel(
                     tickOrder(dt)
                     tickAutoOven()
                     tickAutoOrderComplete()
-                    if (uiViewModel.currentScreen.value == SaveScreen) {
-                        if (shouldListSaves) {
-                            saveFileViewModel.listSavesSuspend().onFailure {
-                                shouldListSaves = false
-                                uiViewModel.addTextButtonPopup("Error Listing Saves", false, "Retry") {
-                                    shouldListSaves = true
-                                }
-                            }
-                        }
-                    }
                     delay(100)
                 }.onFailure {
                     stopLoop()
