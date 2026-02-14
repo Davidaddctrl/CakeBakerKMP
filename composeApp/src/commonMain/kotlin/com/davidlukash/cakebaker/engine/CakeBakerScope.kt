@@ -1,9 +1,9 @@
 package com.davidlukash.cakebaker.engine
 
+import com.davidlukash.cakebaker.data.DataActions
 import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.data.Upgrade
 import com.davidlukash.cakebaker.data.order.Order
-import com.davidlukash.cakebaker.viewmodel.DataViewModel
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.Object
 import com.davidlukash.jsonmath.data.ObjectType
@@ -11,12 +11,12 @@ import com.davidlukash.jsonmath.engine.normal.*
 
 class CakeBakerScope(
     scopeType: ScopeType,
-    val dataViewModel: DataViewModel
+    val dataActions: DataActions
 ) : Scope(scopeType) {
     val localVariables = mutableMapOf<String, Object>()
 
     fun generateUpgradeDescriptors(): List<VariableDescriptor> {
-        return dataViewModel.upgrades.value.flatMap { upgrade ->
+        return dataActions.getUpgrades().flatMap { upgrade ->
             val directDescriptors = upgrade.toObject().asDictionary()!!.flatMap { (key, value) ->
                 val keyString = key.asString()!!
                 listOf(
@@ -36,7 +36,7 @@ class CakeBakerScope(
                         },
                         expectedTypeNullable = keyString == "maxLevel",
                         set = {
-                            dataViewModel.updateUpgrade(
+                            dataActions.updateUpgrade(
                                 upgrade.mergeWith(
                                     createObject(
                                         mapOf(
@@ -53,7 +53,7 @@ class CakeBakerScope(
                         VariableDescriptor(
                             name = "globals.upgrades.${upgrade.name}.parameters.$paramKeyString",
                             set = { paramNewValue ->
-                                dataViewModel.updateUpgrade(
+                                dataActions.updateUpgrade(
                                     upgrade.copy(
                                         parameters = upgrade.parameters + mapOf(
                                             paramKeyString to paramNewValue
@@ -71,7 +71,7 @@ class CakeBakerScope(
                     expectedType = ObjectType.DICTIONARY,
                     expectedTypeNullable = false,
                     set = {
-                        dataViewModel.updateUpgrade(
+                        dataActions.updateUpgrade(
                             upgrade.mergeWith(it)
                         )
                     }
@@ -84,19 +84,19 @@ class CakeBakerScope(
             expectedType = ObjectType.LIST,
             expectedTypeNullable = false,
             set = {
-                dataViewModel.setUpgrades(
+                dataActions.setUpgrades(
                     it.asList()!!.map { innerUpgrade ->
                         Upgrade.fromObject(innerUpgrade)
                     }
                 )
             }
         ) {
-            createObject(dataViewModel.upgrades.value.map { it.toObject() })
+            createObject(dataActions.getUpgrades().map { it.toObject() })
         }
     }
 
     fun generateItemDescriptors(): List<VariableDescriptor> {
-        return dataViewModel.items.value.flatMap { item ->
+        return dataActions.getItems().flatMap { item ->
             val directDescriptors = item.toObject().asDictionary()!!.map { (key, value) ->
                 val keyString = key.asString()!!
                 VariableDescriptor(
@@ -128,7 +128,7 @@ class CakeBakerScope(
                         "salePrice"
                     ),
                     set = {
-                        dataViewModel.updateItem(
+                        dataActions.updateItem(
                             item.mergeWith(
                                 createObject(
                                     mapOf(
@@ -148,7 +148,7 @@ class CakeBakerScope(
                     expectedType = ObjectType.DICTIONARY,
                     expectedTypeNullable = false,
                     set = {
-                        dataViewModel.updateItem(
+                        dataActions.updateItem(
                             item.mergeWith(it)
                         )
                     }
@@ -161,19 +161,19 @@ class CakeBakerScope(
             expectedType = ObjectType.LIST,
             expectedTypeNullable = false,
             set = {
-                dataViewModel.setItems(
+                dataActions.setItems(
                     it.asList()!!.map { innerItem ->
                         Item.fromObject(innerItem)
                     }
                 )
             }
         ) {
-            createObject(dataViewModel.items.value.map { it.toObject() })
+            createObject(dataActions.getItems().map { it.toObject() })
         }
     }
 
     fun generateOrderDescriptors(): List<VariableDescriptor> {
-        return dataViewModel.orders.value.flatMapIndexed { index, order ->
+        return dataActions.getOrders().flatMapIndexed { index, order ->
             val directDescriptors = order.toObject().asDictionary()!!.flatMap { (key, value) ->
                 val keyString = key.asString()!!
                 listOf(
@@ -182,7 +182,7 @@ class CakeBakerScope(
                         expectedType = ObjectType.NUMBER,
                         expectedTypeNullable = false,
                         set = {
-                            dataViewModel.updateOrder(
+                            dataActions.updateOrder(
                                 order.mergeWith(
                                     createObject(
                                         mapOf(
@@ -200,7 +200,7 @@ class CakeBakerScope(
                         expectedType = ObjectType.NUMBER,
                         expectedTypeNullable = false,
                         set = {
-                            dataViewModel.updateOrderAtIndex(
+                            dataActions.updateOrderAtIndex(
                                 order.mergeWith(
                                     createObject(
                                         mapOf(
@@ -222,7 +222,7 @@ class CakeBakerScope(
                 expectedType = ObjectType.DICTIONARY,
                 expectedTypeNullable = false,
                 set = {
-                    dataViewModel.updateOrder(
+                    dataActions.updateOrder(
                         Order.fromObject(it)
                     )
                 }
@@ -233,7 +233,7 @@ class CakeBakerScope(
                 expectedType = ObjectType.DICTIONARY,
                 expectedTypeNullable = false,
                 set = {
-                    dataViewModel.updateOrderAtIndex(
+                    dataActions.updateOrderAtIndex(
                         Order.fromObject(it),
                         index
                     )
@@ -247,14 +247,14 @@ class CakeBakerScope(
                 expectedType = ObjectType.LIST,
                 expectedTypeNullable = false,
                 set = {
-                    dataViewModel.setOrders(
+                    dataActions.setOrders(
                         it.asList()!!.map { order ->
                             Order.fromObject(order)
                         }
                     )
                 }
             ) {
-                createObject(dataViewModel.orders.value.map { it.toObject() })
+                createObject(dataActions.getOrders().map { it.toObject() })
             }
         )
     }
@@ -297,7 +297,7 @@ class CakeBakerScope(
                     parts.getOrNull(1) ?: throw createVariableNameInvalidException(name) // eg. upgrades
                 when (second) {
                     "upgrades" -> {
-                        val upgrades = dataViewModel.upgrades.value
+                        val upgrades = dataActions.getUpgrades()
                         val third = parts.getOrNull(2) ?: throw createVariableNameInvalidException(
                             name,
                         ) //eg. Faster Oven
@@ -311,7 +311,7 @@ class CakeBakerScope(
                             name,
                         ) //eg. buysUntilIncrement
 
-                        dataViewModel.updateUpgrade(
+                        dataActions.updateUpgrade(
                             upgrade.copy(
                                 parameters = upgrade.parameters + mapOf(
                                     fifth to value
