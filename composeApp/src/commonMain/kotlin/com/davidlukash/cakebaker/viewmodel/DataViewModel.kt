@@ -49,17 +49,25 @@ import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 
 class DataViewModel(
-    val uiViewModel: UIViewModel,
-    val saveFileViewModel: SaveFileViewModel,
+    val uiActions: UIActions,
     val engine: CakeBakerEngine
 ) : ViewModel() {
-    val globalScope = CakeBakerScope(ScopeType(EnumScopeType.GLOBAL), this)
+    val dataActions = DataActions.fromDataViewModel(this)
+
+    val globalScope = CakeBakerScope(ScopeType(EnumScopeType.GLOBAL), dataActions)
 
     var loopJob: Job? = null
 
     var random = Random(Random.nextLong())
 
-    var shouldListSaves = true
+    init {
+        engine.dataActions = dataActions
+    }
+
+    fun initialize() {
+        loadSave(Save.default)
+        startLoop()
+    }
 
     @OptIn(ExperimentalTime::class)
     fun startLoop() {
@@ -81,7 +89,7 @@ class DataViewModel(
                     delay(100)
                 }.onFailure {
                     stopLoop()
-                    uiViewModel.addTextButtonPopup("The main loop has failed", false, "Retry") {
+                    uiActions.addTextButtonPopup("The main loop has failed", false, "Retry") {
                         startLoop()
                     }
                 }
@@ -115,7 +123,7 @@ class DataViewModel(
                 val cake =
                     cakes[tempCakeTier].takeOrNullWithWarn("Cake with tier $tempCakeTier does not exist")
                 if (cake == null) {
-                    uiViewModel.addTextPopup("Failed to bake cake")
+                    uiActions.addTextPopup("Failed to bake cake")
                     return
                 }
                 updateItem(
@@ -234,7 +242,7 @@ class DataViewModel(
 
     val nextOrderRemainingTime = _orderCakeTimeCounters.map { if (it.values.isEmpty()) null else it.values.min() }
 
-    val orderFactory = OrderFactory { uiViewModel.addTextPopup(it) }
+    val orderFactory = OrderFactory { uiActions.addTextPopup(it) }
 
     suspend fun tickOrderCounterCreate() {
         val nextTier = orderFactory.selectCakeTier(
@@ -273,17 +281,17 @@ class DataViewModel(
                         calculateCakePrice(cakeTier)
                     )
                     if (order == null) {
-                        uiViewModel.addTextPopup("Failed to create order, deleting timer")
+                        uiActions.addTextPopup("Failed to create order, deleting timer")
                         return@mapNotNull null
                     }
                     val cake =
                         cakes[cakeTier].takeOrNullWithWarn("Cake with tier $cakeTier does not exist")
                     if (cake == null) {
-                        uiViewModel.addTextPopup("Failed to create order, deleting timer")
+                        uiActions.addTextPopup("Failed to create order, deleting timer")
                         return@mapNotNull null
                     }
-                    if (uiViewModel.currentScreen.value != KitchenScreen)
-                        uiViewModel.addTextPopup("New Order for ${order.amount} ${cake.name}")
+                    if (uiActions.getCurrentScreen() != KitchenScreen)
+                        uiActions.addTextPopup("New Order for ${order.amount} ${cake.name}")
                     _orders.emit(
                         _orders.value + order
                     )
@@ -314,7 +322,7 @@ class DataViewModel(
         val settings =
             orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist")
         if (settings == null) {
-            uiViewModel.addTextPopup("Failed to fail order, deleting order")
+            uiActions.addTextPopup("Failed to fail order, deleting order")
             viewModelScope.launch {
                 _orders.emit(
                     _orders.value.filter { it.id != order.id }
@@ -338,7 +346,7 @@ class DataViewModel(
         val settings =
             orderCakeSettings.value[order.cakeTier].takeOrNullWithWarn("Order cake settings with tier ${order.cakeTier} does not exist")
         if (settings == null) {
-            uiViewModel.addTextPopup("Failed to complete order, deleting order")
+            uiActions.addTextPopup("Failed to complete order, deleting order")
             viewModelScope.launch {
                 _orders.emit(
                     _orders.value.filter { it.id != order.id }
@@ -357,7 +365,7 @@ class DataViewModel(
         var cake =
             cakes[order.cakeTier].takeOrNullWithWarn("Cake with tier ${order.cakeTier} does not exist, cancelling order completion")
         if (cake == null) {
-            uiViewModel.addTextPopup("Order with id ${order.id} has an invalid cake tier. It has been deleted")
+            uiActions.addTextPopup("Order with id ${order.id} has an invalid cake tier. It has been deleted")
             viewModelScope.launch {
                 _orders.emit(
                     _orders.value.filter { it.id != order.id }
@@ -580,7 +588,7 @@ class DataViewModel(
         val ingredient = ingredients.find { it.name == name }
             .takeOrNullWithWarn("Ingredient $name does not exist, cancelling ingredient buy")
         if (ingredient == null) {
-            uiViewModel.addTextPopup("Ingredient $name")
+            uiActions.addTextPopup("Ingredient $name")
             return
         }
         var tempIngredient = ingredient
@@ -589,7 +597,7 @@ class DataViewModel(
                 BigDecimal.ZERO
             ))
         ) {
-            uiViewModel.addTextPopup("You do not have enough money to buy $name")
+            uiActions.addTextPopup("You do not have enough money to buy $name")
             return
         }
         updateItem(
@@ -679,7 +687,7 @@ class DataViewModel(
             "Cake with tier ${upgrade.cakeTier} does not exist, returning and notifying the user"
         )
         if (cake == null) {
-            uiViewModel.addTextPopup("Upgrade \"${upgrade.name}\" is linked to an invalid cake. It was not bought")
+            uiActions.addTextPopup("Upgrade \"${upgrade.name}\" is linked to an invalid cake. It was not bought")
             return
         }
         updateUpgrade(
@@ -692,7 +700,7 @@ class DataViewModel(
                 amount = cake.amount - upgrade.price.toBigDecimal()
             )
         )
-        val localScope = CakeBakerScope(ScopeType(EnumScopeType.LOCAL), this)
+        val localScope = CakeBakerScope(ScopeType(EnumScopeType.LOCAL), dataActions)
         localScope.setVariable("locals.this", createObject("globals.upgrades.${upgrade.name}"))
         val origin = OriginNode("Upgrade On Buy", upgrade.onBuy)
         upgrade.onBuy.forEach { expression ->
@@ -705,7 +713,7 @@ class DataViewModel(
             logger.logDebug("Result: $obj")
         }
         result.onFailure {
-            uiViewModel.addTextPopup("When buying upgrade ${upgrade.name} an error occurred. No cakes were deducted")
+            uiActions.addTextPopup("When buying upgrade ${upgrade.name} an error occurred. No cakes were deducted")
             loadSave(snapshot)
         }
     }

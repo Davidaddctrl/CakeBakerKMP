@@ -15,8 +15,8 @@ import com.davidlukash.cakebaker.logger.AppLogger
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.Popup
+import com.davidlukash.cakebaker.data.UIActions
 import com.davidlukash.cakebaker.data.save.Save
-import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.logger
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class UIViewModel : ViewModel() {
+class UIViewModel : ViewModel(), UIActions {
     private val _pendingScreen = MutableStateFlow<Screen?>(null)
     val pendingScreen = _pendingScreen.asStateFlow()
 
@@ -72,7 +72,7 @@ class UIViewModel : ViewModel() {
         }
     }
 
-    fun setDebugConsole(type: ConsoleType) {
+    override fun setDebugConsole(type: ConsoleType) {
         viewModelScope.launch {
             _debugConsole.emit(type)
         }
@@ -87,7 +87,7 @@ class UIViewModel : ViewModel() {
         }
     }
 
-    fun addTextPopup(text: String) {
+    override fun addTextPopup(text: String) {
         addPopup {
             Text(
                 text,
@@ -97,7 +97,7 @@ class UIViewModel : ViewModel() {
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun addTextButtonPopup(text: String, shouldHaveDefaultButton: Boolean = true, buttonText: String, onClick: () -> Unit) {
+    override fun addTextButtonPopup(text: String, shouldHaveDefaultButton: Boolean, buttonText: String, onClick: () -> Unit) {
         addPopup(shouldHaveDefaultButton) {
             Text(
                 text,
@@ -119,6 +119,10 @@ class UIViewModel : ViewModel() {
                 },
             )
         }
+    }
+
+    override fun getCurrentScreen(): Screen? {
+        return _currentScreen.value
     }
 
     @OptIn(ExperimentalUuidApi::class)
