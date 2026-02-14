@@ -19,7 +19,6 @@ import com.davidlukash.cakebaker.data.theme.LocalTheme
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
-import com.davidlukash.cakebaker.ui.InternalPopup
 import com.davidlukash.cakebaker.ui.ScaleViewport
 import com.davidlukash.cakebaker.ui.VariableView
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
@@ -217,7 +216,6 @@ fun App() {
                         )
                     }
                     if (debugConsole == ConsoleType.POPUP) DebugPopup()
-                    if (internalShown) InternalPopup()
                     if (variableShown) VariableView(globalScope)
                 }
                 if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()

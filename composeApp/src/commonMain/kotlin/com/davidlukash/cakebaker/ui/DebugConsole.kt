@@ -66,10 +66,9 @@ import androidx.compose.ui.unit.sp
 import cakebaker.composeapp.generated.resources.Res
 import cakebaker.composeapp.generated.resources.add
 import cakebaker.composeapp.generated.resources.remove_drawable
-import com.davidlukash.cakebaker.App
+import com.davidlukash.cakebaker.data.DataActions
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.log.LogType
-import com.davidlukash.cakebaker.repository.MemorySavesRepository
 import com.davidlukash.cakebaker.debugTimestampFormat
 import com.davidlukash.cakebaker.horizontalDragCursor
 import com.davidlukash.cakebaker.json
@@ -77,7 +76,6 @@ import com.davidlukash.cakebaker.verticalDragCursor
 import com.davidlukash.cakebaker.engine.CakeBakerScope
 import com.davidlukash.cakebaker.logger
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
-import com.davidlukash.cakebaker.viewmodel.MainViewModel
 import com.davidlukash.cakebaker.withResult
 import com.davidlukash.jsonmath.buildExpression
 import com.davidlukash.jsonmath.data.Expression
@@ -132,40 +130,6 @@ fun DebugPopup() {
             canHide = true,
             isHidden = isHidden,
         ) { isHidden = it }
-    }
-}
-
-@Composable
-fun InternalPopup() {
-    val viewModel = LocalMainViewModel.current
-    val internalViewModel = remember {
-        MainViewModel(MemorySavesRepository(viewModel.savesRepository))
-    }
-    val trueDensity by viewModel.uiViewModel.trueDensity.collectAsState()
-    DraggableResizablePopup { (width, height) ->
-        CompositionLocalProvider(
-            LocalMainViewModel provides internalViewModel,
-            LocalDensity provides (trueDensity ?: LocalDensity.current)
-        ) {
-            Column(
-                modifier = Modifier.background(color = background, shape = RoundedCornerShape(8.dp))
-                    .padding(16.dp)
-                    .size(width, height),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text(
-                    "Internal View",
-                    fontFamily = FontFamily.Monospace,
-                    color = textColor,
-                    fontSize = 20.sp,
-                )
-                Box(
-                    modifier = Modifier.weight(1f).fillMaxSize().clip(RoundedCornerShape(8.dp))
-                ) {
-                    App()
-                }
-            }
-        }
     }
 }
 
@@ -242,7 +206,7 @@ fun DebugPanel(
     val uiViewModel = mainViewModel.uiViewModel
     val logs by uiViewModel.logs.collectAsState()
     val globalScope = mainViewModel.dataViewModel.globalScope
-    val localScope = remember { CakeBakerScope(ScopeType(EnumScopeType.LOCAL), mainViewModel.dataViewModel) }
+    val localScope = remember { CakeBakerScope(ScopeType(EnumScopeType.LOCAL), DataActions.fromDataViewModel(mainViewModel.dataViewModel)) }
     DebugPanelContent(
         logs,
         execute = {
