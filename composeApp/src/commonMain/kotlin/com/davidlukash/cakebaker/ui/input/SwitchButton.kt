@@ -42,7 +42,7 @@ fun SwitchButton(
     onClick: (Boolean) -> Unit
 ) {
     CompositionLocalProvider(
-        LocalDoDropShadow provides false
+        LocalDoDropShadow provides Theme.SwitchButtonTheme.doDropShadow
     ) {
         val textStyle = applyShadow(textStyle)
         Surface(

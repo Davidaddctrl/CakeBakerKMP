@@ -15,4 +15,5 @@ data class SwitchButtonTheme(
     val onUnselectedContainerColor: Color,
     val onSelectedTextColor: Color,
     val onUnselectedTextColor: Color,
+    val doDropShadow: Boolean,
 )

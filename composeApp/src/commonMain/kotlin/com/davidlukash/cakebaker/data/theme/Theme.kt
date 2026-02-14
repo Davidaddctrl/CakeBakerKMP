@@ -258,6 +258,7 @@ data class Theme(
                 onUnselectedContainerColor = Color(58, 158, 0).copy(alpha = 0.3f),
                 onSelectedTextColor = Color(255, 255, 255),
                 onUnselectedTextColor = Color(255, 255, 255).copy(alpha = 0.3f),
+                doDropShadow = false
             ),
             backgroundTheme = ContainerTheme(
                 borderColorBrush = SolidColor(Color.Transparent),
