@@ -51,17 +51,9 @@ class UIViewModel : ViewModel() {
     val importDialogOpen = _importDialogOpen.asStateFlow()
     val importSaveData = _importSaveData.asStateFlow()
 
-    private val _internalShown = MutableStateFlow(false)
-    val internalShown = _internalShown.asStateFlow()
-
     private val _variableShown = MutableStateFlow(false)
     val variableShown = _variableShown.asStateFlow()
 
-    fun setInternalShown(internalShown: Boolean) {
-        viewModelScope.launch {
-            _internalShown.emit(internalShown)
-        }
-    }
     fun setVariableShown(variableShown: Boolean) {
         viewModelScope.launch {
             _variableShown.emit(variableShown)
