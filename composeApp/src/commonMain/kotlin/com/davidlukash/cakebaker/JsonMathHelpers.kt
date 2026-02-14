@@ -1,10 +1,18 @@
 package com.davidlukash.cakebaker
 
+import com.davidlukash.cakebaker.data.ConsoleType
+import com.davidlukash.cakebaker.data.UIActions
 import com.davidlukash.jsonmath.buildExpressionList
 import com.davidlukash.jsonmath.buildFunction
 import com.davidlukash.jsonmath.createExpression
+import com.davidlukash.jsonmath.createNullObject
 import com.davidlukash.jsonmath.data.Expression
 import com.davidlukash.jsonmath.data.FunctionCall
+import com.davidlukash.jsonmath.data.ObjectType
+import com.davidlukash.jsonmath.engine.normal.ArgumentDescriptor
+import com.davidlukash.jsonmath.engine.normal.Engine
+import com.davidlukash.jsonmath.engine.normal.FunctionDescriptor
+import com.davidlukash.jsonmath.engine.normal.Scope
 
 object JsonMathHelpers {
     /**
@@ -375,5 +383,106 @@ object JsonMathHelpers {
         appendFunction {
             name = "cakeBaker.denseItem"
         }
+    }
+    
+    fun <T : Scope> Engine<T>.registerHelpers() {
+        registerFunction(
+            FunctionDescriptor(
+                name = "cakeBaker.linearGrowth",
+                description = "This is a helper function for linear growth",
+                returnType = ObjectType.NUMBER,
+                returnTypeNullable = false,
+                arguments = listOf()
+            ) { _, scopes, origins ->
+                evaluateExpressions(
+                    createLinearGrowth(),
+                    scopes,
+                    origins,
+                    "Expression"
+                ).last()
+            }
+        )
+        registerFunction(
+            FunctionDescriptor(
+                name = "cakeBaker.denseItem",
+                description = "This is a helper function for dense item",
+                returnType = ObjectType.DICTIONARY,
+                returnTypeNullable = false,
+                arguments = listOf()
+            ) { _, scopes, origins ->
+                evaluateExpressions(
+                    createDenseItem(),
+                    scopes,
+                    origins,
+                    "Expression"
+                ).last()
+            }
+        )
+        registerFunction(
+            FunctionDescriptor(
+                name = "cakeBaker.cheaperItem",
+                description = "This is a helper function for cheaper item",
+                returnType = ObjectType.NUMBER,
+                returnTypeNullable = false,
+                arguments = listOf()
+            ) { _, scopes, origins ->
+                evaluateExpressions(
+                    createCheaperItem(),
+                    scopes,
+                    origins,
+                    "Expression"
+                ).last()
+            }
+        )
+        registerFunction(
+            FunctionDescriptor(
+                name = "cakeBaker.operation",
+                description = "This is a helper function for operation",
+                returnType = null,
+                returnTypeNullable = true,
+                arguments = listOf(
+                    ArgumentDescriptor(name = "operation", type = ObjectType.STRING)
+                )
+            ) { args, scopes, origins ->
+                evaluateExpressions(
+                    createOperation(args[0].asString()!!),
+                    scopes,
+                    origins,
+                    "Expression"
+                ).last()
+            }
+        )
+    }
+
+    fun <T : Scope> Engine<T>.registerUIActions(uiActions: UIActions) {
+        registerFunction(
+            FunctionDescriptor(
+                name = "console.mode",
+                description = "Sets the mode of the debug console. Can be NONE, WINDOW, POPUP, or SIDEBAR",
+                returnType = null,
+                returnTypeNullable = true,
+                arguments = listOf(
+                    ArgumentDescriptor(name = "mode", type = ObjectType.STRING),
+                )
+            ) { args, _, _ ->
+                uiActions.setDebugConsole(ConsoleType.valueOf(args[0].asString()!!))
+                createNullObject()
+            }
+        )
+
+        registerFunction(
+            FunctionDescriptor(
+                name = "popup.addTextPopup",
+                description = "Adds a text popup to the screen",
+                returnType = null,
+                returnTypeNullable = true,
+                arguments = listOf(
+                    ArgumentDescriptor(name = "text", type = ObjectType.STRING),
+                )
+            ) { args, _, _ ->
+                uiActions.addTextPopup(args[0].asString()!!)
+                createNullObject()
+            }
+        )
     }
 }
