@@ -60,6 +60,11 @@ class DataViewModel(
 
     var random = Random(Random.nextLong())
 
+
+    var thisVersion: String = "Unknown"
+
+    var thisVersionCode: Int? = null
+
     init {
         engine.dataActions = dataActions
     }
@@ -107,6 +112,8 @@ class DataViewModel(
 
     val ovenProgress = _ovenProgress.asStateFlow()
     val ovenRunning = _ovenRunning.asStateFlow()
+
+    var isFirstBake = false
 
     private var tempCakeTier: Int = 1
 
@@ -254,7 +261,10 @@ class DataViewModel(
         nextTier?.let { nextTier ->
             val settings = orderCakeSettings.value[nextTier] ?: return@let
             val weight = mapDoubleBiased(customerSatisfaction.value.toDouble(), 1.0, 100.0, 0.5, 2.5, -1.5)
-            val waitTime = mapDouble(
+            val waitTime = if (isFirstBake) {
+                isFirstBake = false
+                0.0
+            } else mapDouble(
                 weightedRandomInt(weight, 10001, random).toDouble(),
                 0.0,
                 10000.0,
@@ -732,12 +742,15 @@ class DataViewModel(
             _orderCakeSettings.emit(save.orderCakeSettings)
             _orders.emit(save.orders)
             _orderCakeTimeCounters.emit(save.orderCakeTimeCounters)
+            isFirstBake = save.isFirstBake
+            thisVersion = save.version
+            thisVersionCode = save.versionCode
         }
     }
 
     fun createSave(): Save = Save(
-        version = VERSION,
-        versionCode = VERSIONCODE,
+        version = thisVersion,
+        versionCode = thisVersionCode,
         _items.value,
         _currentCakeTier.value,
         _upgrades.value,
@@ -749,7 +762,8 @@ class DataViewModel(
         _customerSatisfaction.value,
         _orderCakeSettings.value,
         _orders.value,
-        _orderCakeTimeCounters.value
+        _orderCakeTimeCounters.value,
+        isFirstBake
     )
 
     val uiStateFlow =

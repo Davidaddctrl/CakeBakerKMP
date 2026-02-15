@@ -36,6 +36,7 @@ data class Save(
     val orderCakeSettings: Map<Int, OrderCakeSettings> = mapOf(),
     val orders: List<Order> = listOf(),
     val orderCakeTimeCounters: Map<Int, Double> = mapOf(),
+    val isFirstBake: Boolean = false,
 ) {
     @OptIn(ForMigrationSupport::class)
     fun forcedMigration(): Save {
@@ -733,8 +734,9 @@ data class Save(
                     -1, -5
                 )
             ),
-            listOf(),
-            mapOf()
+            orders = listOf(),
+            orderCakeTimeCounters = mapOf(),
+            isFirstBake = true
         )
 
         val state = UIState(

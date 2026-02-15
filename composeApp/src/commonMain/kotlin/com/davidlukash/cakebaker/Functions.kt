@@ -173,6 +173,7 @@ fun secondsToString(totalSeconds: Double): String {
 val json = Json {
     prettyPrint = true
     allowStructuredMapKeys = true
+    ignoreUnknownKeys = true
 }
 
 expect fun Modifier.horizontalDragCursor(): Modifier
@@ -208,61 +209,6 @@ fun Modifier.horizontalRowScroll(
         else Modifier
     )
 }
-
-//@OptIn(ExperimentalUuidApi::class)
-//fun <T> withErrorHandling(appLogger: AppLogger, finallyBlock: () -> Unit = {}, block: () -> T): Result<T> {
-//    try {
-//        return Result.success(block())
-//    } catch (e: CancellationException) {
-//        throw e
-//    } catch (e: LanguageException) {
-//        if (appLogger.getDebugConsole() == ConsoleType.NONE)
-//            appLogger.setDebugConsole(ConsoleType.POPUP)
-//        appLogger.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
-//        return Result.failure(e)
-//    } catch (e: Exception) {
-//        if (appLogger.getDebugConsole() == ConsoleType.NONE)
-//            appLogger.setDebugConsole(ConsoleType.POPUP)
-//        appLogger.appendLog(Log(e.stackTraceToString(), LogType.ERROR))
-//        return Result.failure(e)
-//    } finally {
-//        finallyBlock()
-//    }
-//}
-//
-//fun <T> DataViewModel.withErrorHandling(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> =
-//    withErrorHandling(this.uiViewModel, finallyBlock, block)
-//
-//@OptIn(ExperimentalUuidApi::class)
-//suspend fun <T> withErrorHandlingAsync(
-//    appLogger: AppLogger,
-//    finallyBlock: suspend () -> Unit = {},
-//    block: suspend () -> T
-//): Result<T> {
-//    try {
-//        return Result.success(block())
-//    } catch (e: CancellationException) {
-//        throw e
-//    } catch (e: LanguageException) {
-//        if (appLogger.getDebugConsole() == ConsoleType.NONE)
-//            appLogger.setDebugConsole(ConsoleType.POPUP)
-//        appLogger.appendLog(Log(e.toString() + e.origins?.toTraceString(), LogType.ERROR))
-//        return Result.failure(e)
-//    } catch (e: Exception) {
-//        if (appLogger.getDebugConsole() == ConsoleType.NONE)
-//            appLogger.setDebugConsole(ConsoleType.POPUP)
-//        appLogger.appendLog(Log(e.stackTraceToString(), LogType.ERROR))
-//        return Result.failure(e)
-//    } finally {
-//        finallyBlock()
-//    }
-//}
-//
-//suspend fun <T> DataViewModel.withErrorHandlingAsync(
-//    finallyBlock: suspend () -> Unit = {},
-//    block: suspend () -> T
-//): Result<T> =
-//    withErrorHandlingAsync(this.uiViewModel, finallyBlock, block)
 
 fun <T> withResult(finallyBlock: () -> Unit = {}, block: () -> T): Result<T> {
     return try {
@@ -314,7 +260,7 @@ fun getTrueDensity(): Density {
 }
 
 @Composable
-fun ProvideLocalDensity(isScaled: Boolean = false, content: @Composable () -> Unit) {
+fun ProvideTrueDensity(isScaled: Boolean = false, content: @Composable () -> Unit) {
     CompositionLocalProvider(
         LocalDensity provides getTrueDensity(),
         LocalIsScaled provides isScaled,
