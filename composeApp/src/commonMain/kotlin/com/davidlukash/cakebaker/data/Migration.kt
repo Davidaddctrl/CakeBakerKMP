@@ -19,13 +19,13 @@ interface Migration {
                     versionCode = 1,
                     upgrades = Save.default.upgrades.map { baseUpgrade ->
                         val currentUpgrade = save.upgrades.find { it.name == baseUpgrade.name }
-                        if (currentUpgrade == null) baseUpgrade
-                        else currentUpgrade.copy(
+                        currentUpgrade?.copy(
                             pageName = baseUpgrade.pageName,
                             imageName = baseUpgrade.imageName,
                             onBuy = baseUpgrade.onBuy,
                             parameters = baseUpgrade.parameters,
                         )
+                            ?: baseUpgrade
                     }
                 )
             }

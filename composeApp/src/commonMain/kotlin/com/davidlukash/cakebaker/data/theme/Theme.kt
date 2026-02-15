@@ -24,6 +24,7 @@ import cakebaker.composeapp.generated.resources.face_neutral
 import cakebaker.composeapp.generated.resources.face_neutral_sad
 import cakebaker.composeapp.generated.resources.face_sad
 import cakebaker.composeapp.generated.resources.flour
+import cakebaker.composeapp.generated.resources.green_arrow_up
 import cakebaker.composeapp.generated.resources.honey_cake
 import cakebaker.composeapp.generated.resources.honey_pot
 import cakebaker.composeapp.generated.resources.ingredient_shop
@@ -182,6 +183,7 @@ data class Theme(
                 "Neutral Face" to ImageData(resource = Res.drawable.face_neutral),
                 "Neutral Sad Face" to ImageData(resource = Res.drawable.face_neutral_sad),
                 "Sad Face" to ImageData(resource = Res.drawable.face_sad),
+                "Green Arrow Up" to ImageData(resource = Res.drawable.green_arrow_up),
             ),
             font = Res.font.vcr_osd_mono,
             _scaledStyles = TextStyles(
