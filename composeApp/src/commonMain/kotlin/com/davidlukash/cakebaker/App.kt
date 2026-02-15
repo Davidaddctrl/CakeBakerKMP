@@ -133,7 +133,6 @@ fun App() {
                             pendingScreen = pendingScreen,
                             saveFiles = saveFiles,
                             popups = popups,
-                            trueDensity = trueDensity ?: LocalDensity.current,
                             removePopup = { uiViewModel.removePopup(it) },
                             updateCurrentScreen = { uiViewModel.updateCurrentScreen(it) },
                             navigateWithFade = { uiViewModel.navigateWithFade(it) },

@@ -1,12 +1,8 @@
 package com.davidlukash.cakebaker.ui.navigation
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyListState
@@ -14,9 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -45,7 +38,6 @@ const val transitionDuration = 500
 @Composable
 fun NormalScreenMessageManager(
     popups: List<Popup>,
-    trueDensity: Density,
     removePopup: (Uuid) -> Unit,
     lazyListState: LazyListState,
     content: @Composable () -> Unit
@@ -59,7 +51,6 @@ fun NormalScreenMessageManager(
         ) {
             MessageManager(
                 popups = popups,
-                trueDensity = trueDensity,
                 removePopup = removePopup,
                 lazyListState = lazyListState
             )
@@ -75,7 +66,6 @@ fun Navigation(
     pendingScreen: Screen?,
     saveFiles: List<SaveFile>,
     popups: List<Popup>,
-    trueDensity: Density,
     removePopup: (Uuid) -> Unit,
     updateCurrentScreen: (Screen) -> Unit,
     navigateWithFade: (Screen) -> Unit,
@@ -166,7 +156,6 @@ fun Navigation(
     }
     NormalScreenMessageManager(
         popups = popups,
-        trueDensity = trueDensity,
         removePopup = removePopup,
         lazyListState = lazyListState,
     ) {

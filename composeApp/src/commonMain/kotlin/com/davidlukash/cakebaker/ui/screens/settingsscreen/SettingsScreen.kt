@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.ProvideLocalDensity
+import com.davidlukash.cakebaker.ProvideTrueDensity
 import com.davidlukash.cakebaker.data.ConsoleType
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.container.Background
@@ -42,7 +42,7 @@ fun SettingsScreen(
         Box(
             modifier = Modifier.padding(innerPadding).padding(top = 32.dp)
         ) {
-            ProvideLocalDensity(false) {
+            ProvideTrueDensity(false) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)

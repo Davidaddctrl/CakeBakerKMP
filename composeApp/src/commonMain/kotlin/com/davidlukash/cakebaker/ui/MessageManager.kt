@@ -20,11 +20,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.davidlukash.cakebaker.ProvideTrueDensity
 import com.davidlukash.cakebaker.data.Popup
 import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.data.theme.Theme
@@ -38,7 +37,6 @@ import kotlin.uuid.Uuid
 @Composable
 fun MessageManager(
     popups: List<Popup>,
-    trueDensity: Density,
     removePopup: (Uuid) -> Unit,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
@@ -46,10 +44,7 @@ fun MessageManager(
         if (popups.isNotEmpty())
             lazyListState.scrollToItem(popups.size - 1)
     }
-    CompositionLocalProvider(
-        LocalDensity provides trueDensity,
-        LocalIsScaled provides false
-    ) {
+    ProvideTrueDensity {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Bottom),
             modifier = Modifier.width(320.dp).zIndex(2f).padding(16.dp),
