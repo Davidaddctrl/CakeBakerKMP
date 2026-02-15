@@ -21,6 +21,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -88,6 +89,7 @@ fun InfoPanel(
                                 5 -> Theme.getImage("Happy Face")
                                 else -> Theme.getImage("Happy Face")
                             },
+                            contentScale = ContentScale.FillBounds,
                             modifier = Modifier.size(36.dp),
                         )
                         Text(

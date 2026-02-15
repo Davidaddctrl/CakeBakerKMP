@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -94,6 +95,7 @@ fun MainContent(
             ) {
                 ResourceImage(
                     Theme.getImage("Oven"),
+                    contentScale = ContentScale.FillHeight,
                     modifier = Modifier.height(280.dp)
                 )
             }
@@ -106,6 +108,7 @@ fun MainContent(
             ) {
                 ResourceImage(
                     Theme.getImage("Ingredient Shop"),
+                    contentScale = ContentScale.FillHeight,
                     modifier = Modifier.height(280.dp)
                 )
             }
@@ -135,6 +138,7 @@ fun MainContent(
             ) {
                 ResourceImage(
                     Theme.getImage("Upgrade Shop"),
+                    contentScale = ContentScale.FillHeight,
                     modifier = Modifier.height(280.dp)
                 )
             }

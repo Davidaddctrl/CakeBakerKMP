@@ -10,6 +10,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,7 @@ fun ItemAmountDisplay(
             ) {
                 ResourceImage(
                     image,
+                    contentScale = ContentScale.FillHeight,
                     modifier = Modifier.height(if (item.name == "Money") 48.dp else 96.dp)
                 )
             }

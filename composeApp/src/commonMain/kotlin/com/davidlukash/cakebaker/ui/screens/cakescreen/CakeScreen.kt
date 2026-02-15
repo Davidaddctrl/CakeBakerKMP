@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.ResourceImage
@@ -40,6 +41,7 @@ fun CakeScreen(navigateWithFade: (Screen) -> Unit) {
         ) {
             ResourceImage(
                 data = Theme.getImage("Chocolate Cake"),
+                contentScale = ContentScale.FillHeight,
                 modifier = Modifier.fillMaxSize(0.75f),
             )
         }

@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -59,6 +60,7 @@ fun BottomBar(
         ) {
             ResourceImage(
                 Theme.getImage("Ingredient Shop"),
+                contentScale = ContentScale.FillHeight,
                 modifier = Modifier.height(280.dp)
             )
         }
@@ -100,6 +102,7 @@ fun BottomBar(
         ) {
             ResourceImage(
                 Theme.getImage("Oven"),
+                contentScale = ContentScale.FillHeight,
                 modifier = Modifier.height(280.dp)
             )
         }

@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.data.item.ItemType
@@ -41,6 +42,7 @@ fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item,
     ) {
         ResourceImage(
             Theme.getImage(item.name),
+            contentScale = ContentScale.FillHeight,
             modifier = Modifier.height(128.dp)
         )
         PrimaryContainer(

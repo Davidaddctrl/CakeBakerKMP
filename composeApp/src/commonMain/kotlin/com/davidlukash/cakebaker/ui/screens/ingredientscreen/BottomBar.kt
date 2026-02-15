@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.input.ImageButton
@@ -29,6 +30,7 @@ fun BottomBar(navigateWithFade: (Screen) -> Unit) {
         ) {
             ResourceImage(
                 Theme.getImage("Oven"),
+                contentScale = ContentScale.FillHeight,
                 modifier = Modifier.height(280.dp)
             )
         }
@@ -40,6 +42,7 @@ fun BottomBar(navigateWithFade: (Screen) -> Unit) {
         ) {
             ResourceImage(
                 Theme.getImage("Upgrade Shop"),
+                contentScale = ContentScale.FillHeight,
                 modifier = Modifier.height(280.dp)
             )
         }
