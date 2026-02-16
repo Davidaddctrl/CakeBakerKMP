@@ -15,6 +15,7 @@ import kotlin.math.max
 data class Upgrade(
     val pageName: String,
     val imageName: String,
+    val iconName: String? = null,
     val name: String,
     val price: Int,
     val cakeTier: Int,
@@ -27,6 +28,7 @@ data class Upgrade(
         mapOf(
             createObject("pageName") to createObject(pageName),
             createObject("imageName") to createObject(imageName),
+            createObject("iconName") to createObject(iconName),
             createObject("name") to createObject(name),
             createObject("price") to createObject(price.toBigDecimal()),
             createObject("cakeTier") to createObject(cakeTier.toBigDecimal()),
@@ -82,6 +84,11 @@ data class Upgrade(
                 imageName = dictionary[createObject("imageName")]?.asString() ?: throw createInvalidTypeException(
                     "imageName",
                     ObjectType.STRING
+                ),
+                iconName = dictionary[createObject("iconName")]?.asString() ?: throw createInvalidTypeException(
+                    "iconName",
+                    ObjectType.STRING,
+                    true
                 ),
                 name = dictionary[createObject("name")]?.asString() ?: throw createInvalidTypeException(
                     "name",

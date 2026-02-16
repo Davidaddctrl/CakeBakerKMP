@@ -452,6 +452,7 @@ data class Save(
                 Upgrade(
                     pageName = "Butter",
                     imageName = "Butter",
+                    iconName = "Green Arrow Up",
                     name = "Dense Butter",
                     price = 7,
                     cakeTier = 1,
@@ -498,6 +499,7 @@ data class Save(
                 Upgrade(
                     pageName = "Egg",
                     imageName = "Egg",
+                    iconName = "Green Arrow Up",
                     name = "Dense Egg",
                     price = 5,
                     cakeTier = 1,
@@ -544,6 +546,7 @@ data class Save(
                 Upgrade(
                     pageName = "Flour",
                     imageName = "Flour",
+                    iconName = "Green Arrow Up",
                     name = "Dense Flour",
                     price = 7,
                     cakeTier = 2,
@@ -590,6 +593,7 @@ data class Save(
                 Upgrade(
                     pageName = "Sugar",
                     imageName = "Sugar",
+                    iconName = "Green Arrow Up",
                     name = "Dense Sugar",
                     price = 7,
                     cakeTier = 1,
@@ -636,6 +640,7 @@ data class Save(
                 Upgrade(
                     pageName = "Vanilla Extract",
                     imageName = "Vanilla Extract",
+                    iconName = "Green Arrow Up",
                     name = "Dense Vanilla Extract",
                     price = 5,
                     cakeTier = 1,
@@ -682,6 +687,7 @@ data class Save(
                 Upgrade(
                     pageName = "Baking Powder",
                     imageName = "Baking Powder",
+                    iconName = "Green Arrow Up",
                     name = "Dense Baking Powder",
                     price = 7,
                     cakeTier = 1,

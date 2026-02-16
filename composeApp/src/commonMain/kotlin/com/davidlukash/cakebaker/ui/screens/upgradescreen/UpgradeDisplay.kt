@@ -48,11 +48,13 @@ fun UpgradeDisplay(uiState: UIState, buyUpgrade: (Upgrade) -> Unit, upgrade: Upg
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.height(192.dp)
             )
-//            ResourceImage(
-//                Theme.getImage("Green Arrow Up"),
-//                contentScale = ContentScale.FillWidth,
-//                modifier = Modifier.width(64.dp).align(Alignment.TopEnd).offset(x = 72.dp)
-//            )
+            upgrade.iconName?.let {
+                ResourceImage(
+                    Theme.getImage(upgrade.iconName),
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.width(64.dp).align(Alignment.TopEnd).offset(x = 72.dp)
+                )
+            }
         }
         Text(
             "Level ${toEngNotation(upgrade.level.toBigDecimal())}" +

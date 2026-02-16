@@ -25,6 +25,7 @@ class CakeBakerScope(
                         expectedType = when (keyString) {
                             "pageName" -> ObjectType.STRING
                             "imageName" -> ObjectType.STRING
+                            "iconName" -> ObjectType.STRING
                             "name" -> ObjectType.STRING
                             "price" -> ObjectType.NUMBER
                             "cakeTier" -> ObjectType.NUMBER
@@ -34,7 +35,7 @@ class CakeBakerScope(
                             "parameters" -> ObjectType.DICTIONARY
                             else -> null
                         },
-                        expectedTypeNullable = keyString == "maxLevel",
+                        expectedTypeNullable = keyString == "maxLevel" || keyString == "iconName",
                         set = {
                             dataActions.updateUpgrade(
                                 upgrade.mergeWith(
