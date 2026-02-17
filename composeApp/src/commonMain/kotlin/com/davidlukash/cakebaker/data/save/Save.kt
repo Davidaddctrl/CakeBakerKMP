@@ -357,7 +357,7 @@ data class Save(
                         "priceIncrement" to createObject(2.toBigDecimal()),
                         "initialPrice" to createObject(2.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
-                        "variable" to createObject("globals.items.Vanilla Cake.salePrice"),
+                        "variable" to createObject("globals.items.item.vanilla_cake.salePrice"),
                         "argument" to createObject(1.25.toBigDecimal()),
                     )
                 ),
@@ -379,7 +379,7 @@ data class Save(
                         "priceIncrement" to createObject(3.toBigDecimal()),
                         "initialPrice" to createObject(5.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
-                        "variable" to createObject("globals.items.Chocolate Cake.salePrice"),
+                        "variable" to createObject("globals.items.item.chocolate_cake.salePrice"),
                         "argument" to createObject(1.4.toBigDecimal()),
                     )
                 ),
@@ -400,7 +400,7 @@ data class Save(
                         "priceIncrement" to createObject(4.toBigDecimal()),
                         "initialPrice" to createObject(6.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
-                        "variable" to createObject("globals.items.Honey Cake.salePrice"),
+                        "variable" to createObject("globals.items.item.honey_cake.salePrice"),
                         "argument" to createObject(1.7.toBigDecimal()),
                     )
                 ),
@@ -479,7 +479,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(2.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Butter"),
+                        "itemName" to createObject("globals.items.item.butter"),
                         "priceDivisor" to createObject(1.75.toBigDecimal()),
                         "slopeDivisor" to createObject(1.25.toBigDecimal()),
                     )
@@ -487,7 +487,7 @@ data class Save(
                 Upgrade(
                     pageName = "Butter",
                     imageName = "Butter",
-                    iconName = "Green Arrow Up",
+                    iconName = "image.arrow.green_up",
                     name = "Dense Butter",
                     price = 7,
                     cakeTier = 1,
@@ -503,7 +503,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(7.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Butter"),
+                        "itemName" to createObject("globals.items.item.butter"),
                     )
                 ),
                 //endregion
@@ -526,7 +526,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(1.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Egg"),
+                        "itemName" to createObject("globals.items.item.egg"),
                         "priceDivisor" to createObject(2.toBigDecimal()),
                         "slopeDivisor" to createObject(1.75.toBigDecimal()),
                     )
@@ -534,7 +534,7 @@ data class Save(
                 Upgrade(
                     pageName = "Egg",
                     imageName = "Egg",
-                    iconName = "Green Arrow Up",
+                    iconName = "image.arrow.green_up",
                     name = "Dense Egg",
                     price = 5,
                     cakeTier = 1,
@@ -550,7 +550,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(5.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(3.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Egg"),
+                        "itemName" to createObject("globals.items.item.egg"),
                     )
                 ),
                 //endregion
@@ -573,7 +573,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(2.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Flour"),
+                        "itemName" to createObject("globals.items.item.flour"),
                         "priceDivisor" to createObject(2.toBigDecimal()),
                         "slopeDivisor" to createObject(1.5.toBigDecimal()),
                     )
@@ -581,7 +581,7 @@ data class Save(
                 Upgrade(
                     pageName = "Flour",
                     imageName = "Flour",
-                    iconName = "Green Arrow Up",
+                    iconName = "image.arrow.green_up",
                     name = "Dense Flour",
                     price = 7,
                     cakeTier = 2,
@@ -597,7 +597,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(7.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Flour"),
+                        "itemName" to createObject("globals.items.item.flour"),
                     )
                 ),
                 //endregion
@@ -620,7 +620,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(2.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Sugar"),
+                        "itemName" to createObject("globals.items.item.sugar"),
                         "priceDivisor" to createObject(1.75.toBigDecimal()),
                         "slopeDivisor" to createObject(1.25.toBigDecimal()),
                     )
@@ -628,7 +628,7 @@ data class Save(
                 Upgrade(
                     pageName = "Sugar",
                     imageName = "Sugar",
-                    iconName = "Green Arrow Up",
+                    iconName = "image.arrow.green_up",
                     name = "Dense Sugar",
                     price = 7,
                     cakeTier = 1,
@@ -644,7 +644,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(7.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Sugar"),
+                        "itemName" to createObject("globals.items.item.sugar"),
                     )
                 ),
                 //endregion
@@ -667,7 +667,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(1.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Vanilla Extract"),
+                        "itemName" to createObject("globals.items.item.vanilla_extract"),
                         "priceDivisor" to createObject(1.75.toBigDecimal()),
                         "slopeDivisor" to createObject(1.5.toBigDecimal()),
                     )
@@ -675,7 +675,7 @@ data class Save(
                 Upgrade(
                     pageName = "Vanilla Extract",
                     imageName = "Vanilla Extract",
-                    iconName = "Green Arrow Up",
+                    iconName = "image.arrow.green_up",
                     name = "Dense Vanilla Extract",
                     price = 5,
                     cakeTier = 1,
@@ -691,7 +691,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(5.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Vanilla Extract"),
+                        "itemName" to createObject("globals.items.item.vanilla_extract"),
                     )
                 ),
                 //endregion
@@ -714,7 +714,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(2.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(2.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Baking Powder"),
+                        "itemName" to createObject("globals.items.item.baking_powder"),
                         "priceDivisor" to createObject(1.75.toBigDecimal()),
                         "slopeDivisor" to createObject(1.25.toBigDecimal()),
                     )
@@ -722,7 +722,7 @@ data class Save(
                 Upgrade(
                     pageName = "Baking Powder",
                     imageName = "Baking Powder",
-                    iconName = "Green Arrow Up",
+                    iconName = "image.arrow.green_up",
                     name = "Dense Baking Powder",
                     price = 7,
                     cakeTier = 1,
@@ -738,7 +738,7 @@ data class Save(
                         "priceIncrement" to createObject(1.toBigDecimal()),
                         "initialPrice" to createObject(7.toBigDecimal()),
                         "levelsUntilPriceIncrease" to createObject(1.toBigDecimal()),
-                        "itemName" to createObject("globals.items.Baking Powder"),
+                        "itemName" to createObject("globals.items.item.baking_powder"),
                     )
                 ),
                 //endregion
