@@ -27,6 +27,7 @@ import com.davidlukash.cakebaker.ui.navigation.transitionDuration
 import com.davidlukash.cakebaker.ui.screens.savescreen.CreateSaveDialog
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
+import com.davidlukash.cakebaker.viewmodel.SaveFileViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
@@ -175,6 +176,14 @@ fun App() {
                             loadSave = { saveFile ->
                                 coroutineScope.launch {
                                     dataViewModel.loadSave(saveFile.save)
+                                    uiViewModel.navigateWithFade(KitchenScreen)
+                                    delay(transitionDuration.toLong())
+                                    uiViewModel.addTextPopup("Save Loaded")
+                                }
+                            },
+                            loadWithMigration = { saveFile ->
+                                coroutineScope.launch {
+                                    dataViewModel.loadSave(saveFileViewModel.migrateSave(saveFile.save))
                                     uiViewModel.navigateWithFade(KitchenScreen)
                                     delay(transitionDuration.toLong())
                                     uiViewModel.addTextPopup("Save Loaded")

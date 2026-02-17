@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.VERSIONCODE
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.ui.navigation.Screen
@@ -22,6 +23,7 @@ fun SaveScreen(
     exportSave: (SaveFile) -> Unit,
     deleteSave: (SaveFile) -> Unit,
     loadSave: (SaveFile) -> Unit,
+    loadWithMigration: (SaveFile) -> Unit,
     overwriteSave: (SaveFile) -> Unit,
     importSave: () -> Unit
 ) {
@@ -34,45 +36,61 @@ fun SaveScreen(
     when (dialogType) {
         SaveDialogType.NONE -> {}
         SaveDialogType.LOAD -> {
-            LoadSaveDialog(
-                saveName = dialogData?.name!!,
-                load = {
-                    dialogType = SaveDialogType.NONE
-                    loadSave(dialogData!!)
-                    dialogData = null
-                },
-                cancel = {
-                    dialogType = SaveDialogType.NONE
-                    dialogData = null
-                },
-            )
+            dialogData?.let { save ->
+                val canMigrate = if (save.save.versionCode != null) {
+                    save.save.versionCode < VERSIONCODE
+                } else false
+                LoadSaveDialog(
+                    saveName = save.name,
+                    load = {
+                        dialogType = SaveDialogType.NONE
+                        loadSave(save)
+                        dialogData = null
+                    },
+                    cancel = {
+                        dialogType = SaveDialogType.NONE
+                        dialogData = null
+                    },
+                    loadWithMigration = if (canMigrate) {
+                        {
+                            dialogType = SaveDialogType.NONE
+                            loadWithMigration(save)
+                            dialogData = null
+                        }
+                    } else null
+                )
+            }
         }
 
         SaveDialogType.DELETE -> {
-            DeleteSaveDialog(
-                saveName = dialogData?.name!!,
-                delete = {
+            dialogData?.let { save ->
+                DeleteSaveDialog(
+                    saveName = save.name,
+                    delete = {
+                        dialogType = SaveDialogType.NONE
+                        deleteSave(save)
+                        dialogData = null
+                    },
+                ) {
                     dialogType = SaveDialogType.NONE
-                    deleteSave(dialogData!!)
                     dialogData = null
-                },
-            ) {
-                dialogType = SaveDialogType.NONE
-                dialogData = null
+                }
             }
         }
 
         SaveDialogType.OVERWRITE -> {
-            OverwriteSaveDialog(
-                saveName = dialogData?.name!!,
-                overwrite = {
+            dialogData?.let { save ->
+                OverwriteSaveDialog(
+                    saveName = save.name,
+                    overwrite = {
+                        dialogType = SaveDialogType.NONE
+                        overwriteSave(save)
+                        dialogData = null
+                    },
+                ) {
                     dialogType = SaveDialogType.NONE
-                    overwriteSave(dialogData!!)
                     dialogData = null
-                },
-            ) {
-                dialogType = SaveDialogType.NONE
-                dialogData = null
+                }
             }
         }
 

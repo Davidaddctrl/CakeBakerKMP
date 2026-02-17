@@ -78,6 +78,7 @@ fun Navigation(
     exportSave: (SaveFile) -> Unit,
     deleteSave: (SaveFile) -> Unit,
     loadSave: (SaveFile) -> Unit,
+    loadWithMigration: (SaveFile) -> Unit,
     importSave: () -> Unit,
     overwriteSave: (SaveFile) -> Unit,
     buyUpgrade: (Upgrade) -> Unit,
@@ -146,6 +147,7 @@ fun Navigation(
                 exportSave,
                 deleteSave,
                 loadSave,
+                loadWithMigration,
                 overwriteSave,
                 importSave
             )

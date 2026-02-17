@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.data.Migration
 import com.davidlukash.cakebaker.data.UIActions
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
@@ -42,4 +43,16 @@ class SaveFileViewModel(
     suspend fun exportSave(file: SaveFile): Result<Boolean> = savesRepository.exportSave(file)
 
     suspend fun importSave(): Result<Save?> = savesRepository.importSave()
+
+    fun migrateSave(save: Save): Save {
+        var save = save.forcedMigration()
+        val versionCode = save.versionCode ?: return save
+        val migrations = Migration.migrations.filter { it.from >= versionCode }
+
+        migrations.forEach { migration ->
+            save = migration.migrate(save)
+        }
+
+        return save
+    }
 }
