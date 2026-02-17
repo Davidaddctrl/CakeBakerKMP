@@ -58,7 +58,9 @@ fun main() {
                 }
                 if (debugConsole == ConsoleType.WINDOW) {
                     Window(
-                        onCloseRequest = {},
+                        onCloseRequest = {
+                            uiViewModel.setDebugConsole(ConsoleType.NONE)
+                        },
                         title = "Cake Baker - Debug Console",
                     ) {
                         DebugPanel(
