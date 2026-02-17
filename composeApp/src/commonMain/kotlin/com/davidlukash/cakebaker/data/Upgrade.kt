@@ -1,7 +1,5 @@
 package com.davidlukash.cakebaker.data
 
-import androidx.collection.emptyObjectList
-import com.davidlukash.jsonmath.createNullObject
 import com.davidlukash.jsonmath.createObject
 import com.davidlukash.jsonmath.data.Expression
 import com.davidlukash.jsonmath.data.Object
@@ -9,7 +7,6 @@ import com.davidlukash.jsonmath.data.ObjectType
 import com.davidlukash.jsonmath.engine.normal.LanguageException
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import kotlinx.serialization.Serializable
-import kotlin.math.max
 
 @Serializable
 data class Upgrade(
