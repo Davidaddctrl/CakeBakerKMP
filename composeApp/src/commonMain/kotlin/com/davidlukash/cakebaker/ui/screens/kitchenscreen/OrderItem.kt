@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -35,8 +36,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
-    val cakes by derivedStateOf { uiState.getCakes() }
-    val cake by derivedStateOf { cakes[order.cakeTier] }
+    val cakes by remember { derivedStateOf { uiState.getCakes() } }
+    val cake by remember { derivedStateOf { cakes[order.cakeTier] } }
+    val progressAmount by remember { derivedStateOf { order.remainingTime / order.totalTime } }
     SecondaryContainer(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -108,7 +110,7 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
             ) {
                 ProgressBar(
                     modifier = Modifier.width(320.dp),
-                    amount = order.remainingTime / order.totalTime,
+                    amount = progressAmount,
                 )
                 Text(
                     Theme.getString("label.remaining").replace("{0}", secondsToString(order.remainingTime)),

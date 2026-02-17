@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +27,8 @@ fun BoxScope.MainContent(
     buyIngredient: (String) -> Unit,
     setQuantityChanges: (Map<String, BigDecimal>) -> Unit
 ) {
-    val ingredients by derivedStateOf { uiState.getIngredients() }
-    val money by derivedStateOf { uiState.getMoneyItem() }
+    val ingredients by remember { derivedStateOf { uiState.getIngredients() } }
+    val money by remember { derivedStateOf { uiState.getMoneyItem() } }
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     Column(

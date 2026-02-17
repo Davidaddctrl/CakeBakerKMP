@@ -395,7 +395,7 @@ fun VariableViewContent(
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     var searchText by remember { mutableStateOf("") }
-    val filteredDescriptorNames by derivedStateOf {
+    val filteredDescriptorNames by remember { derivedStateOf {
         if (searchText.isBlank()) return@derivedStateOf descriptorNames
         val tokens = searchText.split("/").filter { it.isNotBlank() }.map { it.trim(' ') }
         (descriptorNames.filter { descriptorName -> tokens.any { it == descriptorName } } +
@@ -404,7 +404,7 @@ fun VariableViewContent(
                 descriptorName.contains(it, ignoreCase = true)
             }
         }).distinct()
-    }
+    } }
     var key by remember { mutableStateOf(0) }
     LaunchedEffect(searchText) {
         coroutineScope.launch {

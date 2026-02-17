@@ -62,7 +62,7 @@ fun MainContent(
     innerPadding: PaddingValues
 ) {
     val canBake = uiState.canBake
-    val fasterOvenLevel by derivedStateOf { uiState.getFasterOven() }
+    val fasterOvenLevel by remember { derivedStateOf { uiState.getFasterOven() } }
     val density = LocalDensity.current
     Row(
         modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 16.dp),

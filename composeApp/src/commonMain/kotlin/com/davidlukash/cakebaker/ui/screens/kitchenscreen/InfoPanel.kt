@@ -45,12 +45,12 @@ fun InfoPanel(
     uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit,
     setAutoOrderCompleteEnabled: (Boolean) -> Unit, cutOutSize: Size
 ) {
-    val satisfactionLevel by derivedStateOf { uiState.getSatisfactionLevel() }
+    val satisfactionLevel by remember { derivedStateOf { uiState.getSatisfactionLevel() } }
     val satisfaction = uiState.customerSatisfaction
     val currentCakeTier = uiState.currentCakeTier
-    val cakesSalePrices by derivedStateOf { uiState.getCakesSalesPrices() }
-    val autoOven by derivedStateOf { uiState.getAutoOven() }
-    val autoOrderComplete by derivedStateOf { uiState.getAutoOrderComplete() }
+    val cakesSalePrices by remember { derivedStateOf { uiState.getCakesSalesPrices() } }
+    val autoOven by remember { derivedStateOf { uiState.getAutoOven() } }
+    val autoOrderComplete by remember { derivedStateOf { uiState.getAutoOrderComplete() } }
     PrimaryContainer(
         modifier = Modifier.fillMaxWidth(),
         shape = ShapeWithCutOut(cutOutSize, 16.dp),

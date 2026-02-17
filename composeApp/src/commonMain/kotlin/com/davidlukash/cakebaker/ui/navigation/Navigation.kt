@@ -92,9 +92,9 @@ fun Navigation(
     val navController = rememberNavController()
     val lazyListState = rememberLazyListState()
     val backStack by navController.currentBackStackEntryAsState()
-    val currentScreen by derivedStateOf {
+    val currentScreen by remember { derivedStateOf {
         allScreensMap[backStack?.destination?.route]
-    }
+    } }
     var currentUpgradePage by remember { mutableStateOf("") }
 
     LaunchedEffect(currentScreen) {
