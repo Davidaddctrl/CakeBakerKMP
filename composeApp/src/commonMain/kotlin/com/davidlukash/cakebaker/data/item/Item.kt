@@ -38,6 +38,7 @@ data class Item(
         mapOf(
             createObject("name") to createObject(name),
             createObject("id") to createObject(id),
+            createObject("image") to createObject(image),
             createObject("type") to createObject(type.toString()),
             createObject("amount") to createObject(amount),
             createObject("price") to createObject(price),

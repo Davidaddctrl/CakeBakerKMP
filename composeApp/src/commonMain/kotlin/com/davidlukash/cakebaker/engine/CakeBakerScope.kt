@@ -104,6 +104,8 @@ class CakeBakerScope(
                     name = "globals.items.${item.id}.$keyString",
                     expectedType = when (keyString) {
                         "name" -> ObjectType.STRING
+                        "id" -> ObjectType.STRING
+                        "image" -> ObjectType.STRING
                         "type" -> ObjectType.STRING
                         "amount" -> ObjectType.NUMBER
                         "price" -> ObjectType.NUMBER
