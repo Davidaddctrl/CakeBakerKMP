@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.theme.LocalIsScaled
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.engine.CakeBakerEngine
 import com.davidlukash.cakebaker.logger.AppLogger
 import com.davidlukash.cakebaker.logger.CompoundAppLogger
@@ -160,11 +161,12 @@ fun <T> weightedRandomItem(weight: Double, items: List<T>, random: Random): T? {
     return items.getOrNull(weightedRandomInt(weight, items.size, random))
 }
 
+@Composable
 fun secondsToString(totalSeconds: Double): String {
     val minutes = floor(totalSeconds / 60.0).toInt()
     val seconds = floor(totalSeconds % 60.0).toInt()
     return if (minutes == 0) {
-        "$seconds seconds"
+        "$seconds ${Theme.getString("label.seconds")}"
     } else {
         "${minutes}m ${seconds}s"
     }

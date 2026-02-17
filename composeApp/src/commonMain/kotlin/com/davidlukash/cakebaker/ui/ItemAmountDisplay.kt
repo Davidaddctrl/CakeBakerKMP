@@ -29,7 +29,7 @@ fun ItemAmountDisplay(
     quantityChange: BigDecimal = BigDecimal.ZERO,
     modifier: Modifier = Modifier
 ) {
-    val image = Theme.getImage(item.name)
+    val image = Theme.getImage(item.image)
     val localContentColor = if (LocalInspectionMode.current) Color.White else LocalContentColor.current
     CompositionLocalProvider(
         LocalContentColor provides localContentColor
@@ -40,10 +40,11 @@ fun ItemAmountDisplay(
             modifier = modifier
         ) {
             Column(modifier = Modifier.height(Theme.Styles.verySmallBodyStyle.fontSize.value.dp * 2)) {
+                val name = Theme.getString(item.name)
                 Text(
-                    item.name.replace(" ", "\n"),
+                    name.replace(" ", "\n"),
                     textAlign = TextAlign.Center,
-                    style = if (item.name.contains(" ")) Theme.Styles.verySmallBodyStyle else Theme.Styles.smallBodyStyle,
+                    style = if (name.contains(" ")) Theme.Styles.verySmallBodyStyle else Theme.Styles.smallBodyStyle,
                 )
             }
             Column(
@@ -53,11 +54,11 @@ fun ItemAmountDisplay(
                 ResourceImage(
                     image,
                     contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.height(if (item.name == "Money") 48.dp else 96.dp)
+                    modifier = Modifier.height(if (item.id == "item.money") 48.dp else 96.dp)
                 )
             }
             Text(
-                "Amount",
+                Theme.getString("label.amount"),
                 textAlign = TextAlign.Center,
                 style = Theme.Styles.smallBodyStyle,
             )
@@ -88,7 +89,8 @@ const val backgroundColor = 0xFF0078FFL
 @Composable
 fun ItemAmountDisplayPreview() {
     val item = Item(
-        name = "Butter",
+        name = "item.butter.name",
+        image = "image.butter",
         type = ItemType.CURRENCY,
         amount = 10000.toBigDecimal(),
     )
@@ -99,7 +101,8 @@ fun ItemAmountDisplayPreview() {
 @Composable
 fun ItemAmountDisplayPositiveQuantityPreview() {
     val item = Item(
-        name = "Butter",
+        name = "item.butter.name",
+        image = "image.butter",
         type = ItemType.CURRENCY,
         amount = 10000.toBigDecimal(),
     )
@@ -110,7 +113,8 @@ fun ItemAmountDisplayPositiveQuantityPreview() {
 @Composable
 fun ItemAmountDisplayNegativeQuantityPreview() {
     val item = Item(
-        name = "Butter",
+        name = "item.butter.name",
+        image = "image.butter",
         type = ItemType.CURRENCY,
         amount = 10000.toBigDecimal(),
     )

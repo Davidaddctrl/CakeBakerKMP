@@ -57,7 +57,7 @@ fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
                 ) {
                     Icon(
                         painter = painterResource(Res.drawable.chevron_backward),
-                        contentDescription = "Previous Tier Cake",
+                        contentDescription = Theme.getString("content_description.previous_tier"),
                         modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
                             enabled = currentCakeTier != 1
                         ) {
@@ -66,7 +66,9 @@ fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
                         tint = if (currentCakeTier != 1) LocalContentColor.current else Color.Transparent
                     )
                     Text(
-                        cakes[currentCakeTier]?.name ?: "Cake Tier Invalid",
+                        cakes[currentCakeTier]?.name?.let {
+                            Theme.getString(it)
+                        } ?: Theme.getString("label.invalid_cake_tier"),
                         style = Theme.Styles.mediumBodyStyle,
                         textAlign = TextAlign.Center,
                         textDecoration = TextDecoration.Underline,
@@ -74,7 +76,7 @@ fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
                     )
                     Icon(
                         painter = painterResource(Res.drawable.chevron_forward),
-                        contentDescription = "Next Tier Cake",
+                        contentDescription = Theme.getString("content_description.next_tier"),
                         modifier = Modifier.size(64.dp).clip(CircleShape).clickable(
                             enabled = currentCakeTier != cakes.size
                         ) {
@@ -84,7 +86,7 @@ fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
                     )
                 }
                 ingredients.forEach { item ->
-                    key(item.name) {
+                    key(item.id) {
                         val cakePrice = item.cakePrices?.get(currentCakeTier) ?: BigDecimal.ZERO
                         if (cakePrice != BigDecimal.ZERO) {
                             Row(
@@ -100,21 +102,21 @@ fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
                                         style = Theme.Styles.smallBodyStyle,
                                     )
                                     Text(
-                                        "${toEngNotation(cakePrice)} ${item.name}",
+                                        "${toEngNotation(cakePrice)} ${Theme.getString(item.name)}",
                                         style = Theme.Styles.smallBodyStyle,
                                     )
                                 }
                                 if (item.amount >= cakePrice)
                                     Icon(
                                         painter = painterResource(Res.drawable.check),
-                                        contentDescription = "Enough",
+                                        contentDescription = Theme.getString("content_description.enough"),
                                         tint = Theme.SuccessColor,
                                         modifier = Modifier.size(36.dp)
                                     )
                                 else
                                     Icon(
                                         painter = painterResource(Res.drawable.close),
-                                        contentDescription = "Not Enough",
+                                        contentDescription = Theme.getString("content_description.not_enough"),
                                         tint = Theme.DangerColor,
                                         modifier = Modifier.size(36.dp)
                                     )

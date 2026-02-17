@@ -48,15 +48,15 @@ fun SettingsScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        "Debug Console Open",
+                        Theme.getString("settings.debug_console_open.title"),
                         style = Theme.Styles.largeBodyStyle,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.fillMaxWidth()
                     )
                     SwitchButton(
                         value = debugConsole != ConsoleType.NONE,
-                        onText = "Open",
-                        offText = "Closed",
+                        onText = Theme.getString("settings.debug_console_open.open"),
+                        offText = Theme.getString("settings.debug_console_open.closed"),
                         modifier = Modifier.width(320.dp),
                         height = 36.dp,
                         borderWidth = 6.dp,

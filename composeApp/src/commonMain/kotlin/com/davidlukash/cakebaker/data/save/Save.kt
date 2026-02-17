@@ -98,6 +98,17 @@ data class Save(
                 )
             }
         }
+        save = save.copy(
+            items = save.items.map {
+                it.copy(
+                    id = if (it.id == "item.missing") {
+                        if (it.name == "Money") "item.money" else it.name
+                    } else it.id,
+                    image = if (it.image == "image.missing") it.name else it.image,
+                    name = if (it.name == "Money") "item.money.name" else it.name,
+                )
+            }
+        )
         return save
     }
 
@@ -115,7 +126,9 @@ data class Save(
             versionCode = VERSIONCODE,
             items = listOf(
                 Item(
-                    name = "Butter",
+                    name = "item.butter.name",
+                    id = "item.butter",
+                    image = "image.butter",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(0.2f),
                     price = BigDecimal.fromFloat(250f),
@@ -135,7 +148,9 @@ data class Save(
                     ),
                 ),
                 Item(
-                    name = "Egg",
+                    name = "item.egg.name",
+                    id = "item.egg",
+                    image = "image.egg",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(4f),
                     price = BigDecimal.fromFloat(30f),
@@ -155,7 +170,9 @@ data class Save(
                     ),
                 ),
                 Item(
-                    name = "Flour",
+                    name = "item.flour.name",
+                    id = "item.flour",
+                    image = "image.flour",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(0.1f),
                     price = BigDecimal.fromFloat(400f),
@@ -175,7 +192,9 @@ data class Save(
                     ),
                 ),
                 Item(
-                    name = "Sugar",
+                    name = "item.sugar.name",
+                    id = "item.sugar",
+                    image = "image.sugar",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(0.2f),
                     price = BigDecimal.fromFloat(200f),
@@ -195,7 +214,9 @@ data class Save(
                     ),
                 ),
                 Item(
-                    name = "Vanilla Extract",
+                    name = "item.vanilla_extract.name",
+                    id = "item.vanilla_extract",
+                    image = "image.vanilla_extract",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(0.5f),
                     price = BigDecimal.fromFloat(150f),
@@ -215,7 +236,9 @@ data class Save(
                     ),
                 ),
                 Item(
-                    name = "Baking Powder",
+                    name = "item.baking_powder.name",
+                    id = "item.baking_powder",
+                    image = "image.baking_powder",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(0.2f),
                     price = BigDecimal.fromFloat(175f),
@@ -235,7 +258,9 @@ data class Save(
                     ),
                 ),
                 Item(
-                    name = "Cocoa Powder",
+                    name = "item.cocoa_powder.name",
+                    id = "item.cocoa_powder",
+                    image = "image.cocoa_powder",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(0f),
                     price = BigDecimal.fromFloat(8000f),
@@ -255,7 +280,9 @@ data class Save(
                     ),
                 ),
                 Item(
-                    name = "Honey Pot",
+                    name = "item.honey_pot.name",
+                    id = "item.honey_pot",
+                    image = "image.honey_pot",
                     type = ItemType.INGREDIENT,
                     amount = BigDecimal.fromFloat(0f),
                     price = BigDecimal.fromFloat(15000f),
@@ -275,28 +302,36 @@ data class Save(
                     ),
                 ),
                 Item(
-                    name = "Vanilla Cake",
+                    name = "item.vanilla_cake.name",
+                    id = "item.vanilla_cake",
+                    image = "image.vanilla_cake",
                     type = ItemType.CAKE,
                     amount = BigDecimal.ZERO,
                     cakeTier = 1,
                     salePrice = BigDecimal.fromFloat(1350f)
                 ),
                 Item(
-                    name = "Chocolate Cake",
+                    name = "item.chocolate_cake.name",
+                    id = "item.chocolate_cake",
+                    image = "image.chocolate_cake",
                     type = ItemType.CAKE,
                     amount = BigDecimal.ZERO,
                     cakeTier = 2,
                     salePrice = BigDecimal.fromFloat(4000f)
                 ),
                 Item(
-                    name = "Honey Cake",
+                    name = "item.honey_cake.name",
+                    id = "item.honey_cake",
+                    image = "image.honey_cake",
                     type = ItemType.CAKE,
                     amount = BigDecimal.ZERO,
                     cakeTier = 3,
                     salePrice = BigDecimal.fromFloat(6000f)
                 ),
                 Item(
-                    name = "Money",
+                    name = "item.money.name",
+                    id = "item.money",
+                    image = "image.money",
                     type = ItemType.CURRENCY,
                     amount = BigDecimal.fromFloat(0f),
                 )

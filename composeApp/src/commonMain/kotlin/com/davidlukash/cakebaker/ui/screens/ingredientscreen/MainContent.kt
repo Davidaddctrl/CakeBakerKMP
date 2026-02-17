@@ -39,12 +39,12 @@ fun BoxScope.MainContent(
             horizontalArrangement = Arrangement.Center,
         ) {
             ingredients.forEach { ingredient ->
-                key(ingredient.name) {
+                key(ingredient.id) {
                     BuyableItemDisplay(money, buyIngredient, ingredient) { isHovered ->
                         if (isHovered) setQuantityChanges(
                             mapOf(
-                                ingredient.name to (ingredient.increment ?: BigDecimal.ZERO),
-                                money.name to (ingredient.price?.negate() ?: BigDecimal.ZERO),
+                                ingredient.id to (ingredient.increment ?: BigDecimal.ZERO),
+                                money.id to (ingredient.price?.negate() ?: BigDecimal.ZERO),
                             )
                         ) else setQuantityChanges(mapOf())
                     }

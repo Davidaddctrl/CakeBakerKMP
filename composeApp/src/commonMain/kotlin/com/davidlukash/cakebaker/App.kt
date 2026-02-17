@@ -127,7 +127,7 @@ fun App() {
                 Box(
                     modifier = Modifier.weight(1f).fillMaxSize(),
                 ) {
-                    ScaleViewport(1920.dp, 1200.dp) {
+                    ScaleViewport(1920.dp, 1280.dp) {
                         Navigation(
                             uiState = uiState,
                             pendingScreen = pendingScreen,

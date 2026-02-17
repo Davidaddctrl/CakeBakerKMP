@@ -10,7 +10,7 @@ import com.davidlukash.cakebaker.data.theme.Theme
 @Composable
 fun TopBar() {
     Text(
-        "Cake Baker",
+        Theme.getString("title.cake_baker"),
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),
         style = Theme.Styles.titleStyle,

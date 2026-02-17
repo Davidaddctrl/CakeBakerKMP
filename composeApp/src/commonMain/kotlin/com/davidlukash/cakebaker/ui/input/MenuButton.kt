@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cakebaker.composeapp.generated.resources.Res
 import cakebaker.composeapp.generated.resources.menu
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.navigation.MenuScreen
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
@@ -31,7 +32,7 @@ fun MenuButton(content: @Composable () -> Unit) {
         ) {
             Icon(
                 painter = painterResource(Res.drawable.menu),
-                contentDescription = "Menu",
+                contentDescription = Theme.getString("content_description.menu"),
                 modifier = Modifier.size(48.dp),
             )
         }

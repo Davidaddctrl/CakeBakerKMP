@@ -50,7 +50,7 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Order for",
+                    Theme.getString("label.order_for"),
                     style = Theme.Styles.smallBodyStyle,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
@@ -63,7 +63,7 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
                         isScaled = true,
                         content = {
                             Text(
-                                "Complete",
+                                Theme.getString("action.complete"),
                                 style = Theme.Styles.mediumBodyStyle,
                                 modifier = Modifier.padding(horizontal = 4.dp)
                             )
@@ -73,7 +73,7 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
             }
             cake?.let { cake ->
                 Text(
-                    "${toEngNotation(order.amount.toBigDecimal())} ${cake.name}",
+                    "${toEngNotation(order.amount.toBigDecimal())} ${Theme.getString(cake.name)}",
                     style = Theme.Styles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -81,14 +81,14 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
             }
             if (cake == null)
                 Text(
-                    "Invalid Cake Tier",
+                    Theme.getString("label.invalid_cake_tier"),
                     style = Theme.Styles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 )
 
             Text(
-                "Buying for",
+                Theme.getString("label.buying_for"),
                 style = Theme.Styles.smallBodyStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
@@ -99,7 +99,7 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
             Text(
-                "Remaining Time",
+                Theme.getString("label.remaining_time"),
                 style = Theme.Styles.smallBodyStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
@@ -111,12 +111,12 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
                     amount = order.remainingTime / order.totalTime,
                 )
                 Text(
-                    "${secondsToString(order.remainingTime)} remaining",
+                    Theme.getString("label.remaining").replace("{0}", secondsToString(order.remainingTime)),
                     style = Theme.Styles.verySmallBodyStyle,
                 )
             }
             Text(
-                "Order ${order.id}",
+                "${Theme.getString("label.order")} ${order.id}",
                 style = Theme.Styles.verySmallBodyStyle,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
@@ -134,7 +134,7 @@ fun OrderItemPreview() {
     )
     val infiniteTransition = rememberInfiniteTransition()
     val remainingTime by infiniteTransition.animateFloat(
-        30f, 0f, animationSpec = infiniteRepeatable(
+        300f, 0f, animationSpec = infiniteRepeatable(
             animation = tween(30000, easing = LinearEasing),
         )
     )
@@ -143,7 +143,7 @@ fun OrderItemPreview() {
         amount = 1,
         salePrice = 2500.toBigDecimal(),
         remainingTime = remainingTime.toDouble(),
-        totalTime = 30.0,
+        totalTime = 300.0,
         id = 988756,
     )
     OrderItem(uiState = uiState, completeOrder = {}, order = order)

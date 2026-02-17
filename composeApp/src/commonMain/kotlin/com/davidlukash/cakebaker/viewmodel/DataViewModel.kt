@@ -3,8 +3,6 @@ package com.davidlukash.cakebaker.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidlukash.cakebaker.ForMigrationSupport
-import com.davidlukash.cakebaker.VERSION
-import com.davidlukash.cakebaker.VERSIONCODE
 import com.davidlukash.cakebaker.data.DataActions
 import com.davidlukash.cakebaker.data.UIActions
 import com.davidlukash.cakebaker.data.item.Item
@@ -220,7 +218,7 @@ class DataViewModel(
 
     val money: Item
         get() {
-            return _items.value.find { it.name == "Money" } ?: Item("Money", ItemType.CURRENCY, BigDecimal.ZERO)
+            return _items.value.find { it.id == "item.money" } ?: Item("item.money.name", "item.money", "image.money", ItemType.CURRENCY, BigDecimal.ZERO)
         }
 
     private val _currentCakeTier = MutableStateFlow(1)
@@ -411,10 +409,10 @@ class DataViewModel(
     fun canBake(tier: Int): Boolean {
         ingredients.forEach { ingredient ->
             val cakePrices =
-                ingredient.cakePrices.takeOrNullWithWarn("Ingredient ${ingredient.name} does not have cake prices, skipping iteration")
+                ingredient.cakePrices.takeOrNullWithWarn("Ingredient ${ingredient.id} does not have cake prices, skipping iteration")
                     ?: return@forEach
             val cakePrice =
-                cakePrices[tier].takeOrNullWithWarn("Ingredient ${ingredient.name} cake price for cake tier $tier does not exist, skipping iteration")
+                cakePrices[tier].takeOrNullWithWarn("Ingredient ${ingredient.id} cake price for cake tier $tier does not exist, skipping iteration")
                     ?: return@forEach
 
             if (ingredient.amount < cakePrice) return false
@@ -475,14 +473,14 @@ class DataViewModel(
             var hasMatch = false
             _items.emit(
                 _items.value.map {
-                    if (it.name == item.name) {
+                    if (it.id == item.id) {
                         hasMatch = true
                         item
                     } else it
                 }
             )
             if (!hasMatch) {
-                logger.logWarn("Item with name ${item.name} does not exist")
+                logger.logWarn("Item with id ${item.id} does not exist")
             }
         }
     }
@@ -561,7 +559,7 @@ class DataViewModel(
 
     fun calculateCakePrice(cake: Item, ingredients: List<Item>): BigDecimal {
         var cakePrice = cake.salePrice.takeOrDefaultWithWarn(
-            "Cake ${cake.name} does not have salePrice, defaulting to zero",
+            "Cake ${cake.id} does not have salePrice, defaulting to zero",
             BigDecimal.ZERO
         )
         ingredients.forEach { ingredient ->
@@ -576,12 +574,12 @@ class DataViewModel(
             ingredients.forEach { ingredient ->
                 val cakePrices = ingredient.cakePrices
                 if (cakePrices == null) {
-                    logger.logWarn("Ingredient ${ingredient.name} does not have cake prices, skipping iteration")
+                    logger.logWarn("Ingredient ${ingredient.id} does not have cake prices, skipping iteration")
                     return@forEach
                 }
                 val cakePrice = cakePrices[tempCakeTier]
                 if (cakePrice == null) {
-                    logger.logWarn("Ingredient ${ingredient.name} cake price for cake tier $tempCakeTier does not exist, skipping iteration")
+                    logger.logWarn("Ingredient ${ingredient.id} cake price for cake tier $tempCakeTier does not exist, skipping iteration")
                     return@forEach
                 }
                 updateItem(
@@ -594,52 +592,52 @@ class DataViewModel(
         }
     }
 
-    fun buyIngredient(name: String) {
-        val ingredient = ingredients.find { it.name == name }
-            .takeOrNullWithWarn("Ingredient $name does not exist, cancelling ingredient buy")
+    fun buyIngredient(id: String) {
+        val ingredient = ingredients.find { it.id == id }
+            .takeOrNullWithWarn("Ingredient $id does not exist, cancelling ingredient buy")
         if (ingredient == null) {
-            uiActions.addTextPopup("Ingredient $name")
+            uiActions.addTextPopup("Ingredient $id does not exist")
             return
         }
         var tempIngredient = ingredient
         if (money.amount < (ingredient.price.takeOrDefaultWithWarn(
-                "Ingredient $name does not have price, defaulting to zero",
+                "Ingredient $id does not have price, defaulting to zero",
                 BigDecimal.ZERO
             ))
         ) {
-            uiActions.addTextPopup("You do not have enough money to buy $name")
+            uiActions.addTextPopup("You do not have enough money to buy $id")
             return
         }
         updateItem(
             money.copy(
                 amount = money.amount - ingredient.price.takeOrDefaultWithWarn(
-                    "Ingredient $name does not have price, defaulting to zero",
+                    "Ingredient $id does not have price, defaulting to zero",
                     BigDecimal.ZERO
                 )
             )
         )
         val oldPrice = tempIngredient.price.takeOrDefaultWithWarn(
-            "Ingredient $name does not have price, defaulting to zero",
+            "Ingredient $id does not have price, defaulting to zero",
             BigDecimal.ZERO
         )
         val increment = tempIngredient.increment.takeOrDefaultWithWarn(
-            "Ingredient $name does not have increment, defaulting to zero",
+            "Ingredient $id does not have increment, defaulting to zero",
             BigDecimal.ZERO
         )
         val total = (tempIngredient.total.takeOrDefaultWithWarn(
-            "Ingredient $name does not have total, defaulting to zero",
+            "Ingredient $id does not have total, defaulting to zero",
             BigDecimal.ZERO
         )) + increment
         val increaseSlope = (tempIngredient.increaseSlope.takeOrDefaultWithWarn(
-            "Ingredient $name does not have increaseSlope, defaulting to zero",
+            "Ingredient $id does not have increaseSlope, defaulting to zero",
             BigDecimal.ZERO
         )) + BigDecimal.ONE
         val fastPriceGrowth = tempIngredient.fastPriceGrowth.takeOrDefaultWithWarn(
-            "Ingredient $name does not have fastPriceGrowth, defaulting to false",
+            "Ingredient $id does not have fastPriceGrowth, defaulting to false",
             false
         )
         val cakePriceAccountability = tempIngredient.cakePriceAccountability.takeOrDefaultWithWarn(
-            "Ingredient $name does not have cakePriceAccountability, defaulting to emptyMap()",
+            "Ingredient $id does not have cakePriceAccountability, defaulting to emptyMap()",
             emptyMap()
         ).toMutableMap()
         tempIngredient = tempIngredient.copy(
@@ -651,15 +649,15 @@ class DataViewModel(
         )
 
         val price = tempIngredient.price.takeOrDefaultWithWarn(
-            "Ingredient $name does not have price, defaulting to zero",
+            "Ingredient $id does not have price, defaulting to zero",
             BigDecimal.ZERO
         )
         val maxTier = cakePriceAccountability.keys.maxOrNull().takeOrDefaultWithWarn(
-            "Ingredient $name does not have cakePriceAccountability, defaulting to emptyMap()",
+            "Ingredient $id does not have cakePriceAccountability, defaulting to emptyMap()",
             1
         )
         val minTier = cakePriceAccountability.keys.minOrNull().takeOrDefaultWithWarn(
-            "Ingredient $name does not have cakePriceAccountability, defaulting to emptyMap()",
+            "Ingredient $id does not have cakePriceAccountability, defaulting to emptyMap()",
             1
         )
         val tiers = cakePriceAccountability.keys.size
@@ -674,7 +672,7 @@ class DataViewModel(
         }
         factors.forEach { (tier, factor) ->
             val oldAccountability = cakePriceAccountability[tier].takeOrDefaultWithWarn(
-                "Ingredient $name does not have cakePriceAccountability for tier $tier, defaulting to zero",
+                "Ingredient $id does not have cakePriceAccountability for tier $tier, defaulting to zero",
                 BigDecimal.ZERO
             )
             val difference = ((price - oldPrice) / 2)

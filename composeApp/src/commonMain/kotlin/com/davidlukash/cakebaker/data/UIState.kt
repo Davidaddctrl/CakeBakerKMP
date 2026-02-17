@@ -24,8 +24,10 @@ data class UIState(
         )
     }
 
-    fun getMoneyItem(): Item = items.find { it.name == "Money" } ?: Item(
-        "Money",
+    fun getMoneyItem(): Item = items.find { it.id == "item.money" } ?: Item(
+        "item.money.name",
+        "item.money",
+        "image.money",
         ItemType.CURRENCY,
         BigDecimal.ZERO
     )

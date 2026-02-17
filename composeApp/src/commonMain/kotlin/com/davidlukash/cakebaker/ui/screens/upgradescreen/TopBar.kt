@@ -25,7 +25,7 @@ fun TopBar(uiState: UIState) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                "Upgrade Shop",
+                Theme.getString("title.upgrade_shop"),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
                 style = Theme.Styles.titleStyle,

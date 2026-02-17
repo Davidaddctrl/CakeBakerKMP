@@ -40,7 +40,7 @@ fun CakeScreen(navigateWithFade: (Screen) -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             ResourceImage(
-                data = Theme.getImage("Chocolate Cake"),
+                data = Theme.getImage("image.chocolate_cake"),
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.fillMaxSize(0.75f),
             )

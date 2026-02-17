@@ -39,7 +39,7 @@ fun SaveItem(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
                 Text(
-                    "Version: ${saveFile.save.version}",
+                    Theme.getString("label.version").replace("{0}", saveFile.save.version),
                     style = Theme.Styles.smallBodyStyle,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
@@ -53,7 +53,7 @@ fun SaveItem(
                         },
                         modifier = Modifier.weight(1f).defaultMinSize(minWidth = Theme.Styles.buttonTextStyle.fontSize.value.dp * 6),
                         content = {
-                            Text("Export", maxLines = 1, softWrap = false)
+                            Text(Theme.getString("action.export"), maxLines = 1, softWrap = false)
                         }
                     )
                     if (!saveFile.isDefault)
@@ -63,24 +63,16 @@ fun SaveItem(
                             },
                             modifier = Modifier.weight(1f),
                             content = {
-                                Text("Delete", maxLines = 1, softWrap = false)
+                                Text(Theme.getString("action.delete"), maxLines = 1, softWrap = false)
                             },
                         )
-                    if (saveFile.save.versionCode != null && saveFile.save.versionCode < VERSIONCODE)
-                        LargeThemedButton(
-                            onClick = {
-                            },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text("Migrate", maxLines = 1, softWrap = false)
-                        }
                     LargeThemedButton(
                         onClick = {
                             loadSave(saveFile)
                         },
                         modifier = Modifier.weight(1f),
                         content = {
-                            Text("Load", maxLines = 1, softWrap = false)
+                            Text(Theme.getString("action.load"), maxLines = 1, softWrap = false)
                         }
                     )
                     if (!saveFile.isDefault)
@@ -90,7 +82,7 @@ fun SaveItem(
                             },
                             modifier = Modifier.weight(1f),
                             content = {
-                                Text("Overwrite", maxLines = 1, softWrap = false)
+                                Text(Theme.getString("action.overwrite"), maxLines = 1, softWrap = false)
                             },
                         )
                 }

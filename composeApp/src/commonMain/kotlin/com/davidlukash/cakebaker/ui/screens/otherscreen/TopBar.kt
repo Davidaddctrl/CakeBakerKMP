@@ -13,7 +13,7 @@ import com.davidlukash.cakebaker.data.theme.Theme
 @Composable
 fun TopBar() {
     Text(
-        "Licenses",
+        Theme.getString("title.licenses"),
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
         style = Theme.Styles.titleStyle,

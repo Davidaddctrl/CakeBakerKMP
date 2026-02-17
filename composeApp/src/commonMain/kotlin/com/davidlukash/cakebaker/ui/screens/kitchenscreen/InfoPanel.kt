@@ -61,7 +61,7 @@ fun InfoPanel(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Information",
+                    Theme.getString("title.information"),
                     style = Theme.Styles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
@@ -72,7 +72,7 @@ fun InfoPanel(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        "Customer\nSatisfaction",
+                        Theme.getString("label.customer_satisfaction"),
                         style = Theme.Styles.smallBodyStyle,
                         textAlign = TextAlign.Center,
                     )
@@ -82,12 +82,12 @@ fun InfoPanel(
                     ) {
                         ResourceImage(
                             data = when (satisfactionLevel) {
-                                1 -> Theme.getImage("Sad Face")
-                                2 -> Theme.getImage("Neutral Sad Face")
-                                3 -> Theme.getImage("Neutral Face")
-                                4 -> Theme.getImage("Medium Face")
-                                5 -> Theme.getImage("Happy Face")
-                                else -> Theme.getImage("Happy Face")
+                                1 -> Theme.getImage("image.face.sad")
+                                2 -> Theme.getImage("image.face.neutral_sad")
+                                3 -> Theme.getImage("image.face.neutral")
+                                4 -> Theme.getImage("image.face.medium")
+                                5 -> Theme.getImage("image.face.happy")
+                                else -> Theme.getImage("image.face.missing")
                             },
                             contentScale = ContentScale.FillBounds,
                             modifier = Modifier.size(36.dp),
@@ -99,7 +99,7 @@ fun InfoPanel(
                     }
                 }
                 Text(
-                    "Cake Sale Price",
+                    Theme.getString("label.cake_sale_price"),
                     style = Theme.Styles.smallBodyStyle,
                     textAlign = TextAlign.Center,
                     textDecoration = TextDecoration.Underline,
@@ -114,7 +114,7 @@ fun InfoPanel(
 
                 autoOven?.let { autoOven ->
                     Text(
-                        "Auto Oven",
+                        Theme.getString("label.auto_oven"),
                         style = Theme.Styles.smallBodyStyle,
                         textAlign = TextAlign.Center,
                         textDecoration = TextDecoration.Underline,
@@ -122,8 +122,8 @@ fun InfoPanel(
                     )
                     SwitchButton(
                         value = autoOven.second,
-                        onText = "On",
-                        offText = "Off",
+                        onText = Theme.getString("action.on"),
+                        offText = Theme.getString("action.off"),
                         enabled = autoOven.first,
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -133,7 +133,7 @@ fun InfoPanel(
 
                 autoOrderComplete?.let { autoOrderComplete ->
                     Text(
-                        "Auto Order Complete",
+                        Theme.getString("label.auto_order_complete"),
                         style = Theme.Styles.smallBodyStyle,
                         textAlign = TextAlign.Center,
                         textDecoration = TextDecoration.Underline,
@@ -141,8 +141,8 @@ fun InfoPanel(
                     )
                     SwitchButton(
                         value = autoOrderComplete.second,
-                        onText = "On",
-                        offText = "Off",
+                        onText = Theme.getString("action.on"),
+                        offText = Theme.getString("action.off"),
                         enabled = autoOrderComplete.first,
                         modifier = Modifier.fillMaxWidth()
                     ) {

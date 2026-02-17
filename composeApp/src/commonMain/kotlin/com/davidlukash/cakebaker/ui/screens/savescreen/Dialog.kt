@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.width
@@ -16,12 +17,14 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.GameDialog
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
 import com.davidlukash.cakebaker.ui.input.SmallThemedTextField
+import com.davidlukash.cakebaker.ui.input.SwitchButton
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -31,14 +34,50 @@ fun LoadSaveDialog(
     cancel: () -> Unit,
     loadWithMigration: (() -> Unit)? = null
 ) {
+    var shouldMigrate by remember { mutableStateOf(true) }
     GameDialog(
-        modifier = Modifier.width(512.dp), title = { Text("Load Save?") },
+        modifier = Modifier.width(512.dp), title = { Text(Theme.getString("dialog.load_save.title")) },
         buttons = {
-            SmallThemedButton(onClick = { load() }, modifier = Modifier.weight(1f), content = { Text("Load") })
-            SmallThemedButton(onClick = { cancel() }, modifier = Modifier.weight(1f), content = { Text("Cancel") })
+            SmallThemedButton(
+                onClick = {
+                    if (loadWithMigration == null || !shouldMigrate) {
+                        load()
+                        return@SmallThemedButton
+                    }
+                    loadWithMigration.invoke()
+                },
+                modifier = Modifier.weight(1f),
+                content = { Text(Theme.getString("action.load")) })
+            SmallThemedButton(
+                onClick = { cancel() },
+                modifier = Modifier.weight(1f),
+                content = { Text(Theme.getString("action.cancel")) })
         },
-        content = { Text("Loading save \"$saveName\" will overwrite your current progress." +
-                if (loadWithMigration != null) " There are recommended migrations you may choose to apply." else "") },
+        content = {
+            Text(
+                Theme.getString("dialog.load_save.load_text").replace("{0}", saveName) +
+                        if (loadWithMigration != null) " " + Theme.getString("dialog.load_save.migration_text") else ""
+            )
+            if (loadWithMigration != null) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    Theme.getString("dialog.load_save.migration_title").replace("{0}", saveName),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start,
+                    textDecoration = TextDecoration.Underline,
+                )
+                Spacer(Modifier.height(8.dp))
+                SwitchButton(
+                    value = shouldMigrate,
+                    onText = Theme.getString("action.yes"),
+                    offText = Theme.getString("action.no"),
+                    modifier = Modifier.fillMaxWidth(),
+                    height = 36.dp,
+                    borderWidth = 6.dp,
+                    textStyle = Theme.Styles.mediumBodyStyle
+                ) { shouldMigrate = it }
+            }
+        },
     )
 }
 
@@ -57,12 +96,18 @@ fun LoadSaveDialogWithMigrationPreview() {
 @Composable
 fun DeleteSaveDialog(saveName: String, delete: () -> Unit, cancel: () -> Unit) {
     GameDialog(
-        modifier = Modifier.width(512.dp), title = { Text("Delete Save?") },
+        modifier = Modifier.width(512.dp), title = { Text(Theme.getString("dialog.delete_save.title")) },
         buttons = {
-            SmallThemedButton(onClick = { delete() }, modifier = Modifier.weight(1f), content = { Text("Delete") })
-            SmallThemedButton(onClick = { cancel() }, modifier = Modifier.weight(1f), content = { Text("Cancel") })
+            SmallThemedButton(
+                onClick = { delete() },
+                modifier = Modifier.weight(1f),
+                content = { Text(Theme.getString("action.delete")) })
+            SmallThemedButton(
+                onClick = { cancel() },
+                modifier = Modifier.weight(1f),
+                content = { Text(Theme.getString("action.cancel")) })
         },
-        content = { Text("Are you sure you want to delete save \"$saveName\" permanently?") },
+        content = { Text(Theme.getString("dialog.delete_save.delete_text").replace("{0}", saveName)) },
     )
 }
 
@@ -75,15 +120,18 @@ fun DeleteSaveDialogPreview() {
 @Composable
 fun OverwriteSaveDialog(saveName: String, overwrite: () -> Unit, cancel: () -> Unit) {
     GameDialog(
-        modifier = Modifier.width(512.dp), title = { Text("Overwrite Save?") },
+        modifier = Modifier.width(512.dp), title = { Text(Theme.getString("dialog.overwrite_save.title")) },
         buttons = {
             SmallThemedButton(
                 onClick = { overwrite() },
                 modifier = Modifier.weight(1f),
-                content = { Text("Overwrite") })
-            SmallThemedButton(onClick = { cancel() }, modifier = Modifier.weight(1f), content = { Text("Cancel") })
+                content = { Text(Theme.getString("action.overwrite")) })
+            SmallThemedButton(
+                onClick = { cancel() },
+                modifier = Modifier.weight(1f),
+                content = { Text(Theme.getString("action.cancel")) })
         },
-        content = { Text("Are you sure you want to overwrite save \"$saveName\"? You cannot revert this change") },
+        content = { Text(Theme.getString("dialog.overwrite_save.overwrite_text").replace("{0}", saveName)) },
     )
 }
 
@@ -118,59 +166,57 @@ fun CreateSaveDialog(
     GameDialog(
         modifier = Modifier.width(512.dp),
         offset = IntOffset(0, position.toInt()),
-        title = { Text(if (isImport) "Import Save" else "Create Save") },
+        title = { Text(if (isImport) Theme.getString("dialog.create_save.import_title") else Theme.getString("dialog.create_save.create_title")) },
         buttons = {
             SmallThemedButton(
                 onClick = { create(saveName) },
                 modifier = Modifier.weight(1f),
                 enabled = canCreate,
-            ) { Text(if (isImport) "Import" else "Create") }
+            ) { Text(if (isImport) Theme.getString("action.import") else Theme.getString("action.create")) }
             SmallThemedButton(onClick = { cancel() }, modifier = Modifier.weight(1f), content = { Text("Cancel") })
-        },
-        {
+        }
+    ) {
+        Text(
+            Theme.getString("dialog.create_save.save_name_field.title"),
+            textAlign = TextAlign.Start,
+            modifier = Modifier.align(
+                Alignment.Start
+            )
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        SmallThemedTextField(
+            modifier = Modifier.width(512.dp).onGloballyPositioned {
+                if (imeBottom == 0)
+                    bottomToBottomHeight = (it.positionInWindow().y - it.size.height).toInt()
+            },
+            placeholder = Theme.getString("dialog.create_save.save_name_field.title"),
+            value = saveName,
+        ) { saveName = it }
+        if (saveName.isNotEmpty() && !nameValid) {
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
-                "Save Name",
+                Theme.getString("dialog.create_save.error.invalid_name"),
+                style = Theme.Styles.smallBodyStyle,
                 textAlign = TextAlign.Start,
+                color = Theme.DangerColor,
                 modifier = Modifier.align(
                     Alignment.Start
                 )
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            SmallThemedTextField(
-                modifier = Modifier.width(512.dp).onGloballyPositioned {
-                    if (imeBottom == 0)
-                        bottomToBottomHeight = (it.positionInWindow().y - it.size.height).toInt()
-                },
-                placeholder = "Save Name",
-                value = saveName,
-            ) { saveName = it }
-            if (saveName.isNotEmpty() && !nameValid) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    "Save Name must" + (if (isBlank) " not be blank" else "") + (if (containsNonAlphanumeric && isBlank) " and must" else "") +
-                            (if (containsNonAlphanumeric) " only contain lowercase alphanumeric characters" else ""),
-                    style = Theme.Styles.smallBodyStyle,
-                    textAlign = TextAlign.Start,
-                    color = Theme.DangerColor,
-                    modifier = Modifier.align(
-                        Alignment.Start
-                    )
-                )
-            }
-            if (nameValid && alreadyExists) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    "A save with this name already exists",
-                    style = Theme.Styles.smallBodyStyle,
-                    textAlign = TextAlign.Start,
-                    color = Theme.DangerColor,
-                    modifier = Modifier.align(
-                        Alignment.Start
-                    )
-                )
-            }
         }
-    )
+        if (nameValid && alreadyExists) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                Theme.getString("dialog.create_save.error.already_exists"),
+                style = Theme.Styles.smallBodyStyle,
+                textAlign = TextAlign.Start,
+                color = Theme.DangerColor,
+                modifier = Modifier.align(
+                    Alignment.Start
+                )
+            )
+        }
+    }
 }
 
 @Preview

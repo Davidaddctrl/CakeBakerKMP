@@ -41,7 +41,7 @@ fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item,
         modifier = Modifier.padding(16.dp)
     ) {
         ResourceImage(
-            Theme.getImage(item.name),
+            Theme.getImage(item.image),
             contentScale = ContentScale.FillHeight,
             modifier = Modifier.height(128.dp)
         )
@@ -50,7 +50,7 @@ fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item,
             content = {
                 Column {
                     Text(
-                        item.name,
+                        Theme.getString(item.name),
                         style = Theme.Styles.verySmallBodyStyle,
                     )
                     Text(
@@ -62,14 +62,14 @@ fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item,
         )
         LargeThemedButton(
             onClick = {
-                buyIngredient(item.name)
+                buyIngredient(item.id)
             },
             modifier = Modifier.width(180.dp),
             enabled = money.amount >= (item.price ?: BigDecimal.ZERO),
             interactionSource = interactionSource,
             {
                 Text(
-                    "Buy",
+                    Theme.getString("action.buy"),
                 )
             },
         )
@@ -80,12 +80,16 @@ fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item,
 @Composable
 fun BuyableItemDisplayPreview() {
     val money = Item(
-        name = "Money",
+        name = "item.money.name",
+        id = "item.money",
+        image = "image.money",
         type = ItemType.CURRENCY,
         amount = 2000.toBigDecimal(),
     )
     val item = Item(
-        name = "Butter",
+        name = "item.butter.name",
+        id = "item.butter",
+        image = "image.butter",
         type = ItemType.INGREDIENT,
         amount = BigDecimal.ZERO,
         price = 200.toBigDecimal()

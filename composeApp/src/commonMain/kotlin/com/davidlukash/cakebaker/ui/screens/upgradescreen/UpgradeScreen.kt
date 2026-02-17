@@ -42,7 +42,7 @@ fun UpgradeScreen(uiState: UIState, navigateWithFade: (Screen) -> Unit, buyUpgra
 fun UpgradeScreenPreview() {
     val uiState = Save.state.copy(
         items = Save.state.items.map {
-            if (it.name == "Vanilla Cake") it.copy(amount = 5.toBigDecimal()) else it
+            if (it.id == "item.vanilla_cake") it.copy(amount = 5.toBigDecimal()) else it
         },
     )
     var currentPage by remember { mutableStateOf("") }

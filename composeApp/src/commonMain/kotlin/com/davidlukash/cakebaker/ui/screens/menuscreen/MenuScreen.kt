@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
@@ -41,7 +42,7 @@ fun MenuScreen(navigateWithFade: (Screen) -> Unit) {
                 },
                 modifier = Modifier.width(480.dp),
                 content = {
-                    Text("Play")
+                    Text(Theme.getString("action.play"))
                 }
             )
             LargeThemedButton(
@@ -50,7 +51,7 @@ fun MenuScreen(navigateWithFade: (Screen) -> Unit) {
                 },
                 modifier = Modifier.width(480.dp),
                 content = {
-                    Text("Saves")
+                    Text(Theme.getString("action.saves"))
                 }
             )
             LargeThemedButton(
@@ -59,7 +60,7 @@ fun MenuScreen(navigateWithFade: (Screen) -> Unit) {
                 },
                 modifier = Modifier.width(480.dp),
                 content = {
-                    Text("Licenses")
+                    Text(Theme.getString("action.licenses"))
                 }
             )
             LargeThemedButton(
@@ -68,7 +69,7 @@ fun MenuScreen(navigateWithFade: (Screen) -> Unit) {
                 },
                 modifier = Modifier.width(480.dp),
                 content = {
-                    Text("Settings")
+                    Text(Theme.getString("action.settings"))
                 }
             )
         }

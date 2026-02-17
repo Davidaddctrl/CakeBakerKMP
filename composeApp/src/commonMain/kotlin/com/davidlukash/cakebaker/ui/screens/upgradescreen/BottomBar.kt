@@ -59,7 +59,7 @@ fun BottomBar(
             }
         ) {
             ResourceImage(
-                Theme.getImage("Ingredient Shop"),
+                Theme.getImage("image.ingredient_shop"),
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.height(280.dp)
             )
@@ -101,7 +101,7 @@ fun BottomBar(
             }
         ) {
             ResourceImage(
-                Theme.getImage("Oven"),
+                Theme.getImage("image.oven"),
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.height(280.dp)
             )

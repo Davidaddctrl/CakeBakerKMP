@@ -38,10 +38,10 @@ fun ItemTopRow(uiState: UIState, quantityChanges: Map<String, BigDecimal> = mapO
             coroutineScope = coroutineScope
         ) {
             items.forEach { item ->
-                key(item.name) {
+                key(item.id) {
                     ItemAmountDisplay(
                         item = item,
-                        quantityChange = quantityChanges[item.name] ?: BigDecimal.ZERO,
+                        quantityChange = quantityChanges[item.id] ?: BigDecimal.ZERO,
                         modifier = Modifier.widthIn(min = 128.dp)
                     )
                 }
@@ -59,11 +59,11 @@ fun ItemTopRow(uiState: UIState, quantityChanges: Map<String, BigDecimal> = mapO
 fun ItemTopRowPreview() {
     val uiState = Save.state.copy(
         items = Save.state.items.map {
-            if (it.name == "Money") it.copy(amount = 500.toBigDecimal()) else it
+            if (it.id == "item.money") it.copy(amount = 500.toBigDecimal()) else it
         }
     )
     ItemTopRow(
         uiState = uiState,
-        quantityChanges = mapOf("Butter" to 0.2.toBigDecimal(), "Money" to (-250).toBigDecimal())
+        quantityChanges = mapOf("item.butter" to 0.2.toBigDecimal(), "item.money" to (-250).toBigDecimal())
     )
 }

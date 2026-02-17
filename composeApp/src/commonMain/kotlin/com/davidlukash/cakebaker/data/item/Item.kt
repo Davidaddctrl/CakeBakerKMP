@@ -14,6 +14,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Item(
     val name: String,
+    val id: String = "item.missing",
+    val image: String = "image.missing",
     val type: ItemType,
     @Serializable(with = BigDecimalSerializer::class)
     val amount: BigDecimal,
@@ -35,6 +37,7 @@ data class Item(
     fun toObject(): Object = createObject(
         mapOf(
             createObject("name") to createObject(name),
+            createObject("id") to createObject(id),
             createObject("type") to createObject(type.toString()),
             createObject("amount") to createObject(amount),
             createObject("price") to createObject(price),
@@ -77,6 +80,14 @@ data class Item(
             return Item(
                 name = dictionary[createObject("name")]?.asString() ?: throw createInvalidTypeException(
                     "name",
+                    ObjectType.STRING
+                ),
+                id = dictionary[createObject("id")]?.asString() ?: throw createInvalidTypeException(
+                    "id",
+                    ObjectType.STRING
+                ),
+                image = dictionary[createObject("image")]?.asString() ?: throw createInvalidTypeException(
+                    "image",
                     ObjectType.STRING
                 ),
                 type = ItemType.valueOf(

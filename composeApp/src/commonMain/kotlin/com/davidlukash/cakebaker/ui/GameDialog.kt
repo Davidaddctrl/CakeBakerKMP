@@ -123,6 +123,7 @@ fun BoxScope.GameDialogContent(
                     }
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         buttons()
                     }

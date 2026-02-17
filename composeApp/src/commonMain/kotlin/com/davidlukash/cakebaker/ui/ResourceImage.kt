@@ -51,5 +51,5 @@ fun ResourceImage(data: ImageData, contentScale: ContentScale, contentDescriptio
 @Preview
 @Composable
 fun ResourceImagePreview() {
-    ResourceImage(Theme.getImage("Oven"), contentScale = ContentScale.FillHeight,)
+    ResourceImage(Theme.getImage("image.oven"), contentScale = ContentScale.FillHeight,)
 }

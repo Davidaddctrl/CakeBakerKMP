@@ -73,7 +73,8 @@ fun applyShadow(style: TextStyle): TextStyle {
 }
 
 data class Theme(
-    val nameToImageMap: Map<String, ImageData>,
+    val idToImageMap: Map<String, ImageData>,
+    val idToStringMap: Map<String, String>,
     val font: FontResource,
     val _scaledStyles: TextStyles,
     val _unscaledStyles: TextStyles,
@@ -89,17 +90,13 @@ data class Theme(
     val tabSelectedColor: Color,
 ) {
 
-    fun nameToImage(name: String): ImageData {
-        return nameToImageMap[name] ?: ImageData()
+    fun idToImage(name: String): ImageData {
+        return idToImageMap[name] ?: ImageData()
     }
 
-//    val scaledStyles: TextStyles
-//        @Composable
-//        get() = convertStyles(_scaledStyles, font)
-//
-//    val unscaledStyles: TextStyles
-//        @Composable
-//        get() = convertStyles(_unscaledStyles, font)
+    fun idToString(name: String): String {
+        return idToStringMap[name] ?: name
+    }
 
     val styles: TextStyles
         @Composable
@@ -158,11 +155,16 @@ data class Theme(
 
         @Composable
         fun getImage(name: String): ImageData {
-            return LocalTheme.current.nameToImage(name)
+            return LocalTheme.current.idToImage(name)
+        }
+
+        @Composable
+        fun getString(name: String): String {
+            return LocalTheme.current.idToString(name)
         }
 
         val default = Theme(
-            nameToImageMap = mapOf(
+            idToImageMap = mapOf(
                 "Butter" to ImageData(resource = Res.drawable.butter),
                 "Egg" to ImageData(resource = Res.drawable.egg),
                 "Flour" to ImageData(resource = Res.drawable.flour),
@@ -183,7 +185,122 @@ data class Theme(
                 "Neutral Face" to ImageData(resource = Res.drawable.face_neutral),
                 "Neutral Sad Face" to ImageData(resource = Res.drawable.face_neutral_sad),
                 "Sad Face" to ImageData(resource = Res.drawable.face_sad),
-                "Green Arrow Up" to ImageData(resource = Res.drawable.green_arrow_up),
+
+                "image.butter" to ImageData(resource = Res.drawable.butter),
+                "image.egg" to ImageData(resource = Res.drawable.egg),
+                "image.flour" to ImageData(resource = Res.drawable.flour),
+                "image.sugar" to ImageData(resource = Res.drawable.sugar),
+                "image.vanilla_extract" to ImageData(resource = Res.drawable.vanilla_extract),
+                "image.baking_powder" to ImageData(resource = Res.drawable.baking_powder),
+                "image.cocoa_powder" to ImageData(resource = Res.drawable.cocoa_powder),
+                "image.honey_pot" to ImageData(resource = Res.drawable.honey_pot),
+                "image.vanilla_cake" to ImageData(resource = Res.drawable.vanilla_cake),
+                "image.chocolate_cake" to ImageData(resource = Res.drawable.choc_cake),
+                "image.honey_cake" to ImageData(resource = Res.drawable.honey_cake),
+                "image.money" to ImageData(resource = Res.drawable.money),
+                "image.ingredient_shop" to ImageData(resource = Res.drawable.ingredient_shop),
+                "image.upgrade_shop" to ImageData(resource = Res.drawable.upgrade_shop),
+                "image.oven" to ImageData(resource = Res.drawable.oven),
+                "image.face.happy" to ImageData(resource = Res.drawable.face_happy),
+                "image.face.medium" to ImageData(resource = Res.drawable.face_medium),
+                "image.face.neutral" to ImageData(resource = Res.drawable.face_neutral),
+                "image.face.neutral_sad" to ImageData(resource = Res.drawable.face_neutral_sad),
+                "image.face.sad" to ImageData(resource = Res.drawable.face_sad),
+                "image.arrow.green_up" to ImageData(resource = Res.drawable.green_arrow_up),
+                "image.missing" to ImageData()
+            ),
+            idToStringMap = mapOf(
+                "item.butter.name" to "Butter",
+                "item.egg.name" to "Egg",
+                "item.flour.name" to "Flour",
+                "item.sugar.name" to "Sugar",
+                "item.vanilla_extract.name" to "Vanilla Extract",
+                "item.baking_powder.name" to "Baking Powder",
+                "item.cocoa_powder.name" to "Cocoa Powder",
+                "item.honey_pot.name" to "Honey Pot",
+                "item.vanilla_cake.name" to "Vanilla Cake",
+                "item.chocolate_cake.name" to "Chocolate Cake",
+                "item.honey_cake.name" to "Honey Cake",
+                "item.money.name" to "Money",
+
+                "action.buy" to "Buy",
+                "action.delete" to "Delete",
+                "action.dismiss" to "Dismiss",
+                "action.overwrite" to "Overwrite",
+                "action.delete" to "Delete",
+                "action.import" to "Import",
+                "action.export" to "Export",
+                "action.yes" to "Yes",
+                "action.no" to "No",
+                "action.create" to "Create",
+                "action.complete" to "Complete",
+                "action.load" to "Load",
+                "action.cancel" to "Cancel",
+                "action.on" to "On",
+                "action.off" to "Off",
+                "action.play" to "Play",
+                "action.saves" to "Saves",
+                "action.licenses" to "Licenses",
+                "action.settings" to "Settings",
+                "action.back" to "Back",
+
+                "content_description.menu" to "Menu",
+                "content_description.previous_tier" to "Previous Tier",
+                "content_description.next_tier" to "Next Tier",
+                "content_description.enough" to "Enough",
+                "content_description.not_enough" to "Not Enough",
+
+                "label.amount" to "Amount",
+                "label.customer_satisfaction" to "Customer\nSatisfaction",
+                "label.cake_sale_price" to "Cake Sale Price",
+                "label.auto_oven" to "Auto Oven",
+                "label.auto_order_complete" to "Auto Order Complete",
+                "label.seconds_remaining" to "{0} seconds remaining",
+                "label.remaining" to "{0} remaining",
+                "label.order_for" to "Order For",
+                "label.buying_for" to "Buying For",
+                "label.remaining_time" to "Remaining Time",
+                "label.order" to "Order",
+                "label.invalid_cake_tier" to "Invalid Cake Tier",
+                "label.seconds" to "seconds",
+                "label.version" to "Version: {0}",
+                "label.level" to "Level",
+                "label.max_level" to "Max Level Reached",
+
+                "title.cake_baker" to "Cake Baker",
+                "title.kitchen" to "Kitchen",
+                "title.ingredient_shop" to "Ingredient Shop",
+                "title.information" to "Information",
+                "title.orders" to "Orders",
+                "title.license_for" to "License For {0}",
+                "title.licenses" to "Licenses",
+                "title.saves" to "Saves",
+                "title.settings" to "Settings",
+                "title.upgrade_shop" to "Upgrade Shop",
+
+                "settings.debug_console_open.title" to "Debug Console Open",
+                "settings.debug_console_open.open" to "Open",
+                "settings.debug_console_open.closed" to "Closed",
+
+                "orders_panel.until_next_order" to "{0} until next order",
+                "orders_panel.help_text" to "Bake a cake to get orders",
+
+                "dialog.load_save.title" to "Load Save?",
+                "dialog.load_save.load_text" to "Loading save \"{0}\" will overwrite your current progress.",
+                "dialog.load_save.migration_text" to "There are recommended migrations you may choose to apply that will not overwrite the save.",
+                "dialog.load_save.migration_title" to "Migrate?",
+
+                "dialog.delete_save.title" to "Delete Save?",
+                "dialog.delete_save.delete_text" to "Are you sure you want to delete save \"{0}\" permanently?",
+
+                "dialog.overwrite_save.title" to "Overwrite Save?",
+                "dialog.overwrite_save.overwrite_text" to "Are you sure you want to overwrite save \"{0}\"? You cannot revert this.",
+
+                "dialog.create_save.create_title" to "Create Save",
+                "dialog.create_save.import_title" to "Import Save",
+                "dialog.create_save.save_name_field.title" to "Save Name",
+                "dialog.create_save.error.already_exists" to "A save with this name already exists",
+                "dialog.create_save.error.invalid_name" to "Save name must not be blank and must only contain lowercase alphanumeric characters",
             ),
             font = Res.font.vcr_osd_mono,
             _scaledStyles = TextStyles(
@@ -304,7 +421,7 @@ data class Theme(
         )
 
 //        val darkDefault = Theme(
-//            nameToImageMap = mapOf(
+//            idToImageMap = mapOf(
 //                "Butter" to ImageData(resource = Res.drawable.butter),
 //                "Egg" to ImageData(resource = Res.drawable.egg),
 //                "Flour" to ImageData(resource = Res.drawable.flour),

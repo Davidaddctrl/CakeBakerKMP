@@ -11,7 +11,7 @@ import com.davidlukash.cakebaker.data.theme.Theme
 @Composable
 fun TopBar() {
     Text(
-        "Saves",
+        Theme.getString("title.saves"),
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),
         style = Theme.Styles.titleStyle,

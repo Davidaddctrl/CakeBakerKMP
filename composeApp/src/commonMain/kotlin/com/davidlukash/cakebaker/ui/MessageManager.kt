@@ -89,7 +89,7 @@ fun Popup(remove: () -> Unit, popup: Popup) {
                                 },
                                 content = {
                                     Text(
-                                        "Dismiss",
+                                        Theme.getString("action.dismiss"),
                                         modifier = Modifier.fillMaxWidth(),
                                         textAlign = TextAlign.Center
                                     )

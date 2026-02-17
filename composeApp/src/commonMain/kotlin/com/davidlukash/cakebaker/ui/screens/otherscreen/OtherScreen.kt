@@ -79,12 +79,12 @@ fun OtherScreen(navigateWithFade: (Screen) -> Unit) {
                     TextButton(
                         onClick = { currentLicense = null }
                     ) {
-                        Text("Dismiss")
+                        Text(Theme.getString("action.dismiss"))
                     }
                 },
                 title = {
                     Text(
-                        "License for ${currentLicense?.first}",
+                        Theme.getString("title.license_for").replace("{0}", currentLicense?.first.toString()),
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,

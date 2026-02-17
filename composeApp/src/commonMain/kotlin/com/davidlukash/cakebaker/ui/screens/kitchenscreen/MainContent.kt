@@ -80,9 +80,14 @@ fun MainContent(
                     ovenProgress
                 )
                 val ovenTime = 5.0 - fasterOvenLevel / 10.0
+
                 if (ovenRunning)
                     Text(
-                        "${floor((1.0 - ovenProgress) * ovenTime * 10.0) / 10.0} seconds remaining",
+                        Theme.getString("label.seconds_remaining")
+                            .replace(
+                                "{0}",
+                                (floor((1.0 - ovenProgress) * ovenTime * 10.0) / 10.0).toString()
+                            ),
                         style = Theme.Styles.verySmallBodyStyle,
                         color = Theme.ProgressBarTheme.contentColor
                     )
@@ -94,7 +99,7 @@ fun MainContent(
                 enabled = canBake && !ovenRunning,
             ) {
                 ResourceImage(
-                    Theme.getImage("Oven"),
+                    Theme.getImage("image.oven"),
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.height(280.dp)
                 )
@@ -107,7 +112,7 @@ fun MainContent(
                 modifier = Modifier.align(Alignment.Start)
             ) {
                 ResourceImage(
-                    Theme.getImage("Ingredient Shop"),
+                    Theme.getImage("image.ingredient_shop"),
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.height(280.dp)
                 )
@@ -125,9 +130,9 @@ fun MainContent(
             var buttonSize by remember { mutableStateOf(Size.Zero) }
             InfoPanel(
                 uiState, setAutoOvenEnabled, setAutoOrderCompleteEnabled, buttonSize.copy(
-                width = buttonSize.width + density.run { 8.dp.toPx() },
-                height = buttonSize.height + density.run { 8.dp.toPx() }
-            ))
+                    width = buttonSize.width + density.run { 8.dp.toPx() },
+                    height = buttonSize.height + density.run { 8.dp.toPx() }
+                ))
             ImageButton(
                 onClick = {
                     navigateWithFade(UpgradeScreen)
@@ -137,7 +142,7 @@ fun MainContent(
                 }
             ) {
                 ResourceImage(
-                    Theme.getImage("Upgrade Shop"),
+                    Theme.getImage("image.upgrade_shop"),
                     contentScale = ContentScale.FillHeight,
                     modifier = Modifier.height(280.dp)
                 )

@@ -23,7 +23,7 @@ fun TopBar(uiState: UIState) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                "Kitchen",
+                Theme.getString("title.kitchen"),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
                 style = Theme.Styles.titleStyle,

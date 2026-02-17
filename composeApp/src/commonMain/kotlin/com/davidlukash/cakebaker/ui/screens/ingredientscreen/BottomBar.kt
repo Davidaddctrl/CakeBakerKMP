@@ -29,7 +29,7 @@ fun BottomBar(navigateWithFade: (Screen) -> Unit) {
             },
         ) {
             ResourceImage(
-                Theme.getImage("Oven"),
+                Theme.getImage("image.oven"),
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.height(280.dp)
             )
@@ -41,7 +41,7 @@ fun BottomBar(navigateWithFade: (Screen) -> Unit) {
             },
         ) {
             ResourceImage(
-                Theme.getImage("Upgrade Shop"),
+                Theme.getImage("image.upgrade_shop"),
                 contentScale = ContentScale.FillHeight,
                 modifier = Modifier.height(280.dp)
             )

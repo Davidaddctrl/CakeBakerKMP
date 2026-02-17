@@ -101,7 +101,7 @@ class CakeBakerScope(
             val directDescriptors = item.toObject().asDictionary()!!.map { (key, value) ->
                 val keyString = key.asString()!!
                 VariableDescriptor(
-                    name = "globals.items.${item.name}.$keyString",
+                    name = "globals.items.${item.id}.$keyString",
                     expectedType = when (keyString) {
                         "name" -> ObjectType.STRING
                         "type" -> ObjectType.STRING
@@ -145,7 +145,7 @@ class CakeBakerScope(
             }
             listOf(
                 VariableDescriptor(
-                    name = "globals.items.${item.name}",
+                    name = "globals.items.${item.id}",
                     expectedType = ObjectType.DICTIONARY,
                     expectedTypeNullable = false,
                     set = {

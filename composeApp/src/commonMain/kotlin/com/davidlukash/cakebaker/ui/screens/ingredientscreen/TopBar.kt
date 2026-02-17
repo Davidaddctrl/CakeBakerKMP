@@ -22,7 +22,7 @@ fun TopBar(uiState: UIState, quantityChanges: Map<String, BigDecimal>) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                "Ingredient Shop",
+                Theme.getString("title.ingredient_shop"),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
                 style = Theme.Styles.titleStyle,

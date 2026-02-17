@@ -34,7 +34,7 @@ fun RowScope.OrdersPanel(uiState: UIState, completeOrder: (Order) -> Unit, nextO
             ) {
                 Box {
                     Text(
-                        "Orders",
+                        Theme.getString("title.orders"),
                         style = Theme.Styles.smallBodyStyle,
                         textAlign = TextAlign.Center,
                         textDecoration = TextDecoration.Underline,
@@ -53,7 +53,7 @@ fun RowScope.OrdersPanel(uiState: UIState, completeOrder: (Order) -> Unit, nextO
                     if (orders.isEmpty()) {
                         nextOrderRemainingTime?.let {
                             Text(
-                                "${secondsToString(it)} until next order",
+                                Theme.getString("orders_panel.until_next_order").replace("{0}", secondsToString(it)),
                                 style = Theme.Styles.smallBodyStyle,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.fillMaxWidth()
@@ -61,7 +61,7 @@ fun RowScope.OrdersPanel(uiState: UIState, completeOrder: (Order) -> Unit, nextO
                         }
                         if (nextOrderRemainingTime == null)
                             Text(
-                                "Bake a cake to get orders",
+                                Theme.getString("orders_panel.help_text"),
                                 style = Theme.Styles.smallBodyStyle,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.fillMaxWidth()

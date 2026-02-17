@@ -57,7 +57,7 @@ fun UpgradeDisplay(uiState: UIState, buyUpgrade: (Upgrade) -> Unit, upgrade: Upg
             }
         }
         Text(
-            "Level ${toEngNotation(upgrade.level.toBigDecimal())}" +
+            "${Theme.getString("label.level")} ${toEngNotation(upgrade.level.toBigDecimal())}" +
                     if (upgrade.maxLevel != null) " / ${toEngNotation(upgrade.maxLevel.toBigDecimal())} " else "",
             style = Theme.Styles.smallBodyStyle,
             textAlign = TextAlign.Center,
@@ -69,11 +69,11 @@ fun UpgradeDisplay(uiState: UIState, buyUpgrade: (Upgrade) -> Unit, upgrade: Upg
         ) {
             if (upgrade.maxLevel?.let { upgrade.level < it } ?: true)
                 Text(
-                    "${toEngNotation(upgrade.price.toBigDecimal())} ${cake?.name.toString()}",
+                    "${toEngNotation(upgrade.price.toBigDecimal())} ${Theme.getString(cake?.name.toString())}",
                     style = Theme.Styles.smallBodyStyle,
                 ) else
                 Text(
-                    "Max Level Reached",
+                    Theme.getString("label.max_level"),
                     style = Theme.Styles.smallBodyStyle,
                 )
         }
@@ -86,7 +86,7 @@ fun UpgradeDisplay(uiState: UIState, buyUpgrade: (Upgrade) -> Unit, upgrade: Upg
                 ?: BigDecimal.ZERO) >= upgrade.price && (upgrade.maxLevel?.let { upgrade.level < it } ?: true),
             content = {
                 Text(
-                    "Buy"
+                    Theme.getString("action.buy")
                 )
             }
         )
