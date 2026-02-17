@@ -237,7 +237,6 @@ fun App() {
                         )
                     }
                     if (debugConsole == ConsoleType.POPUP) DebugPopup()
-                    if (variableShown) VariableView(globalScope)
                 }
                 if (debugConsole == ConsoleType.SIDEBAR) DebugSideBar()
             }

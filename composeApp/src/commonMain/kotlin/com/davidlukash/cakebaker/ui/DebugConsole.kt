@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -81,7 +82,6 @@ import com.davidlukash.jsonmath.buildExpression
 import com.davidlukash.jsonmath.data.Expression
 import com.davidlukash.jsonmath.engine.basic.OriginNode
 import com.davidlukash.jsonmath.engine.normal.EnumScopeType
-import com.davidlukash.jsonmath.engine.normal.Scope
 import com.davidlukash.jsonmath.engine.normal.ScopeType
 import com.davidlukash.jsonmath.engine.normal.VariableDescriptor
 import kotlinx.coroutines.launch
@@ -206,7 +206,13 @@ fun DebugPanel(
     val uiViewModel = mainViewModel.uiViewModel
     val logs by uiViewModel.logs.collectAsState()
     val globalScope = mainViewModel.dataViewModel.globalScope
-    val localScope = remember { CakeBakerScope(ScopeType(EnumScopeType.LOCAL), DataActions.fromDataViewModel(mainViewModel.dataViewModel)) }
+    val localScope = remember {
+        CakeBakerScope(
+            ScopeType(EnumScopeType.LOCAL),
+            DataActions.fromDataViewModel(mainViewModel.dataViewModel)
+        )
+    }
+    var descriptorNames by remember { mutableStateOf(globalScope.listVariables().map { it.name }) }
     DebugPanelContent(
         logs,
         execute = {
@@ -227,6 +233,9 @@ fun DebugPanel(
         canHide = canHide,
         isHidden = isHidden,
         setHidden = setHidden,
+        refresh = { descriptorNames = globalScope.listVariables().map { it.name } },
+        getDescriptor = { name -> globalScope.listVariables().find { it.name == name } },
+        descriptorNames = descriptorNames,
     )
 }
 
@@ -235,17 +244,16 @@ fun DebugPanel(
 fun DebugPanelContent(
     logs: List<Log>,
     execute: (String) -> Unit,
+    refresh: () -> Unit = {},
+    getDescriptor: (String) -> VariableDescriptor?,
+    descriptorNames: List<String>,
     modifier: Modifier,
     canHide: Boolean = false,
     isHidden: Boolean = false,
     setHidden: (Boolean) -> Unit = {}
 ) {
     var input by remember { mutableStateOf("") }
-    val lazyListState = rememberLazyListState()
-
-    LaunchedEffect(logs) {
-        if (logs.isNotEmpty()) lazyListState.scrollToItem(logs.size - 1)
-    }
+    var isVariableView by remember { mutableStateOf(false) }
     Column(
         modifier = modifier.background(color = background).padding(horizontal = 16.dp).padding(
             top = if (canHide) 8.dp else 16.dp,
@@ -261,7 +269,7 @@ fun DebugPanelContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "Debug Console",
+                if (isVariableView) "Variable View" else "Debug Console",
                 fontFamily = FontFamily.Monospace,
                 color = textColor,
                 fontSize = 20.sp
@@ -291,75 +299,38 @@ fun DebugPanelContent(
             }
         }
         if (!isHidden) {
-            Surface(
-                color = surface,
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier.weight(1f).fillMaxSize().padding(
-                    bottom = 8.dp
+            if (isVariableView)
+                VariableView(
+                    refresh = refresh,
+                    getDescriptor = getDescriptor,
+                    descriptorNames = descriptorNames,
                 )
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize().padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    state = lazyListState
-                ) {
-                    items(
-                        logs.size,
-                        key = { logs[it].uuid }
-                    ) { index ->
-                        val log = logs[index]
-                        Log(log)
-                    }
-                }
-            }
-            Box(
-                modifier = Modifier.weight(1f)
-            ) {
-                InputField(
+            else
+                DebugConsole(
+                    logs = logs,
                     input = input,
-                    modifier = Modifier.fillMaxSize()
                 ) { input = it }
-            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 InputButton(
                     onClick = {
-                        val expression = buildExpression {
-                            function {
-                                name = "console.internalShown"
-                                appendFunction {
-                                    name = "compare.not"
-                                    appendFunction {
-                                        name = "console.internalShown"
-                                    }
-                                }
-                            }
-                        }
-                        execute(json.encodeToString(expression))
+                        isVariableView = !isVariableView
                     },
                 ) {
-                    Text("Toggle Internal View")
+                    Text(if (isVariableView) "Open Console" else "Open Variable View")
                 }
-                InputButton(
-                    onClick = {
-                        val expression = buildExpression {
-                            function {
-                                name = "console.variableShown"
-                                appendFunction {
-                                    name = "compare.not"
-                                    appendFunction {
-                                        name = "console.variableShown"
-                                    }
-                                }
-                            }
-                        }
-                        execute(json.encodeToString(expression))
-                    },
-                ) {
-                    Text("Toggle Variable View")
+                if (!isVariableView) {
+                    InputButton(
+                        onClick = {
+                            execute(input)
+                        },
+                    ) {
+                        Text("Execute")
+                    }
                 }
+                Spacer(modifier = Modifier.weight(1f))
                 InputButton(
                     onClick = {
                         val expression = buildExpression {
@@ -373,135 +344,143 @@ fun DebugPanelContent(
                 ) {
                     Text("Close")
                 }
-                InputButton(
-                    onClick = {
-                        execute(input)
-                    },
-                ) {
-                    Text("Execute")
-                }
             }
         }
     }
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
-fun VariableViewContent(
+fun ColumnScope.DebugConsole(
+    logs: List<Log>,
+    input: String,
+    onInputChange: (String) -> Unit,
+) {
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(logs) {
+        if (logs.isNotEmpty()) lazyListState.scrollToItem(logs.size - 1)
+    }
+    Surface(
+        color = surface,
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.weight(1f).fillMaxSize().padding(
+            bottom = 8.dp
+        )
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            state = lazyListState
+        ) {
+            items(
+                logs.size,
+                key = { logs[it].uuid }
+            ) { index ->
+                val log = logs[index]
+                Log(log)
+            }
+        }
+    }
+    Box(
+        modifier = Modifier.weight(1f)
+    ) {
+        InputField(
+            input = input,
+            modifier = Modifier.fillMaxSize()
+        ) { onInputChange(it) }
+    }
+}
+
+@Composable
+fun ColumnScope.VariableView(
     refresh: () -> Unit = {},
     getDescriptor: (String) -> VariableDescriptor?,
     descriptorNames: List<String>,
-    modifier: Modifier = Modifier,
 ) {
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     var searchText by remember { mutableStateOf("") }
-    val filteredDescriptorNames by remember { derivedStateOf {
-        if (searchText.isBlank()) return@derivedStateOf descriptorNames
-        val tokens = searchText.split("/").filter { it.isNotBlank() }.map { it.trim(' ') }
-        (descriptorNames.filter { descriptorName -> tokens.any { it == descriptorName } } +
-        descriptorNames.filter { descriptorName ->
-            tokens.all {
-                descriptorName.contains(it, ignoreCase = true)
-            }
-        }).distinct()
-    } }
+    val filteredDescriptorNames by remember {
+        derivedStateOf {
+            if (searchText.isBlank()) return@derivedStateOf descriptorNames
+            val tokens = searchText.split("/").filter { it.isNotBlank() }.map { it.trim(' ') }
+            (descriptorNames.filter { descriptorName -> tokens.any { it == descriptorName } } +
+                    descriptorNames.filter { descriptorName ->
+                        tokens.all {
+                            descriptorName.contains(it, ignoreCase = true)
+                        }
+                    }).distinct()
+        }
+    }
     var key by remember { mutableStateOf(0) }
     LaunchedEffect(searchText) {
         coroutineScope.launch {
             lazyListState.scrollToItem(0)
         }
     }
-    Column(
-        modifier = modifier.background(color = background, shape = RoundedCornerShape(8.dp))
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
-            "Variable View",
+            "Search:",
             fontFamily = FontFamily.Monospace,
             color = textColor,
-            fontSize = 20.sp,
-            modifier = Modifier.fillMaxWidth()
         )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        InputField(
+            input = searchText,
+            modifier = Modifier.weight(1f),
+            maxLines = 1,
+        ) { searchText = it }
+        InputButton(
+            onClick = {
+                refresh()
+                key++
+            }
+        ) { Text("Refresh") }
+    }
+    key(key) {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth().weight(1f),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            state = lazyListState
         ) {
-            Text(
-                "Search:",
-                fontFamily = FontFamily.Monospace,
-                color = textColor,
-            )
-            InputField(
-                input = searchText,
-                modifier = Modifier.weight(1f),
-                maxLines = 1,
-            ) { searchText = it }
-            InputButton(
-                onClick = {
-                    refresh()
-                    key++
+            items(filteredDescriptorNames, key = { it }) { descriptorName ->
+                var value by remember {
+                    mutableStateOf(
+                        getDescriptor(descriptorName)?.get?.invoke()
+                            ?.let { json.encodeToString(it) } ?: "Not Readable"
+                    )
                 }
-            ) { Text("Refresh") }
-        }
-        key(key) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                state = lazyListState
-            ) {
-                items(filteredDescriptorNames, key = { it }) { descriptorName ->
-                    var value by remember {
-                        mutableStateOf(
-                            getDescriptor(descriptorName)?.get?.invoke()
-                                ?.let { json.encodeToString(it) } ?: "Not Readable"
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(descriptorName, fontFamily = FontFamily.Monospace, color = textColor)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text(descriptorName, fontFamily = FontFamily.Monospace, color = textColor)
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            InputField(
-                                input = value,
-                                enabled = getDescriptor(descriptorName)?.set != null,
-                                modifier = Modifier.heightIn(48.dp, 512.dp).weight(1f)
-                            ) { value = it }
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(2.dp),
-                            ) {
-                                if (getDescriptor(descriptorName)?.set != null)
-                                    InputButton(
-                                        onClick = {
-                                            withResult {
-                                                getDescriptor(descriptorName)?.set?.invoke(json.decodeFromString(value))
-                                            }
-                                        },
-                                        modifier = Modifier.width(96.dp)
-                                    ) { Text("Set") }
-                            }
+                        InputField(
+                            input = value,
+                            enabled = getDescriptor(descriptorName)?.set != null,
+                            modifier = Modifier.heightIn(48.dp, 512.dp).weight(1f)
+                        ) { value = it }
+                        if (getDescriptor(descriptorName)?.set != null) {
+                            InputButton(
+                                onClick = {
+                                    withResult {
+                                        getDescriptor(descriptorName)?.set?.invoke(json.decodeFromString(value))
+                                    }
+                                },
+                                modifier = Modifier.width(96.dp)
+                            ) { Text("Set") }
                         }
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun VariableView(globalScope: Scope) {
-    var descriptorNames by remember { mutableStateOf(globalScope.listVariables().map { it.name }) }
-    DraggableResizablePopup { (width, height) ->
-        VariableViewContent(
-            refresh = { descriptorNames = globalScope.listVariables().map { it.name } },
-            getDescriptor = { name -> globalScope.listVariables().find { it.name == name } },
-            descriptorNames = descriptorNames,
-            modifier = Modifier.size(width, height)
-        )
     }
 }
 
@@ -610,5 +589,8 @@ fun DebugPanelPreview() {
         modifier = Modifier.size(800.dp, 600.dp),
         canHide = true,
         isHidden = isHidden,
+        refresh = {  },
+        getDescriptor = { null },
+        descriptorNames = listOf(),
     ) { isHidden = it }
 }
