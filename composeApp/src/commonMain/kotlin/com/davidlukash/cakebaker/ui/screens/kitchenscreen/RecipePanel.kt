@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,8 +40,8 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
-    val cakes  by derivedStateOf { uiState.getCakes() }
-    val ingredients by derivedStateOf { uiState.getIngredients() }
+    val cakes by remember(uiState.items) { derivedStateOf { uiState.getCakes() } }
+    val ingredients by remember(uiState.items) { derivedStateOf { uiState.getIngredients() } }
     val currentCakeTier = uiState.currentCakeTier
 
     PrimaryContainer(

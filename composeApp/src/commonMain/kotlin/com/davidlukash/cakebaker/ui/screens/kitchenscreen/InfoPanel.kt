@@ -45,12 +45,12 @@ fun InfoPanel(
     uiState: UIState, setAutoOvenEnabled: (Boolean) -> Unit,
     setAutoOrderCompleteEnabled: (Boolean) -> Unit, cutOutSize: Size
 ) {
-    val satisfactionLevel by remember { derivedStateOf { uiState.getSatisfactionLevel() } }
     val satisfaction = uiState.customerSatisfaction
+    val satisfactionLevel by remember(satisfaction) { derivedStateOf { uiState.getSatisfactionLevel() } }
     val currentCakeTier = uiState.currentCakeTier
-    val cakesSalePrices by remember { derivedStateOf { uiState.getCakesSalesPrices() } }
-    val autoOven by remember { derivedStateOf { uiState.getAutoOven() } }
-    val autoOrderComplete by remember { derivedStateOf { uiState.getAutoOrderComplete() } }
+    val cakesSalePrices by remember(uiState.items) { derivedStateOf { uiState.getCakesSalesPrices() } }
+    val autoOven by remember(uiState.upgrades) { derivedStateOf { uiState.getAutoOven() } }
+    val autoOrderComplete by remember(uiState.upgrades) { derivedStateOf { uiState.getAutoOrderComplete() } }
     PrimaryContainer(
         modifier = Modifier.fillMaxWidth(),
         shape = ShapeWithCutOut(cutOutSize, 16.dp),
@@ -87,7 +87,7 @@ fun InfoPanel(
                                 3 -> Theme.getImage("image.face.neutral")
                                 4 -> Theme.getImage("image.face.medium")
                                 5 -> Theme.getImage("image.face.happy")
-                                else -> Theme.getImage("image.face.missing")
+                                else -> Theme.getImage("image.missing")
                             },
                             contentScale = ContentScale.FillBounds,
                             modifier = Modifier.size(36.dp),

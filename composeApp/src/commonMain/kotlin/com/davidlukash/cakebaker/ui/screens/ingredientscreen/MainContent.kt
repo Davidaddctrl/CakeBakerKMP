@@ -27,10 +27,11 @@ fun BoxScope.MainContent(
     buyIngredient: (String) -> Unit,
     setQuantityChanges: (Map<String, BigDecimal>) -> Unit
 ) {
-    val ingredients by remember { derivedStateOf { uiState.getIngredients() } }
-    val money by remember { derivedStateOf { uiState.getMoneyItem() } }
+    val ingredients by remember(uiState.items) { derivedStateOf { uiState.getIngredients() } }
+    val money by remember(uiState.items) { derivedStateOf { uiState.getMoneyItem() } }
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier.align(Alignment.Center)
     ) {

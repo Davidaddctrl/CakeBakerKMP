@@ -62,7 +62,7 @@ fun MainContent(
     innerPadding: PaddingValues
 ) {
     val canBake = uiState.canBake
-    val fasterOvenLevel by remember { derivedStateOf { uiState.getFasterOven() } }
+    val fasterOvenLevel by remember(uiState.upgrades) { derivedStateOf { uiState.getFasterOven() } }
     val density = LocalDensity.current
     Row(
         modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = 16.dp),
@@ -100,8 +100,8 @@ fun MainContent(
             ) {
                 ResourceImage(
                     Theme.getImage("image.oven"),
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.height(280.dp)
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.width(280.dp)
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -113,8 +113,8 @@ fun MainContent(
             ) {
                 ResourceImage(
                     Theme.getImage("image.ingredient_shop"),
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.height(280.dp)
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.width(280.dp)
                 )
             }
         }
@@ -143,8 +143,8 @@ fun MainContent(
             ) {
                 ResourceImage(
                     Theme.getImage("image.upgrade_shop"),
-                    contentScale = ContentScale.FillHeight,
-                    modifier = Modifier.height(280.dp)
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.width(280.dp)
                 )
             }
         }

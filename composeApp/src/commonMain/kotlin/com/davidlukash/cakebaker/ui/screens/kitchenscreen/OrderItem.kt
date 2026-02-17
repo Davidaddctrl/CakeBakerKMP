@@ -36,7 +36,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
-    val cakes by remember { derivedStateOf { uiState.getCakes() } }
+    val cakes by remember(uiState.items) { derivedStateOf { uiState.getCakes() } }
     val cake by remember { derivedStateOf { cakes[order.cakeTier] } }
     val progressAmount by remember { derivedStateOf { order.remainingTime / order.totalTime } }
     SecondaryContainer(
