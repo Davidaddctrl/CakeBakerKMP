@@ -27,6 +27,7 @@ class CakeBakerScope(
                             "imageName" -> ObjectType.STRING
                             "iconName" -> ObjectType.STRING
                             "name" -> ObjectType.STRING
+                            "id" -> ObjectType.STRING
                             "price" -> ObjectType.NUMBER
                             "cakeTier" -> ObjectType.NUMBER
                             "maxLevel" -> ObjectType.NUMBER

@@ -14,6 +14,7 @@ data class Upgrade(
     val imageName: String,
     val iconName: String? = null,
     val name: String,
+    val id: String = "upgrade.missing",
     val price: Int,
     val cakeTier: Int,
     val maxLevel: Int?,
@@ -27,6 +28,7 @@ data class Upgrade(
             createObject("imageName") to createObject(imageName),
             createObject("iconName") to createObject(iconName),
             createObject("name") to createObject(name),
+            createObject("id") to createObject(id),
             createObject("price") to createObject(price.toBigDecimal()),
             createObject("cakeTier") to createObject(cakeTier.toBigDecimal()),
             createObject("maxLevel") to createObject(maxLevel?.toBigDecimal()),
@@ -89,6 +91,10 @@ data class Upgrade(
                 ),
                 name = dictionary[createObject("name")]?.asString() ?: throw createInvalidTypeException(
                     "name",
+                    ObjectType.STRING
+                ),
+                id = dictionary[createObject("name")]?.asString() ?: throw createInvalidTypeException(
+                    "id",
                     ObjectType.STRING
                 ),
                 price = (dictionary[createObject("price")]?.asInteger() ?: throw createInvalidTypeException(
