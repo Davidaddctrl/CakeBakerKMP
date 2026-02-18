@@ -105,7 +105,6 @@ data class Save(
                         if (it.name == "Money") "item.money" else it.name
                     } else it.id,
                     image = if (it.image == "image.missing") it.name else it.image,
-                    name = if (it.name == "Money") "item.money.name" else it.name,
                 )
             }
         )
