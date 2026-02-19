@@ -38,7 +38,7 @@ fun UpgradeDisplay(uiState: UIState, buyUpgrade: (Upgrade) -> Unit, upgrade: Upg
         modifier = Modifier.padding(16.dp).width(480.dp)
     ) {
         Text(
-            upgrade.name,
+            Theme.getString(upgrade.name),
             style = Theme.Styles.smallBodyStyle,
             textAlign = TextAlign.Center,
         )
