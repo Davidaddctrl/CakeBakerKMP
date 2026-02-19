@@ -172,7 +172,7 @@ fun MainContentPreview() {
     )
     val uiState = Save.state.copy(
         customerSatisfaction = 50,
-        upgrades = Save.default.upgrades.filter { it.name == "Auto Oven" || it.name == "Auto Order Complete" }.map {
+        upgrades = Save.default.upgrades.filter { it.id == "upgrade.auto_oven" || it.id == "upgrade.auto_order_complete" }.map {
             it.copy(level = 1)
         },
     )
