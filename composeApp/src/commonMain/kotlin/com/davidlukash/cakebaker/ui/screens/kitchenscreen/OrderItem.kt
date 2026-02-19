@@ -37,8 +37,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
     val cakes by remember(uiState.items) { derivedStateOf { uiState.getCakes() } }
-    val cake by remember { derivedStateOf { cakes[order.cakeTier] } }
-    val progressAmount by remember { derivedStateOf { order.remainingTime / order.totalTime } }
+    val cake by remember(cakes, order.cakeTier) { derivedStateOf { cakes[order.cakeTier] } }
+    val progressAmount by remember(order.remainingTime, order.totalTime) { derivedStateOf { order.remainingTime / order.totalTime } }
+    val completeEnabled by remember(cake?.amount, order.amount) { derivedStateOf { (cake?.amount ?: 0) >= order.amount } }
     SecondaryContainer(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -56,12 +57,12 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
                     style = Theme.Styles.smallBodyStyle,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-                cake?.let { cake ->
+                if (cake != null) {
                     SmallThemedButton(
                         onClick = {
                             completeOrder()
                         },
-                        enabled = cake.amount >= order.amount,
+                        enabled = completeEnabled,
                         isScaled = true,
                         content = {
                             Text(
