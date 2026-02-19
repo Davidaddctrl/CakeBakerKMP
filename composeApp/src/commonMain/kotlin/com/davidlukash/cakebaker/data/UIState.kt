@@ -39,7 +39,7 @@ data class UIState(
      * @return bought to enabled or null
      */
     fun getAutoOven(): Pair<Boolean, Boolean>? {
-        val autoOven = upgrades.find { it.name == "Auto Oven" }
+        val autoOven = upgrades.find { it.id == "upgrade.auto_oven" }
         if (autoOven == null) return null
         val enabled = autoOven.parameters["enabled"]?.asBoolean() ?: false
         val bought = autoOven.level.toBoolean()
@@ -52,14 +52,14 @@ data class UIState(
      * @return bought to enabled or null
      */
     fun getAutoOrderComplete(): Pair<Boolean, Boolean>? {
-        val autoOrderComplete = upgrades.find { it.name == "Auto Order Complete" }
+        val autoOrderComplete = upgrades.find { it.id == "upgrade.auto_order_complete" }
         if (autoOrderComplete == null) return null
         val enabled = autoOrderComplete.parameters["enabled"]?.asBoolean() ?: false
         val bought = autoOrderComplete.level.toBoolean()
         return bought to enabled
     }
 
-    fun getFasterOven(): Double = upgrades.find { it.name == "Faster Oven" }?.level?.toDouble() ?: 0.0
+    fun getFasterOven(): Double = upgrades.find { it.id == "upgrade.faster_oven" }?.level?.toDouble() ?: 0.0
 
     fun calculateCakePrice(cake: Item, ingredients: List<Item>): BigDecimal {
         var cakePrice = cake.salePrice ?: BigDecimal.ZERO
