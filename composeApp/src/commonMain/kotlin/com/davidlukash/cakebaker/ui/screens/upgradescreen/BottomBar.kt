@@ -86,7 +86,7 @@ fun BottomBar(
                                 modifier = Modifier.defaultMinSize(minWidth = 200.dp, minHeight = 80.dp).weight(1f)
                             ) {
                                 Text(
-                                    page,
+                                    Theme.getString(page),
                                     textAlign = TextAlign.Center,
                                     style = Theme.Styles.smallBodyStyle,
                                     fontWeight = if (page == currentPage) FontWeight.Bold else FontWeight.Normal,
