@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,11 +46,14 @@ fun BottomBar(
 ) {
     val upgrades = uiState.upgrades
     val pages = upgrades.map { it.pageName }.distinct()
+    val scrollState = rememberScrollState()
+
     LaunchedEffect(pages) {
         if (!pages.contains(currentPage)) {
             setCurrentPage(pages.firstOrNull() ?: "")
         }
     }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Bottom,
@@ -68,7 +73,7 @@ fun BottomBar(
             modifier = Modifier.weight(1f).padding(horizontal = 8.dp).height(312.dp),
             content = {
                 FlowRow(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.verticalScroll(scrollState).fillMaxSize(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
