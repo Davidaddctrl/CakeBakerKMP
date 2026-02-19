@@ -21,7 +21,7 @@ class CakeBakerScope(
                 val keyString = key.asString()!!
                 listOf(
                     VariableDescriptor(
-                        name = "globals.upgrades.${upgrade.name}.$keyString",
+                        name = "globals.upgrades.${upgrade.id}.$keyString",
                         expectedType = when (keyString) {
                             "pageName" -> ObjectType.STRING
                             "imageName" -> ObjectType.STRING
@@ -53,7 +53,7 @@ class CakeBakerScope(
                     value.asDictionary()!!.map { (paramKey, paramValue) ->
                         val paramKeyString = paramKey.asString()!!
                         VariableDescriptor(
-                            name = "globals.upgrades.${upgrade.name}.parameters.$paramKeyString",
+                            name = "globals.upgrades.${upgrade.id}.parameters.$paramKeyString",
                             set = { paramNewValue ->
                                 dataActions.updateUpgrade(
                                     upgrade.copy(
@@ -69,7 +69,7 @@ class CakeBakerScope(
             }
             listOf(
                 VariableDescriptor(
-                    name = "globals.upgrades.${upgrade.name}",
+                    name = "globals.upgrades.${upgrade.id}",
                     expectedType = ObjectType.DICTIONARY,
                     expectedTypeNullable = false,
                     set = {
@@ -305,7 +305,7 @@ class CakeBakerScope(
                         val third = parts.getOrNull(2) ?: throw createVariableNameInvalidException(
                             name,
                         ) //eg. Faster Oven
-                        val upgrade = upgrades.find { it.name == third } ?: throw createVariableNameInvalidException(
+                        val upgrade = upgrades.find { it.id == third } ?: throw createVariableNameInvalidException(
                             name,
                         )
                         val fourth = parts.getOrNull(3) ?: throw createVariableNameInvalidException(
