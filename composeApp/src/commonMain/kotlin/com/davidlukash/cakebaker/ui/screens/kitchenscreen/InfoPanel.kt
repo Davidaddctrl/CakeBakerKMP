@@ -263,8 +263,8 @@ fun InfoPanelPreview() {
     var autoOrderCompleteEnabled by remember { mutableStateOf(true) }
     val uiState = remember(autoOrderCompleteEnabled, autoOvenEnabled) { Save.state.copy(
         customerSatisfaction = 50,
-        upgrades = Save.default.upgrades.filter { it.name == "Auto Oven" || it.name == "Auto Order Complete" }.map {
-            (if (it.name == "Auto Oven")
+        upgrades = Save.default.upgrades.filter { it.id == "upgrade.auto_oven" || it.name == "upgrade.auto_order_c-mplete" }.map {
+            (if (it.id == "upgrade.auto_oven")
                 it.copy(parameters = mapOf("enabled" to createObject(autoOvenEnabled)))
             else
                 it.copy(parameters = mapOf("enabled" to createObject(autoOrderCompleteEnabled)))).copy(level = 1)
