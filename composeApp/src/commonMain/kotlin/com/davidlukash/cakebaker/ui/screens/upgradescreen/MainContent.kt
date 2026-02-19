@@ -39,7 +39,7 @@ fun MainContent(uiState: UIState, buyUpgrade: (Upgrade) -> Unit, innerPadding: P
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
         ) {
             filteredUpgrades.forEach { upgrade ->
-                key(upgrade.name) {
+                key(upgrade.id) {
                     UpgradeDisplay(uiState, buyUpgrade, upgrade)
                 }
             }
