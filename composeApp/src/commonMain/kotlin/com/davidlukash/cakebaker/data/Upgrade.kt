@@ -59,6 +59,15 @@ data class Upgrade(
             val maxLevel =
                 if (maxLevelObject.objectType == ObjectType.NULL) null else maxLevelObject.asInteger("Upgrade[maxLevel]")
                     .intValue(true)
+            if (!dictionary.contains(createObject("iconName"))) {
+                throw createInvalidTypeException(
+                    "iconName",
+                    "String?",
+                )
+            }
+            val iconNameObject = dictionary[createObject("iconName")]!!
+            val iconName =
+                if (iconNameObject.objectType == ObjectType.NULL) null else iconNameObject.asString("Upgrade[iconName]")
             if (!dictionary.contains(createObject("onBuy"))) {
                 throw createInvalidTypeException(
                     "onBuy",
@@ -84,16 +93,12 @@ data class Upgrade(
                     "imageName",
                     ObjectType.STRING
                 ),
-                iconName = dictionary[createObject("iconName")]?.asString() ?: throw createInvalidTypeException(
-                    "iconName",
-                    ObjectType.STRING,
-                    true
-                ),
+                iconName = iconName,
                 name = dictionary[createObject("name")]?.asString() ?: throw createInvalidTypeException(
                     "name",
                     ObjectType.STRING
                 ),
-                id = dictionary[createObject("name")]?.asString() ?: throw createInvalidTypeException(
+                id = dictionary[createObject("id")]?.asString() ?: throw createInvalidTypeException(
                     "id",
                     ObjectType.STRING
                 ),
