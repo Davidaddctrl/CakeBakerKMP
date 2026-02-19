@@ -41,12 +41,35 @@ data class Save(
     @OptIn(ForMigrationSupport::class)
     fun forcedMigration(): Save {
         var save = this
-        val autoOven = save.upgrades.find { it.name == "Auto Oven" }
+
+        save = save.copy(
+            upgrades = save.upgrades.map {
+                it.copy(
+                    id = if (it.id == "upgrade.missing") {
+                        when (it.name) {
+                            "Auto Oven" -> "upgrade.auto_oven"
+                            "Auto Order Complete" -> "upgrade.auto_order_complete"
+                            else -> it.name
+                        }
+                    } else it.id
+                )
+            },
+            items = save.items.map {
+                it.copy(
+                    id = if (it.id == "item.missing") {
+                        if (it.name == "Money") "item.money" else it.name
+                    } else it.id,
+                    image = if (it.image == "image.missing") it.name else it.image,
+                )
+            }
+        )
+
+        val autoOven = save.upgrades.find { it.id == "upgrade.auto_oven" }
         if (autoOven != null) {
             if (save.autoOvenEnabled != null) {
                 save = save.copy(
                     upgrades = save.upgrades.map {
-                        if (it.name == "Auto Oven") {
+                        if (it.id == "upgrade.auto_oven") {
                             autoOven.copy(
                                 parameters = autoOven.parameters + mapOf(
                                     "enabled" to createObject(save.autoOvenEnabled)
@@ -58,7 +81,7 @@ data class Save(
             } else if (autoOven.parameters["enabled"]?.asBoolean() == null) {
                 save = save.copy(
                     upgrades = save.upgrades.map {
-                        if (it.name == "Auto Oven") {
+                        if (it.id == "upgrade.auto_oven") {
                             autoOven.copy(
                                 parameters = autoOven.parameters + mapOf(
                                     "enabled" to createObject(false)
@@ -70,12 +93,12 @@ data class Save(
             }
         }
 
-        val autoOrderComplete = save.upgrades.find { it.name == "Auto Order Complete" }
+        val autoOrderComplete = save.upgrades.find { it.id == "upgrade.auto_order_complete" }
         if (autoOrderComplete != null) {
             if (save.autoOrderCompleteEnabled != null) {
                 save = save.copy(
                     upgrades = save.upgrades.map {
-                        if (it.name == "Auto Order Complete") {
+                        if (it.id == "upgrade.auto_order_complete") {
                             autoOrderComplete.copy(
                                 parameters = autoOrderComplete.parameters + mapOf(
                                     "enabled" to createObject(save.autoOrderCompleteEnabled)
@@ -87,7 +110,7 @@ data class Save(
             } else if (autoOrderComplete.parameters["enabled"]?.asBoolean() == null) {
                 save = save.copy(
                     upgrades = save.upgrades.map {
-                        if (it.name == "Auto Order Complete") {
+                        if (it.id == "upgrade.auto_order_complete") {
                             autoOrderComplete.copy(
                                 parameters = autoOrderComplete.parameters + mapOf(
                                     "enabled" to createObject(false)
@@ -98,16 +121,6 @@ data class Save(
                 )
             }
         }
-        save = save.copy(
-            items = save.items.map {
-                it.copy(
-                    id = if (it.id == "item.missing") {
-                        if (it.name == "Money") "item.money" else it.name
-                    } else it.id,
-                    image = if (it.image == "image.missing") it.name else it.image,
-                )
-            }
-        )
         return save
     }
 
@@ -117,7 +130,6 @@ data class Save(
         suspend fun readOldSaves() {
             version0 = json.decodeFromString<Save>(Res.readBytes("files/save_version_0.json").decodeToString())
                 .forcedMigration()
-
         }
 
         val default = Save(
@@ -339,9 +351,10 @@ data class Save(
             upgrades = listOf(
                 //region Cake Upgrades
                 Upgrade(
-                    pageName = "Cake",
-                    imageName = "Vanilla Cake",
-                    name = "Expensive Vanilla Cakes",
+                    pageName = "upgrade.page_name.cake",
+                    imageName = "image.vanilla_cake",
+                    name = "upgrade.expensive_vanilla_cakes.name",
+                    id = "upgrade.expensive_vanilla_cakes",
                     price = 2,
                     cakeTier = 1,
                     maxLevel = null,
@@ -361,9 +374,10 @@ data class Save(
                     )
                 ),
                 Upgrade(
-                    pageName = "Cake",
-                    imageName = "Chocolate Cake",
-                    name = "Expensive Chocolate Cakes",
+                    pageName = "upgrade.page_name.cake",
+                    imageName = "image.chocolate_cake",
+                    name = "upgrade.expensive_chocolate_cakes.name",
+                    id = "upgrade.expensive_chocolate_cakes",
                     price = 5,
                     cakeTier = 1,
                     maxLevel = null,
@@ -383,9 +397,10 @@ data class Save(
                     )
                 ),
                 Upgrade(
-                    pageName = "Cake",
-                    imageName = "Honey Cake",
-                    name = "Expensive Honey Cakes",
+                    pageName = "upgrade.page_name.cake",
+                    imageName = "image.honey_cake",
+                    name = "upgrade.expensive_honey_cakes.name",
+                    id = "upgrade.expensive_honey_cakes",
                     price = 6,
                     cakeTier = 2,
                     maxLevel = null,
@@ -406,9 +421,10 @@ data class Save(
                 //endregion
                 //region Oven Upgrades
                 Upgrade(
-                    pageName = "Oven",
-                    imageName = "Oven",
-                    name = "Faster Oven",
+                    pageName = "upgrade.page_name.oven",
+                    imageName = "image.oven",
+                    name = "upgrade.faster_oven.name",
+                    id = "upgrade.faster_oven",
                     price = 1,
                     cakeTier = 1,
                     maxLevel = 45,
@@ -425,9 +441,10 @@ data class Save(
                     )
                 ),
                 Upgrade(
-                    pageName = "Oven",
-                    imageName = "Oven",
-                    name = "Auto Oven",
+                    pageName = "upgrade.page_name.oven",
+                    imageName = "image.oven",
+                    name = "upgrade.auto_oven.name",
+                    id = "upgrade.auto_oven",
                     price = 3,
                     cakeTier = 1,
                     maxLevel = 1,
@@ -443,9 +460,10 @@ data class Save(
                 //endregion
                 //region Order Upgrades
                 Upgrade(
-                    pageName = "Orders",
-                    imageName = "Happy Face",
-                    name = "Auto Order Complete",
+                    pageName = "upgrade.page_name.orders",
+                    imageName = "image.face.happy",
+                    name = "upgrade.auto_order_complete.name",
+                    id = "upgrade.auto_order_complete",
                     price = 5,
                     cakeTier = 1,
                     maxLevel = 1,
@@ -461,9 +479,10 @@ data class Save(
                 //endregion
                 //region Butter Upgrades
                 Upgrade(
-                    pageName = "Butter",
-                    imageName = "Butter",
-                    name = "Cheaper Butter",
+                    pageName = "upgrade.page_name.butter",
+                    imageName = "image.butter",
+                    name = "upgrade.cheaper_butter.name",
+                    id = "upgrade.cheaper_butter",
                     price = 2,
                     cakeTier = 1,
                     maxLevel = null,
@@ -484,10 +503,11 @@ data class Save(
                     )
                 ),
                 Upgrade(
-                    pageName = "Butter",
-                    imageName = "Butter",
+                    pageName = "upgrade.page_name.butter",
+                    imageName = "image.butter",
                     iconName = "image.arrow.green_up",
-                    name = "Dense Butter",
+                    name = "upgrade.dense_butter.name",
+                    id = "upgrade.dense_butter",
                     price = 7,
                     cakeTier = 1,
                     maxLevel = 7,
@@ -508,9 +528,10 @@ data class Save(
                 //endregion
                 //region Egg Upgrades
                 Upgrade(
-                    pageName = "Egg",
-                    imageName = "Egg",
-                    name = "Cheaper Egg",
+                    pageName = "upgrade.page_name.egg",
+                    imageName = "image.egg",
+                    name = "upgrade.cheaper_egg.name",
+                    id = "upgrade.cheaper_egg",
                     price = 1,
                     cakeTier = 1,
                     maxLevel = null,
@@ -531,10 +552,11 @@ data class Save(
                     )
                 ),
                 Upgrade(
-                    pageName = "Egg",
-                    imageName = "Egg",
+                    pageName = "upgrade.page_name.egg",
+                    imageName = "image.egg",
                     iconName = "image.arrow.green_up",
-                    name = "Dense Egg",
+                    name = "upgrade.dense_egg.name",
+                    id = "upgrade.dense_egg",
                     price = 5,
                     cakeTier = 1,
                     maxLevel = 24,
@@ -555,9 +577,10 @@ data class Save(
                 //endregion
                 //region Flour Upgrades
                 Upgrade(
-                    pageName = "Flour",
-                    imageName = "Flour",
-                    name = "Cheaper Flour",
+                    pageName = "upgrade.page_name.flour",
+                    imageName = "image.flour",
+                    name = "upgrade.cheaper_flour.name",
+                    id = "upgrade.cheaper_flour",
                     price = 2,
                     cakeTier = 1,
                     maxLevel = null,
@@ -578,10 +601,11 @@ data class Save(
                     )
                 ),
                 Upgrade(
-                    pageName = "Flour",
-                    imageName = "Flour",
+                    pageName = "upgrade.page_name.flour",
+                    imageName = "image.flour",
                     iconName = "image.arrow.green_up",
-                    name = "Dense Flour",
+                    name = "upgrade.dense_flour.name",
+                    id = "upgrade.dense_flour",
                     price = 7,
                     cakeTier = 2,
                     maxLevel = 3,
@@ -602,9 +626,10 @@ data class Save(
                 //endregion
                 //region Sugar Upgrades
                 Upgrade(
-                    pageName = "Sugar",
-                    imageName = "Sugar",
-                    name = "Cheaper Sugar",
+                    pageName = "upgrade.page_name.sugar",
+                    imageName = "image.sugar",
+                    name = "upgrade.cheaper_sugar.name",
+                    id = "upgrade.cheaper_sugar",
                     price = 2,
                     cakeTier = 1,
                     maxLevel = null,
@@ -625,10 +650,11 @@ data class Save(
                     )
                 ),
                 Upgrade(
-                    pageName = "Sugar",
-                    imageName = "Sugar",
+                    pageName = "upgrade.page_name.sugar",
+                    imageName = "image.sugar",
                     iconName = "image.arrow.green_up",
-                    name = "Dense Sugar",
+                    name = "upgrade.dense_sugar.name",
+                    id = "upgrade.dense_sugar",
                     price = 7,
                     cakeTier = 1,
                     maxLevel = 7,
@@ -649,9 +675,10 @@ data class Save(
                 //endregion
                 //region Vanilla Extract Upgrades
                 Upgrade(
-                    pageName = "Vanilla Extract",
-                    imageName = "Vanilla Extract",
-                    name = "Cheaper Vanilla Extract",
+                    pageName = "upgrade.page_name.vanilla_extract",
+                    imageName = "image.vanilla_extract",
+                    name = "upgrade.cheaper_vanilla_extract.name",
+                    id = "upgrade.cheaper_vanilla_extract",
                     price = 1,
                     cakeTier = 1,
                     maxLevel = null,
@@ -672,10 +699,11 @@ data class Save(
                     )
                 ),
                 Upgrade(
-                    pageName = "Vanilla Extract",
-                    imageName = "Vanilla Extract",
+                    pageName = "upgrade.page_name.vanilla_extract",
+                    imageName = "image.vanilla_extract",
                     iconName = "image.arrow.green_up",
-                    name = "Dense Vanilla Extract",
+                    name = "upgrade.dense_vanilla_extract.name",
+                    id = "upgrade.dense_vanilla_extract",
                     price = 5,
                     cakeTier = 1,
                     maxLevel = 10,
@@ -696,9 +724,10 @@ data class Save(
                 //endregion
                 //region Baking Powder Upgrades
                 Upgrade(
-                    pageName = "Baking Powder",
-                    imageName = "Baking Powder",
-                    name = "Cheaper Baking Powder",
+                    pageName = "upgrade.page_name.baking_powder",
+                    imageName = "image.baking_powder",
+                    name = "upgrade.cheaper_baking_powder.name",
+                    id = "upgrade.cheaper_baking_powder",
                     price = 2,
                     cakeTier = 1,
                     maxLevel = null,
@@ -719,10 +748,11 @@ data class Save(
                     )
                 ),
                 Upgrade(
-                    pageName = "Baking Powder",
-                    imageName = "Baking Powder",
+                    pageName = "upgrade.page_name.baking_powder",
+                    imageName = "image.baking_powder",
                     iconName = "image.arrow.green_up",
-                    name = "Dense Baking Powder",
+                    name = "upgrade.dense_baking_powder.name",
+                    id = "upgrade.dense_baking_powder",
                     price = 7,
                     cakeTier = 1,
                     maxLevel = 7,
