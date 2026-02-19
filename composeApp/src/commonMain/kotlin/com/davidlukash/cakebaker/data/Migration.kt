@@ -12,22 +12,7 @@ interface Migration {
         val migration0to1 = object : Migration {
             override val from: Int = 0
             override val to: Int = 1
-
-            private val nameToName = mapOf(
-                "Butter" to "item.butter.name",
-                "Egg" to "item.egg.name",
-                "Flour" to "item.flour.name",
-                "Sugar" to "item.sugar.name",
-                "Vanilla Extract" to "item.vanilla_extract.name",
-                "Baking Powder" to "item.baking_powder.name",
-                "Cocoa Powder" to "item.cocoa_powder.name",
-                "Honey Pot" to "item.honey_pot.name",
-                "Vanilla Cake" to "item.vanilla_cake.name",
-                "Chocolate Cake" to "item.chocolate_cake.name",
-                "Honey Cake" to "item.honey_cake.name",
-            )
-
-            private val nameToId = mapOf(
+            private val itemNameToId = mapOf(
                 "Butter" to "item.butter",
                 "Egg" to "item.egg",
                 "Flour" to "item.flour",
@@ -39,42 +24,44 @@ interface Migration {
                 "Vanilla Cake" to "item.vanilla_cake",
                 "Chocolate Cake" to "item.chocolate_cake",
                 "Honey Cake" to "item.honey_cake",
+                "Money" to "item.money"
             )
-            
-            private val nameToImage = mapOf(
-                "Butter" to "image.butter",
-                "Egg" to "image.egg",
-                "Flour" to "image.flour",
-                "Sugar" to "image.sugar",
-                "Vanilla Extract" to "image.vanilla_extract",
-                "Baking Powder" to "image.baking_powder",
-                "Cocoa Powder" to "image.cocoa_powder",
-                "Honey Pot" to "image.honey_pot",
-                "Vanilla Cake" to "image.vanilla_cake",
-                "Chocolate Cake" to "image.chocolate_cake",
-                "Honey Cake" to "image.honey_cake",
+
+            val upgradeNameToId = mapOf(
+                "Expensive Vanilla Cakes" to "upgrade.expensive_vanilla_cakes",
+                "Expensive Chocolate Cakes" to "upgrade.expensive_chocolate_cakes",
+                "Expensive Honey Cakes" to "upgrade.expensive_honey_cakes",
+                "Faster Oven" to "upgrade.faster_oven",
+                "Auto Oven" to "upgrade.auto_oven",
+                "Cheaper Egg" to "upgrade.cheaper_egg",
+                "Cheaper Vanilla Extract" to "upgrade.cheaper_vanilla_extract"
             )
 
             override fun migrate(save: Save): Save {
-                return save.copy(
+                return save
+                    .copy(
                     version = "Beta 0.9.2",
                     versionCode = 1,
-                    items = save.items.map { item ->
-                        item.copy(
-                            name = nameToName[item.name] ?: item.name,
-                            id = nameToId[item.id] ?: item.id,
-                            image = nameToImage[item.name] ?: item.image,
-                        )
+                    items = Save.default.items.map { baseItem ->
+                        val item = save.items.find { itemNameToId[it.name] == baseItem.id }
+                        item?.let {
+                            baseItem.copy(
+                                amount = item.amount,
+                                price = item.price,
+                                total = item.total,
+                                increaseSlope = item.increaseSlope
+                            )
+                        } ?: baseItem
                     },
                     upgrades = Save.default.upgrades.map { baseUpgrade ->
-                        val currentUpgrade = save.upgrades.find { it.name == baseUpgrade.name }
-                        currentUpgrade?.copy(
-                            pageName = baseUpgrade.pageName,
-                            imageName = baseUpgrade.imageName,
-                            onBuy = baseUpgrade.onBuy,
-                            parameters = baseUpgrade.parameters,
-                        )
-                            ?: baseUpgrade
+                        val upgrade = save.upgrades.find { upgradeNameToId[it.name] == baseUpgrade.id }
+                        upgrade?.let {
+                             baseUpgrade.copy(
+                                 price = upgrade.price,
+                                 cakeTier = upgrade.cakeTier,
+                                 level = upgrade.level,
+                             )
+                        } ?: baseUpgrade
                     }
                 )
             }
