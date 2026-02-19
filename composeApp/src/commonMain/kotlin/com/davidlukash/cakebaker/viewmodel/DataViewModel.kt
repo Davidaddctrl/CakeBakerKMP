@@ -117,7 +117,7 @@ class DataViewModel(
 
     suspend fun tickOven(dt: Long) {
         val ovenRunning = ovenRunning.value
-        val fasterOven = upgrades.value.find { it.name == "Faster Oven" }
+        val fasterOven = upgrades.value.find { it.id == "upgrade.faster_oven" }
         val level = fasterOven?.level ?: 0
         if (ovenRunning) {
             val speed = 5000.0 - level.toDouble() * 100.0
@@ -143,7 +143,7 @@ class DataViewModel(
     fun tickAutoOven() {
         val ovenRunning = ovenRunning.value
 
-        val autoOven = upgrades.value.find { it.name == "Auto Oven" }
+        val autoOven = upgrades.value.find { it.id == "upgrade.auto_oven" }
         if (autoOven == null) {
             return
         }
@@ -169,7 +169,7 @@ class DataViewModel(
     fun tickAutoOrderComplete() {
         val orders = orders.value
 
-        val autoOrderComplete = upgrades.value.find { it.name == "Auto Order Complete" }
+        val autoOrderComplete = upgrades.value.find { it.id == "upgrade.auto_order_complete" }
         if (autoOrderComplete == null) {
             return
         }
@@ -430,7 +430,7 @@ class DataViewModel(
 
     fun setAutoOvenEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            val autoOven = upgrades.value.find { it.name == "Auto Oven" }
+            val autoOven = upgrades.value.find { it.id == "upgrade.auto_oven" }
                 .takeOrNullWithWarn("Auto Oven upgrade not found, aborting set auto oven enabled")
             if (autoOven == null) {
                 return@launch
@@ -447,7 +447,7 @@ class DataViewModel(
 
     fun setAutoOrderCompleteEnabled(enabled: Boolean) {
         viewModelScope.launch {
-            val autoOrderComplete = upgrades.value.find { it.name == "Auto Order Complete" }
+            val autoOrderComplete = upgrades.value.find { it.id == "upgrade.auto_order_complete" }
                 .takeOrNullWithWarn("Auto Order Complete upgrade not found, aborting set auto order complete enabled")
             if (autoOrderComplete == null) {
                 return@launch
@@ -496,14 +496,14 @@ class DataViewModel(
             var hasMatch = false
             _upgrades.emit(
                 _upgrades.value.map {
-                    if (it.name == upgrade.name) {
+                    if (it.id == upgrade.id) {
                         hasMatch = true
                         upgrade
                     } else it
                 }
             )
             if (!hasMatch) {
-                logger.logWarn("Upgrade with name ${upgrade.name} does not exist")
+                logger.logWarn("Upgrade with id ${upgrade.id} does not exist")
             }
         }
     }
@@ -709,7 +709,7 @@ class DataViewModel(
             )
         )
         val localScope = CakeBakerScope(ScopeType(EnumScopeType.LOCAL), dataActions)
-        localScope.setVariable("locals.this", createObject("globals.upgrades.${upgrade.name}"))
+        localScope.setVariable("locals.this", createObject("globals.upgrades.${upgrade.id}"))
         val origin = OriginNode("Upgrade On Buy", upgrade.onBuy)
         upgrade.onBuy.forEach { expression ->
             logger.logDebug(expression.toString())
