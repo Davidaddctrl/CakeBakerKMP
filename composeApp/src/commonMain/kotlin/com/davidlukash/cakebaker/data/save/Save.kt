@@ -18,6 +18,8 @@ import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import kotlinx.serialization.Serializable
 import kotlin.collections.plus
 
+const val GENERATE_UPGRADE_LOCALISATIONS = false
+
 @Serializable
 data class Save(
     val version: String = "Beta 0.9.1",
@@ -131,6 +133,9 @@ data class Save(
             version0 = json.decodeFromString<Save>(Res.readBytes("files/save_version_0.json").decodeToString())
                 .forcedMigration()
         }
+
+        fun convertUnderscoreToName(name: String) =
+            name.split("_").joinToString(" ") { part -> part.replaceFirstChar { it.uppercaseChar() } }
 
         val default = Save(
             version = VERSION,
@@ -808,6 +813,14 @@ data class Save(
             orderCakeTimeCounters = mapOf(),
             isFirstBake = true
         )
+
+        init {
+            if (GENERATE_UPGRADE_LOCALISATIONS)
+                default.upgrades.forEach { upgrade ->
+                    println("\"" + upgrade.name + "\" to \"" + convertUnderscoreToName(upgrade.name.split(".")[1]) + "\",")
+                    println("\"" + upgrade.pageName + "\" to \"" + convertUnderscoreToName(upgrade.pageName.split(".")[2]) + "\",")
+                }
+        }
 
         val state = UIState(
             items = default.items,
