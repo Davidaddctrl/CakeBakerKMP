@@ -20,14 +20,12 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.DebugPopup
 import com.davidlukash.cakebaker.ui.DebugSideBar
 import com.davidlukash.cakebaker.ui.ScaleViewport
-import com.davidlukash.cakebaker.ui.VariableView
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
 import com.davidlukash.cakebaker.ui.screens.savescreen.CreateSaveDialog
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
-import com.davidlukash.cakebaker.viewmodel.SaveFileViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
@@ -59,7 +57,7 @@ fun App() {
         val uiViewModel = mainViewModel.uiViewModel
         val dataViewModel = mainViewModel.dataViewModel
         val themeViewModel = mainViewModel.themeViewModel
-        val saveFileViewModel = mainViewModel.saveFileViewModel
+        val saveFileViewModel = mainViewModel.saveViewModel
 
         val coroutineScope = rememberCoroutineScope()
 
