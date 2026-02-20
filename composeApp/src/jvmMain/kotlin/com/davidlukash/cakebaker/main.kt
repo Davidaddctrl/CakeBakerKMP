@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.davidlukash.cakebaker.data.ConsoleType
-import com.davidlukash.cakebaker.data.JVMSavesRepository
+import com.davidlukash.cakebaker.repository.JVMSavesRepository
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.logger.AppLogger
