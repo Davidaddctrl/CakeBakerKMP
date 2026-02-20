@@ -16,7 +16,7 @@ class MainViewModel(
     @OptIn(ExperimentalUuidApi::class)
     val uiViewModel = UIViewModel()
 
-    val saveFileViewModel = SaveFileViewModel(uiViewModel, savesRepository)
+    val saveViewModel = SaveViewModel(uiViewModel, savesRepository)
     val dataViewModel = DataViewModel(
         uiActions = uiViewModel,
         engine = engine

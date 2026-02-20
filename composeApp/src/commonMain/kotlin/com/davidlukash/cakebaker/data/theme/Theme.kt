@@ -36,6 +36,9 @@ import cakebaker.composeapp.generated.resources.vanilla_cake
 import cakebaker.composeapp.generated.resources.vanilla_extract
 import cakebaker.composeapp.generated.resources.vcr_osd_mono
 import com.davidlukash.cakebaker.data.ImageData
+import com.davidlukash.cakebaker.data.theme.json.BrushDescriptor
+import com.davidlukash.cakebaker.data.theme.json.JsonTheme
+import com.davidlukash.cakebaker.json
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.FontResource
 
@@ -89,6 +92,24 @@ data class Theme(
     val dangerColor: Color,
     val tabSelectedColor: Color,
 ) {
+    fun toJsonTheme() = JsonTheme(
+        idToImageMap = idToImageMap.map { (key, value) ->
+            key to (value.imagePath)
+        }.toMap(),
+        idToStringMap = idToStringMap,
+        scaledStyles = _scaledStyles.toJsonTheme(),
+        unscaledStyles = _unscaledStyles.toJsonTheme(),
+        progressBarTheme = progressBarTheme.toJsonTheme(),
+        buttonTheme = buttonTheme.toJsonTheme(),
+        switchButtonTheme = switchButtonTheme.toJsonTheme(),
+        backgroundTheme = backgroundTheme.toJsonTheme(),
+        containerTheme = containerTheme.toJsonTheme(),
+        secondaryContainerTheme = secondaryContainerTheme.toJsonTheme(),
+        textFieldTheme = textFieldTheme.toJsonTheme(),
+        successColor = successColor,
+        dangerColor = dangerColor,
+        tabSelectedColor = tabSelectedColor,
+    )
 
     fun idToImage(name: String): ImageData {
         return idToImageMap[name] ?: ImageData()
@@ -416,11 +437,23 @@ data class Theme(
                 onUnselectedContainerColor = Color(58, 158, 0).copy(alpha = 0.3f),
                 onSelectedTextColor = Color(255, 255, 255),
                 onUnselectedTextColor = Color(255, 255, 255).copy(alpha = 0.3f),
-                doDropShadow = false
+                shouldDropShadow = false
             ),
             backgroundTheme = ContainerTheme(
                 borderColorBrush = SolidColor(Color.Transparent),
+                borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color.Transparent),
                 containerColorBrush = Brush.verticalGradient(
+                    listOf(
+                        Color(0, 100, 217, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                        Color(0, 120, 255),
+                    )
+                ),
+                containerColorBrushDescriptor = BrushDescriptor.LinearGradient(
                     listOf(
                         Color(0, 100, 217, 255),
                         Color(0, 120, 255),
@@ -436,18 +469,23 @@ data class Theme(
             ),
             containerTheme = ContainerTheme(
                 borderColorBrush = SolidColor(Color(0, 0, 0)),
+                borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
                 containerColorBrush = SolidColor(Color(246, 255, 153)),
+                containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(246, 255, 153)),
                 contentColor = Color(0, 0, 0),
                 shouldDropShadow = false
             ),
             secondaryContainerTheme = ContainerTheme(
                 borderColorBrush = SolidColor(Color(0, 0, 0)),
+                borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
                 containerColorBrush = SolidColor(Color(8, 160, 69)),
+                containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(8, 160, 69)),
                 contentColor = Color(255, 255, 255),
                 shouldDropShadow = true
             ),
             textFieldTheme = TextFieldTheme(
                 cursorBrush = SolidColor(Color.White),
+                cursorBrushDescriptor = BrushDescriptor.SolidColor(Color.White),
                 contentColor = Color.White,
                 placeholderColor = Color(128, 128, 128),
                 containerColor = Color(53, 57, 62),
@@ -458,6 +496,9 @@ data class Theme(
             dangerColor = Color(255, 0, 0),
             tabSelectedColor = Color(8, 160, 69)
         )
+        init {
+            println(json.encodeToString(default.toJsonTheme()))
+        }
 
 //        val darkDefault = Theme(
 //            idToImageMap = mapOf(

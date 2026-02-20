@@ -20,7 +20,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun ResourceImage(data: ImageData, contentScale: ContentScale, contentDescription: String? = null, modifier: Modifier = Modifier) {
     key(data) {
         val resourceBitmap = imageResource(data.resource)
-        val placeholderBitmap = imageResource(Res.drawable.missing)
+        val placeholderBitmap = imageResource(data.resource)
         val placeholder = BitmapPainter(placeholderBitmap, filterQuality = FilterQuality.None)
         val resource = BitmapPainter(resourceBitmap, filterQuality = data.filterQuality)
         if (data.imagePath != null)
