@@ -38,6 +38,7 @@ import cakebaker.composeapp.generated.resources.vcr_osd_mono
 import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.theme.json.BrushDescriptor
 import com.davidlukash.cakebaker.data.theme.json.JsonTheme
+import com.davidlukash.cakebaker.takeOrDefaultWithWarn
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.FontResource
 
@@ -115,7 +116,7 @@ data class Theme(
     }
 
     fun idToString(name: String): String {
-        return idToStringMap[name] ?: name
+        return idToStringMap[name].takeOrDefaultWithWarn("String resource with id $name not found", name)
     }
 
     val styles: TextStyles
@@ -263,12 +264,20 @@ data class Theme(
                 "action.licenses" to "Licenses",
                 "action.settings" to "Settings",
                 "action.back" to "Back",
+                "action.themes" to "Themes",
+                "action.apply" to "Apply",
 
                 "content_description.menu" to "Menu",
                 "content_description.previous_tier" to "Previous Tier",
                 "content_description.next_tier" to "Next Tier",
                 "content_description.enough" to "Enough",
                 "content_description.not_enough" to "Not Enough",
+                "content_description.select_theme" to "Select Theme",
+                "content_description.deselect_theme" to "Deselect Theme",
+                "content_description.export_theme" to "Export Theme",
+                "content_description.delete_theme" to "Delete Theme",
+                "content_description.move_up" to "Move Up",
+                "content_description.move_down" to "Move Down",
 
                 "label.amount" to "Amount",
                 "label.customer_satisfaction" to "Customer\nSatisfaction",
@@ -297,6 +306,9 @@ data class Theme(
                 "title.saves" to "Saves",
                 "title.settings" to "Settings",
                 "title.upgrade_shop" to "Upgrade Shop",
+                "title.themes" to "Themes",
+                "title.available" to "Available",
+                "title.selected" to "Selected",
 
                 "settings.debug_console_open.title" to "Debug Console Open",
                 "settings.debug_console_open.open" to "Open",
@@ -321,9 +333,6 @@ data class Theme(
                 "dialog.create_save.save_name_field.title" to "Save Name",
                 "dialog.create_save.error.already_exists" to "A save with this name already exists",
                 "dialog.create_save.error.invalid_name" to "Save name must not be blank and must only contain lowercase alphanumeric characters",
-
-                "dialog.load_themes.title" to "Load Themes",
-                "dialog.load_themes.load_text" to "Are you sure you want to load themes {0}?",
 
                 "dialog.delete_theme.title" to "Delete Theme",
                 "dialog.delete_theme.delete_text" to "Are you sure you want to delete theme \"{0}\" permanently?",
