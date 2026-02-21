@@ -1,0 +1,46 @@
+package com.davidlukash.cakebaker.ui.screens.themescreen
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.ui.input.LargeThemedButton
+
+import com.davidlukash.cakebaker.ui.navigation.MenuScreen
+import com.davidlukash.cakebaker.ui.navigation.Screen
+
+@Composable
+fun BottomBar(import: () -> Unit, navigateWithFade: (Screen) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        LargeThemedButton(
+            onClick = {
+                navigateWithFade(MenuScreen)
+            },
+            modifier = Modifier.width(280.dp),
+            content = {
+                Text(Theme.getString("action.back"))
+            }
+        )
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
+        LargeThemedButton(
+            onClick = {
+                import()
+            },
+            modifier = Modifier.width(280.dp),
+            content = {
+                Text(Theme.getString("action.import"))
+            }
+        )
+    }
+}

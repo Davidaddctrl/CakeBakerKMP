@@ -28,6 +28,7 @@ import com.davidlukash.cakebaker.ui.screens.menuscreen.MenuScreen
 import com.davidlukash.cakebaker.ui.screens.otherscreen.OtherScreen
 import com.davidlukash.cakebaker.ui.screens.savescreen.SaveScreen
 import com.davidlukash.cakebaker.ui.screens.settingsscreen.SettingsScreen
+import com.davidlukash.cakebaker.ui.screens.themescreen.ThemeScreen
 import com.davidlukash.cakebaker.ui.screens.upgradescreen.UpgradeScreen
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -154,6 +155,24 @@ fun Navigation(
         }
         composable<OtherScreen> {
             OtherScreen(navigateWithFade)
+        }
+        composable<ThemeScreen> {
+            ThemeScreen(
+                themes = listOf(
+                    "realistic",
+                    "moreitemstheme",
+                    "horrortheme",
+                ),
+                initialSelectedThemes = listOf(
+                    "realistic",
+                ),
+                listThemes = { },
+                navigateWithFade = navigateWithFade,
+                exportTheme = { },
+                deleteTheme = { },
+                applyThemes = { },
+                importTheme = { }
+            )
         }
     }
     NormalScreenMessageManager(

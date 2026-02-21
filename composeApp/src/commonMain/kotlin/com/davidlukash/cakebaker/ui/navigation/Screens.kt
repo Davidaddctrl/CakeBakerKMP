@@ -30,6 +30,8 @@ object SaveScreen : Screen("SaveScreen")
 object OtherScreen : Screen("OtherScreen")
 @Serializable
 object SettingsScreen : Screen("SettingsScreen")
+@Serializable
+object ThemeScreen : Screen("ThemeScreen")
 
 val allScreens = listOf(
     CakeScreen,
@@ -39,7 +41,8 @@ val allScreens = listOf(
     UpgradeScreen,
     SaveScreen,
     OtherScreen,
-    SettingsScreen
+    SettingsScreen,
+    ThemeScreen
 )
 
 val allScreensMap = allScreens.associateBy { Json.encodeToJsonElement(it as Screen).jsonObject["type"]?.jsonPrimitive?.content }
