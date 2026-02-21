@@ -173,7 +173,7 @@ fun CreateSaveDialog(
                 modifier = Modifier.weight(1f),
                 enabled = canCreate,
             ) { Text(if (isImport) Theme.getString("action.import") else Theme.getString("action.create")) }
-            SmallThemedButton(onClick = { cancel() }, modifier = Modifier.weight(1f), content = { Text("Cancel") })
+            SmallThemedButton(onClick = { cancel() }, modifier = Modifier.weight(1f), content = { Text(Theme.getString("action.cancel")) })
         }
     ) {
         Text(
