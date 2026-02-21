@@ -31,105 +31,94 @@ fun SaveScreen(
         listSaves()
     }
 
-    var dialogType by remember { mutableStateOf(SaveDialogType.NONE) }
-    var dialogData by remember { mutableStateOf<SaveFile?>(null) }
-    when (dialogType) {
-        SaveDialogType.NONE -> {}
-        SaveDialogType.LOAD -> {
-            dialogData?.let { save ->
-                val canMigrate = if (save.save.versionCode != null) {
-                    save.save.versionCode < VERSIONCODE
-                } else false
-                LoadSaveDialog(
-                    saveName = save.name,
-                    load = {
-                        dialogType = SaveDialogType.NONE
-                        loadSave(save)
-                        dialogData = null
-                    },
-                    cancel = {
-                        dialogType = SaveDialogType.NONE
-                        dialogData = null
-                    },
-                    loadWithMigration = if (canMigrate) {
-                        {
-                            dialogType = SaveDialogType.NONE
-                            loadWithMigration(save)
-                            dialogData = null
-                        }
-                    } else null
-                )
-            }
+    var dialogState by remember { mutableStateOf<SaveDialogState>(SaveDialogState.None) }
+    when (val state = dialogState) {
+        SaveDialogState.None -> {}
+        is SaveDialogState.Load -> {
+            val saveFile = state.saveFile
+            val canMigrate = if (saveFile.save.versionCode != null) {
+                saveFile.save.versionCode < VERSIONCODE
+            } else false
+            LoadSaveDialog(
+                saveName = saveFile.name,
+                load = {
+                    loadSave(saveFile)
+                    dialogState = SaveDialogState.None
+                },
+                cancel = {
+                    dialogState = SaveDialogState.None
+                },
+                loadWithMigration = if (canMigrate) {
+                    {
+                        loadWithMigration(saveFile)
+                        dialogState = SaveDialogState.None
+                    }
+                } else null
+            )
         }
 
-        SaveDialogType.DELETE -> {
-            dialogData?.let { save ->
-                DeleteSaveDialog(
-                    saveName = save.name,
-                    delete = {
-                        dialogType = SaveDialogType.NONE
-                        deleteSave(save)
-                        dialogData = null
-                    },
-                ) {
-                    dialogType = SaveDialogType.NONE
-                    dialogData = null
+        is SaveDialogState.Delete -> {
+            val saveFile = state.saveFile
+            DeleteSaveDialog(
+                saveName = saveFile.name,
+                delete = {
+                    deleteSave(saveFile)
+                    dialogState = SaveDialogState.None
+                },
+                cancel = {
+                    dialogState = SaveDialogState.None
                 }
-            }
+            )
         }
 
-        SaveDialogType.OVERWRITE -> {
-            dialogData?.let { save ->
-                OverwriteSaveDialog(
-                    saveName = save.name,
-                    overwrite = {
-                        dialogType = SaveDialogType.NONE
-                        overwriteSave(save)
-                        dialogData = null
-                    },
-                ) {
-                    dialogType = SaveDialogType.NONE
-                    dialogData = null
+        is SaveDialogState.Overwrite -> {
+            val saveFile = state.saveFile
+            OverwriteSaveDialog(
+                saveName = saveFile.name,
+                overwrite = {
+                    overwriteSave(saveFile)
+                    dialogState = SaveDialogState.None
+                },
+                cancel = {
+                    dialogState = SaveDialogState.None
                 }
-            }
+            )
         }
 
-        SaveDialogType.CREATE -> {
+        SaveDialogState.Create -> {
             CreateSaveDialog(
                 exists = { name ->
                     saveFiles.map { it.name.uppercase() }.contains(name.uppercase())
                 },
                 create = {
                     overwriteSave(SaveFile(it, Save.default)) /*Save data is populated later*/
-                    dialogType = SaveDialogType.NONE
+                    dialogState = SaveDialogState.None
                 },
-                cancel = { dialogType = SaveDialogType.NONE },
+                cancel = { dialogState = SaveDialogState.None },
             )
         }
     }
+
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
             TopBar()
         },
         bottomBar = {
-            BottomBar(import = { importSave() }, create = { dialogType = SaveDialogType.CREATE }, navigateWithFade)
+            BottomBar(import = { importSave() }, create = { dialogState = SaveDialogState.None }, navigateWithFade)
         },
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
         MainContent(
             saveFiles, exportSave,
             deleteSave = {
-                dialogType = SaveDialogType.DELETE
-                dialogData = it
+                dialogState = SaveDialogState.None
             },
             loadSave = {
-                dialogType = SaveDialogType.LOAD
-                dialogData = it
+                dialogState = SaveDialogState.None
             },
             overwriteSave = {
-                dialogType = SaveDialogType.OVERWRITE
-                dialogData = it
+                dialogState = SaveDialogState.None
             }, innerPadding
         )
     }
