@@ -27,14 +27,14 @@ fun MainContent(
         modifier = Modifier.fillMaxSize().padding(innerPadding).padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        columns = GridCells.Adaptive(900.dp)
+        columns = GridCells.Adaptive(800.dp)
     ) {
-        item {
-            SaveItem(exportSave, deleteSave, loadSave, overwriteSave, default)
+        item(key = "default") {
+            SaveItem(modifier = Modifier.animateItem(), exportSave, deleteSave, loadSave, overwriteSave, default)
         }
-        items(saveFiles.size) { index ->
+        items(saveFiles.size,key = { saveFiles[it].name }) { index ->
             val saveFile = saveFiles[index]
-            SaveItem(exportSave, deleteSave, loadSave, overwriteSave, saveFile)
+            SaveItem(modifier = Modifier.animateItem(), exportSave, deleteSave, loadSave, overwriteSave, saveFile)
         }
     }
 }

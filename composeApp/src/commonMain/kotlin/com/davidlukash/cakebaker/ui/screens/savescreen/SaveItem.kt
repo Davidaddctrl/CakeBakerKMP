@@ -21,6 +21,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SaveItem(
+    modifier: Modifier = Modifier,
     exportSave: (SaveFile) -> Unit,
     deleteSave: (SaveFile) -> Unit,
     loadSave: (SaveFile) -> Unit,
@@ -28,7 +29,7 @@ fun SaveItem(
     saveFile: SaveFile
 ) {
     PrimaryContainer(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         content = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
