@@ -105,20 +105,20 @@ fun SaveScreen(
             TopBar()
         },
         bottomBar = {
-            BottomBar(import = { importSave() }, create = { dialogState = SaveDialogState.None }, navigateWithFade)
+            BottomBar(import = { importSave() }, create = { dialogState = SaveDialogState.Create }, navigateWithFade)
         },
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     ) { innerPadding ->
         MainContent(
             saveFiles, exportSave,
             deleteSave = {
-                dialogState = SaveDialogState.None
+                dialogState = SaveDialogState.Delete(it)
             },
             loadSave = {
-                dialogState = SaveDialogState.None
+                dialogState = SaveDialogState.Load(it)
             },
             overwriteSave = {
-                dialogState = SaveDialogState.None
+                dialogState = SaveDialogState.Overwrite(it)
             }, innerPadding
         )
     }
