@@ -38,7 +38,6 @@ import cakebaker.composeapp.generated.resources.vcr_osd_mono
 import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.theme.json.BrushDescriptor
 import com.davidlukash.cakebaker.data.theme.json.JsonTheme
-import com.davidlukash.cakebaker.json
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.FontResource
 
@@ -508,9 +507,6 @@ data class Theme(
             dangerColor = Color(255, 0, 0),
             tabSelectedColor = Color(8, 160, 69)
         )
-        init {
-            println(json.encodeToString(default.toJsonTheme()))
-        }
 
 //        val darkDefault = Theme(
 //            idToImageMap = mapOf(
