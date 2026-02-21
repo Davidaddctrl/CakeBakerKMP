@@ -15,12 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
-
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
 import com.davidlukash.cakebaker.ui.navigation.OtherScreen
 import com.davidlukash.cakebaker.ui.navigation.SaveScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import com.davidlukash.cakebaker.ui.navigation.SettingsScreen
+import com.davidlukash.cakebaker.ui.navigation.ThemeScreen
 
 @Composable
 fun MenuScreen(navigateWithFade: (Screen) -> Unit) {
@@ -52,6 +52,15 @@ fun MenuScreen(navigateWithFade: (Screen) -> Unit) {
                 modifier = Modifier.width(480.dp),
                 content = {
                     Text(Theme.getString("action.saves"))
+                }
+            )
+            LargeThemedButton(
+                onClick = {
+                    navigateWithFade(ThemeScreen)
+                },
+                modifier = Modifier.width(480.dp),
+                content = {
+                    Text(Theme.getString("action.themes"))
                 }
             )
             LargeThemedButton(
