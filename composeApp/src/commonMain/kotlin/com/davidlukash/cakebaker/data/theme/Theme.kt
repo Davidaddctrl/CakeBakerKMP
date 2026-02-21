@@ -306,15 +306,15 @@ data class Theme(
                 "orders_panel.until_next_order" to "{0} until next order",
                 "orders_panel.help_text" to "Bake a cake to get orders",
 
-                "dialog.load_save.title" to "Load Save?",
+                "dialog.load_save.title" to "Load Save",
                 "dialog.load_save.load_text" to "Loading save \"{0}\" will overwrite your current progress.",
                 "dialog.load_save.migration_text" to "There are recommended migrations you may choose to apply that will not overwrite the save.",
                 "dialog.load_save.migration_title" to "Migrate?",
 
-                "dialog.delete_save.title" to "Delete Save?",
+                "dialog.delete_save.title" to "Delete Save",
                 "dialog.delete_save.delete_text" to "Are you sure you want to delete save \"{0}\" permanently?",
 
-                "dialog.overwrite_save.title" to "Overwrite Save?",
+                "dialog.overwrite_save.title" to "Overwrite Save",
                 "dialog.overwrite_save.overwrite_text" to "Are you sure you want to overwrite save \"{0}\"? You cannot revert this.",
 
                 "dialog.create_save.create_title" to "Create Save",
@@ -322,6 +322,18 @@ data class Theme(
                 "dialog.create_save.save_name_field.title" to "Save Name",
                 "dialog.create_save.error.already_exists" to "A save with this name already exists",
                 "dialog.create_save.error.invalid_name" to "Save name must not be blank and must only contain lowercase alphanumeric characters",
+
+                "dialog.load_themes.title" to "Load Themes",
+                "dialog.load_themes.load_text" to "Are you sure you want to load themes {0}?",
+
+                "dialog.delete_theme.title" to "Delete Theme",
+                "dialog.delete_theme.delete_text" to "Are you sure you want to delete theme \"{0}\" permanently?",
+
+                "dialog.import_theme.title" to "Import Theme",
+                "dialog.import_theme.theme_name_field.title" to "Theme Name",
+                "dialog.import_theme.error.already_exists" to "A theme with this name already exists",
+                "dialog.import_theme.error.invalid_name" to "Theme name must not be blank and must only contain lowercase alphanumeric characters",
+
 
                 "upgrade.expensive_vanilla_cakes.name" to "Expensive Vanilla Cakes",
                 "upgrade.page_name.cake" to "Cake",
