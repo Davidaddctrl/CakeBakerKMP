@@ -209,7 +209,7 @@ fun DebugPanel(
     val localScope = remember {
         CakeBakerScope(
             ScopeType(EnumScopeType.LOCAL),
-            DataActions.fromDataViewModel(mainViewModel.dataViewModel)
+            mainViewModel.dataViewModel
         )
     }
     var descriptorNames by remember { mutableStateOf(globalScope.listVariables().map { it.name }) }
