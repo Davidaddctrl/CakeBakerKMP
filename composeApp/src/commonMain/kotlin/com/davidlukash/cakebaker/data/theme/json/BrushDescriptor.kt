@@ -10,9 +10,12 @@ sealed class BrushDescriptor {
     @Serializable
     class SolidColor(@Serializable(with = ColorSerializer::class) val color: Color) : BrushDescriptor()
     @Serializable
-    class LinearGradient(val colors: List<@Serializable(with = ColorSerializer::class) Color>) : BrushDescriptor()
+    class VerticalGradient(val colors: List<@Serializable(with = ColorSerializer::class) Color>) : BrushDescriptor()
+    @Serializable
+    class HorizontalGradient(val colors: List<@Serializable(with = ColorSerializer::class) Color>) : BrushDescriptor()
     fun toBrush(): Brush = when(this) {
-        is LinearGradient -> Brush.linearGradient(colors)
+        is VerticalGradient -> Brush.verticalGradient(colors)
+        is HorizontalGradient -> Brush.horizontalGradient(colors)
         is SolidColor -> androidx.compose.ui.graphics.SolidColor(color)
     }
 }
