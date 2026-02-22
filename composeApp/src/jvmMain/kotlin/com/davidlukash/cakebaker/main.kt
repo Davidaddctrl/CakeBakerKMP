@@ -13,6 +13,7 @@ import com.davidlukash.cakebaker.repository.JVMSavesRepository
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.logger.AppLogger
+import com.davidlukash.cakebaker.repository.JVMThemesRepository
 import com.davidlukash.cakebaker.ui.DebugPanel
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
@@ -41,7 +42,8 @@ fun main() {
             }
         }
         val savesRepository = JVMSavesRepository(baseDirectory)
-        val viewModel = MainViewModel(savesRepository)
+        val themesRepository = JVMThemesRepository(baseDirectory)
+        val viewModel = MainViewModel(savesRepository, themesRepository)
         setSystemLookAndFeel()
         application {
             val localMainViewModel = remember { viewModel }

@@ -10,12 +10,16 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.davidlukash.cakebaker.data.AndroidSavesRepository
-import com.davidlukash.cakebaker.data.EXPORT_SAVE
-import com.davidlukash.cakebaker.data.IMPORT_SAVE
+import com.davidlukash.cakebaker.repository.AndroidSavesRepository
+import com.davidlukash.cakebaker.repository.EXPORT_SAVE
+import com.davidlukash.cakebaker.repository.IMPORT_SAVE
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.save.Save
+import com.davidlukash.cakebaker.data.theme.json.JsonTheme
 import com.davidlukash.cakebaker.logger.AppLogger
+import com.davidlukash.cakebaker.repository.AndroidThemesRepository
+import com.davidlukash.cakebaker.repository.EXPORT_THEME
+import com.davidlukash.cakebaker.repository.IMPORT_THEME
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -26,6 +30,7 @@ import java.io.FileOutputStream
 
 class MainActivity : ComponentActivity() {
     var saveToBeExported: Save? = null
+    var themeToBeExported: JsonTheme? = null
     lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +51,8 @@ class MainActivity : ComponentActivity() {
         }
 
         val savesRepository = AndroidSavesRepository(baseDirectory = filesDir, activity = this)
-        mainViewModel = MainViewModel(savesRepository)
+        val themesRepository = AndroidThemesRepository(baseDirectory = filesDir, activity = this)
+        mainViewModel = MainViewModel(savesRepository, themesRepository)
 
         logger.registerLogger(
             object : AppLogger() {
@@ -101,8 +107,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-        }
-        if (requestCode == IMPORT_SAVE && resultCode == RESULT_OK) {
+        } else if (requestCode == IMPORT_SAVE && resultCode == RESULT_OK) {
             CoroutineScope(Dispatchers.IO).launch {
                 data?.data?.also { uri ->
                     val result = withResultSuspend {
@@ -110,13 +115,52 @@ class MainActivity : ComponentActivity() {
                             FileInputStream(it.fileDescriptor).use { fileInputStream ->
                                 val text = fileInputStream.readBytes().decodeToString()
                                 val save = json.decodeFromString<Save>(text)
-                                mainViewModel.uiViewModel.setImportDialogOpen(true)
+                                mainViewModel.uiViewModel.setImportSaveDialogOpen(true)
                                 mainViewModel.uiViewModel.setImportSaveData(save)
                             }
                         }
                     }
                     result.onFailure {
                         mainViewModel.uiViewModel.addTextPopup("Save Error")
+                    }
+                }
+            }
+        } else if (requestCode == EXPORT_THEME && resultCode == RESULT_OK) {
+            val content = themeToBeExported?.let { json.encodeToString(it) }
+            CoroutineScope(Dispatchers.IO).launch {
+                content?.let {
+                    data?.data?.also { uri ->
+                        val result = withResultSuspend {
+                            contentResolver.openFileDescriptor(uri, "w")?.use {
+                                FileOutputStream(it.fileDescriptor).use { fileOutputStream ->
+                                    fileOutputStream.write(content.toByteArray())
+                                }
+                            }
+                        }
+                        result.onSuccess {
+                            mainViewModel.uiViewModel.addTextPopup("Theme Exported")
+                        }
+                        result.onFailure {
+                            mainViewModel.uiViewModel.addTextPopup("Theme Error")
+                        }
+                    }
+                }
+            }
+        } else if (requestCode == IMPORT_THEME && resultCode == RESULT_OK) {
+            CoroutineScope(Dispatchers.IO).launch {
+                data?.data?.also { uri ->
+                    val result = withResultSuspend {
+                        contentResolver.openFileDescriptor(uri, "r")?.use {
+                            FileInputStream(it.fileDescriptor).use { fileInputStream ->
+                                val text = fileInputStream.readBytes().decodeToString()
+                                val theme = json.decodeFromString<JsonTheme>(text)
+                                mainViewModel.uiViewModel.setImportThemeDialogOpen(true)
+                                mainViewModel.uiViewModel.setImportThemeData(theme)
+                            }
+                        }
+                    }
+                    result.onFailure {
+                        mainViewModel.uiViewModel.addTextPopup("Theme Error")
                     }
                 }
             }

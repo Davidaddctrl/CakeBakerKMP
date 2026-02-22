@@ -4,18 +4,19 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.lifecycle.ViewModel
 import com.davidlukash.cakebaker.repository.SavesRepository
 import com.davidlukash.cakebaker.engine.CakeBakerEngine
+import com.davidlukash.cakebaker.repository.ThemesRepository
 import kotlin.uuid.ExperimentalUuidApi
 
 class MainViewModel(
     savesRepository: SavesRepository,
+    themesRepository: ThemesRepository
 ) : ViewModel() {
-    val themeViewModel = ThemeViewModel()
 
     val engine = CakeBakerEngine()
 
     @OptIn(ExperimentalUuidApi::class)
     val uiViewModel = UIViewModel()
-
+    val themeViewModel = ThemeViewModel(uiViewModel, themesRepository)
     val saveViewModel = SaveViewModel(uiViewModel, savesRepository)
     val dataViewModel = DataViewModel(
         uiActions = uiViewModel,
@@ -30,6 +31,7 @@ class MainViewModel(
 
         engine.initialize(uiViewModel)
         dataViewModel.initialize()
+        themeViewModel.initialize()
     }
 }
 
