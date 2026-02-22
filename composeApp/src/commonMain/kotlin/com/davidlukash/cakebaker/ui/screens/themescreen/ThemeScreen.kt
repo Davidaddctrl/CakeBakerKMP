@@ -29,20 +29,22 @@ fun ThemeScreen(
 ) {
     var dialogState by remember { mutableStateOf<ThemeDialogState>(ThemeDialogState.None) }
     val selectedThemes = remember { mutableStateListOf<String>() }
+    var hasLoadedSelectedThemes by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         listThemes()
     }
 
-    LaunchedEffect(Unit) {
-        snapshotFlow { selectedThemes.toList() }.collect { selectedThemes ->
-            applyThemes(selectedThemes)
-        }
-    }
-
     LaunchedEffect(initialSelectedThemes) {
         selectedThemes.clear()
         selectedThemes.addAll(initialSelectedThemes)
+        hasLoadedSelectedThemes = true
+    }
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { selectedThemes.toList() }.collect { selectedThemes ->
+            if (hasLoadedSelectedThemes) applyThemes(selectedThemes)
+        }
     }
 
     when (val state = dialogState) {

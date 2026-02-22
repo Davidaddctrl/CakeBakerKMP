@@ -89,6 +89,13 @@ fun Navigation(
     ovenRunning: Boolean,
     nextOrderRemainingTime: Double?,
     orders: List<Order>,
+    themes: List<String>,
+    initialSelectedThemes: List<String>,
+    listThemes: () -> Unit,
+    exportTheme: (String) -> Unit,
+    deleteTheme: (String) -> Unit,
+    applyThemes: (List<String>) -> Unit,
+    importTheme: () -> Unit
 ) {
     val navController = rememberNavController()
     val lazyListState = rememberLazyListState()
@@ -158,20 +165,14 @@ fun Navigation(
         }
         composable<ThemeScreen> {
             ThemeScreen(
-                themes = listOf(
-                    "realistic",
-                    "moreitemstheme",
-                    "horrortheme",
-                ),
-                initialSelectedThemes = listOf(
-                    "realistic",
-                ),
-                listThemes = { },
+                themes = themes,
+                initialSelectedThemes = initialSelectedThemes,
+                listThemes = listThemes,
                 navigateWithFade = navigateWithFade,
-                exportTheme = { },
-                deleteTheme = { },
-                applyThemes = { },
-                importTheme = { }
+                exportTheme = exportTheme,
+                deleteTheme = deleteTheme,
+                applyThemes = applyThemes,
+                importTheme = importTheme,
             )
         }
     }

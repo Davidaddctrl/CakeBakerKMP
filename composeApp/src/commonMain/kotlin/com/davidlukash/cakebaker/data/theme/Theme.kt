@@ -473,7 +473,7 @@ data class Theme(
                         Color(0, 120, 255),
                     )
                 ),
-                containerColorBrushDescriptor = BrushDescriptor.LinearGradient(
+                containerColorBrushDescriptor = BrushDescriptor.VerticalGradient(
                     listOf(
                         Color(0, 100, 217, 255),
                         Color(0, 120, 255),

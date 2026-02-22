@@ -102,7 +102,21 @@ fun MainContent(
             item("default") {
                 ThemeItem(
                     theme = "default",
-                    before = { Spacer(Modifier.weight(1f)) },
+                    before = {
+                        IconButton(
+                            onClick = {
+                                exportTheme("default")
+                            },
+                            modifier = Modifier.size(64.dp)
+                        ) {
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.download),
+                                modifier = Modifier.size(48.dp),
+                                contentDescription = Theme.getString("content_description.export_theme"),
+                            )
+                        }
+                        Spacer(Modifier.weight(1f))
+                    },
                 )
             }
             items(selectedThemes.size, key = { selectedThemes[it] }) { index ->

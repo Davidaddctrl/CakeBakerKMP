@@ -30,6 +30,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.floor
@@ -172,10 +173,12 @@ fun secondsToString(totalSeconds: Double): String {
     }
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 val json = Json {
     prettyPrint = true
     allowStructuredMapKeys = true
     ignoreUnknownKeys = true
+    allowTrailingComma = true
 }
 
 expect fun Modifier.horizontalDragCursor(): Modifier
