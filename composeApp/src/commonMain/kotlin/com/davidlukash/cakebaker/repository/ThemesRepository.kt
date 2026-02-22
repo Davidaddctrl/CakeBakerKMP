@@ -13,4 +13,8 @@ abstract class ThemesRepository {
     abstract suspend fun exportTheme(file: ThemeFile): Boolean
 
     abstract suspend fun importTheme(): JsonTheme?
+
+    abstract suspend fun listSelectedThemes(): List<String>
+
+    abstract suspend fun setSelectedThemes(list: List<String>)
 }

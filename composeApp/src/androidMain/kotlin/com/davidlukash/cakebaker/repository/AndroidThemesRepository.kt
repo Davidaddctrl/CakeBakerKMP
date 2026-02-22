@@ -1,15 +1,23 @@
 package com.davidlukash.cakebaker.repository
 
+import android.content.Intent
+import android.os.Bundle
+import androidx.core.app.ActivityCompat.startActivityForResult
+import com.davidlukash.cakebaker.MainActivity
 import com.davidlukash.cakebaker.data.theme.ThemeFile
 import com.davidlukash.cakebaker.data.theme.json.JsonTheme
 import com.davidlukash.cakebaker.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import javax.swing.JFileChooser
 
-class JVMThemesRepository(
+const val EXPORT_THEME = 3
+const val IMPORT_THEME = 4
+
+
+class AndroidThemesRepository(
     baseDirectory: File,
+    val activity: MainActivity
 ) : ThemesRepository() {
     val themeDirectory = baseDirectory.resolve("themes").also { it.mkdirs() }
     val selectedThemesFile = baseDirectory.resolve("selected_themes.json").also { if (it.createNewFile()) it.writeText("[]") }
@@ -35,24 +43,29 @@ class JVMThemesRepository(
         existsBefore
     }
 
-    override suspend fun exportTheme(file: ThemeFile): Boolean = withContext(Dispatchers.IO) {
-        val fileChooser = JFileChooser()
-        val option = fileChooser.showSaveDialog(null)
-        if (option == JFileChooser.APPROVE_OPTION) {
-            val selectedFile = fileChooser.selectedFile
-            selectedFile.writeText(json.encodeToString(file.theme))
-            true
-        } else false
+    override suspend fun exportTheme(file: ThemeFile): Boolean {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_TITLE, "${file.name}.json")
+        }
+
+        activity.themeToBeExported = file.theme
+        startActivityForResult(activity, intent, EXPORT_THEME, Bundle())
+
+        return false
     }
 
-    override suspend fun importTheme(): JsonTheme? = withContext(Dispatchers.IO) {
-        val fileChooser = JFileChooser()
-        val option = fileChooser.showOpenDialog(null)
-        if (option == JFileChooser.APPROVE_OPTION) {
-            val selectedFile = fileChooser.selectedFile
-            val theme = json.decodeFromString<JsonTheme>(selectedFile.readText())
-            theme
-        } else null
+
+    override suspend fun importTheme(): JsonTheme? {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+        }
+
+        startActivityForResult(activity, intent, IMPORT_THEME, Bundle())
+
+        return null
     }
 
     override suspend fun listSelectedThemes(): List<String> = withContext(Dispatchers.IO) {
