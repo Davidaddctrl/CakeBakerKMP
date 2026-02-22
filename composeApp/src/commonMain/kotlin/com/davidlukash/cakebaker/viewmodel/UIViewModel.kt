@@ -17,6 +17,7 @@ import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.Popup
 import com.davidlukash.cakebaker.data.UIActions
 import com.davidlukash.cakebaker.data.save.Save
+import com.davidlukash.cakebaker.data.theme.json.JsonTheme
 import com.davidlukash.cakebaker.logger
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
 import com.davidlukash.cakebaker.ui.navigation.Screen
@@ -45,30 +46,39 @@ class UIViewModel : ViewModel(), UIActions {
     private val _debugConsole = MutableStateFlow(ConsoleType.NONE)
     val debugConsole = _debugConsole.asStateFlow()
 
-    private val _importDialogOpen = MutableStateFlow(false)
+    private val _importSaveDialogOpen = MutableStateFlow(false)
     private val _importSaveData = MutableStateFlow<Save?>(null)
 
-    val importDialogOpen = _importDialogOpen.asStateFlow()
+    val importSaveDialogOpen = _importSaveDialogOpen.asStateFlow()
     val importSaveData = _importSaveData.asStateFlow()
 
-    private val _variableShown = MutableStateFlow(false)
-    val variableShown = _variableShown.asStateFlow()
-
-    fun setVariableShown(variableShown: Boolean) {
+    fun setImportSaveDialogOpen(open: Boolean) {
         viewModelScope.launch {
-            _variableShown.emit(variableShown)
-        }
-    }
-
-    fun setImportDialogOpen(open: Boolean) {
-        viewModelScope.launch {
-            _importDialogOpen.emit(open)
+            _importSaveDialogOpen.emit(open)
         }
     }
 
     fun setImportSaveData(save: Save?) {
         viewModelScope.launch {
             _importSaveData.emit(save)
+        }
+    }
+
+    private val _importThemeDialogOpen = MutableStateFlow(false)
+    private val _importThemeData = MutableStateFlow<JsonTheme?>(null)
+    
+    val importThemeDialogOpen = _importThemeDialogOpen.asStateFlow()
+    val importThemeData = _importThemeData.asStateFlow()
+
+    fun setImportThemeDialogOpen(open: Boolean) {
+        viewModelScope.launch {
+            _importThemeDialogOpen.emit(open)
+        }
+    }
+
+    fun setImportThemeData(theme: JsonTheme?) {
+        viewModelScope.launch {
+            _importThemeData.emit(theme)
         }
     }
 
