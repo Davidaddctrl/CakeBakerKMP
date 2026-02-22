@@ -33,7 +33,7 @@ fun ItemTopRow(uiState: UIState, quantityChanges: Map<String, BigDecimal> = mapO
         ScrollableRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.Bottom,
+            verticalAlignment = Alignment.Top,
             scrollState = scrollState,
             coroutineScope = coroutineScope
         ) {

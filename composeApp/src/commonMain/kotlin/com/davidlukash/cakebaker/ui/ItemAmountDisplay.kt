@@ -1,8 +1,10 @@
 package com.davidlukash.cakebaker.ui
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,7 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.item.Item
@@ -31,6 +35,13 @@ fun ItemAmountDisplay(
 ) {
     val image = Theme.getImage(item.image)
     val localContentColor = if (LocalInspectionMode.current) Color.White else LocalContentColor.current
+    val textMeasurer = rememberTextMeasurer()
+    val layoutResult = textMeasurer.measure(
+        text = "A\nA",
+        style = Theme.Styles.verySmallBodyStyle
+    )
+    val heightPx = layoutResult.size.height
+    val labelHeight = LocalDensity.current.run { heightPx.toDp() }
     CompositionLocalProvider(
         LocalContentColor provides localContentColor
     ) {
@@ -39,7 +50,10 @@ fun ItemAmountDisplay(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
         ) {
-            Column(modifier = Modifier.height(Theme.Styles.verySmallBodyStyle.fontSize.value.dp * 2)) {
+            Column(
+                modifier = Modifier.height(labelHeight),
+                verticalArrangement = Arrangement.Top
+            ) {
                 val name = Theme.getString(item.name)
                 Text(
                     name.replace(" ", "\n"),
