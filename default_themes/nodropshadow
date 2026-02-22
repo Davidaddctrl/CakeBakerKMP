@@ -1,0 +1,20 @@
+{
+    "buttonTheme": {
+        "shouldDropShadow": false
+    },
+    "switchButtonTheme": {
+        "shouldDropShadow": false
+    },
+    "backgroundTheme": {
+        "shouldDropShadow": false
+    },
+    "containerTheme": {
+        "shouldDropShadow": false
+    },
+    "secondaryContainerTheme": {
+        "shouldDropShadow": false
+    },
+    "textFieldTheme": {
+        "shouldDropShadow": false
+    }
+}

@@ -1,0 +1,436 @@
+{
+  "progressBarTheme": {
+    "border": {
+      "red": 0.9,
+      "green": 0.9,
+      "blue": 1,
+      "alpha": 0.3,
+      "specified": true
+    },
+    "backgroundColor": {
+      "red": 0.9,
+      "green": 0.9,
+      "blue": 1,
+      "alpha": 0.2,
+      "specified": true
+    },
+    "filledColor": {
+      "red": 0.85,
+      "green": 0.85,
+      "blue": 0.9,
+      "alpha": 0.7,
+      "specified": true
+    },
+    "contentColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 1.0,
+      "specified": true
+    }
+  },
+  "buttonTheme": {
+    "containerColor": {
+      "red": 0.9,
+      "green": 0.9,
+      "blue": 1,
+      "alpha": 0.2,
+      "specified": true
+    },
+    "disabledContainerColor": {
+      "red": 0.9,
+      "green": 0.9,
+      "blue": 1,
+      "alpha": 0.2,
+      "specified": true
+    },
+    "contentColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 1.0,
+      "specified": true
+    },
+    "disabledContentColor": {
+      "red": 0.85,
+      "green": 0.85,
+      "blue": 0.9,
+      "alpha": 1,
+      "specified": true
+    },
+    "borderColor": {
+      "red": 0.9,
+      "green": 0.9,
+      "blue": 1,
+      "alpha": 0.3,
+      "specified": true
+    },
+    "disabledBorderColor": {
+      "red": 0.9,
+      "green": 0.9,
+      "blue": 1,
+      "alpha": 0.3,
+      "specified": true
+    },
+    "shouldDropShadow": false
+  },
+  "switchButtonTheme": {
+    "borderColor": {
+      "red": 0.9,
+      "green": 0.9,
+      "blue": 1,
+      "alpha": 0.3,
+      "specified": true
+    },
+    "disabledBorderColor": {
+      "red": 0.9,
+      "green": 0.9,
+      "blue": 1,
+      "alpha": 0.3,
+      "specified": true
+    },
+    "containerColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 0.3,
+      "specified": true
+    },
+    "disabledContainerColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 0.3,
+      "specified": true
+    },
+    "offSelectedContainerColor": {
+      "red": 1.0,
+      "green": 0.0,
+      "blue": 0.0,
+      "alpha": 0.7,
+      "specified": true
+    },
+    "offUnselectedContainerColor": {
+      "red": 1.0,
+      "green": 0.0,
+      "blue": 0.0,
+      "alpha": 0.3019608,
+      "specified": true
+    },
+    "offSelectedTextColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 1.0,
+      "specified": true
+    },
+    "offUnselectedTextColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 0.3019608,
+      "specified": true
+    },
+    "onSelectedContainerColor": {
+      "red": 0.22745098,
+      "green": 0.61960787,
+      "blue": 0.0,
+      "alpha": 0.7,
+      "specified": true
+    },
+    "onUnselectedContainerColor": {
+      "red": 0.22745098,
+      "green": 0.61960787,
+      "blue": 0.0,
+      "alpha": 0.3019608,
+      "specified": true
+    },
+    "onSelectedTextColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 1.0,
+      "specified": true
+    },
+    "onUnselectedTextColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 0.3019608,
+      "specified": true
+    },
+    "shouldDropShadow": false
+  },
+  "backgroundTheme": {
+    "borderColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 0.0,
+        "green": 0.0,
+        "blue": 0.0,
+        "alpha": 0.0,
+        "specified": true
+      }
+    },
+    "containerColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 0.1373,
+        "green": 0.5961,
+        "blue": 0.8706,
+        "alpha": 1.0,
+        "specified": true
+      }
+    },
+    "contentColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 1.0,
+      "specified": true
+    },
+    "shouldDropShadow": false
+  },
+  "containerTheme": {
+    "borderColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.VerticalGradient",
+      "colors": [
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.2,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.4,
+          "specified": true
+        }
+      ]
+    },
+    "containerColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.VerticalGradient",
+      "colors": [
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.2,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.4,
+          "specified": true
+        }
+      ]
+    },
+    "contentColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 1.0,
+      "specified": true
+    },
+    "shouldDropShadow": false
+  },
+  "secondaryContainerTheme": {
+    "borderColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.VerticalGradient",
+      "colors": [
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.2,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.4,
+          "specified": true
+        }
+      ]
+    },
+    "containerColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.VerticalGradient",
+      "colors": [
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.2,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.3,
+          "specified": true
+        },
+        {
+          "red": 1,
+          "green": 1.0,
+          "blue": 1,
+          "alpha": 0.4,
+          "specified": true
+        }
+      ]
+    },
+    "contentColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 1.0,
+      "specified": true
+    },
+    "shouldDropShadow": false
+  },
+  "textFieldTheme": {
+    "cursorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1.0,
+        "specified": true
+      }
+    },
+    "contentColor": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 1.0,
+      "specified": true
+    },
+    "placeholderColor": {
+      "red": 0.5019608,
+      "green": 0.5019608,
+      "blue": 0.5019608,
+      "alpha": 1.0,
+      "specified": true
+    },
+    "containerColor": {
+      "red": 1,
+      "green": 1.0,
+      "blue": 1,
+      "alpha": 0.2,
+      "specified": true
+    },
+    "borderColor": {
+      "red": 1,
+      "green": 1.0,
+      "blue": 1,
+      "alpha": 0.2,
+      "specified": true
+    },
+    "shouldDropShadow": false
+  },
+  "successColor": {
+    "red": 0.2,
+    "green": 1,
+    "blue": 0.2,
+    "alpha": 1.0,
+    "specified": true
+  },
+  "dangerColor": {
+    "red": 1.0,
+    "green": 0.0,
+    "blue": 0.0,
+    "alpha": 1.0,
+    "specified": true
+  },
+  "tabSelectedColor": {
+    "red": 0.75,
+    "green": 0.85,
+    "blue": 1,
+    "alpha": 1.0,
+    "specified": true
+  }
+}
