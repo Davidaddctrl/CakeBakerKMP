@@ -49,10 +49,9 @@ import kotlin.uuid.ExperimentalUuidApi
 class DataViewModel(
     val uiActions: UIActions,
     val engine: CakeBakerEngine
-) : ViewModel() {
-    val dataActions = DataActions.fromDataViewModel(this)
+) : ViewModel(), DataActions {
 
-    val globalScope = CakeBakerScope(ScopeType(EnumScopeType.GLOBAL), dataActions)
+    val globalScope = CakeBakerScope(ScopeType(EnumScopeType.GLOBAL), this)
 
     var loopJob: Job? = null
 
@@ -64,7 +63,7 @@ class DataViewModel(
     var thisVersionCode: Int? = null
 
     init {
-        engine.dataActions = dataActions
+        engine.dataActions = this
     }
 
     fun initialize() {
@@ -114,6 +113,13 @@ class DataViewModel(
     var isFirstBake = false
 
     private var tempCakeTier: Int = 1
+
+
+    override fun getItems(): List<Item> = _items.value
+
+    override fun getOrders(): List<Order> = _orders.value
+
+    override fun getUpgrades(): List<Upgrade> = _upgrades.value
 
     suspend fun tickOven(dt: Long) {
         val ovenRunning = ovenRunning.value
@@ -400,7 +406,7 @@ class DataViewModel(
         }
     }
 
-    fun setOrders(orders: List<Order>) {
+    override fun setOrders(orders: List<Order>) {
         viewModelScope.launch {
             _orders.emit(orders)
         }
@@ -468,7 +474,7 @@ class DataViewModel(
         }
     }
 
-    fun updateItem(item: Item) {
+    override fun updateItem(item: Item) {
         viewModelScope.launch {
             var hasMatch = false
             _items.emit(
@@ -485,13 +491,13 @@ class DataViewModel(
         }
     }
 
-    fun setItems(items: List<Item>) {
+    override fun setItems(items: List<Item>) {
         viewModelScope.launch {
             _items.emit(items)
         }
     }
 
-    fun updateUpgrade(upgrade: Upgrade) {
+    override fun updateUpgrade(upgrade: Upgrade) {
         viewModelScope.launch {
             var hasMatch = false
             _upgrades.emit(
@@ -508,13 +514,13 @@ class DataViewModel(
         }
     }
 
-    fun setUpgrades(upgrades: List<Upgrade>) {
+    override fun setUpgrades(upgrades: List<Upgrade>) {
         viewModelScope.launch {
             _upgrades.emit(upgrades)
         }
     }
 
-    fun updateOrder(order: Order) {
+    override fun updateOrder(order: Order) {
         viewModelScope.launch {
             var hasMatch = false
             _orders.emit(
@@ -531,7 +537,7 @@ class DataViewModel(
         }
     }
 
-    fun updateOrderAtIndex(order: Order, index: Int) {
+    override fun updateOrderAtIndex(order: Order, index: Int) {
         viewModelScope.launch {
             var hasMatch = false
             _orders.emit(
@@ -708,7 +714,7 @@ class DataViewModel(
                 amount = cake.amount - upgrade.price.toBigDecimal()
             )
         )
-        val localScope = CakeBakerScope(ScopeType(EnumScopeType.LOCAL), dataActions)
+        val localScope = CakeBakerScope(ScopeType(EnumScopeType.LOCAL), this)
         localScope.setVariable("locals.this", createObject("globals.upgrades.${upgrade.id}"))
         val origin = OriginNode("Upgrade On Buy", upgrade.onBuy)
         upgrade.onBuy.forEach { expression ->
