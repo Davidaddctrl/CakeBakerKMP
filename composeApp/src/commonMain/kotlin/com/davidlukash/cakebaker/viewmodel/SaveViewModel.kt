@@ -20,20 +20,14 @@ class SaveViewModel(
     private val _saves = MutableStateFlow(emptyList<SaveFile>())
     val saves = _saves.asStateFlow()
 
-    suspend fun listSavesSuspend(): Result<List<SaveFile>> {
+    suspend fun listSavesSuspend(addPopupOnFailure: Boolean = true): Result<List<SaveFile>> {
        return savesRepository.listSaves().onSuccess {
            _saves.emit(it)
+       }.let {
+           if (addPopupOnFailure) it.onFailure {
+               uiActions.addTextPopup("Failed to list saves.")
+           } else it
        }
-    }
-
-    fun listSaves(onResult: (Result<List<SaveFile>>) -> Unit = {}) {
-        viewModelScope.launch {
-            onResult(
-                listSavesSuspend().onFailure {
-                    uiActions.addTextPopup("Failed to list saves.")
-                }
-            )
-        }
     }
 
     suspend fun deleteSave(name: String): Result<Boolean> = savesRepository.deleteSave(name)
