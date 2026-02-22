@@ -76,7 +76,7 @@ class WASMSavesRepository : SavesRepository() {
                         if (buffer != null) {
                             val content = Int8Array(buffer).toByteArray().decodeToString()
                             val save = json.decodeFromString<Save>(content)
-                            mainViewModel.uiViewModel.setImportDialogOpen(true)
+                            mainViewModel.uiViewModel.setImportSaveDialogOpen(true)
                             mainViewModel.uiViewModel.setImportSaveData(save)
                         }
                     }
