@@ -82,6 +82,11 @@ class UIViewModel : ViewModel(), UIActions {
         }
     }
 
+    override fun triggerThemeImport(data: JsonTheme) {
+        setImportThemeData(data)
+        setImportThemeDialogOpen(true)
+    }
+
     override fun setDebugConsole(type: ConsoleType) {
         viewModelScope.launch {
             _debugConsole.emit(type)
