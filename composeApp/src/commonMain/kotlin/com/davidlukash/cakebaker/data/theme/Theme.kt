@@ -2,6 +2,7 @@ package com.davidlukash.cakebaker.data.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -112,7 +113,7 @@ data class Theme(
     )
 
     fun idToImage(name: String): ImageData {
-        return idToImageMap[name] ?: ImageData()
+        return idToImageMap[name].takeOrDefaultWithWarn("Image resource with id $name not found", ImageData())
     }
 
     fun idToString(name: String): String {
@@ -176,12 +177,14 @@ data class Theme(
 
         @Composable
         fun getImage(name: String): ImageData {
-            return LocalTheme.current.idToImage(name)
+            val theme = LocalTheme.current
+            return remember(theme, name) { theme.idToImage(name) }
         }
 
         @Composable
         fun getString(name: String): String {
-            return LocalTheme.current.idToString(name)
+            val theme = LocalTheme.current
+            return remember(name, theme) { theme.idToString(name) }
         }
 
         val default = Theme(
@@ -266,6 +269,8 @@ data class Theme(
                 "action.back" to "Back",
                 "action.themes" to "Themes",
                 "action.apply" to "Apply",
+                "action.import_default_themes" to "Import Default Themes",
+                "action.import_from_url" to "Import from URL",
 
                 "content_description.menu" to "Menu",
                 "content_description.previous_tier" to "Previous Tier",
@@ -381,6 +386,13 @@ data class Theme(
                 "upgrade.page_name.baking_powder" to "Baking Powder",
                 "upgrade.dense_baking_powder.name" to "Dense Baking Powder",
                 "upgrade.page_name.baking_powder" to "Baking Powder",
+
+                "dialog.import_url_theme.title" to "Import Theme from URL",
+                "dialog.import_url_theme.theme_name_field.title" to "URL",
+                "dialog.import_url_theme.theme_name_field.placeholder" to "https://...",
+
+                "dialog.wait_for_import_theme.title" to "Importing Themes",
+                "dialog.wait_for_import_theme.text" to "Please wait. Importing external themes."
             ),
             font = Res.font.vcr_osd_mono,
             _scaledStyles = TextStyles(
