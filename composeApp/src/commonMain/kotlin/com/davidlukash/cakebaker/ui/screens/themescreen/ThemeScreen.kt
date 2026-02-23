@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.davidlukash.cakebaker.DEFAULT_THEME_REGISTRY_URL
 import com.davidlukash.cakebaker.ui.container.Background
 import com.davidlukash.cakebaker.ui.navigation.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -25,7 +26,8 @@ fun ThemeScreen(
     exportTheme: (String) -> Unit,
     deleteTheme: (String) -> Unit,
     applyThemes: (List<String>) -> Unit,
-    importTheme: () -> Unit
+    importTheme: () -> Unit,
+    importThemeFromURL: (String) -> Unit,
 ) {
     var dialogState by remember { mutableStateOf<ThemeDialogState>(ThemeDialogState.None) }
     val selectedThemes = remember { mutableStateListOf<String>() }
@@ -59,6 +61,16 @@ fun ThemeScreen(
                 cancel = { dialogState = ThemeDialogState.None }
             )
         }
+
+        is ThemeDialogState.ImportFromURL -> {
+            ImportURLThemeDialog(
+                import = {
+                    importThemeFromURL(it)
+                    dialogState = ThemeDialogState.None
+                },
+                cancel = { dialogState = ThemeDialogState.None },
+            )
+        }
     }
     Scaffold(
         containerColor = Color.Transparent,
@@ -68,6 +80,8 @@ fun ThemeScreen(
         bottomBar = {
             BottomBar(
                 import = { importTheme() },
+                importDefaultThemes = { importThemeFromURL(DEFAULT_THEME_REGISTRY_URL) },
+                importThemeFromURL = { dialogState = ThemeDialogState.ImportFromURL },
                 navigateWithFade = navigateWithFade
             )
         },
@@ -105,6 +119,7 @@ fun ThemeScreenPreview() {
             deleteTheme = {},
             applyThemes = {},
             importTheme = {},
+            importThemeFromURL = {}
         )
     }
 }

@@ -29,14 +29,21 @@ import com.davidlukash.cakebaker.ui.navigation.Navigation
 import com.davidlukash.cakebaker.ui.navigation.transitionDuration
 import com.davidlukash.cakebaker.ui.screens.savescreen.CreateSaveDialog
 import com.davidlukash.cakebaker.ui.screens.themescreen.ImportThemeDialog
+import com.davidlukash.cakebaker.ui.screens.themescreen.WaitForImportThemeDialog
 import com.davidlukash.cakebaker.viewmodel.LocalMainViewModel
 import com.davidlukash.cakebaker.viewmodel.LocalViewModelProvided
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 
 const val VERSION = "Beta 0.9.2"
 const val VERSIONCODE = 1
+
+const val DEFAULT_THEME_REGISTRY_URL = "https://davidaddctrl.github.io/CakeBakerKMP/default_themes/themes.json"
+
+val client = HttpClient(CIO)
 
 fun versionCodeToString(versionCode: Int?): String {
     return if (versionCode == null) "Unknown" else when (versionCode) {
@@ -92,6 +99,7 @@ fun App() {
         val ovenRunning by dataViewModel.ovenRunning.collectAsState()
         val nextOrderRemainingTime by dataViewModel.nextOrderRemainingTime.collectAsState(initial = null)
         val orders by dataViewModel.orders.collectAsState()
+        val waitingForImport by themeViewModel.waitingForImport.collectAsState()
 
         LaunchedEffect(density) {
             mainViewModel.uiViewModel.updateTrueDensity(density)
@@ -100,6 +108,8 @@ fun App() {
         CompositionLocalProvider(
             LocalTheme provides theme
         ) {
+            if (waitingForImport) WaitForImportThemeDialog()
+
             if (importSaveDialogOpen) {
                 CreateSaveDialog(
                     exists = { name ->
@@ -347,6 +357,9 @@ fun App() {
                                         }
                                 }
                             },
+                            importThemeFromURL = {
+                                themeViewModel.importThemeFromURL(it)
+                            }
                         )
                     }
                     if (debugConsole == ConsoleType.POPUP) DebugPopup()

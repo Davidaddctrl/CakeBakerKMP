@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
@@ -16,10 +18,11 @@ import com.davidlukash.cakebaker.ui.navigation.MenuScreen
 import com.davidlukash.cakebaker.ui.navigation.Screen
 
 @Composable
-fun BottomBar(import: () -> Unit, navigateWithFade: (Screen) -> Unit) {
+fun BottomBar(import: () -> Unit, importDefaultThemes: () -> Unit, importThemeFromURL: () -> Unit, navigateWithFade: (Screen) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.Bottom
     ) {
         LargeThemedButton(
             onClick = {
@@ -32,6 +35,34 @@ fun BottomBar(import: () -> Unit, navigateWithFade: (Screen) -> Unit) {
         )
         Spacer(
             modifier = Modifier.weight(1f)
+        )
+        LargeThemedButton(
+            onClick = {
+                importDefaultThemes()
+            },
+            modifier = Modifier.width(300.dp),
+            content = {
+                Text(
+                    Theme.getString("action.import_default_themes"),
+                    style = Theme.Styles.smallBodyStyle,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        )
+        LargeThemedButton(
+            onClick = {
+                importThemeFromURL()
+            },
+            modifier = Modifier.width(300.dp),
+            content = {
+                Text(
+                    Theme.getString("action.import_from_url"),
+                    style = Theme.Styles.smallBodyStyle,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         )
         LargeThemedButton(
             onClick = {

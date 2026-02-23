@@ -95,7 +95,8 @@ fun Navigation(
     exportTheme: (String) -> Unit,
     deleteTheme: (String) -> Unit,
     applyThemes: (List<String>) -> Unit,
-    importTheme: () -> Unit
+    importTheme: () -> Unit,
+    importThemeFromURL: (String) -> Unit
 ) {
     val navController = rememberNavController()
     val lazyListState = rememberLazyListState()
@@ -173,6 +174,7 @@ fun Navigation(
                 deleteTheme = deleteTheme,
                 applyThemes = applyThemes,
                 importTheme = importTheme,
+                importThemeFromURL = importThemeFromURL,
             )
         }
     }
