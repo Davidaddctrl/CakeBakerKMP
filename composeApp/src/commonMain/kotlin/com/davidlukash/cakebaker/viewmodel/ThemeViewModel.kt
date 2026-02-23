@@ -2,15 +2,23 @@ package com.davidlukash.cakebaker.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.davidlukash.cakebaker.client
 import com.davidlukash.cakebaker.data.UIActions
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.data.theme.ThemeFile
 import com.davidlukash.cakebaker.data.theme.json.JsonTheme
+import com.davidlukash.cakebaker.json
 import com.davidlukash.cakebaker.repository.ResultThemesRepositoryWrapper
 import com.davidlukash.cakebaker.repository.ThemesRepository
+import com.davidlukash.cakebaker.withResultSuspend
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsBytes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
 
 class ThemeViewModel(
     val uiActions: UIActions,
@@ -51,6 +59,7 @@ class ThemeViewModel(
             } else it
         }
     }
+
     suspend fun deleteTheme(name: String): Result<Boolean> = themesRepository.deleteTheme(name)
 
     suspend fun upsertTheme(file: ThemeFile) = themesRepository.upsertTheme(file)
@@ -79,6 +88,53 @@ class ThemeViewModel(
                     applySelectedThemes(selectedThemes.value)
                 }
             }
+        }
+    }
+
+    private val _waitingForImport = MutableStateFlow(false)
+    val waitingForImport = _waitingForImport.asStateFlow()
+
+    private suspend fun _importThemeFromURL(url: String, name: String?, isFirst: Boolean) {
+        withResultSuspend {
+            if (isFirst) _waitingForImport.emit(true)
+            val response = client.get(url)
+            val responseString = response.bodyAsBytes().decodeToString()
+            val responseJson = json.parseToJsonElement(responseString)
+            val shouldDialog = responseJson is JsonObject && name == null
+            if (responseJson is JsonArray) {
+                val listURLS = json.decodeFromJsonElement<List<String>>(responseJson)
+                val regex = Regex("[a-z0-9]")
+                listURLS.forEach { thisURL ->
+                    val name = thisURL.split("/").last { it.isNotBlank() }.split(".").first()
+                        .filter { regex.matches(it.toString()) }
+                    if (name.isNotBlank()) {
+                        _importThemeFromURL(thisURL, name, false)
+                    }
+                }
+            }
+            if (responseJson is JsonObject) {
+                val jsonTheme = json.decodeFromJsonElement<JsonTheme>(responseJson)
+                if (name == null) {
+                    _waitingForImport.emit(false)
+                    uiActions.triggerThemeImport(jsonTheme)
+                } else {
+                    themesRepository.upsertTheme(ThemeFile(name, jsonTheme))
+                }
+            }
+            if (isFirst && !shouldDialog) {
+                _waitingForImport.emit(false)
+                listThemesSuspend()
+            }
+        }.onFailure {
+            if (isFirst) _waitingForImport.emit(false)
+            uiActions.addTextPopup("Failed to import theme from URL \"$url\".")
+        }
+    }
+
+
+    fun importThemeFromURL(url: String, name: String? = null, isFirst: Boolean = true) {
+        viewModelScope.launch {
+            _importThemeFromURL(url, name, isFirst)
         }
     }
 }
