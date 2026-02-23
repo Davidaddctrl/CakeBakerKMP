@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
@@ -52,6 +53,8 @@ fun versionCodeToString(versionCode: Int?): String {
         else -> "Unknown"
     }
 }
+
+expect fun loadBytesToFont(identity: String, byteArray: ByteArray): Font
 
 @OptIn(ExperimentalUuidApi::class)
 @Composable

@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,8 +45,10 @@ import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.FontResource
 
 @Composable
-fun convertStyles(styles: TextStyles, font: FontResource): TextStyles {
-    val fontFamily = FontFamily(Font(font))
+fun convertStyles(styles: TextStyles, externalFont: Font?, font: FontResource): TextStyles {
+    val fontFamily = FontFamily(
+        externalFont ?: Font(font)
+    )
     return styles.copy(
         titleStyle = convertStyle(styles.titleStyle, fontFamily),
         buttonTextStyle = convertStyle(styles.buttonTextStyle, fontFamily),
@@ -80,6 +83,7 @@ data class Theme(
     val idToImageMap: Map<String, ImageData>,
     val idToStringMap: Map<String, String>,
     val font: FontResource,
+    val externalFont: Font?,
     val _scaledStyles: TextStyles,
     val _unscaledStyles: TextStyles,
     val progressBarTheme: ProgressBarTheme,
@@ -126,7 +130,7 @@ data class Theme(
             return convertStyles(
                 if (LocalIsScaled.current) {
                     _scaledStyles
-                } else _unscaledStyles, font
+                } else _unscaledStyles, externalFont, font
             )
         }
 
@@ -395,6 +399,7 @@ data class Theme(
                 "dialog.wait_for_import_theme.text" to "Please wait. Importing external themes."
             ),
             font = Res.font.vcr_osd_mono,
+            externalFont = null,
             _scaledStyles = TextStyles(
                 titleStyle = TextStyle(fontSize = 72.sp, shadow = Shadow(color = Color.Black, offset = Offset(0f, 4f))),
                 buttonTextStyle = TextStyle(

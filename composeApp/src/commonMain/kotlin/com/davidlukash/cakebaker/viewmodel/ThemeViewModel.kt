@@ -75,7 +75,7 @@ class ThemeViewModel(
             val themesMap = themes.value.associateBy { it.name }
             var theme = Theme.default
             selectedThemes.reversed().forEach { themeName ->
-                themesMap[themeName]?.let { theme = it.theme.toTheme(theme) }
+                themesMap[themeName]?.let { theme = it.theme.loadToTheme(theme) }
             }
             setTheme(theme)
         }

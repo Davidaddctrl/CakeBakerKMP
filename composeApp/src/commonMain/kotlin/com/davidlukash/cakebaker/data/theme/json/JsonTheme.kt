@@ -1,15 +1,26 @@
 package com.davidlukash.cakebaker.data.theme.json
 
 import androidx.compose.ui.graphics.Color
+import com.davidlukash.cakebaker.client
 import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.serializers.ColorSerializer
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.loadBytesToFont
+import com.davidlukash.cakebaker.withResultSuspend
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsBytes
+import io.ktor.client.statement.readRawBytes
+import kotlinx.io.bytestring.decode
+import kotlinx.io.bytestring.decodeIntoByteArray
 import kotlinx.serialization.Serializable
+import kotlin.io.encoding.Base64
+import kotlin.random.Random
 
 @Serializable
 data class JsonTheme(
     val idToImageMap: Map<String, String?> = mapOf(),
     val idToStringMap: Map<String, String> = mapOf(),
+    val externalFont: String? = null,
     val scaledStyles: JsonTextStyles? = null,
     val unscaledStyles: JsonTextStyles? = null,
     val progressBarTheme: JsonProgressBarTheme? = null,
@@ -26,7 +37,7 @@ data class JsonTheme(
     @Serializable(with = ColorSerializer::class)
     val tabSelectedColor: Color? = null,
 ) {
-    fun toTheme(base: Theme): Theme {
+    suspend fun loadToTheme(base: Theme): Theme {
         val intersection = base.idToImageMap.keys intersect idToImageMap.keys
         val uniqueFromBase = base.idToImageMap.keys - idToImageMap.keys
         val uniqueFromBaseMap = uniqueFromBase.mapNotNull { key ->
@@ -43,9 +54,19 @@ data class JsonTheme(
             fromBase?.copy(imagePath = fromThis)?.let { key to it }
         }.toMap()
         val total = nonOverridden + merged
+        val fontResult = withResultSuspend {
+            if (externalFont != null) {
+                val bytes = if (externalFont.startsWith("http")) {
+                    val response = client.get(externalFont)
+                    response.bodyAsBytes()
+                } else Base64.decode(externalFont)
+                loadBytesToFont(externalFont.take(64), bytes)
+            } else null
+        }
         return base.copy(
             idToImageMap = total,
             idToStringMap = base.idToStringMap + idToStringMap,
+            externalFont = fontResult.getOrNull() ?: base.externalFont,
             _scaledStyles = scaledStyles?.toTheme(base._scaledStyles) ?: base._scaledStyles,
             _unscaledStyles = unscaledStyles?.toTheme(base._unscaledStyles) ?: base._unscaledStyles,
             progressBarTheme = progressBarTheme?.toTheme(base.progressBarTheme) ?: base.progressBarTheme,
