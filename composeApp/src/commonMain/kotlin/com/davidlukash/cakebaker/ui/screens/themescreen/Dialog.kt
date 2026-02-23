@@ -49,6 +49,21 @@ fun DeleteThemeDialogPreview() {
 }
 
 @Composable
+fun WaitForImportThemeDialog() {
+    GameDialog(
+        modifier = Modifier.width(512.dp), title = { Text(Theme.getString("dialog.wait_for_import_theme.title")) },
+        buttons = {},
+        content = { Text(Theme.getString("dialog.wait_for_import_theme.text")) },
+    )
+}
+
+@Preview
+@Composable
+fun WaitForImportThemeDialogPreview() {
+    WaitForImportThemeDialog()
+}
+
+@Composable
 fun ImportThemeDialog(
     exists: (String) -> Boolean,
     import: (String) -> Unit,
@@ -132,4 +147,59 @@ fun ImportThemeDialog(
 @Composable
 fun ImportThemeDialogPreview() {
     ImportThemeDialog(exists = { false }, import = {}, cancel = {})
+}
+
+@Composable
+fun ImportURLThemeDialog(
+    import: (String) -> Unit,
+    cancel: () -> Unit,
+) {
+    var themeURL by remember { mutableStateOf("") }
+
+    val imeBottom = WindowInsets.ime.getBottom(LocalDensity.current)
+    var bottomToBottomHeight by remember { mutableStateOf(0) }
+    val position by animateFloatAsState(
+        targetValue = (if (imeBottom > 0) bottomToBottomHeight - imeBottom else 0).toFloat(),
+        animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing)
+    )
+
+    //This is a popup internally
+    GameDialog(
+        modifier = Modifier.width(512.dp),
+        offset = IntOffset(0, position.toInt()),
+        title = { Text(Theme.getString("dialog.import_url_theme.title")) },
+        buttons = {
+            SmallThemedButton(
+                onClick = { import(themeURL) },
+                modifier = Modifier.weight(1f),
+            ) { Text(Theme.getString("action.import")) }
+            SmallThemedButton(
+                onClick = { cancel() },
+                modifier = Modifier.weight(1f),
+                content = { Text(Theme.getString("action.cancel")) })
+        }
+    ) {
+        Text(
+            Theme.getString("dialog.import_url_theme.theme_name_field.title"),
+            textAlign = TextAlign.Start,
+            modifier = Modifier.align(
+                Alignment.Start
+            )
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        SmallThemedTextField(
+            modifier = Modifier.width(512.dp).onGloballyPositioned {
+                if (imeBottom == 0)
+                    bottomToBottomHeight = (it.positionInWindow().y - it.size.height).toInt()
+            },
+            placeholder = Theme.getString("dialog.import_url_theme.theme_name_field.placeholder"),
+            value = themeURL,
+        ) { themeURL = it }
+    }
+}
+
+@Preview
+@Composable
+fun ImportURLThemeDialogPreview() {
+    ImportURLThemeDialog(import = {}, cancel = {})
 }
