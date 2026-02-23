@@ -36,6 +36,8 @@ data class JsonTheme(
     val dangerColor: Color? = null,
     @Serializable(with = ColorSerializer::class)
     val tabSelectedColor: Color? = null,
+    val largeButtonValues: JsonButtonValues? = null,
+    val smallButtonValues: JsonButtonValues? = null,
 ) {
     suspend fun loadToTheme(base: Theme): Theme {
         val intersection = base.idToImageMap.keys intersect idToImageMap.keys
@@ -80,6 +82,8 @@ data class JsonTheme(
             successColor = successColor ?: base.successColor,
             dangerColor = dangerColor ?: base.dangerColor,
             tabSelectedColor = tabSelectedColor ?: base.tabSelectedColor,
+            largeButtonValues = largeButtonValues?.toValues(base.largeButtonValues) ?: base.largeButtonValues,
+            smallButtonValues = smallButtonValues?.toValues(base.smallButtonValues) ?: base.smallButtonValues,
         )
     }
 }
