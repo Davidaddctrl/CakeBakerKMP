@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.davidlukash.cakebaker.data.theme.ButtonElevation
 import com.davidlukash.cakebaker.data.theme.ButtonTheme
@@ -82,7 +83,7 @@ fun BaseThemedButton(
         ) {
             CompositionLocalProvider(
                 LocalTextStyle provides
-                        Theme.Styles.buttonTextStyle.copy(textAlign = TextAlign.Center, brush = contentColorBrush),
+                        Theme.Styles.buttonTextStyle.copy(textAlign = TextAlign.Center, brush = contentColorBrush, fontWeight = if (theme.contentBold) FontWeight.Bold else  Theme.Styles.buttonTextStyle.fontWeight),
                 LocalContentColor provides contentColor
             ) {
                 content()

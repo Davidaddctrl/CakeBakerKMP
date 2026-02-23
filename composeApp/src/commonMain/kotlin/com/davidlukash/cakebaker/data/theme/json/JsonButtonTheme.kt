@@ -13,6 +13,7 @@ data class JsonButtonTheme(
     val disabledContentColorBrushDescriptor: BrushDescriptor? = null,
     val borderColorBrushDescriptor: BrushDescriptor? = null,
     val disabledBorderColorBrushDescriptor: BrushDescriptor? = null,
+    val contentBold: Boolean? = null,
     val shouldDropShadow: Boolean? = null,
 ) {
     fun toTheme(base: ButtonTheme) = base.copy(
@@ -22,6 +23,7 @@ data class JsonButtonTheme(
         disabledContentColorBrushDescriptor = disabledContentColorBrushDescriptor ?: base.disabledContentColorBrushDescriptor,
         borderColorBrushDescriptor = borderColorBrushDescriptor ?: base.borderColorBrushDescriptor,
         disabledBorderColorBrushDescriptor = disabledBorderColorBrushDescriptor ?: base.disabledBorderColorBrushDescriptor,
+        contentBold = contentBold ?: base.contentBold,
         shouldDropShadow = shouldDropShadow ?: base.shouldDropShadow,
     )
 }
