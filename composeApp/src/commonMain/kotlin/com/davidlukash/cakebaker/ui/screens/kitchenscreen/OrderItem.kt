@@ -116,6 +116,7 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
                 Text(
                     Theme.getString("label.remaining").replace("{0}", secondsToString(order.remainingTime)),
                     style = Theme.Styles.verySmallBodyStyle,
+                    color = Theme.ProgressBarTheme.contentColor
                 )
             }
             Text(
