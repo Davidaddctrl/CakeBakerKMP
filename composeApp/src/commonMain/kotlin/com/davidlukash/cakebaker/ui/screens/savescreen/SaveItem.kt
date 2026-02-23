@@ -3,9 +3,11 @@ package com.davidlukash.cakebaker.ui.screens.savescreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -44,15 +46,14 @@ fun SaveItem(
                     style = Theme.Styles.smallBodyStyle,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
-                FlowRow(
+                Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     LargeThemedButton(
                         onClick = {
                             exportSave(saveFile)
                         },
-                        modifier = Modifier.weight(1f).defaultMinSize(minWidth = Theme.Styles.buttonTextStyle.fontSize.value.dp * 6),
+                        modifier = Modifier.weight(1f),
                         content = {
                             Text(Theme.getString("action.export"), maxLines = 1, softWrap = false)
                         }
@@ -76,17 +77,17 @@ fun SaveItem(
                             Text(Theme.getString("action.load"), maxLines = 1, softWrap = false)
                         }
                     )
-                    if (!saveFile.isDefault)
-                        LargeThemedButton(
-                            onClick = {
-                                overwriteSave(saveFile)
-                            },
-                            modifier = Modifier.weight(1f),
-                            content = {
-                                Text(Theme.getString("action.overwrite"), maxLines = 1, softWrap = false)
-                            },
-                        )
                 }
+                if (!saveFile.isDefault)
+                    LargeThemedButton(
+                        onClick = {
+                            overwriteSave(saveFile)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        content = {
+                            Text(Theme.getString("action.overwrite"), maxLines = 1, softWrap = false)
+                        },
+                    )
             }
         }
     )
