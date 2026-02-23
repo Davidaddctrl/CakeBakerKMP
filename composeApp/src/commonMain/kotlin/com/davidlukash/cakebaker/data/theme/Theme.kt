@@ -94,7 +94,8 @@ data class Theme(
     val successColor: Color,
     val dangerColor: Color,
     val tabSelectedColor: Color,
-    val largeButtonValues: ButtonValues
+    val largeButtonValues: ButtonValues,
+    val smallButtonValues: ButtonValues
 ) {
     fun toJsonTheme() = JsonTheme(
         idToImageMap = idToImageMap.map { (key, value) ->
@@ -181,6 +182,10 @@ data class Theme(
         val LargeButtonValues: ButtonValues
             @Composable
             get() = LocalTheme.current.largeButtonValues
+
+        val SmallButtonValues: ButtonValues
+            @Composable
+            get() = LocalTheme.current.smallButtonValues
 
         @Composable
         fun getImage(name: String): ImageData {
@@ -456,12 +461,12 @@ data class Theme(
                 contentColor = Color.White
             ),
             buttonTheme = ButtonTheme(
-                containerColor = Color(8, 160, 69),
-                disabledContainerColor = Color(37, 41, 46),
-                contentColor = Color(255, 255, 255),
-                disabledContentColor = Color(128, 128, 128),
-                borderColor = Color(0, 0, 0),
-                disabledBorderColor = Color(53, 57, 62),
+                containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(8, 160, 69)),
+                disabledContainerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(37, 41, 46)),
+                contentColorBrushDescriptor = BrushDescriptor.SolidColor(Color(255, 255, 255)),
+                disabledContentColorBrushDescriptor = BrushDescriptor.SolidColor(Color(128, 128, 128)),
+                borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
+                disabledBorderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(53, 57, 62)),
                 shouldDropShadow = true
             ),
             switchButtonTheme = SwitchButtonTheme(
@@ -517,7 +522,27 @@ data class Theme(
             ),
             successColor = Color(58, 158, 0),
             dangerColor = Color(255, 0, 0),
-            tabSelectedColor = Color(8, 160, 69)
+            tabSelectedColor = Color(8, 160, 69),
+            largeButtonValues = ButtonValues(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+                focusedElevation = 0.dp,
+                hoveredElevation = 0.dp,
+                disabledElevation = 0.dp,
+                borderRadius = 16.dp,
+                borderWidth = 8.dp,
+                contentPadding = 16.dp
+            ),
+            smallButtonValues = ButtonValues(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+                focusedElevation = 0.dp,
+                hoveredElevation = 0.dp,
+                disabledElevation = 0.dp,
+                borderRadius = 8.dp,
+                borderWidth = 4.dp,
+                contentPadding = 8.dp
+            ),
         )
 
 //        val darkDefault = Theme(

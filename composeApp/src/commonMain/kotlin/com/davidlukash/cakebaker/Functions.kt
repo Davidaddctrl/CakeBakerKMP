@@ -1,8 +1,13 @@
 package com.davidlukash.cakebaker
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -12,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import com.davidlukash.cakebaker.data.log.Log
 import com.davidlukash.cakebaker.data.theme.LocalIsScaled
 import com.davidlukash.cakebaker.data.theme.Theme
@@ -271,4 +277,22 @@ fun ProvideTrueDensity(isScaled: Boolean = false, content: @Composable () -> Uni
         LocalIsScaled provides isScaled,
         content = content
     )
+}
+
+suspend fun Animatable<Dp, *>.animateElevation(
+    target: Dp,
+    from: Interaction? = null,
+    to: Interaction? = null,
+) {
+    val spec =
+        when {
+            // Moving to a new state
+            to != null -> TweenSpec(durationMillis = 120, easing = FastOutSlowInEasing)
+            // Moving to default, from a previous state
+            from != null -> TweenSpec<Dp>(durationMillis = 120, easing = CubicBezierEasing(0.40f, 0.00f, 0.60f, 1.00f))
+            // Loading the initial state, or moving back to the baseline state from a disabled /
+            // unknown state, so just snap to the final value.
+            else -> null
+        }
+    if (spec != null) animateTo(target, spec) else snapTo(target)
 }

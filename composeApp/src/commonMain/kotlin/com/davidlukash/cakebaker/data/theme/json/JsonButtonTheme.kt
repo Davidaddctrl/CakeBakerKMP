@@ -7,27 +7,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class JsonButtonTheme(
-    @Serializable(with = ColorSerializer::class)
-    val containerColor: Color? = null,
-    @Serializable(with = ColorSerializer::class)
-    val disabledContainerColor: Color? = null,
-    @Serializable(with = ColorSerializer::class)
-    val contentColor: Color? = null,
-    @Serializable(with = ColorSerializer::class)
-    val disabledContentColor: Color? = null,
-    @Serializable(with = ColorSerializer::class)
-    val borderColor: Color? = null,
-    @Serializable(with = ColorSerializer::class)
-    val disabledBorderColor: Color? = null,
+    val containerColorBrushDescriptor: BrushDescriptor? = null,
+    val disabledContainerColorBrushDescriptor: BrushDescriptor? = null,
+    val contentColorBrushDescriptor: BrushDescriptor? = null,
+    val disabledContentColorBrushDescriptor: BrushDescriptor? = null,
+    val borderColorBrushDescriptor: BrushDescriptor? = null,
+    val disabledBorderColorBrushDescriptor: BrushDescriptor? = null,
     val shouldDropShadow: Boolean? = null,
 ) {
     fun toTheme(base: ButtonTheme) = base.copy(
-        containerColor = containerColor ?: base.containerColor,
-        disabledContainerColor = disabledContainerColor ?: base.disabledContainerColor,
-        contentColor = contentColor ?: base.contentColor,
-        disabledContentColor = disabledContentColor ?: base.disabledContentColor,
-        borderColor = borderColor ?: base.borderColor,
-        disabledBorderColor = disabledBorderColor ?: base.disabledBorderColor,
+        containerColorBrushDescriptor = containerColorBrushDescriptor ?: base.containerColorBrushDescriptor,
+        disabledContainerColorBrushDescriptor = disabledContainerColorBrushDescriptor ?: base.disabledContainerColorBrushDescriptor,
+        contentColorBrushDescriptor = contentColorBrushDescriptor ?: base.contentColorBrushDescriptor,
+        disabledContentColorBrushDescriptor = disabledContentColorBrushDescriptor ?: base.disabledContentColorBrushDescriptor,
+        borderColorBrushDescriptor = borderColorBrushDescriptor ?: base.borderColorBrushDescriptor,
+        disabledBorderColorBrushDescriptor = disabledBorderColorBrushDescriptor ?: base.disabledBorderColorBrushDescriptor,
         shouldDropShadow = shouldDropShadow ?: base.shouldDropShadow,
     )
 }

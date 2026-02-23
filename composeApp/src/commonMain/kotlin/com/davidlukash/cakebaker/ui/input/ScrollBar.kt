@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker.ui.input
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -31,6 +32,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun HorizontalScrollBar(scrollState: ScrollState, coroutineScope: CoroutineScope) {
+    //TODO: Make this not use ButtonTheme
     val density = LocalDensity.current
     val viewportWidth = density.run { scrollState.viewportSize.toDp() }
     val maxValue = density.run { scrollState.maxValue.toDp() } + viewportWidth
@@ -41,8 +43,9 @@ fun HorizontalScrollBar(scrollState: ScrollState, coroutineScope: CoroutineScope
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterStart
         ) {
+            //TODO: Make this use a native brush instead of toColor
             Surface(
-                color = Theme.ButtonTheme.containerColor,
+                color = Theme.ButtonTheme.containerColorBrushDescriptor.toColor(),
                 modifier = Modifier.fillMaxWidth(visibleFraction).height(32.dp)
                     .absoluteOffset(x = value * visibleFraction)
                     .pointerInput(Unit) {
@@ -51,7 +54,7 @@ fun HorizontalScrollBar(scrollState: ScrollState, coroutineScope: CoroutineScope
                                 scrollState.scrollBy(dragAmount / visibleFraction)
                             }
                         }
-                    }.border(6.dp, Theme.ButtonTheme.borderColor)
+                    }.border(BorderStroke(6.dp, Theme.ButtonTheme.borderColorBrushDescriptor.toBrush()))
             ) {
 
             }
