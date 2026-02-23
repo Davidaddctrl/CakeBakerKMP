@@ -18,4 +18,10 @@ sealed class BrushDescriptor {
         is HorizontalGradient -> Brush.horizontalGradient(colors)
         is SolidColor -> androidx.compose.ui.graphics.SolidColor(color)
     }
+
+    fun toColor(): Color = when(this) {
+        is VerticalGradient -> colors.firstOrNull() ?: Color.Unspecified
+        is HorizontalGradient -> colors.firstOrNull() ?: Color.Unspecified
+        is SolidColor -> color
+    }
 }
