@@ -44,7 +44,7 @@ const val VERSIONCODE = 1
 
 const val DEFAULT_THEME_REGISTRY_URL = "https://davidaddctrl.github.io/CakeBakerKMP/default_themes/themes.json"
 
-val client = HttpClient(CIO)
+expect val client: HttpClient
 
 fun versionCodeToString(versionCode: Int?): String {
     return if (versionCode == null) "Unknown" else when (versionCode) {
