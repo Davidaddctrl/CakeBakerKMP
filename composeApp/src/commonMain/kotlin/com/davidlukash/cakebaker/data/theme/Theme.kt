@@ -114,6 +114,8 @@ data class Theme(
         successColor = successColor,
         dangerColor = dangerColor,
         tabSelectedColor = tabSelectedColor,
+        largeButtonValues = largeButtonValues.toJsonValues(),
+        smallButtonValues = smallButtonValues.toJsonValues()
     )
 
     fun idToImage(name: String): ImageData {
@@ -467,6 +469,7 @@ data class Theme(
                 disabledContentColorBrushDescriptor = BrushDescriptor.SolidColor(Color(128, 128, 128)),
                 borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
                 disabledBorderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(53, 57, 62)),
+                contentBold = false,
                 shouldDropShadow = true
             ),
             switchButtonTheme = SwitchButtonTheme(
