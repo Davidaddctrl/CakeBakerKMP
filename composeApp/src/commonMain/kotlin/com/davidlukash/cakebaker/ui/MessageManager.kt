@@ -82,7 +82,7 @@ fun Popup(remove: () -> Unit, popup: Popup) {
                             )
                         }
                         if (popup.shouldHaveDefaultButton) {
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(4.dp))
                             SmallThemedButton(
                                 onClick = {
                                     remove()
