@@ -4,10 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -96,6 +94,7 @@ data class Theme(
     val successColor: Color,
     val dangerColor: Color,
     val tabSelectedColor: Color,
+    val largeButtonValues: ButtonValues
 ) {
     fun toJsonTheme() = JsonTheme(
         idToImageMap = idToImageMap.map { (key, value) ->
@@ -178,6 +177,10 @@ data class Theme(
         val TabSelectedColor: Color
             @Composable
             get() = LocalTheme.current.tabSelectedColor
+
+        val LargeButtonValues: ButtonValues
+            @Composable
+            get() = LocalTheme.current.largeButtonValues
 
         @Composable
         fun getImage(name: String): ImageData {
@@ -477,19 +480,7 @@ data class Theme(
                 shouldDropShadow = false
             ),
             backgroundTheme = ContainerTheme(
-                borderColorBrush = SolidColor(Color.Transparent),
                 borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color.Transparent),
-                containerColorBrush = Brush.verticalGradient(
-                    listOf(
-                        Color(0, 100, 217, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                        Color(0, 120, 255),
-                    )
-                ),
                 containerColorBrushDescriptor = BrushDescriptor.VerticalGradient(
                     listOf(
                         Color(0, 100, 217, 255),
@@ -505,23 +496,18 @@ data class Theme(
                 shouldDropShadow = true
             ),
             containerTheme = ContainerTheme(
-                borderColorBrush = SolidColor(Color(0, 0, 0)),
                 borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
-                containerColorBrush = SolidColor(Color(246, 255, 153)),
                 containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(246, 255, 153)),
                 contentColor = Color(0, 0, 0),
                 shouldDropShadow = false
             ),
             secondaryContainerTheme = ContainerTheme(
-                borderColorBrush = SolidColor(Color(0, 0, 0)),
                 borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
-                containerColorBrush = SolidColor(Color(8, 160, 69)),
                 containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(8, 160, 69)),
                 contentColor = Color(255, 255, 255),
                 shouldDropShadow = true
             ),
             textFieldTheme = TextFieldTheme(
-                cursorBrush = SolidColor(Color.White),
                 cursorBrushDescriptor = BrushDescriptor.SolidColor(Color.White),
                 contentColor = Color.White,
                 placeholderColor = Color(128, 128, 128),

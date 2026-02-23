@@ -31,7 +31,7 @@ fun SmallThemedTextField(modifier: Modifier = Modifier, placeholder: String, val
             value,
             onValueChange = { setValue(it) },
             modifier = modifier,
-            cursorBrush = Theme.TextFieldTheme.cursorBrush,
+            cursorBrush = Theme.TextFieldTheme.cursorBrushDescriptor.toBrush(),
             textStyle = Theme.Styles.largeBodyStyle.copy(color = Theme.TextFieldTheme.contentColor),
             singleLine = singleLine,
             decorationBox = { innerTextField ->

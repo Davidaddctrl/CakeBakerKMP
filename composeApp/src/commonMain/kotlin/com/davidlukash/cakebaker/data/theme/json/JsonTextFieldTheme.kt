@@ -1,6 +1,5 @@
 package com.davidlukash.cakebaker.data.theme.json
 
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.davidlukash.cakebaker.data.serializers.ColorSerializer
 import com.davidlukash.cakebaker.data.theme.TextFieldTheme
@@ -20,7 +19,6 @@ data class JsonTextFieldTheme(
     val shouldDropShadow: Boolean? = null
 ) {
     fun toTheme(base: TextFieldTheme): TextFieldTheme = base.copy(
-        cursorBrush = cursorBrushDescriptor?.toBrush() ?: base.cursorBrush,
         cursorBrushDescriptor = cursorBrushDescriptor ?: base.cursorBrushDescriptor,
         contentColor = contentColor ?: base.contentColor,
         placeholderColor = placeholderColor ?: base.placeholderColor,
