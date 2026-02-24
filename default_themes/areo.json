@@ -200,12 +200,15 @@
         "specified": true
       }
     },
-    "contentColor": {
-      "red": 1.0,
-      "green": 1.0,
-      "blue": 1.0,
-      "alpha": 1.0,
-      "specified": true
+    "contentColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1.0,
+        "specified": true
+      }
     },
     "shouldDropShadow": false
   },
@@ -290,12 +293,15 @@
         }
       ]
     },
-    "contentColor": {
-      "red": 1.0,
-      "green": 1.0,
-      "blue": 1.0,
-      "alpha": 1.0,
-      "specified": true
+    "contentColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1.0,
+        "specified": true
+      }
     },
     "shouldDropShadow": false
   },
@@ -380,12 +386,15 @@
         }
       ]
     },
-    "contentColor": {
-      "red": 1.0,
-      "green": 1.0,
-      "blue": 1.0,
-      "alpha": 1.0,
-      "specified": true
+    "contentColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1.0,
+        "specified": true
+      }
     },
     "shouldDropShadow": false
   },
