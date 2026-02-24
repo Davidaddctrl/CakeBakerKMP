@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.ui.container.LargePrimaryContainer
+import com.davidlukash.cakebaker.ui.container.LargeSecondaryContainer
 
 @Composable
 fun LazyItemScope.ThemeItem(
@@ -19,7 +20,7 @@ fun LazyItemScope.ThemeItem(
     before: @Composable () -> Unit = {},
     after: @Composable () -> Unit = {},
 ) {
-    LargePrimaryContainer(
+    LargeSecondaryContainer(
         modifier = Modifier.fillParentMaxWidth().animateItem()
     ) {
         Row(

@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
+import com.davidlukash.cakebaker.ui.container.LargePrimaryContainer
 import com.davidlukash.cakebaker.ui.container.LargeSecondaryContainer
 
 @Composable
@@ -21,7 +22,7 @@ fun RowScope.ThemeItemColumn(
     text: String,
     content: LazyListScope.() -> Unit
 ) {
-    LargeSecondaryContainer(
+    LargePrimaryContainer(
         modifier = Modifier.weight(1f)
     ) {
         Column(
