@@ -1,7 +1,5 @@
 package com.davidlukash.cakebaker.data.theme.json
 
-import androidx.compose.ui.graphics.Color
-import com.davidlukash.cakebaker.data.serializers.ColorSerializer
 import com.davidlukash.cakebaker.data.theme.ContainerTheme
 import kotlinx.serialization.Serializable
 
@@ -9,14 +7,13 @@ import kotlinx.serialization.Serializable
 data class JsonContainerTheme(
     val borderColorBrushDescriptor: BrushDescriptor? = null,
     val containerColorBrushDescriptor: BrushDescriptor? = null,
-    @Serializable(with = ColorSerializer::class)
-    val contentColor: Color? = null,
+    val contentColorBrushDescriptor: BrushDescriptor? = null,
     val shouldDropShadow: Boolean? = null
 ) {
     fun toTheme(base: ContainerTheme): ContainerTheme = base.copy(
         borderColorBrushDescriptor = borderColorBrushDescriptor ?: base.borderColorBrushDescriptor,
         containerColorBrushDescriptor = containerColorBrushDescriptor ?: base.containerColorBrushDescriptor,
-        contentColor = contentColor ?: base.contentColor,
+        contentColorBrushDescriptor = contentColorBrushDescriptor ?: base.contentColorBrushDescriptor,
         shouldDropShadow = shouldDropShadow ?: base.shouldDropShadow
     )
 }

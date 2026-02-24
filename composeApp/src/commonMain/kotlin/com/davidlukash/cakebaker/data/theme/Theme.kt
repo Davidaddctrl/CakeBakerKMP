@@ -500,19 +500,19 @@ data class Theme(
                         Color(0, 120, 255),
                     )
                 ),
-                contentColor = Color(255, 255, 255),
+                contentColorBrushDescriptor = BrushDescriptor.SolidColor(Color(255, 255, 255)),
                 shouldDropShadow = true
             ),
             containerTheme = ContainerTheme(
                 borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
                 containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(246, 255, 153)),
-                contentColor = Color(0, 0, 0),
+                contentColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
                 shouldDropShadow = false
             ),
             secondaryContainerTheme = ContainerTheme(
                 borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
                 containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(8, 160, 69)),
-                contentColor = Color(255, 255, 255),
+                contentColorBrushDescriptor = BrushDescriptor.SolidColor(Color(255, 255, 255)),
                 shouldDropShadow = true
             ),
             textFieldTheme = TextFieldTheme(
