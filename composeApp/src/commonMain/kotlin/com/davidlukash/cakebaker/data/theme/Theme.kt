@@ -591,13 +591,13 @@ data class Theme(
                 contentPadding = 16.dp
             ),
             smallPrimaryContainerValues = ContainerValues(
-                elevation = 8.dp,
+                elevation = 0.dp,
                 borderRadius = 8.dp,
                 borderWidth = 6.dp,
                 contentPadding = 16.dp
             ),
             smallSecondaryContainerValues = ContainerValues(
-                elevation = 8.dp,
+                elevation = 0.dp,
                 borderRadius = 8.dp,
                 borderWidth = 4.dp,
                 contentPadding = 8.dp
