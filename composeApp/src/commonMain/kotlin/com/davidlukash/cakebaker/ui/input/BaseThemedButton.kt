@@ -60,12 +60,11 @@ fun BaseThemedButton(
         width = values.borderWidth,
         brush = (if (enabled) theme.borderColorBrushDescriptor else theme.disabledBorderColorBrushDescriptor).toBrush(),
     )
-
     Row(
         modifier = modifier
             .semantics { role = Role.Button }
-            .clip(shape)
             .shadow(shadowElevation, shape)
+            .clip(shape)
             .background(containerColorBrush, shape)
             .border(borderStroke, shape)
             .clickable(
