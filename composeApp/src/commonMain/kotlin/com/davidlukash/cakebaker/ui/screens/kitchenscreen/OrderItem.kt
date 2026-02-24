@@ -110,13 +110,9 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
                 contentAlignment = Alignment.Center,
             ) {
                 ProgressBar(
-                    modifier = Modifier.width(320.dp),
                     amount = progressAmount,
-                )
-                Text(
-                    Theme.getString("label.remaining").replace("{0}", secondsToString(order.remainingTime)),
-                    style = Theme.Styles.verySmallBodyStyle,
-                    color = Theme.ProgressBarTheme.contentColor
+                    text = Theme.getString("label.remaining").replace("{0}", secondsToString(order.remainingTime)),
+                    modifier = Modifier.width(320.dp),
                 )
             }
             Text(

@@ -82,7 +82,7 @@ fun BaseThemedButton(
         ) {
             CompositionLocalProvider(
                 LocalTextStyle provides
-                        Theme.Styles.buttonTextStyle.copy(textAlign = TextAlign.Center, brush = contentColorBrush, fontWeight = if (theme.contentBold) FontWeight.Bold else  Theme.Styles.buttonTextStyle.fontWeight),
+                        Theme.Styles.buttonTextStyle.copy(textAlign = TextAlign.Center, brush = contentColorBrush, fontWeight = if (theme.contentBold) FontWeight.Bold else Theme.Styles.buttonTextStyle.fontWeight),
                 LocalContentColor provides contentColor
             ) {
                 content()

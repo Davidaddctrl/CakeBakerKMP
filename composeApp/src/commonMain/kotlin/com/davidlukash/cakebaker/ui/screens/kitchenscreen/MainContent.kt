@@ -72,26 +72,16 @@ fun MainContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxHeight()
         ) {
-            Box(
-                contentAlignment = Alignment.Center,
-            ) {
-                ProgressBar(
-                    modifier = Modifier.width(296.dp),
-                    ovenProgress
-                )
-                val ovenTime = 5.0 - fasterOvenLevel / 10.0
-
-                if (ovenRunning)
-                    Text(
-                        Theme.getString("label.seconds_remaining")
-                            .replace(
-                                "{0}",
-                                (floor((1.0 - ovenProgress) * ovenTime * 10.0) / 10.0).toString()
-                            ),
-                        style = Theme.Styles.verySmallBodyStyle,
-                        color = Theme.ProgressBarTheme.contentColor
-                    )
-            }
+            val ovenTime = 5.0 - fasterOvenLevel / 10.0
+            ProgressBar(
+                amount = ovenProgress,
+                text = if (ovenRunning) Theme.getString("label.seconds_remaining")
+                    .replace(
+                        "{0}",
+                        (floor((1.0 - ovenProgress) * ovenTime * 10.0) / 10.0).toString()
+                    ) else null,
+                modifier = Modifier.width(296.dp),
+            )
             ImageButton(
                 onClick = {
                     bake()
@@ -172,9 +162,10 @@ fun MainContentPreview() {
     )
     val uiState = Save.state.copy(
         customerSatisfaction = 50,
-        upgrades = Save.default.upgrades.filter { it.id == "upgrade.auto_oven" || it.id == "upgrade.auto_order_complete" }.map {
-            it.copy(level = 1)
-        },
+        upgrades = Save.default.upgrades.filter { it.id == "upgrade.auto_oven" || it.id == "upgrade.auto_order_complete" }
+            .map {
+                it.copy(level = 1)
+            },
     )
     Background {
         MainContent(

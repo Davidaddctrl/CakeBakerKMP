@@ -7,19 +7,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class JsonProgressBarTheme(
-    @Serializable(with = ColorSerializer::class)
-    val border: Color? = null,
-    @Serializable(with = ColorSerializer::class)
-    val backgroundColor: Color? = null,
-    @Serializable(with = ColorSerializer::class)
-    val filledColor: Color? = null,
-    @Serializable(with = ColorSerializer::class)
-    val contentColor: Color? = null,
+    val borderColorBrushDescriptor: BrushDescriptor? = null,
+    val backgroundColorBrushDescriptor: BrushDescriptor? = null,
+    val filledColorBrushDescriptor: BrushDescriptor? = null,
+    val contentColorBrushDescriptor: BrushDescriptor? = null,
+    val contentBold: Boolean? = null,
+    val shouldDropShadow: Boolean? = null
 ) {
     fun toTheme(base: ProgressBarTheme) = base.copy(
-        border = border ?: base.border,
-        backgroundColor = backgroundColor ?: base.backgroundColor,
-        filledColor = filledColor ?: base.filledColor,
-        contentColor = contentColor ?: base.contentColor,
+        borderColorBrushDescriptor = borderColorBrushDescriptor ?: base.borderColorBrushDescriptor,
+        backgroundColorBrushDescriptor = backgroundColorBrushDescriptor ?: base.backgroundColorBrushDescriptor,
+        filledColorBrushDescriptor = filledColorBrushDescriptor ?: base.filledColorBrushDescriptor,
+        contentColorBrushDescriptor = contentColorBrushDescriptor ?: base.contentColorBrushDescriptor,
+        contentBold = contentBold ?: base.contentBold,
+        shouldDropShadow = shouldDropShadow ?: base.shouldDropShadow
     )
 }

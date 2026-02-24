@@ -101,6 +101,7 @@ data class Theme(
     val largeSecondaryContainerValues: ContainerValues,
     val smallPrimaryContainerValues: ContainerValues,
     val smallSecondaryContainerValues: ContainerValues,
+    val progressBarValues: ProgressBarValues
 ) {
     fun toJsonTheme() = JsonTheme(
         idToImageMap = idToImageMap.map { (key, value) ->
@@ -126,6 +127,7 @@ data class Theme(
         largeSecondaryContainerValues = largeSecondaryContainerValues.toJsonValues(),
         smallPrimaryContainerValues = smallPrimaryContainerValues.toJsonValues(),
         smallSecondaryContainerValues = smallSecondaryContainerValues.toJsonValues(),
+        progressBarValues = progressBarValues.toJsonValues(),
     )
 
     fun idToImage(name: String): ImageData {
@@ -214,6 +216,10 @@ data class Theme(
         val SmallSecondaryContainerValues: ContainerValues
             @Composable
             get() = LocalTheme.current.smallSecondaryContainerValues
+
+        val ProgressBarValues: ProgressBarValues
+            @Composable
+            get() = LocalTheme.current.progressBarValues
 
         @Composable
         fun getImage(name: String): ImageData {
@@ -483,10 +489,12 @@ data class Theme(
                 )
             ),
             progressBarTheme = ProgressBarTheme(
-                border = Color.Black,
-                backgroundColor = Color(127, 127, 127),
-                filledColor = Color(255, 127, 0),
-                contentColor = Color.White
+                borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color.Black),
+                backgroundColorBrushDescriptor = BrushDescriptor.SolidColor(Color(127, 127, 127)),
+                filledColorBrushDescriptor = BrushDescriptor.SolidColor(Color(255, 127, 0)),
+                contentColorBrushDescriptor = BrushDescriptor.SolidColor(Color.White),
+                contentBold = false,
+                shouldDropShadow = true
             ),
             buttonTheme = ButtonTheme(
                 containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(8, 160, 69)),
@@ -602,6 +610,12 @@ data class Theme(
                 borderWidth = 4.dp,
                 contentPadding = 8.dp
             ),
+            progressBarValues = ProgressBarValues(
+                elevation = 0.dp,
+                borderRadius = 48.dp,
+                borderWidth = 8.dp,
+                minHeight = 48.dp
+            )
         )
 
 //        val darkDefault = Theme(

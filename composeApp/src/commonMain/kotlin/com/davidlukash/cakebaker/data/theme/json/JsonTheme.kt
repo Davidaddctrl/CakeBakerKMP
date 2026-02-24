@@ -5,6 +5,7 @@ import com.davidlukash.cakebaker.client
 import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.serializers.ColorSerializer
 import com.davidlukash.cakebaker.data.theme.ContainerValues
+import com.davidlukash.cakebaker.data.theme.ProgressBarValues
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.loadBytesToFont
 import com.davidlukash.cakebaker.withResultSuspend
@@ -40,6 +41,7 @@ data class JsonTheme(
     val largeSecondaryContainerValues: JsonContainerValues? = null,
     val smallPrimaryContainerValues: JsonContainerValues? = null,
     val smallSecondaryContainerValues: JsonContainerValues? = null,
+    val progressBarValues: JsonProgressBarValues? = null
 ) {
     suspend fun loadToTheme(base: Theme): Theme {
         val intersection = base.idToImageMap.keys intersect idToImageMap.keys
@@ -91,6 +93,7 @@ data class JsonTheme(
             largeSecondaryContainerValues = largeSecondaryContainerValues?.toValues(base.largeSecondaryContainerValues) ?: base.largeSecondaryContainerValues,
             smallPrimaryContainerValues = smallPrimaryContainerValues?.toValues(base.smallPrimaryContainerValues) ?: base.smallPrimaryContainerValues,
             smallSecondaryContainerValues = smallSecondaryContainerValues?.toValues(base.smallSecondaryContainerValues) ?: base.smallSecondaryContainerValues,
+            progressBarValues = progressBarValues?.toValues(base.progressBarValues) ?: base.progressBarValues,
         )
     }
 }
