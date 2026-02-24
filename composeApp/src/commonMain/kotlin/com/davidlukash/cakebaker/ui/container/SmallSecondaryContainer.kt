@@ -10,14 +10,12 @@ import com.davidlukash.cakebaker.data.theme.Theme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SecondaryContainer(modifier: Modifier, content: @Composable () -> Unit) {
+fun SmallSecondaryContainer(modifier: Modifier, content: @Composable () -> Unit) {
     BaseContainer(
         modifier = modifier,
         theme = Theme.SecondaryContainerTheme,
-        shape = RoundedCornerShape(8.dp),
-        borderWidth = 4.dp,
-        padding = 8.dp,
-        shadowElevation = 0.dp,
+        values = Theme.SmallSecondaryContainerValues,
+        shapeOverrideFactory = null,
         content = content,
     )
 }
@@ -25,7 +23,7 @@ fun SecondaryContainer(modifier: Modifier, content: @Composable () -> Unit) {
 @Preview
 @Composable
 fun SecondaryContainerPreview() {
-    SecondaryContainer(modifier = Modifier.fillMaxSize(), {
-        Text("Secondary Container", style = Theme.Styles.titleStyle)
+    SmallSecondaryContainer(modifier = Modifier.fillMaxSize(), {
+        Text("Small Secondary Container", style = Theme.Styles.titleStyle)
     })
 }

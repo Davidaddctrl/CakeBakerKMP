@@ -2,7 +2,9 @@ package com.davidlukash.cakebaker.data.theme.json
 
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.ContainerValues
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class JsonContainerValues(
     val elevation: Float? = null,
     val borderRadius: Float? = null,

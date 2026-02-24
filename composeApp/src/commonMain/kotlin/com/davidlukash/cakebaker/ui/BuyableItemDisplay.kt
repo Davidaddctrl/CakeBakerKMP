@@ -21,7 +21,7 @@ import com.davidlukash.cakebaker.data.item.Item
 import com.davidlukash.cakebaker.data.item.ItemType
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
-import com.davidlukash.cakebaker.ui.container.PrimaryContainer
+import com.davidlukash.cakebaker.ui.container.LargePrimaryContainer
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
@@ -45,7 +45,7 @@ fun BuyableItemDisplay(money: Item, buyIngredient: (String) -> Unit, item: Item,
             contentScale = ContentScale.FillHeight,
             modifier = Modifier.height(128.dp)
         )
-        PrimaryContainer(
+        LargePrimaryContainer(
             modifier = Modifier.defaultMinSize(minWidth = 208.dp),
             content = {
                 Column {

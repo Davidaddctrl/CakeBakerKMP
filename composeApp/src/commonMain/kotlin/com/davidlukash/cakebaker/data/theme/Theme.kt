@@ -95,7 +95,12 @@ data class Theme(
     val dangerColor: Color,
     val tabSelectedColor: Color,
     val largeButtonValues: ButtonValues,
-    val smallButtonValues: ButtonValues
+    val smallButtonValues: ButtonValues,
+    val backgroundValues: ContainerValues,
+    val largePrimaryContainerValues: ContainerValues,
+    val largeSecondaryContainerValues: ContainerValues,
+    val smallPrimaryContainerValues: ContainerValues,
+    val smallSecondaryContainerValues: ContainerValues,
 ) {
     fun toJsonTheme() = JsonTheme(
         idToImageMap = idToImageMap.map { (key, value) ->
@@ -115,7 +120,12 @@ data class Theme(
         dangerColor = dangerColor,
         tabSelectedColor = tabSelectedColor,
         largeButtonValues = largeButtonValues.toJsonValues(),
-        smallButtonValues = smallButtonValues.toJsonValues()
+        smallButtonValues = smallButtonValues.toJsonValues(),
+        backgroundValues = backgroundValues.toJsonValues(),
+        largePrimaryContainerValues = largePrimaryContainerValues.toJsonValues(),
+        largeSecondaryContainerValues = largeSecondaryContainerValues.toJsonValues(),
+        smallPrimaryContainerValues = smallPrimaryContainerValues.toJsonValues(),
+        smallSecondaryContainerValues = smallSecondaryContainerValues.toJsonValues(),
     )
 
     fun idToImage(name: String): ImageData {
@@ -188,6 +198,22 @@ data class Theme(
         val SmallButtonValues: ButtonValues
             @Composable
             get() = LocalTheme.current.smallButtonValues
+
+        val LargePrimaryContainerValues: ContainerValues
+            @Composable
+            get() = LocalTheme.current.largePrimaryContainerValues
+
+        val LargeSecondaryContainerValues: ContainerValues
+            @Composable
+            get() = LocalTheme.current.largeSecondaryContainerValues
+
+        val SmallPrimaryContainerValues: ContainerValues
+            @Composable
+            get() = LocalTheme.current.smallPrimaryContainerValues
+
+        val SmallSecondaryContainerValues: ContainerValues
+            @Composable
+            get() = LocalTheme.current.smallSecondaryContainerValues
 
         @Composable
         fun getImage(name: String): ImageData {
@@ -542,6 +568,36 @@ data class Theme(
                 focusedElevation = 0.dp,
                 hoveredElevation = 0.dp,
                 disabledElevation = 0.dp,
+                borderRadius = 8.dp,
+                borderWidth = 4.dp,
+                contentPadding = 8.dp
+            ),
+            backgroundValues = ContainerValues(
+                elevation = 0.dp,
+                borderRadius = 0.dp,
+                borderWidth = 0.dp,
+                contentPadding = 16.dp
+            ),
+            largePrimaryContainerValues = ContainerValues(
+                elevation = 0.dp,
+                borderRadius = 16.dp,
+                borderWidth = 8.dp,
+                contentPadding = 16.dp
+            ),
+            largeSecondaryContainerValues = ContainerValues(
+                elevation = 0.dp,
+                borderRadius = 16.dp,
+                borderWidth = 8.dp,
+                contentPadding = 16.dp
+            ),
+            smallPrimaryContainerValues = ContainerValues(
+                elevation = 8.dp,
+                borderRadius = 8.dp,
+                borderWidth = 6.dp,
+                contentPadding = 16.dp
+            ),
+            smallSecondaryContainerValues = ContainerValues(
+                elevation = 8.dp,
                 borderRadius = 8.dp,
                 borderWidth = 4.dp,
                 contentPadding = 8.dp

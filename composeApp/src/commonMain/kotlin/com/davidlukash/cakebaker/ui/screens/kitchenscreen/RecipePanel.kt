@@ -33,7 +33,7 @@ import cakebaker.composeapp.generated.resources.close
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.toEngNotation
-import com.davidlukash.cakebaker.ui.container.PrimaryContainer
+import com.davidlukash.cakebaker.ui.container.LargePrimaryContainer
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import org.jetbrains.compose.resources.painterResource
@@ -44,7 +44,7 @@ fun RowScope.RecipePanel(uiState: UIState, setCurrentCake: (Int) -> Unit) {
     val ingredients by remember(uiState.items) { derivedStateOf { uiState.getIngredients() } }
     val currentCakeTier = uiState.currentCakeTier
 
-    PrimaryContainer(
+    LargePrimaryContainer(
         modifier = Modifier.weight(1f).fillMaxWidth(),
         content = {
             Column(

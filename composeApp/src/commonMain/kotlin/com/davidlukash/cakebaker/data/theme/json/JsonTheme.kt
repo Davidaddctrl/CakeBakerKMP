@@ -4,17 +4,14 @@ import androidx.compose.ui.graphics.Color
 import com.davidlukash.cakebaker.client
 import com.davidlukash.cakebaker.data.ImageData
 import com.davidlukash.cakebaker.data.serializers.ColorSerializer
+import com.davidlukash.cakebaker.data.theme.ContainerValues
 import com.davidlukash.cakebaker.data.theme.Theme
 import com.davidlukash.cakebaker.loadBytesToFont
 import com.davidlukash.cakebaker.withResultSuspend
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsBytes
-import io.ktor.client.statement.readRawBytes
-import kotlinx.io.bytestring.decode
-import kotlinx.io.bytestring.decodeIntoByteArray
 import kotlinx.serialization.Serializable
 import kotlin.io.encoding.Base64
-import kotlin.random.Random
 
 @Serializable
 data class JsonTheme(
@@ -38,6 +35,11 @@ data class JsonTheme(
     val tabSelectedColor: Color? = null,
     val largeButtonValues: JsonButtonValues? = null,
     val smallButtonValues: JsonButtonValues? = null,
+    val backgroundValues: JsonContainerValues? = null,
+    val largePrimaryContainerValues: JsonContainerValues? = null,
+    val largeSecondaryContainerValues: JsonContainerValues? = null,
+    val smallPrimaryContainerValues: JsonContainerValues? = null,
+    val smallSecondaryContainerValues: JsonContainerValues? = null,
 ) {
     suspend fun loadToTheme(base: Theme): Theme {
         val intersection = base.idToImageMap.keys intersect idToImageMap.keys
@@ -84,6 +86,11 @@ data class JsonTheme(
             tabSelectedColor = tabSelectedColor ?: base.tabSelectedColor,
             largeButtonValues = largeButtonValues?.toValues(base.largeButtonValues) ?: base.largeButtonValues,
             smallButtonValues = smallButtonValues?.toValues(base.smallButtonValues) ?: base.smallButtonValues,
+            backgroundValues = backgroundValues?.toValues(base.backgroundValues) ?: base.backgroundValues,
+            largePrimaryContainerValues = largePrimaryContainerValues?.toValues(base.largePrimaryContainerValues) ?: base.largePrimaryContainerValues,
+            largeSecondaryContainerValues = largeSecondaryContainerValues?.toValues(base.largeSecondaryContainerValues) ?: base.largeSecondaryContainerValues,
+            smallPrimaryContainerValues = smallPrimaryContainerValues?.toValues(base.smallPrimaryContainerValues) ?: base.smallPrimaryContainerValues,
+            smallSecondaryContainerValues = smallSecondaryContainerValues?.toValues(base.smallSecondaryContainerValues) ?: base.smallSecondaryContainerValues,
         )
     }
 }

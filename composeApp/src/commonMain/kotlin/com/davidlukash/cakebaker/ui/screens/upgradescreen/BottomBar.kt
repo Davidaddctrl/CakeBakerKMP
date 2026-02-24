@@ -28,9 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.UIState
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.container.PrimaryContainer
+import com.davidlukash.cakebaker.ui.container.LargePrimaryContainer
 import com.davidlukash.cakebaker.ui.input.ImageButton
-
 import com.davidlukash.cakebaker.ui.ResourceImage
 import com.davidlukash.cakebaker.ui.navigation.IngredientScreen
 import com.davidlukash.cakebaker.ui.navigation.KitchenScreen
@@ -69,7 +68,7 @@ fun BottomBar(
                 modifier = Modifier.height(280.dp)
             )
         }
-        PrimaryContainer(
+        LargePrimaryContainer(
             modifier = Modifier.weight(1f).padding(horizontal = 8.dp).height(312.dp),
             content = {
                 FlowRow(

@@ -6,19 +6,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.Theme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun PrimaryContainer(modifier: Modifier = Modifier, shape: Shape = RoundedCornerShape(16.dp), content: @Composable () -> Unit) {
+fun LargePrimaryContainer(
+    modifier: Modifier = Modifier,
+    shapeOverrideFactory: ((Dp) -> Shape)? = null,
+    content: @Composable () -> Unit
+) {
     BaseContainer(
         modifier = modifier,
         theme = Theme.ContainerTheme,
-        shape = shape,
-        borderWidth = 8.dp,
-        padding = 16.dp,
-        shadowElevation = 0.dp,
+        values = Theme.LargePrimaryContainerValues,
+        shapeOverrideFactory = shapeOverrideFactory,
         content = content
     )
 }
@@ -26,9 +29,9 @@ fun PrimaryContainer(modifier: Modifier = Modifier, shape: Shape = RoundedCorner
 @Preview
 @Composable
 fun ContainerPreview() {
-    PrimaryContainer(
+    LargePrimaryContainer(
         Modifier.size(400.dp), content = {
-            Text(text = "PrimaryContainer Preview", style = Theme.Styles.smallBodyStyle)
+            Text(text = "LargePrimaryContainer Preview", style = Theme.Styles.smallBodyStyle)
         }
     )
 }

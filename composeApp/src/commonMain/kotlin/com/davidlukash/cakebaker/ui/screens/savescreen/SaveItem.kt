@@ -2,21 +2,17 @@ package com.davidlukash.cakebaker.ui.screens.savescreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.davidlukash.cakebaker.VERSIONCODE
 import com.davidlukash.cakebaker.data.save.Save
 import com.davidlukash.cakebaker.data.save.SaveFile
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.container.PrimaryContainer
+import com.davidlukash.cakebaker.ui.container.LargePrimaryContainer
 import com.davidlukash.cakebaker.ui.input.LargeThemedButton
 
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -30,7 +26,7 @@ fun SaveItem(
     overwriteSave: (SaveFile) -> Unit,
     saveFile: SaveFile
 ) {
-    PrimaryContainer(
+    LargePrimaryContainer(
         modifier = modifier.fillMaxWidth(),
         content = {
             Column(

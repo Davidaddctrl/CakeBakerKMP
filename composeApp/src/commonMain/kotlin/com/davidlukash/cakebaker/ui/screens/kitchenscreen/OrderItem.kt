@@ -30,7 +30,7 @@ import com.davidlukash.cakebaker.toEngNotation
 
 import com.davidlukash.cakebaker.ui.ProgressBar
 import com.davidlukash.cakebaker.ui.input.SmallThemedButton
-import com.davidlukash.cakebaker.ui.container.SecondaryContainer
+import com.davidlukash.cakebaker.ui.container.SmallSecondaryContainer
 import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -40,7 +40,7 @@ fun OrderItem(uiState: UIState, completeOrder: () -> Unit, order: Order) {
     val cake by remember(cakes, order.cakeTier) { derivedStateOf { cakes[order.cakeTier] } }
     val progressAmount by remember(order.remainingTime, order.totalTime) { derivedStateOf { order.remainingTime / order.totalTime } }
     val completeEnabled by remember(cake?.amount, order.amount) { derivedStateOf { (cake?.amount ?: 0) >= order.amount } }
-    SecondaryContainer(
+    SmallSecondaryContainer(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(

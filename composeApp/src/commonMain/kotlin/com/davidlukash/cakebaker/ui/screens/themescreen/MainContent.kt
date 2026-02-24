@@ -1,21 +1,15 @@
 package com.davidlukash.cakebaker.ui.screens.themescreen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
@@ -25,9 +19,6 @@ import cakebaker.composeapp.generated.resources.chevron_forward
 import cakebaker.composeapp.generated.resources.delete
 import cakebaker.composeapp.generated.resources.download
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.ui.container.LargeSecondaryContainer
-import com.davidlukash.cakebaker.ui.container.PrimaryContainer
-import com.davidlukash.cakebaker.ui.container.SecondaryContainer
 import org.jetbrains.compose.resources.vectorResource
 
 fun <T> SnapshotStateList<T>.swap(oldIndex: Int, newIndex: Int) {

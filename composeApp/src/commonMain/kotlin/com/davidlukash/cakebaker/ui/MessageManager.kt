@@ -64,41 +64,37 @@ fun Popup(remove: () -> Unit, popup: Popup) {
         LocalIsScaled provides false
     ) {
         Box {
-            SmallPrimaryContainer(
-                modifier = Modifier.width(320.dp),
-                shadowElevation = 8.dp,
-                {
-                    Column(
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxSize()
+            SmallPrimaryContainer(modifier = Modifier.width(320.dp)) {
+                Column(
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides Theme.Styles.largeBodyStyle.copy(
+                            textAlign = TextAlign.Center,
+                        )
                     ) {
-                        CompositionLocalProvider(
-                            LocalTextStyle provides Theme.Styles.largeBodyStyle.copy(
-                                textAlign = TextAlign.Center,
-                            )
-                        ) {
-                            popup.content.invoke(
-                                popup
-                            )
-                        }
-                        if (popup.shouldHaveDefaultButton) {
-                            Spacer(modifier = Modifier.height(4.dp))
-                            SmallThemedButton(
-                                onClick = {
-                                    remove()
-                                },
-                                content = {
-                                    Text(
-                                        Theme.getString("action.dismiss"),
-                                        modifier = Modifier.fillMaxWidth(),
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-                            )
-                        }
+                        popup.content.invoke(
+                            popup
+                        )
+                    }
+                    if (popup.shouldHaveDefaultButton) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        SmallThemedButton(
+                            onClick = {
+                                remove()
+                            },
+                            content = {
+                                Text(
+                                    Theme.getString("action.dismiss"),
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        )
                     }
                 }
-            )
+            }
         }
     }
 }

@@ -15,7 +15,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun SmallPrimaryContainer(
     modifier: Modifier = Modifier,
-    shadowElevation: Dp = 0.dp,
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
@@ -24,10 +23,8 @@ fun SmallPrimaryContainer(
         BaseContainer(
             modifier = modifier,
             theme = Theme.ContainerTheme,
-            shape = RoundedCornerShape(8.dp),
-            borderWidth = 6.dp,
-            padding = 16.dp,
-            shadowElevation = shadowElevation,
+            values = Theme.SmallPrimaryContainerValues,
+            shapeOverrideFactory = null,
             content = content
         )
     }
