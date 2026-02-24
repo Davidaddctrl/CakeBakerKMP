@@ -29,8 +29,8 @@ fun BaseContainer(
     val shape = shapeOverrideFactory?.invoke(values.borderRadius) ?: RoundedCornerShape(values.borderRadius)
     Box(
         modifier = modifier
-            .clip(shape)
             .shadow(elevation, shape)
+            .clip(shape)
             .background(theme.containerColorBrushDescriptor.toBrush(), shape)
             .border(BorderStroke(borderWidth, theme.borderColorBrushDescriptor.toBrush()), shape)
             .padding(values.contentPadding)
