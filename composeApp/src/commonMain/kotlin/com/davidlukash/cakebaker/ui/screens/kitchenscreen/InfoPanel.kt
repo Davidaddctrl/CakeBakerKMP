@@ -63,7 +63,7 @@ fun InfoPanel(
         ) {
             Text(
                 Theme.getString("title.information"),
-                style = Theme.Styles.smallBodyStyle,
+                style = Theme.Styles.mediumBodyStyle,
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)

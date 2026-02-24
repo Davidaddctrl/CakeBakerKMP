@@ -35,7 +35,7 @@ fun RowScope.OrdersPanel(uiState: UIState, completeOrder: (Order) -> Unit, nextO
                 Box {
                     Text(
                         Theme.getString("title.orders"),
-                        style = Theme.Styles.smallBodyStyle,
+                        style = Theme.Styles.mediumBodyStyle,
                         textAlign = TextAlign.Center,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
