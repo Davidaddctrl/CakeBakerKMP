@@ -8,12 +8,14 @@ data class JsonContainerTheme(
     val borderColorBrushDescriptor: BrushDescriptor? = null,
     val containerColorBrushDescriptor: BrushDescriptor? = null,
     val contentColorBrushDescriptor: BrushDescriptor? = null,
+    val contentBold: Boolean? = null,
     val shouldDropShadow: Boolean? = null
 ) {
     fun toTheme(base: ContainerTheme): ContainerTheme = base.copy(
         borderColorBrushDescriptor = borderColorBrushDescriptor ?: base.borderColorBrushDescriptor,
         containerColorBrushDescriptor = containerColorBrushDescriptor ?: base.containerColorBrushDescriptor,
         contentColorBrushDescriptor = contentColorBrushDescriptor ?: base.contentColorBrushDescriptor,
+        contentBold = contentBold ?: base.contentBold,
         shouldDropShadow = shouldDropShadow ?: base.shouldDropShadow
     )
 }

@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.davidlukash.cakebaker.data.theme.LocalDoDropShadow
 import com.davidlukash.cakebaker.data.theme.Theme
-import com.davidlukash.cakebaker.data.theme.applyShadow
+import com.davidlukash.cakebaker.data.theme.applyLocals
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -44,7 +44,7 @@ fun SwitchButton(
     CompositionLocalProvider(
         LocalDoDropShadow provides Theme.SwitchButtonTheme.shouldDropShadow
     ) {
-        val textStyle = applyShadow(textStyle)
+        val textStyle = applyLocals(textStyle)
         Surface(
             color = if (enabled) Theme.SwitchButtonTheme.containerColor else Theme.SwitchButtonTheme.disabledContainerColor,
             border = BorderStroke(

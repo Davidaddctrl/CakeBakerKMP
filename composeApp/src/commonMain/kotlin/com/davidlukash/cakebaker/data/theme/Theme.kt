@@ -1,5 +1,6 @@
 package com.davidlukash.cakebaker.data.theme
 
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
@@ -59,7 +60,7 @@ fun convertStyles(styles: TextStyles, externalFont: Font?, font: FontResource): 
 
 @Composable
 fun convertStyle(style: TextStyle, fontFamily: FontFamily): TextStyle {
-    return applyShadow(
+    return applyLocals(
         style.copy(
             fontFamily = fontFamily,
         )
@@ -67,13 +68,17 @@ fun convertStyle(style: TextStyle, fontFamily: FontFamily): TextStyle {
 }
 
 @Composable
-fun applyShadow(style: TextStyle): TextStyle {
+fun applyLocals(style: TextStyle): TextStyle {
     val density = LocalDensity.current
     val shadow = if (LocalDoDropShadow.current) style.shadow else null
+    val brush = LocalTextStyle.current.brush
+    val weight = LocalTextStyle.current.fontWeight
     return style.copy(
         shadow = shadow?.copy(
             offset = density.run { shadow.offset.copy(x = shadow.offset.x.dp.toPx(), y = shadow.offset.y.dp.toPx()) }
-        )
+        ),
+        brush = brush,
+        fontWeight = weight
     )
 }
 
@@ -539,18 +544,21 @@ data class Theme(
                     )
                 ),
                 contentColorBrushDescriptor = BrushDescriptor.SolidColor(Color(255, 255, 255)),
+                contentBold = false,
                 shouldDropShadow = true
             ),
             containerTheme = ContainerTheme(
                 borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
                 containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(246, 255, 153)),
                 contentColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
+                contentBold = false,
                 shouldDropShadow = false
             ),
             secondaryContainerTheme = ContainerTheme(
                 borderColorBrushDescriptor = BrushDescriptor.SolidColor(Color(0, 0, 0)),
                 containerColorBrushDescriptor = BrushDescriptor.SolidColor(Color(8, 160, 69)),
                 contentColorBrushDescriptor = BrushDescriptor.SolidColor(Color(255, 255, 255)),
+                contentBold = false,
                 shouldDropShadow = true
             ),
             textFieldTheme = TextFieldTheme(

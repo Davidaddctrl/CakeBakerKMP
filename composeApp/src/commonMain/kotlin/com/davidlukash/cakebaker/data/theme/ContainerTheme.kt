@@ -4,6 +4,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.text.font.FontWeight
 import com.davidlukash.cakebaker.data.theme.json.BrushDescriptor
 import com.davidlukash.cakebaker.data.theme.json.JsonContainerTheme
 
@@ -11,6 +12,7 @@ data class ContainerTheme(
     val borderColorBrushDescriptor: BrushDescriptor,
     val containerColorBrushDescriptor: BrushDescriptor,
     val contentColorBrushDescriptor: BrushDescriptor,
+    val contentBold: Boolean,
     val shouldDropShadow: Boolean
 ) {
     fun toJsonTheme(): JsonContainerTheme = JsonContainerTheme(
@@ -26,7 +28,10 @@ fun ProvideContainer(containerTheme: ContainerTheme, content: @Composable () -> 
     CompositionLocalProvider(
         LocalDoDropShadow provides containerTheme.shouldDropShadow,
         LocalContentColor provides containerTheme.contentColorBrushDescriptor.toColor(),
-        LocalTextStyle provides LocalTextStyle.current.copy(brush = containerTheme.contentColorBrushDescriptor.toBrush())
+        LocalTextStyle provides LocalTextStyle.current.copy(
+            brush = containerTheme.contentColorBrushDescriptor.toBrush(),
+            fontWeight = if (containerTheme.contentBold) FontWeight.Bold else FontWeight.Normal,
+        ),
     ) {
         content()
     }

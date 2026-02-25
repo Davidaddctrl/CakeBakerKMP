@@ -1,6 +1,5 @@
 package com.davidlukash.cakebaker.data.theme
 
-import androidx.compose.ui.graphics.Color
 import com.davidlukash.cakebaker.data.theme.json.BrushDescriptor
 import com.davidlukash.cakebaker.data.theme.json.JsonProgressBarTheme
 
