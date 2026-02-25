@@ -217,6 +217,10 @@ data class Theme(
             @Composable
             get() = LocalTheme.current.smallSecondaryContainerValues
 
+        val BackgroundValues: ContainerValues
+            @Composable
+            get() = LocalTheme.current.backgroundValues
+
         val ProgressBarValues: ProgressBarValues
             @Composable
             get() = LocalTheme.current.progressBarValues
