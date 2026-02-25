@@ -16,5 +16,8 @@
     },
     "textFieldTheme": {
         "shouldDropShadow": false
+    },
+    "progressBarTheme": {
+        "shouldDropShadow": false
     }
 }

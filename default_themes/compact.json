@@ -1,0 +1,59 @@
+{
+
+  "largeButtonValues": {
+    "defaultElevation": 0.0,
+    "pressedElevation": 0.0,
+    "focusedElevation": 0.0,
+    "hoveredElevation": 0.0,
+    "disabledElevation": 0.0,
+    "borderRadius": 0.0,
+    "borderWidth": 2.0,
+    "contentPadding": 8.0
+  },
+  "smallButtonValues": {
+    "defaultElevation": 0.0,
+    "pressedElevation": 0.0,
+    "focusedElevation": 0.0,
+    "hoveredElevation": 0.0,
+    "disabledElevation": 0.0,
+    "borderRadius": 0.0,
+    "borderWidth": 2.0,
+    "contentPadding": 8.0
+  },
+  "backgroundValues": {
+    "elevation": 0.0,
+    "borderRadius": 0.0,
+    "borderWidth": 0.0,
+    "contentPadding": 8.0
+  },
+  "largePrimaryContainerValues": {
+    "elevation": 0.0,
+    "borderRadius": 0.0,
+    "borderWidth": 2.0,
+    "contentPadding": 8.0
+  },
+  "largeSecondaryContainerValues": {
+    "elevation": 0.0,
+    "borderRadius": 0.0,
+    "borderWidth": 2.0,
+    "contentPadding": 8.0
+  },
+  "smallPrimaryContainerValues": {
+    "elevation": 0.0,
+    "borderRadius": 0.0,
+    "borderWidth": 2.0,
+    "contentPadding": 8.0
+  },
+  "smallSecondaryContainerValues": {
+    "elevation": 0.0,
+    "borderRadius": 0.0,
+    "borderWidth": 2.0,
+    "contentPadding": 8.0
+  },
+  "progressBarValues": {
+    "elevation": 0.0,
+    "borderRadius": 0.0,
+    "borderWidth": 2.0,
+    "minHeight": 48.0
+  }
+}
