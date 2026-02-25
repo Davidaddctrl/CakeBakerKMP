@@ -1,33 +1,46 @@
 {
   "progressBarTheme": {
-    "border": {
-      "red": 0.9,
-      "green": 0.9,
-      "blue": 1,
-      "alpha": 0.3,
-      "specified": true
+    "borderColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 0.0,
+        "green": 0.0,
+        "blue": 0.0,
+        "alpha": 0,
+        "specified": true
+      }
     },
-    "backgroundColor": {
-      "red": 0.9,
-      "green": 0.9,
-      "blue": 1,
-      "alpha": 0.2,
-      "specified": true
+    "backgroundColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 0.9,
+        "green": 0.9,
+        "blue": 1,
+        "alpha": 0.2,
+        "specified": true
+      }
     },
-    "filledColor": {
-      "red": 0.85,
-      "green": 0.85,
-      "blue": 0.9,
-      "alpha": 0.7,
-      "specified": true
+    "filledColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 0.85,
+        "green": 0.85,
+        "blue": 0.9,
+        "alpha": 0.7,
+        "specified": true
+      }
     },
-    "contentColor": {
-      "red": 1.0,
-      "green": 1.0,
-      "blue": 1.0,
-      "alpha": 1.0,
-      "specified": true
-    }
+    "contentColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1.0,
+        "specified": true
+      }
+    },
+    "shouldDropShadow": false
   },
   "buttonTheme": {
     "containerColorBrushDescriptor": {
@@ -73,10 +86,10 @@
     "borderColorBrushDescriptor": {
       "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
       "color": {
-        "red": 0.9,
-        "green": 0.9,
-        "blue": 1,
-        "alpha": 0.3,
+        "red": 0.0,
+        "green": 0.0,
+        "blue": 0,
+        "alpha": 0,
         "specified": true
       }
     },
@@ -94,10 +107,10 @@
   },
   "switchButtonTheme": {
     "borderColor": {
-      "red": 0.9,
-      "green": 0.9,
-      "blue": 1,
-      "alpha": 0.3,
+      "red": 0.0,
+      "green": 0.0,
+      "blue": 0,
+      "alpha": 0,
       "specified": true
     },
     "disabledBorderColor": {
@@ -214,44 +227,14 @@
   },
   "containerTheme": {
     "borderColorBrushDescriptor": {
-      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.VerticalGradient",
-      "colors": [
-        {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.2,
-          "specified": true
-        },
-        {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.3,
-          "specified": true
-        },
-        {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.3,
-          "specified": true
-        },
-        {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.3,
-          "specified": true
-        },
-        {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.4,
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+          "red": 0,
+          "green": 0.0,
+          "blue": 0,
+          "alpha": 0,
           "specified": true
         }
-      ]
     },
     "containerColorBrushDescriptor": {
       "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.VerticalGradient",
@@ -307,44 +290,15 @@
   },
   "secondaryContainerTheme": {
     "borderColorBrushDescriptor": {
-      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.VerticalGradient",
-      "colors": [
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color":
         {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.2,
-          "specified": true
-        },
-        {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.3,
-          "specified": true
-        },
-        {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.3,
-          "specified": true
-        },
-        {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.3,
-          "specified": true
-        },
-        {
-          "red": 1,
-          "green": 1.0,
-          "blue": 1,
-          "alpha": 0.4,
+          "red": 0,
+          "green": 0.0,
+          "blue": 0,
+          "alpha": 0,
           "specified": true
         }
-      ]
     },
     "containerColorBrushDescriptor": {
       "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.VerticalGradient",
@@ -417,10 +371,10 @@
       "specified": true
     },
     "placeholderColor": {
-      "red": 0.5019608,
-      "green": 0.5019608,
-      "blue": 0.5019608,
-      "alpha": 1.0,
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "alpha": 0.8,
       "specified": true
     },
     "containerColor": {
@@ -431,10 +385,10 @@
       "specified": true
     },
     "borderColor": {
-      "red": 1,
-      "green": 1.0,
-      "blue": 1,
-      "alpha": 0.2,
+      "red": 0,
+      "green": 0.0,
+      "blue": 0,
+      "alpha": 0,
       "specified": true
     },
     "shouldDropShadow": false
@@ -459,5 +413,60 @@
     "blue": 1,
     "alpha": 1.0,
     "specified": true
+  },
+  "largeButtonValues": {
+    "defaultElevation": 0.0,
+    "pressedElevation": 0.0,
+    "focusedElevation": 0.0,
+    "hoveredElevation": 0.0,
+    "disabledElevation": 0.0,
+    "borderRadius": 8.0,
+    "borderWidth": 0.0,
+    "contentPadding": 16.0
+  },
+  "smallButtonValues": {
+    "defaultElevation": 0.0,
+    "pressedElevation": 0.0,
+    "focusedElevation": 0.0,
+    "hoveredElevation": 0.0,
+    "disabledElevation": 0.0,
+    "borderRadius": 8.0,
+    "borderWidth": 0.0,
+    "contentPadding": 8.0
+  },
+  "backgroundValues": {
+    "elevation": 0.0,
+    "borderRadius": 0.0,
+    "borderWidth": 0.0,
+    "contentPadding": 16.0
+  },
+  "largePrimaryContainerValues": {
+    "elevation": 0.0,
+    "borderRadius": 8.0,
+    "borderWidth": 0.0,
+    "contentPadding": 16.0
+  },
+  "largeSecondaryContainerValues": {
+    "elevation": 0.0,
+    "borderRadius": 8.0,
+    "borderWidth": 0.0,
+    "contentPadding": 16.0
+  },
+  "smallPrimaryContainerValues": {
+    "elevation": 0.0,
+    "borderRadius": 8.0,
+    "borderWidth": 0.0,
+    "contentPadding": 16.0
+  },
+  "smallSecondaryContainerValues": {
+    "elevation": 0.0,
+    "borderRadius": 8.0,
+    "borderWidth": 0.0,
+    "contentPadding": 8.0
+  },
+  "progressBarValues": {
+    "elevation": 0.0,
+    "borderRadius": 4.0,
+    "borderWidth": 0.0
   }
 }

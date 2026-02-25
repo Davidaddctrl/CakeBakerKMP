@@ -1,33 +1,46 @@
 {
   "progressBarTheme": {
-    "border": {
-      "red": 0.0,
-      "green": 0.0,
-      "blue": 0.0,
-      "alpha": 1.0,
-      "specified": true
+    "borderColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 0.0,
+        "green": 0.0,
+        "blue": 0.0,
+        "alpha": 1.0,
+        "specified": true
+      }
     },
-    "backgroundColor": {
-      "red": 1.0,
-      "green": 1.0,
-      "blue": 1.0,
-      "alpha": 1.0,
-      "specified": true
+    "backgroundColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 1.0,
+        "green": 1.0,
+        "blue": 1.0,
+        "alpha": 1.0,
+        "specified": true
+      }
     },
-    "filledColor": {
-      "red": 0.5,
-      "green": 0.5,
-      "blue": 0.5,
-      "alpha": 1.0,
-      "specified": true
+    "filledColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 0.8,
+        "green": 0.8,
+        "blue": 0.8,
+        "alpha": 1.0,
+        "specified": true
+      }
     },
-    "contentColor": {
-      "red": 0.0,
-      "green": 0.0,
-      "blue": 0.0,
-      "alpha": 1.0,
-      "specified": true
-    }
+    "contentColorBrushDescriptor": {
+      "type": "com.davidlukash.cakebaker.data.theme.json.BrushDescriptor.SolidColor",
+      "color": {
+        "red": 0.0,
+        "green": 0.0,
+        "blue": 0.0,
+        "alpha": 1.0,
+        "specified": true
+      }
+    },
+    "shouldDropShadow": false
   },
   "buttonTheme": {
     "containerColorBrushDescriptor": {
